@@ -8,24 +8,41 @@
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @import kableExtra
 #' @import colorspace
-c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = 12, cvd.sim = c("none", "deutan", "protan", "tritan"), devel = TRUE) {
+c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = 12, cvd.sim = c("none", "deutan", "protan", "tritan"), order.by.score = TRUE) {
 
-	x = z_cat
-	s = z_cat_score
+	devel = (!is.null(n)) # scores are shown
+
+
+	z = z_cat
+	s = s_cat
 
 	cvd.sim = match.arg(cvd.sim)
 	if (!is.null(n)) columns = n
 
-	x = sel_cat(x, n)
-	sel = attr(x, "sel")
+	zn = get_z_n(z, n = n)
 
-	s = rank_cat(sel_scores(s, n)[sel,, drop=FALSE])
-	x = x[s$order]
-	s = s[s$order,]
-	s$order = NULL
+	if (devel) {
+		if (n == 1L) order.by.score = FALSE
+		sel = attr(zn, "sel")
+		sn = s[sel, n, ]
+		if (length(zn) > 1) {
+			if (order.by.score) {
+				o = order(sn[, ncol(sn)])
+			} else {
+				o = names(zn)
+			}
+			so = sn[o,]
+			zn = zn[o]
+		} else {
+			so = matrix(sn, nrow = 1, dimnames = list(names(zn), names(sn)))
+		}
+		so = so[,1:(ncol(so)-1), drop = FALSE]
+	} else {
+		zn = zn[order(names(zn))]
+	}
 
-	d = data.frame(name = names(x), nlines = sapply(x, function(xi) (((length(xi)-1) %/% columns) + 1)))
-	d = cbind(d, s)
+	d = data.frame(name = names(zn), nlines = sapply(zn, function(xi) (((length(xi)-1) %/% columns) + 1)))
+	#if (devel) d = cbind(d, so)
 	# add dummy lines
 
 
@@ -44,34 +61,35 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = 12
 	e$row_h = ifelse(e$ind==e$indx, 25, 12)
 
 	if (devel) {
-		e = cbind(e, s[match(e$label, rownames(s)),,drop=FALSE])
-		snames = colnames(s)
+		e = cbind(e, so[match(e$label, rownames(so)),,drop=FALSE])
+		rownames(so) = NULL
+		snames = colnames(so)
 	} else {
 		snames = NULL
 	}
 
 
-	tot = max(c(sapply(x, length), columns))
+	tot = max(c(sapply(zn, length), columns))
 	if (columns < tot) tot = (((tot-1) %/% columns) + 1) * columns
 
 
-	x2 = lapply(x, function(xi) {
-		if (length(xi) < tot) {
-			c(xi, rep("#FFFFFF", tot - length(xi)))
+	x = lapply(zn, function(zni) {
+		if (length(zni) < tot) {
+			c(zni, rep("#FFFFFF", tot - length(zni)))
 		} else {
-			xi
+			zni
 		}
 	})
 
-	m = unname(do.call(rbind, x2))
+	m = unname(do.call(rbind, x))
 	ml = ceiling(tot / columns)
 
 	sid = split(1:tot, f = rep(1:ml, each = columns, length.out = tot))
-
 	me = do.call(rbind, lapply(1:nrow(e), function(i) {
 		m[e$did[i], sid[[e$ind[i]]]]
 	}))
 
+	colnames(me) = 1:ncol(me)
 	e2 = cbind(e, me)
 
 	sim = switch(cvd.sim,
@@ -88,10 +106,10 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = 12
 	}
 
 
-
+	rownames(e2) = NULL
 	k = kableExtra::kbl(e2[, c("label", as.character(1:columns), snames)], col.names = c("", as.character(1:columns), snames), escape = F)
 	k = kableExtra::row_spec(k, 0, align = "c")
-	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 20px;padding-right: 10px")
+	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 20px;padding-right: 10px;min-width: 120px")
 
 	kc = k[1]
 

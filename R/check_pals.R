@@ -80,6 +80,7 @@ check_cyc_pal = function(p) {
 #' @param p sequential palette
 #' @return vector of three quality indices
 check_cat_pal = function(p) {
+	if (length(p) == 1) return(c(min_dist = Inf))
 	cvds = c("deu", "pro", "tri")
 
 	scores = sapply(cvds, function(cvd) {
@@ -91,10 +92,14 @@ check_cat_pal = function(p) {
 
 check_cat_list = function(x) {
 	lapply(x, function(xi) {
-		if (is.list(xi)) {
-			lapply(xi, check_cat_pal)
-		} else {
+		index = attr(xi, "index")
+		if (is.null(index)) {
 			check_cat_pal(xi)
+		} else {
+			lapply(index, function(ind) {
+				pal = xi[ind]
+				check_cat_pal(pal)
+			})
 		}
 	})
 }
