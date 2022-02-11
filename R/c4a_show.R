@@ -6,9 +6,11 @@
 #' @param n number of colors
 #' @param columns number of columns in case `n` is not specified. Otherwise `columns` is set to `n`
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
+#' @param order.by.score order the palettes by score (`TRUE`, default) or by name?
+#' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
 #' @import kableExtra
 #' @import colorspace
-c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = 12, cvd.sim = c("none", "deutan", "protan", "tritan"), order.by.score = TRUE) {
+c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = 12, cvd.sim = c("none", "deutan", "protan", "tritan"), order.by.score = TRUE, text.col = "same") {
 
 	devel = (!is.null(n)) # scores are shown
 
@@ -102,21 +104,44 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = 12
 		#e[[paste0("x", i)]] = ""
 		cols = e2[[as.character(i)]]
 		cols_cvd = sim(cols)
-		e2[[as.character(i)]] = kableExtra::cell_spec(cols, color = cols_cvd, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px;")
+		textcol = if (text.col == "same") cols_cvd else text.col
+		e2[[as.character(i)]] = kableExtra::cell_spec(cols, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px;")
 	}
 
 
 	rownames(e2) = NULL
-	k = kableExtra::kbl(e2[, c("label", as.character(1:columns), snames)], col.names = c("", as.character(1:columns), snames), escape = F)
+
+	if (devel) {
+		e2$score = ifelse(e2$min_dist > 8, "&#9786;", "")
+		e2cols = c("label", snames, "score", as.character(1:columns))
+		e2nms = c("", snames, "", as.character(1:columns))
+	} else {
+		e2cols = c("label", as.character(1:columns))
+		e2nms = c("", as.character(1:columns))
+	}
+
+	k = kableExtra::kbl(e2[, e2cols], col.names = e2nms, escape = F)
 	k = kableExtra::row_spec(k, 0, align = "c")
 	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 20px;padding-right: 10px;min-width: 120px")
+
+	if (devel) {
+		for (i in 1:length(snames)) {
+			k = kableExtra::column_spec(k, i+1, extra_css = "padding-right: 20px;")
+		}
+		k = kableExtra::column_spec(k, length(snames)+2, extra_css = "padding-right: 10px; font-size: 200%")
+	}
+
 
 	kc = k[1]
 
 	kl = strsplit(kc, "\n")[[1]]
-	rws = which(kl == "  <tr>")
-
-	kl[rws[-1]] = paste0("  <tr style=\"height:", e2$row_h, "px;vertical-align:top;\">")
+	trIDs = which(kl == "  <tr>")[-1]
+	rws1 = trIDs[e2$ind==1] # first line per palette
+	rws2 = trIDs[e2$ind!=1] # other lines
+	#browser()
+	kl[rws1] = paste0("  <tr style=\"height: ", e2$row_h[e2$ind==1], "px;vertical-align:center;\">")
+	kl[rws2] = paste0("  <tr style=\"height: ", e2$row_h[e2$ind!=1], "px;vertical-align:top;\">")
+	#kl[rws[-1]] = paste0("  <tr style=\"vertical-align:top;\">")
 
 	css = readLines("css/table.css")
 

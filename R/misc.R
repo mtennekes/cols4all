@@ -93,9 +93,11 @@ min_dist_cvd = function(pal) {
 }
 
 remove_black_white = function(pal, th = 5) {
-	pal
-	# blcks = dist_to_col(pal, "#000000") <= th
-	# whts = dist_to_col(pal, "#FFFFFF") <= th
-	# pal[!blcks & !whts]
+	blcks = dist_to_col(pal, "#000000") <= th
+	almost_blcks = dist_to_col(pal, "#0D0D0D") <= th # 1/20 grey
+
+	whts = dist_to_col(pal, "#FFFFFF") <= th
+	almost_whts = dist_to_col(pal, "#F2F2F2") <= th # 19/20 grey
+	pal[!blcks & !whts & !almost_blcks & !almost_blcks]
 }
 

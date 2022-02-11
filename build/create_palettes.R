@@ -14,6 +14,7 @@ cat_grDevices = local({
 	lapply(remove_black_white) |>
 	lapply(unname)
 })
+cat_grDevices$Alphabet = grDevices:::.palette_colors_hex$Alphabet # restore alphabet (since this should have exactly 26 colors)
 names(cat_grDevices) = c("R3", "R4", "ggplot2", "okabe", "brewer.accent", "brewer.dark2", "brewer.paired",
 						 "brewer.pastel1", "brewer.pastel2", "brewer.set1", "brewer.set2", "brewer.set3", "tableau.10",
 						 "tableau.classic", "polychrome", "alphabet")
@@ -27,19 +28,22 @@ cat_pals = local({
 	pals = lapply(palsCat, function(p) {
 		if (p %in% names(pals_syspals)) {
 			pal = pals_syspals[[p]]
-			if (is.list(pal)) {
-				pal = lapply(pal, remove_black_white)
-			} else {
-				pal = remove_black_white(pal)
+			if (p != "alphabet") {
+				if (is.list(pal)) {
+					pal = lapply(pal, remove_black_white)
+				} else {
+					pal = remove_black_white(pal)
+				}
 			}
 		} else {
-			pal = unname(do.call(p, args = list())) |>
-				remove_black_white()
+			pal = unname(do.call(p, args = list()))
+			if (p != "alphabet") pal = remove_black_white(pal)
 		}
 		pal
 	})
 	pals = lapply(pals, unname)
 	names(pals) = palsNew
+	pals$kelly = c(pals$kelly[-1], pals$kelly[1]) # put black at the end
 	pals
 })
 
@@ -54,19 +58,19 @@ cat_tol = local({
 	#     dput(l2)
 	rainbow_ids = list(`1` = 10, `2` = c(10, 26), `3` = c(10, 18, 26), `4` = c(10, 15, 18, 26), `5` = c(10, 14, 15, 18, 26), `6` = c(10, 14, 15, 17, 18, 26), `7` = c(9, 10, 14, 15, 17, 18, 26), `8` = c(9, 10, 14, 15, 17, 18, 23, 26), `9` = c(9, 10, 14, 15, 17, 18, 23, 26, 28), `10` = c(9, 10, 14, 15, 17, 18, 21, 24, 26, 28), `11` = c(9, 10, 12, 14, 15, 17, 18, 21, 24, 26, 28), `12` = c(3, 6, 9, 10, 12, 14, 15, 17, 18, 21, 24, 26), `13` = c(3, 6, 9, 10, 12, 14, 15, 16, 17, 18, 21, 24, 26), `14` = c(3, 6, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26), `15` = c(3, 6, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 28), `16` = c(3, 5, 7, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 28), `17` = c(3, 5, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 28), `18` = c(3, 5, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 27, 28), `19` = c(2, 4, 5, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 27, 28), `20` = c(2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 20, 22, 24, 26, 27, 28), `21` = c(2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26, 27, 28), `22` = c(2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26, 27, 28, 29), `23` = c(1, 2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26, 27, 28, 29))
 	# from https://personal.sron.nl/~pault/data/tol_colors.py
-	list(tol.bright = c('#4477AA', '#EE6677', '#228833', '#CCBB44', '#66CCEE', '#AA3377', '#BBBBBB', '#000000'),
+	pals = list(tol.bright = c('#4477AA', '#EE6677', '#228833', '#CCBB44', '#66CCEE', '#AA3377', '#BBBBBB', '#000000'),
 		 tol.contrast = c('#004488', '#DDAA33', '#BB5566', '#000000'),
 		 tol.vibrant = c('#EE7733', '#0077BB', '#33BBEE', '#EE3377', '#CC3311', '#009988', '#BBBBBB', '#000000'),
 		 tol.muted = c('#CC6677', '#332288', '#DDCC77', '#117733', '#88CCEE', '#882255', '#44AA99', '#999933', '#AA4499', '#DDDDDD','#000000'),
 		 tol.medium = c('#6699CC', '#004488', '#EECC66', '#994455', '#997700','#EE99AA', '#000000'),
-		 tol.light = c('#77AADD', '#EE8866', '#EEDD88', '#FFAABB', '#99DDFF','#44BB99', '#BBCC33', '#AAAA00', '#DDDDDD', '#000000'),
-		 tol.rainbow = structure(c('#E8ECFB', '#D9CCE3', '#D1BBD7', '#CAACCB', '#BA8DB4',
+		 tol.light = c('#77AADD', '#EE8866', '#EEDD88', '#FFAABB', '#99DDFF','#44BB99', '#BBCC33', '#AAAA00', '#DDDDDD', '#000000')) |>
+		lapply(remove_black_white) |>
+		c(list(tol.rainbow = structure(c('#E8ECFB', '#D9CCE3', '#D1BBD7', '#CAACCB', '#BA8DB4',
 		 						  '#AE76A3', '#AA6F9E', '#994F88', '#882E72', '#1965B0',
 		 						  '#437DBF', '#5289C7', '#6195CF', '#7BAFDE', '#4EB265',
 		 						  '#90C987', '#CAE0AB', '#F7F056', '#F7CB45', '#F6C141',
 		 						  '#F4A736', '#F1932D', '#EE8026', '#E8601C', '#E65518',
-		 						  '#DC050C', '#A5170E', '#72190E', '#42150A'), index = rainbow_ids))
-
+		 						  '#DC050C', '#A5170E', '#72190E', '#42150A'), index = rainbow_ids)))
 
 })
 
@@ -103,7 +107,7 @@ cat_carto = local({
 	})
 
 	cat_carto = mapply(function(pal, ind) {
-		structure(pal, index = ind)
+		structure(remove_black_white(pal), index = ind)
 	}, cartoQual$n12, indices, SIMPLIFY = FALSE)
 
 	names(cat_carto) = paste0("carto.", tolower(cartoQual$Name))
@@ -116,7 +120,7 @@ cat_hcl = local({
 	structure(lapply(hclnames, function(h) {
 		pals = lapply(1:20, function(i) {
 			qualitative_hcl(palette = h, n = i)
-		})
+		}) |> lapply(remove_black_white)
 		pal = unique(unlist(pals))
 		indices = structure(lapply(1:20, function(i) {
 			match(pals[[i]], pal)
@@ -143,7 +147,7 @@ cat_hcl = local({
 cat_light = list(
 	light.martin = unname(colorBlindness::paletteMartin),
 	light.paired = unname(colorBlindness::PairedColor12Steps)
-)
+) |> lapply(remove_black_white)
 
 # TODO
 # pals stepped palettes: bivariate (cat x num)
