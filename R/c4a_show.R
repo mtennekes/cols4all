@@ -4,82 +4,88 @@
 #'
 #' @param x named list of color palettes
 #' @param n number of colors
-#' @param columns number of columns in case `n` is not specified. Otherwise `columns` is set to `n`
+#' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @param order.by.score order the palettes by score (`TRUE`, default) or by name?
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
 #' @import kableExtra
 #' @import colorspace
-c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = 12, cvd.sim = c("none", "deutan", "protan", "tritan"), order.by.score = TRUE, text.col = "same") {
+c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), order.by.score = TRUE, text.col = "same") {
+
+	type = match.arg(type)
 
 	devel = (!is.null(n)) # scores are shown
 
 
-	z = z_cat
-	s = s_cat
+	zt = z[z$type == type, ]
+	#s = s_cat
 
 	cvd.sim = match.arg(cvd.sim)
-	if (!is.null(n)) columns = n
 
-	zn = get_z_n(z, n = n)
+	if (is.na(columns)) columns = if (!is.null(n)) n else 12
+
+	zn = get_z_n(zt, n = n)
+
+	columns = min(columns, max(zn$ncolors))
+
+	k = nrow(zn)
 
 	if (devel) {
-		if (n == 1L) order.by.score = FALSE
-		sel = attr(zn, "sel")
-		sn = s[sel, n, ]
-		if (length(zn) > 1) {
-			if (order.by.score) {
-				o = order(sn[, ncol(sn)])
-			} else {
-				o = names(zn)
-			}
-			so = sn[o,]
-			zn = zn[o]
-		} else {
-			so = matrix(sn, nrow = 1, dimnames = list(names(zn), names(sn)))
+		rn = paste0("rank", n)
+		if (type == "cat") {
+			qn = paste0(c("min_dist", "friendly"), n)
+			ql = c("Minimum distance", "Colorblind-friendly")
+		} else if (type == "seq") {
+			qn = paste0(c("min_step", "max_step", "friendly"), n)
+			ql = c("Minimum step", "Maximum step", "Colorblind-friendly")
+		} else if (type == "div") {
+			qn = paste0(c("inter_wing_dist", "min_step", "friendly"), n)
+			ql = c("Inter-wing-dist", "Minimum step", "Colorblind-friendly")
 		}
-		so = so[,1:(ncol(so)-1), drop = FALSE]
+
+		if (n == 1L) order.by.score = FALSE
+		if (nrow(zn) > 1) {
+			if (order.by.score) {
+				o = order(zn[[rn]])
+			} else {
+				o = order(zn$name)
+			}
+			zn = zn[o, ]
+		}
 	} else {
-		zn = zn[order(names(zn))]
+		zn = zn[order(zn$name), ]
 	}
 
-	d = data.frame(name = names(zn), nlines = sapply(zn, function(xi) (((length(xi)-1) %/% columns) + 1)))
-	#if (devel) d = cbind(d, so)
-	# add dummy lines
-
+	zn$nlines = ((zn$ncolors-1) %/% columns) + 1
 
 	e = data.frame(id = unlist(mapply(function(n, i) {
 		c(i * 1000 + 1:n)
-	}, d$nlines, 1:nrow(d), SIMPLIFY = FALSE))
+	}, zn$nlines, 1L:k, SIMPLIFY = FALSE))
 	)
 	e$did = floor(e$id/1000)
 	e$ind = e$id - e$did * 1000
-	e$indx = sapply(1:nrow(d), function(i) which.max(e$ind[e$did==i]))[e$did]
+	e$indx = sapply(1L:k, function(i) which.max(e$ind[e$did==i]))[e$did]
 	e$name = ""
-	e$name[e$did>0] = d$name[match(e$did[e$did>0], 1:nrow(d))]
+	e$name[e$did>0] = zn$name[match(e$did[e$did>0], 1L:k)]
 	e$label = ""
-	e$label[e$ind==1] = d$name[match(e$did[e$ind==1], 1:nrow(d))]
+	e$label[e$ind==1] = zn$name[match(e$did[e$ind==1], 1L:k)]
 
 	e$row_h = ifelse(e$ind==e$indx, 25, 12)
 
 	if (devel) {
-		e = cbind(e, so[match(e$label, rownames(so)),,drop=FALSE])
-		rownames(so) = NULL
-		snames = colnames(so)
-	} else {
-		snames = NULL
+		e = cbind(e, zn[match(e$label, zn$name),qn,drop=FALSE])
+		colnames(e)[match(qn, colnames(e))] = ql
 	}
 
-
-	tot = max(c(sapply(zn, length), columns))
+	tot = max(c(zn$ncolors, columns))
 	if (columns < tot) tot = (((tot-1) %/% columns) + 1) * columns
 
 
-	x = lapply(zn, function(zni) {
-		if (length(zni) < tot) {
-			c(zni, rep("#FFFFFF", tot - length(zni)))
+	x = lapply(zn$palette, function(p) {
+		if (length(p) < tot) {
+			c(p, rep("", tot - length(p)))
 		} else {
-			zni
+			p
 		}
 	})
 
@@ -103,7 +109,8 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = 12
 	for (i in 1:columns) {
 		#e[[paste0("x", i)]] = ""
 		cols = e2[[as.character(i)]]
-		cols_cvd = sim(cols)
+		cols_cvd = cols
+		cols_cvd[cols_cvd != ""] = sim(cols[cols_cvd != ""])
 		textcol = if (text.col == "same") cols_cvd else text.col
 		e2[[as.character(i)]] = kableExtra::cell_spec(cols, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px;")
 	}
@@ -112,23 +119,37 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = 12
 	rownames(e2) = NULL
 
 	if (devel) {
-		e2$score = ifelse(e2$min_dist > 8, "&#9786;", "")
-		e2cols = c("label", snames, "score", as.character(1:columns))
-		e2nms = c("", snames, "", as.character(1:columns))
+		e2[[ql[length(ql)]]] = ifelse(!is.na(e2[[ql[length(ql)]]]) & e2[[ql[length(ql)]]] == 1L, "&#9786;", "")
+
+
+		for (i in 1:(length(ql)-1)) {
+			e2[[ql[i]]] = as.character(e2[[ql[i]]])
+			e2[[ql[i]]][is.na(e2[[ql[i]]])] = ""
+		}
+
+		e2cols = c("label", ql, as.character(1:columns))
+		e2nms = c("", ql, as.character(1:columns))
 	} else {
 		e2cols = c("label", as.character(1:columns))
 		e2nms = c("", as.character(1:columns))
 	}
 
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2nms, escape = F)
-	k = kableExtra::row_spec(k, 0, align = "c")
-	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 20px;padding-right: 10px;min-width: 120px")
+#return(k)
+
+	# for (i in (1:columns)+(length(ql)+1)) {
+	# 	k = kableExtra::column_spec(k, i, extra_css = 'width: 5em; overflow: hidden; background-color: #000000"')
+	# }
+	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 10px;padding-right: 10px;min-width: 120px")
+
+	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 10px;padding-right: 10px;min-width: 120px")
+	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "max-width: 5em; vertical-align: bottom")
 
 	if (devel) {
-		for (i in 1:length(snames)) {
-			k = kableExtra::column_spec(k, i+1, extra_css = "padding-right: 20px;")
+		for (i in 1:length(ql)) {
+			k = kableExtra::column_spec(k, i+1, extra_css = "padding-right: 20px; max-width: 10em;")
 		}
-		k = kableExtra::column_spec(k, length(snames)+2, extra_css = "padding-right: 10px; font-size: 200%")
+		k = kableExtra::column_spec(k, length(ql)+1, extra_css = "font-size: 250%; line-height: 40%; vertical-align: center; text-align: center", width = "3em" )
 	}
 
 
@@ -139,7 +160,7 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = 12
 	rws1 = trIDs[e2$ind==1] # first line per palette
 	rws2 = trIDs[e2$ind!=1] # other lines
 	#browser()
-	kl[rws1] = paste0("  <tr style=\"height: ", e2$row_h[e2$ind==1], "px;vertical-align:center;\">")
+	kl[rws1] = paste0("  <tr style=\"height: ", e2$row_h[e2$ind==1], "px;vertical-align:center;max-height: 20px; overflow-y: auto;\">")
 	kl[rws2] = paste0("  <tr style=\"height: ", e2$row_h[e2$ind!=1], "px;vertical-align:top;\">")
 	#kl[rws[-1]] = paste0("  <tr style=\"vertical-align:top;\">")
 

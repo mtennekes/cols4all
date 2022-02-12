@@ -6,21 +6,31 @@
 #' @return vector of three quality indices
 check_div_pal = function(p) {
 	n = length(p)
-	if ((n %% 2) != 1) stop("p needs to be odd-numbered")
+
+	is_even = ((n %% 2) != 1)
 	nh = floor(n/2)
 
 	cvds = c("deu", "pro", "tri")
 
 	scores = t(sapply(cvds, function(cvd) {
 		m = colorblindcheck::palette_dist(p, cvd = cvd)
-		inter_wing_dist = min(m[1:nh, (nh+2):n])
+		if (is_even) {
+			inter_wing_dist = min(m[1:nh, (nh+1):n])
+		} else {
+			inter_wing_dist = min(m[1:nh, (nh+2):n])
+		}
 		step_sizes = mapply(function(i,j) m[i,j], 1:(n-1), 2:n)
+
 		min_step_size = min(step_sizes)
 		#mean_step_size = mean(step_sizes)
 		#step_indicator = max(abs(step_sizes - mean_step_size)) / mean_step_size
 		c(inter_wing_dist = round(inter_wing_dist), min_step = round(min_step_size))
 	}))
-	c(inter_wing_dist = min(scores[,1]), min_step = min(scores[,2]))
+	inter_wing_dist = min(scores[,1])
+	min_step = min(scores[,2])
+
+
+	c(inter_wing_dist = inter_wing_dist, min_step = min_step)
 }
 
 

@@ -2,52 +2,92 @@
 #'
 #' @param x named list of palettes. Each list item is either a color vector or a list of color vectors for specific lengths (names should correspond to those lengths.
 #' @param n desired number colors. When not specific, the maximum is taken.
-get_z_n = function(x, n = NULL) {
-	x2 = lapply(x, function(xi) {
-		index = attr(xi, "index")
-		if (!is.null(index)) {
-			if (is.null(n)) n = as.character(names(index)[length(index)])
-			ind = which(names(index) == as.character(n))[1]
-			if (length(ind)) {
-				unname(xi[index[[as.character(n)]]])
-			} else {
-				xi
+get_z_n = function(z, n = NULL) {
+
+	if (any(z$type == "cat")) {
+		zcat = if (is.null(n)) z[z$type == "cat", ] else z[z$type == "cat" & z$nmax >= n, ]
+		zcat$ncolors = if (is.null(n)) zcat$nmax else rep(n, nrow(zcat))
+
+		zcat$palette = mapply(function(p, k) {
+			index = attr(p, "index")
+			if (is.null(index)) {
+				ind = 1L:k
+			} else{
+				ind = unname(index[[as.character(k)]])
 			}
-		} else {
-			xi
-		}
-	})
-	l = sapply(x2, length)
-
-	if (is.null(n)) {
-		sel = NULL
-		y = x2
+			p[ind]
+		}, zcat$palette, zcat$ncolors, SIMPLIFY = FALSE)
 	} else {
-		sel = (l >= n)
-		y = lapply(x2[sel], function(pal) pal[1:n])
+		zcat = NULL
 	}
+	if (any(z$type %in% c("seq", "div"))) {
+		zsd = z[z$type %in% c("seq", "div"), ]
+		zsd$ncolors = if (is.null(n)) 9 else rep(n, nrow(zsd))
 
-	attr(y, "sel") = sel
-	y
+		zsd$palette = mapply(function(p, k) {
+			if (k != length(p)) p = colorRampPalette(p)(k)
+			p
+		}, zsd$palette, zsd$ncolors, SIMPLIFY = FALSE)
+	} else {
+		zsd = NULL
+	}
+	rbind(zcat, zsd)
 }
 
-get_scores = function(z, nmax, type = "cat") {
-	q = switch(type, cat = "min_dist", seq = "min_step", cyc = "min_step", div = c("inter_wing_dist", "min_step"))
-	p = length(z)
+attach_scores = function(z, nmax.cat = 36, nmax.oth = 9) {
 
-	qfun = paste0("check_", type, "_pal")
 
-	m = array(NA, dim = c(p, nmax, length(q) + 1), dimnames = list(names(z), 1:nmax, c(q, "rank")))
-	for (n in 2:nmax) {
-		zn = get_z_n(z, n =n)
-		sel = attr(zn, "sel")
-		s = do.call(rbind, lapply(zn, qfun))
-		m[sel, n, 1:length(q)] = s
 
+	q = c(paste0("min_dist", 2:nmax.cat),
+		  paste0("min_step", 2:nmax.oth),
+		  paste0("max_step", 2:nmax.oth),
+		  paste0("inter_wing_dist", 2:nmax.oth),
+		  paste0("rank", 2:max(nmax.cat, nmax.oth)),
+		  paste0("friendly", 2:max(nmax.cat, nmax.oth)))
+
+	m = matrix(as.integer(NA), nrow=nrow(z), ncol = length(q), dimnames = list(NULL, q))
+
+	# categorical
+	for (n in 2:nmax.cat) {
+		zn = get_z_n(z[z$type == "cat",], n =n)
+		s = do.call(rbind, lapply(zn$palette, check_cat_pal))
 		r = rank(-s, ties.method = "first")
-		m[sel, n, length(q) + 1] = r
+		f = as.integer(s > 7)
+
+		mn = cbind(s,r,f)
+
+		m[match(zn$name, z$name), paste0(c("min_dist", "rank", "friendly"), n)] = mn
 	}
-	m
+
+	# sequential
+	for (n in 2:nmax.oth) {
+		zn = get_z_n(z[z$type == "seq",], n =n)
+		s = do.call(rbind, lapply(zn$palette, check_seq_pal))
+		sr = s[,1] - s[,2] / 1000 # order min_step, those with equal store to -max_step
+
+		r = rank(-sr, ties.method = "first")
+		f = as.integer(s[,1] > 7)
+
+		mn = cbind(s,r,f)
+
+		m[match(zn$name, z$name), paste0(c("min_step", "max_step", "rank", "friendly"), n)] = mn
+	}
+
+	# diverging
+	for (n in 2:nmax.oth) {
+		zn = get_z_n(z[z$type == "div",], n =n)
+		s = do.call(rbind, lapply(zn$palette, check_div_pal))
+		sr = pmin(s[,1], s[,2] * 2)
+
+		r = rank(-sr, ties.method = "first")
+		f = as.integer(s[,1] > 10 & s[,2] > 5)
+
+		mn = cbind(s,r,f)
+
+		m[match(zn$name, z$name), paste0(c("inter_wing_dist", "min_step", "rank", "friendly"), n)] = mn
+	}
+
+	cbind(z, m)
 }
 
 sel_scores = function(x, n = NULL) {
@@ -101,3 +141,7 @@ remove_black_white = function(pal, th = 5) {
 	pal[!blcks & !whts & !almost_blcks & !almost_blcks]
 }
 
+is_light <- function(col) {
+	colrgb <- col2rgb(col)
+	apply(colrgb * c(.299, .587, .114), MARGIN=2, sum) >= 128
+}

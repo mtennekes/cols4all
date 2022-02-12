@@ -2,6 +2,7 @@ library(pals)
 library(rcartocolor)
 library(grid)
 library(colorblindcheck)
+library(rcartocolor)
 
 
 #####################################################
@@ -10,14 +11,15 @@ library(colorblindcheck)
 
 
 cat_grDevices = local({
-	grDevices:::.palette_colors_hex |>
+	pals = grDevices:::.palette_colors_hex |>
 	lapply(remove_black_white) |>
 	lapply(unname)
+	pals$Alphabet = unname(grDevices:::.palette_colors_hex$Alphabet) # restore alphabet (since this should have exactly 26 colors)
+	names(pals) = c("R3", "R4", "ggplot2", "okabe", "brewer.accent", "brewer.dark2", "brewer.paired",
+							 "brewer.pastel1", "brewer.pastel2", "brewer.set1", "brewer.set2", "brewer.set3", "tableau.10",
+							 "tableau.classic", "polychrome", "alphabet")
+	pals
 })
-cat_grDevices$Alphabet = grDevices:::.palette_colors_hex$Alphabet # restore alphabet (since this should have exactly 26 colors)
-names(cat_grDevices) = c("R3", "R4", "ggplot2", "okabe", "brewer.accent", "brewer.dark2", "brewer.paired",
-						 "brewer.pastel1", "brewer.pastel2", "brewer.set1", "brewer.set2", "brewer.set3", "tableau.10",
-						 "tableau.classic", "polychrome", "alphabet")
 
 
 cat_pals = local({
@@ -58,7 +60,7 @@ cat_tol = local({
 	#     dput(l2)
 	rainbow_ids = list(`1` = 10, `2` = c(10, 26), `3` = c(10, 18, 26), `4` = c(10, 15, 18, 26), `5` = c(10, 14, 15, 18, 26), `6` = c(10, 14, 15, 17, 18, 26), `7` = c(9, 10, 14, 15, 17, 18, 26), `8` = c(9, 10, 14, 15, 17, 18, 23, 26), `9` = c(9, 10, 14, 15, 17, 18, 23, 26, 28), `10` = c(9, 10, 14, 15, 17, 18, 21, 24, 26, 28), `11` = c(9, 10, 12, 14, 15, 17, 18, 21, 24, 26, 28), `12` = c(3, 6, 9, 10, 12, 14, 15, 17, 18, 21, 24, 26), `13` = c(3, 6, 9, 10, 12, 14, 15, 16, 17, 18, 21, 24, 26), `14` = c(3, 6, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26), `15` = c(3, 6, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 28), `16` = c(3, 5, 7, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 28), `17` = c(3, 5, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 28), `18` = c(3, 5, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 27, 28), `19` = c(2, 4, 5, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 27, 28), `20` = c(2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 20, 22, 24, 26, 27, 28), `21` = c(2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26, 27, 28), `22` = c(2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26, 27, 28, 29), `23` = c(1, 2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26, 27, 28, 29))
 	# from https://personal.sron.nl/~pault/data/tol_colors.py
-	pals = list(tol.bright = c('#4477AA', '#EE6677', '#228833', '#CCBB44', '#66CCEE', '#AA3377', '#BBBBBB', '#000000'),
+	list(tol.bright = c('#4477AA', '#EE6677', '#228833', '#CCBB44', '#66CCEE', '#AA3377', '#BBBBBB', '#000000'),
 		 tol.contrast = c('#004488', '#DDAA33', '#BB5566', '#000000'),
 		 tol.vibrant = c('#EE7733', '#0077BB', '#33BBEE', '#EE3377', '#CC3311', '#009988', '#BBBBBB', '#000000'),
 		 tol.muted = c('#CC6677', '#332288', '#DDCC77', '#117733', '#88CCEE', '#882255', '#44AA99', '#999933', '#AA4499', '#DDDDDD','#000000'),
@@ -74,26 +76,9 @@ cat_tol = local({
 
 })
 
-library(khroma)
-# khroma:::.schemes
-#
-# tols = c("bright",
-# "high contrast",
-# "vibrant",
-# "muted",
-# "medium contrast",
-# "pale",
-# "dark",
-# "light")
-#
-k = khroma:::.schemes[tols]
-# cat_khroma_tol = lapply(k, function(ki) ki$colours)
-# names(cat_khroma_tol) = paste0("khroma_", names(cat_khroma_tol))
-
 
 
 cat_carto = local({
-	require(rcartocolor)
 
 	carto_pal(name="Vivid")
 	cartoQual = cartocolors[cartocolors$Type == "qualitative",]
@@ -129,9 +114,10 @@ cat_hcl = local({
 	}), names = hclnewnm)
 })
 
+## meta package: 2000 palettes, less organized
 
+# library(paletteer)
 # cat_paletteer = local({
-# 	require(paletteer)
 #
 # 	cat_paletteer = do.call(c, palettes_d)
 # 	cat_paletteer = lapply(cat_paletteer, na.omit)
@@ -144,28 +130,40 @@ cat_hcl = local({
 # 	cat_paletteer
 # })
 
-cat_light = list(
-	light.martin = unname(colorBlindness::paletteMartin),
-	light.paired = unname(colorBlindness::PairedColor12Steps)
-) |> lapply(remove_black_white)
 
-# TODO
-# pals stepped palettes: bivariate (cat x num)
-# divering: X.colorBlindness.Blue2Orange12Steps and X.dichromat.BluetoOrange_12
+# library(khroma)
+# khroma:::.schemes
 #
+# tols = c("bright",
+# "high contrast",
+# "vibrant",
+# "muted",
+# "medium contrast",
+# "pale",
+# "dark",
+# "light")
+#
+# k = khroma:::.schemes[tols]
+# cat_khroma_tol = lapply(k, function(ki) ki$colours)
+# names(cat_khroma_tol) = paste0("khroma_", names(cat_khroma_tol))
 
-z_cat = c(cat_grDevices, cat_pals, cat_tol, cat_carto, cat_hcl, cat_light) #cat_paletteer
 
-series = sub("\\..*", "", names(z_cat))
-series[series == names(z_cat)] = "other"
 
-s_cat = get_scores(z_cat, 36)
+cat_lb = local({
+	list(
+		lb.martin = unname(colorBlindness::paletteMartin),
+		lb.paired = unname(colorBlindness::PairedColor12Steps)
+	) |> lapply(remove_black_white)
+})
 
-nmax = sapply(z_cat, function(x) {
+cat_all = c(cat_grDevices, cat_pals, cat_tol, cat_carto, cat_hcl, cat_lb) #cat_paletteer
+
+series = sub("\\..*", "", names(cat_all))
+series[series == names(cat_all)] = "other"
+
+nmax = sapply(cat_all, function(x) {
 	index = attr(x, "index")
 	if (is.null(index)) length(x) else length(index[[length(index)]])
 })
 
-m = data.frame(name = names(z_cat), series = series, nmax = nmax)
-
-save(z_cat, s_cat, file="R/sysdata.rda", compress="xz")
+z_cat = data.frame(name = names(cat_all), type = "cat", series = series, palette = I(cat_all), nmax = nmax)
