@@ -21,10 +21,11 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div", "biv", "c
 	palid = which(palette == .z$name)
 	if (!length(palid)) stop("Unknown palette. See c4a_palettes() for options, and c4a_show / c4a_gui to see them.")
 
-	if (n > .z$nmax[palid]) stop("Palette ", name, " only supports ", .z$nmax[palid], " colors.")
+	if (!is.null(n) && n > .z$nmax[palid]) stop("Palette ", name, " only supports ", .z$nmax[palid], " colors.")
 
 	zl = as.list(.z[palid,])
 	zl$palette = zl$palette[[1]]
+	if (is.null(n)) n = ifelse(zl$type == "cat", zl$nmax, 9)
 	pal = do.call(get_pal_n, c(list(n = n), zl))
 
 	pal = if (!is.null(order)) {

@@ -17,5 +17,6 @@
 
 .highC = "High chroma"
 
+.hueType = "Hues"
 
 .maxn = "Max colors"

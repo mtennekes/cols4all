@@ -16,9 +16,9 @@ c4a_gui = function() {
 					shiny::sliderInput("n", "Number of colors",
 									   min = 2, max = 36, value = 7),
 					shiny::radioButtons("cvd", "Color vision deficiency", choices = c(None = "none", Deutan = "deutan", Protan = "protan", Tritan = "tritan"), selected = "none"),
-					shiny::radioButtons("sort", "Sort", choiceValues = c("name", "rank"),
-										choiceNames = c("Name", .friendly), selected = "name"),
-					shiny::checkboxInput("advanced", "Show scores", value = FALSE)
+					shiny::checkboxInput("advanced", "Show underlying data", value = FALSE),
+					shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .friendly)), selected = "rank"),
+					shiny::selectizeInput("series", "Series", choices = c("hcl", "tol", "viridis", "brewer", "carto", "scico", "lb", "other"), selected = c("hcl", "tol", "viridis", "brewer", "carto", "scico", "lb", "other"), multiple = TRUE)
 				),
 
 				shiny::mainPanel(
@@ -29,19 +29,26 @@ c4a_gui = function() {
 		server = function(input, output, session) {
 
 			output$show = function() {
-				shiny::req(input$n, input$cvd, input$sort, input$type)
+				shiny::req(input$n, input$cvd, input$sort, input$type, input$series)
 
 				columns = if (input$n > 16) 12 else input$n
-				c4a_show(n = input$n, cvd.sim = input$cvd, sort = input$sort, columns = columns, type = input$type, advanced.mode = input$advanced)
+				c4a_show(n = input$n, cvd.sim = input$cvd, sort = input$sort, columns = columns, type = input$type, advanced.mode = input$advanced, series = input$series)
 			}
 			observe({
 				tp = input$type
-				ind = .indicators[[tp]]
+				adv = input$advanced
 
-				updateRadioButtons(session, "sort",
-								   choiceValues = c("name", "rank", ind, "Crel", "Hwidth"),
-								   choiceNames = c("Name", .friendly, unname(.labels[ind]), "Chroma (rel. max)", "Hue width")
-				)
+				ind = .indicators[[tp]]
+				if (!adv) ind = NULL
+
+
+				sort = shiny::isolate(input$sort)
+				choi = structure(c("name", "rank", ind, "Crel", "Hwidth"), names = c("Name", .friendly, unname(.labels[ind]), "Chroma (rel. max)", "Hue width"))
+
+				sortNew = if (sort %in% choi) sort else "name"
+
+				updateSelectInput(session, "sort",
+								   choices  = choi,selected = sortNew)
 			})
 		}
 		shiny::shinyApp(ui = ui, server = server)

@@ -10,15 +10,16 @@
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
 #' @import kableExtra
 #' @import colorspace
-c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mode = FALSE, columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same") {
+c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mode = FALSE, columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL) {
 
 	type = match.arg(type)
 	show.ranking = (!is.null(n))
 	cvd.sim = match.arg(cvd.sim)
 	if (is.na(columns)) columns = if (!is.null(n)) n else 12
 
-	# palettes for selected type, n colors
+	# palettes for selected type, n colors, and optionally for specific series
 	zn = get_z_n(.z[.z$type == type, ], n = n)
+	if (!is.null(series)) zn = zn[zn$series %in% series, ]
 
 	columns = min(columns, max(zn$n))
 
@@ -32,6 +33,11 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 		ql = c(.friendly, .highC)
 	}
 
+	if (all(zn$type == "seq")) {
+		qn = c(qn, "hueType")
+		ql = c(ql, .hueType)
+	}
+
 	if (advanced.mode) {
 		qn = c(qn, .indicators[[type]], .hcl)
 		ql = c(ql, .labels[c(.indicators[[type]], .hcl)])
@@ -43,47 +49,53 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 
 	zn$nlines = ((zn$n-1) %/% columns) + 1
 
+	# data.frame with possibly multiple lines per palette (if n > columns)
 	e = data.frame(id = unlist(mapply(function(n, i) {
 		c(i * 1000 + 1:n)
 	}, zn$nlines, 1L:k, SIMPLIFY = FALSE))
 	)
-	e$did = floor(e$id/1000)
-	e$ind = e$id - e$did * 1000
-	e$indx = sapply(1L:k, function(i) which.max(e$ind[e$did==i]))[e$did]
-	e$name = ""
-	e$name[e$did>0] = zn$name[match(e$did[e$did>0], 1L:k)]
-	e$label = ""
-	e$label[e$ind==1] = zn$name[match(e$did[e$ind==1], 1L:k)]
-
-	e$row_h = ifelse(e$ind==e$indx, 25, 12)
-
-	# e$n = as.integer(NA)
-	# e$n[e$ind==1] = zn$n[match(e$did[e$ind==1], 1L:k)]
-
+	e = within(e, {
+		did = floor(id/1000)
+		ind = id - did * 1000
+		indx = sapply(1L:k, function(i) which.max(ind[did==i]))[did]
+		name = ""
+		name[did>0] = zn$name[match(did[did>0], 1L:k)]
+		label = name
+		label[ind!=1] = ""
+		row_h = ifelse(ind==indx, 25, 12)
+	})
 	e = cbind(e, zn[match(e$label, zn$name),qn,drop=FALSE])
 	colnames(e)[match(qn, colnames(e))] = ql
 
+	# total number of columns
 	tot = max(c(zn$n, columns))
 	if (columns < tot) tot = (((tot-1) %/% columns) + 1) * columns
 
-
-	x = lapply(zn$palette, function(p) {
-		if (length(p) < tot) {
-			c(p, rep("", tot - length(p)))
-		} else {
-			p
-		}
-	})
-
-	m = unname(do.call(rbind, x))
+	# maximum number of lines per palette
 	ml = ceiling(tot / columns)
 
-	sid = split(1:tot, f = rep(1:ml, each = columns, length.out = tot))
-	me = do.call(rbind, lapply(1:nrow(e), function(i) {
-		m[e$did[i], sid[[e$ind[i]]]]
-	}))
+	# color matrix
+	m = local({
+		x = lapply(zn$palette, function(p) {
+			if (length(p) < tot) {
+				c(p, rep("", tot - length(p)))
+			} else {
+				p
+			}
+		})
+		unname(do.call(rbind, x))
+	})
 
-	colnames(me) = 1:ncol(me)
+	# color matrix spread over lines
+	me = local({
+		sid = split(1:tot, f = rep(1:ml, each = columns, length.out = tot))
+		x = do.call(rbind, lapply(1:nrow(e), function(i) {
+			m[e$did[i], sid[[e$ind[i]]]]
+		}))
+		colnames(x) = 1:ncol(x)
+		x
+	})
+
 	e2 = cbind(e, me)
 
 	sim = switch(cvd.sim,
@@ -93,7 +105,6 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 				 tritan = colorspace::tritan)
 
 	for (i in 1:columns) {
-		#e[[paste0("x", i)]] = ""
 		cols = e2[[as.character(i)]]
 		cols_cvd = cols
 		cols_cvd[cols_cvd != ""] = sim(cols[cols_cvd != ""])
@@ -104,8 +115,20 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 
 	rownames(e2) = NULL
 
-	if (.friendly %in% ql) e2[[.friendly]] = ifelse(!is.na(e2[[.friendly]]) & e2[[.friendly]] == 1L, "&#9786;", "")
-	if (.highC %in% ql) e2[[.highC]] = ifelse(!is.na(e2[[.highC]]) & e2[[.highC]] == 1L, "&#x1f576;", "")
+	tooltip_cbfriendly = if (is.null(n)) "Colorblind-friendly!" else paste0("Colorblind-friendly! (at least, for n = ", n, ")")
+	tooltip_highC = "Watch out for those intense colors!"
+
+	tooltip_RH = "Spectral palette"
+	tooltip_SH = "Single hue palette"
+
+	if (.friendly %in% ql) e2[[.friendly]] = ifelse(!is.na(e2[[.friendly]]) & e2[[.friendly]] == 1L, kableExtra::cell_spec("&#9786;", tooltip = tooltip_cbfriendly, escape = FALSE), "")
+	if (.highC %in% ql) e2[[.highC]] = ifelse(!is.na(e2[[.highC]]) & e2[[.highC]] == 1L, kableExtra::cell_spec("&#x1f576;", tooltip = tooltip_highC, escape = FALSE), "")
+
+
+	if (.hueType %in% ql) e2[[.hueType]] =
+		ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE),
+		ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "SH", kableExtra::cell_spec("&#128393;", tooltip = tooltip_SH, escape = FALSE), ""))
+
 
 	ql_icons = intersect(ql, c(.friendly, .highC))
 	ql_other = setdiff(ql, c(.friendly, .highC))
@@ -125,17 +148,15 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	# for (i in (1:columns)+(length(ql)+1)) {
 	# 	k = kableExtra::column_spec(k, i, extra_css = 'width: 5em; overflow: hidden; background-color: #000000"')
 	# }
-	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 10px;padding-right: 10px;min-width: 120px")
-
-	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 10px;padding-right: 10px;min-width: 120px")
+	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 10px;padding-right: 10px;min-width: 120px; text-align: right")
 	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "max-width: 5em; vertical-align: bottom")
 
 	for (q in ql_other) {
-		k = kableExtra::column_spec(k, which(q == e2nms), extra_css = "padding-right: 20px; max-width: 10em;")
+		k = kableExtra::column_spec(k, which(q == e2nms), extra_css = "padding-right: 20px; max-width: 10em; text-align: right")
 	}
 
 	for (q in ql_icons) {
-		k = kableExtra::column_spec(k, which(q == e2nms), extra_css = "font-size: 250%; line-height: 40%; vertical-align: center; text-align: center", width = "3em" )
+		k = kableExtra::column_spec(k, which(q == e2nms), extra_css = "font-size: 250%; line-height: 40%; vertical-align: center; text-align: center; white-space: nowrap;", width = "3em")
 	}
 
 	kc = k[1]

@@ -32,6 +32,8 @@ get_z_n = function(n = NULL, z = .z, s = .s) {
 
 	z3$highC = z3$Crel >= 95
 
+	z3$hueType = ifelse(z3$Hwidth < 15, "SH", ifelse(z3$Hwidth < 180, "MH", "RH"))
+
 	z3
 }
 
