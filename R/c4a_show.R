@@ -10,53 +10,38 @@
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
 #' @import kableExtra
 #' @import colorspace
-c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), order.by.score = TRUE, text.col = "same") {
+c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mode = FALSE, columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same") {
 
 	type = match.arg(type)
-
-	devel = (!is.null(n)) # scores are shown
-
-
-	zt = z[z$type == type, ]
-	#s = s_cat
-
+	show.ranking = (!is.null(n))
 	cvd.sim = match.arg(cvd.sim)
-
 	if (is.na(columns)) columns = if (!is.null(n)) n else 12
 
-	zn = get_z_n(zt, n = n)
+	# palettes for selected type, n colors
+	zn = get_z_n(.z[.z$type == type, ], n = n)
 
-	columns = min(columns, max(zn$ncolors))
+	columns = min(columns, max(zn$n))
 
 	k = nrow(zn)
 
-	if (devel) {
-		rn = paste0("rank", n)
-		if (type == "cat") {
-			qn = paste0(c("min_dist", "friendly"), n)
-			ql = c("Minimum distance", "Colorblind-friendly")
-		} else if (type == "seq") {
-			qn = paste0(c("min_step", "max_step", "friendly"), n)
-			ql = c("Minimum step", "Maximum step", "Colorblind-friendly")
-		} else if (type == "div") {
-			qn = paste0(c("inter_wing_dist", "min_step", "friendly"), n)
-			ql = c("Inter-wing-dist", "Minimum step", "Colorblind-friendly")
-		}
-
-		if (n == 1L) order.by.score = FALSE
-		if (nrow(zn) > 1) {
-			if (order.by.score) {
-				o = order(zn[[rn]])
-			} else {
-				o = order(zn$name)
-			}
-			zn = zn[o, ]
-		}
+	if (any(zn$type == "cat")) {
+		qn = c("nmax", "cbfriendly", "highC")
+		ql = c(.maxn, .friendly, .highC)
 	} else {
-		zn = zn[order(zn$name), ]
+		qn = c("cbfriendly", "highC")
+		ql = c(.friendly, .highC)
 	}
 
-	zn$nlines = ((zn$ncolors-1) %/% columns) + 1
+	if (advanced.mode) {
+		qn = c(qn, .indicators[[type]], .hcl)
+		ql = c(ql, .labels[c(.indicators[[type]], .hcl)])
+	}
+
+
+	decreasing = !(sort %in% c("name", "rank"))
+	zn = zn[order(zn[[sort]], decreasing = decreasing), ]
+
+	zn$nlines = ((zn$n-1) %/% columns) + 1
 
 	e = data.frame(id = unlist(mapply(function(n, i) {
 		c(i * 1000 + 1:n)
@@ -72,12 +57,13 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = NA
 
 	e$row_h = ifelse(e$ind==e$indx, 25, 12)
 
-	if (devel) {
-		e = cbind(e, zn[match(e$label, zn$name),qn,drop=FALSE])
-		colnames(e)[match(qn, colnames(e))] = ql
-	}
+	# e$n = as.integer(NA)
+	# e$n[e$ind==1] = zn$n[match(e$did[e$ind==1], 1L:k)]
 
-	tot = max(c(zn$ncolors, columns))
+	e = cbind(e, zn[match(e$label, zn$name),qn,drop=FALSE])
+	colnames(e)[match(qn, colnames(e))] = ql
+
+	tot = max(c(zn$n, columns))
 	if (columns < tot) tot = (((tot-1) %/% columns) + 1) * columns
 
 
@@ -118,21 +104,20 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = NA
 
 	rownames(e2) = NULL
 
-	if (devel) {
-		e2[[ql[length(ql)]]] = ifelse(!is.na(e2[[ql[length(ql)]]]) & e2[[ql[length(ql)]]] == 1L, "&#9786;", "")
+	if (.friendly %in% ql) e2[[.friendly]] = ifelse(!is.na(e2[[.friendly]]) & e2[[.friendly]] == 1L, "&#9786;", "")
+	if (.highC %in% ql) e2[[.highC]] = ifelse(!is.na(e2[[.highC]]) & e2[[.highC]] == 1L, "&#x1f576;", "")
 
+	ql_icons = intersect(ql, c(.friendly, .highC))
+	ql_other = setdiff(ql, c(.friendly, .highC))
 
-		for (i in 1:(length(ql)-1)) {
-			e2[[ql[i]]] = as.character(e2[[ql[i]]])
-			e2[[ql[i]]][is.na(e2[[ql[i]]])] = ""
-		}
-
-		e2cols = c("label", ql, as.character(1:columns))
-		e2nms = c("", ql, as.character(1:columns))
-	} else {
-		e2cols = c("label", as.character(1:columns))
-		e2nms = c("", as.character(1:columns))
+	for (q in ql_other) {
+		e2[[q]] = as.character(e2[[q]])
+		e2[[q]][is.na(e2[[q]])] = ""
 	}
+
+
+	e2cols = c("label", ql, as.character(1:columns))
+	e2nms = c("", ql, as.character(1:columns))
 
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2nms, escape = F)
 #return(k)
@@ -145,13 +130,13 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), columns = NA
 	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 10px;padding-right: 10px;min-width: 120px")
 	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "max-width: 5em; vertical-align: bottom")
 
-	if (devel) {
-		for (i in 1:length(ql)) {
-			k = kableExtra::column_spec(k, i+1, extra_css = "padding-right: 20px; max-width: 10em;")
-		}
-		k = kableExtra::column_spec(k, length(ql)+1, extra_css = "font-size: 250%; line-height: 40%; vertical-align: center; text-align: center", width = "3em" )
+	for (q in ql_other) {
+		k = kableExtra::column_spec(k, which(q == e2nms), extra_css = "padding-right: 20px; max-width: 10em;")
 	}
 
+	for (q in ql_icons) {
+		k = kableExtra::column_spec(k, which(q == e2nms), extra_css = "font-size: 250%; line-height: 40%; vertical-align: center; text-align: center", width = "3em" )
+	}
 
 	kc = k[1]
 

@@ -100,16 +100,59 @@ check_cat_pal = function(p) {
 }
 
 
-check_cat_list = function(x) {
-	lapply(x, function(xi) {
-		index = attr(xi, "index")
-		if (is.null(index)) {
-			check_cat_pal(xi)
-		} else {
-			lapply(index, function(ind) {
-				pal = xi[ind]
-				check_cat_pal(pal)
-			})
-		}
-	})
+#' Calculate the minimum distance a palette (any color in this palette) and a color.
+dist_to_col = function(pal, col) {
+	colorblindcheck::palette_dist(c(col, pal))[1,-1]
 }
+
+#' Function to remove (near) blacks and whites
+remove_black_white = function(pal, th = 5) {
+	blcks = dist_to_col(pal, "#000000") <= th
+	almost_blcks = dist_to_col(pal, "#0D0D0D") <= th # 1/20 grey
+
+	whts = dist_to_col(pal, "#FFFFFF") <= th
+	almost_whts = dist_to_col(pal, "#F2F2F2") <= th # 19/20 grey
+	pal[!blcks & !whts & !almost_blcks & !almost_blcks]
+}
+
+#' Determine if colors are light (otherwise dark, so binary).
+is_light <- function(col) {
+	colrgb <- col2rgb(col)
+	apply(colrgb * c(.299, .587, .114), MARGIN=2, sum) >= 128
+}
+
+#' HCL characteristics
+analyse_hcl = function(pals) {
+	t(sapply(pals, function(p) {
+		m = as(hex2RGB(p), "polarLUV")@coords
+
+		# find largest hue gap
+		hs = round(unique(m[,3][m[,2]>10]))
+		if (!length(hs)) {
+			Hwidth = 0
+		} else {
+			hs = c(hs, hs + 360)
+			gap = 0
+			gap_max = 0
+			for (h in 0:720) {
+				if (any(hs == h)) {
+					gap = 0
+				} else {
+					gap = gap + 1
+				}
+				if (gap > gap_max) gap_max = gap
+			}
+			Hwidth = round(360 - gap_max)
+		}
+		Crel = min(max(round((m[,2] / .maxC[round(m[,3]) + 1]) * 100)), 100)
+
+
+		# Lmin = min(m[,1]), Lmax = max(m[,1]),
+		# Cmin = min(m[,2]), Cmax = max(m[,2]),
+
+
+
+		c(Crel = Crel, Hwidth = Hwidth)
+	}))
+}
+

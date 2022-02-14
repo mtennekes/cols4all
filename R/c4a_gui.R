@@ -14,9 +14,11 @@ c4a_gui = function() {
 				shiny::sidebarPanel(
 					shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = "cat"),
 					shiny::sliderInput("n", "Number of colors",
-									   min = 2, max = 36, value = 8),
-					shiny::radioButtons("cvd", "Color vision deficiency", choices = c("none", "deutan", "protan", "tritan"), selected = "none"),
-					shiny::radioButtons("sort", "Sort", choices = c("name", "score"), selected = "name")
+									   min = 2, max = 36, value = 7),
+					shiny::radioButtons("cvd", "Color vision deficiency", choices = c(None = "none", Deutan = "deutan", Protan = "protan", Tritan = "tritan"), selected = "none"),
+					shiny::radioButtons("sort", "Sort", choiceValues = c("name", "rank"),
+										choiceNames = c("Name", .friendly), selected = "name"),
+					shiny::checkboxInput("advanced", "Show scores", value = FALSE)
 				),
 
 				shiny::mainPanel(
@@ -24,15 +26,23 @@ c4a_gui = function() {
 				)
 			)
 		)
-		server = function(input, output) {
+		server = function(input, output, session) {
 
 			output$show = function() {
 				shiny::req(input$n, input$cvd, input$sort, input$type)
 
 				columns = if (input$n > 16) 12 else input$n
-
-				c4a_show(n = input$n, cvd.sim = input$cvd, order.by.score = (input$sort == "score"), columns = columns, type = input$type)
+				c4a_show(n = input$n, cvd.sim = input$cvd, sort = input$sort, columns = columns, type = input$type, advanced.mode = input$advanced)
 			}
+			observe({
+				tp = input$type
+				ind = .indicators[[tp]]
+
+				updateRadioButtons(session, "sort",
+								   choiceValues = c("name", "rank", ind, "Crel", "Hwidth"),
+								   choiceNames = c("Name", .friendly, unname(.labels[ind]), "Chroma (rel. max)", "Hue width")
+				)
+			})
 		}
 		shiny::shinyApp(ui = ui, server = server)
 	} else {
