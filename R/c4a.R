@@ -20,6 +20,10 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div", "biv", "c
 
 	palid = which(palette == .z$name)
 	if (!length(palid)) stop("Unknown palette. See c4a_palettes() for options, and c4a_show / c4a_gui to see them.")
+	if (length(palid) > 1) {
+		warning("There are ", length(palid), " palettes with that name. The first one is taken")
+		palid = palid[1]
+	}
 
 	if (!is.null(n) && n > .z$nmax[palid]) stop("Palette ", name, " only supports ", .z$nmax[palid], " colors.")
 

@@ -2,7 +2,7 @@
 get_scores = function(z, nmax) {
 	k = nrow(z)
 
-	sc = c("min_dist", "min_step", "max_step", "inter_wing_dist", "rank")
+	sc = c("min_dist", "min_step", "max_step", "inter_wing_dist", "inter_wing_hue_dist", "rank")
 	a = array(as.integer(NA), dim = c(nrow(z), length(sc), nmax), dimnames = list(z$name, sc, NULL))
 
 	# s = list(min_dist = as.list(rep(as.integer(NA), nmax)),
@@ -39,13 +39,13 @@ get_scores = function(z, nmax) {
 	for (n in 2:nmax) {
 		zn = get_z_n(z[z$type == "div",], n =n)
 		q = do.call(rbind, lapply(zn$palette, check_div_pal))
-		qr = pmin(q[,1], q[,2] * 2)
+		qr = pmin(q[,1], q[,3] * 2) + (q[,2] >= 100) * 1000
 
 		r = rank(-qr, ties.method = "first")
 
 		mn = cbind(q,r)
 
-		a[match(zn$name, dimnames(a)[[1]]), c("inter_wing_dist", "min_step", "rank"), n] = mn
+		a[match(zn$name, dimnames(a)[[1]]), c("inter_wing_dist", "inter_wing_hue_dist", "min_step", "rank"), n] = mn
 	}
 
 	a

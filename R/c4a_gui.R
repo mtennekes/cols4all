@@ -18,7 +18,7 @@ c4a_gui = function() {
 					shiny::radioButtons("cvd", "Color vision deficiency", choices = c(None = "none", Deutan = "deutan", Protan = "protan", Tritan = "tritan"), selected = "none"),
 					shiny::checkboxInput("advanced", "Show underlying data", value = FALSE),
 					shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .friendly)), selected = "rank"),
-					shiny::selectizeInput("series", "Series", choices = c("hcl", "tol", "viridis", "brewer", "carto", "scico", "lb", "other"), selected = c("hcl", "tol", "viridis", "brewer", "carto", "scico", "lb", "other"), multiple = TRUE)
+					shiny::selectizeInput("series", "Series", choices = c("hcl", "tol", "viridis", "brewer", "carto", "scico", "lb", "kovesi", "other"), selected = c("hcl", "tol", "viridis", "brewer", "carto", "scico", "lb", "kovesi", "other"), multiple = TRUE)
 				),
 
 				shiny::mainPanel(

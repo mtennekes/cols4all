@@ -22,15 +22,25 @@ check_div_pal = function(p) {
 		step_sizes = mapply(function(i,j) m[i,j], 1:(n-1), 2:n)
 
 		min_step_size = min(step_sizes)
-		#mean_step_size = mean(step_sizes)
-		#step_indicator = max(abs(step_sizes - mean_step_size)) / mean_step_size
-		c(inter_wing_dist = round(inter_wing_dist), min_step = round(min_step_size))
+
+		p2 = switch(cvd,
+					deu = colorspace::deutan(p),
+					pro = colorspace::protan(p),
+					tri = colorspace::tritan(p),
+					p)
+		m = get_hcl_matrix(p2)
+		m[,3][m[,2]<10] = NA
+		m2 = expand.grid(x1 = m[1:nh, 3], x2 = m[(nh+1+!is_even):n, 3])
+		inter_wing_hue_dist = min(abs(m2$x2 - m2$x1), na.rm = TRUE)
+
+		c(inter_wing_dist = round(inter_wing_dist), inter_wing_hue_dist = round(inter_wing_hue_dist), min_step = round(min_step_size))
 	}))
 	inter_wing_dist = min(scores[,1])
-	min_step = min(scores[,2])
+	inter_wing_hue_dist = min(scores[,2])
+	min_step = min(scores[,3])
 
 
-	c(inter_wing_dist = inter_wing_dist, min_step = min_step)
+	c(inter_wing_dist = inter_wing_dist, inter_wing_hue_dist = inter_wing_hue_dist, min_step = min_step)
 }
 
 
@@ -54,6 +64,7 @@ check_seq_pal = function(p) {
 		max_step_size = max(step_sizes)
 		#mean_step_size = mean(step_sizes)
 		#step_indicator = max(abs(step_sizes - mean_step_size)) / mean_step_size
+
 		c(min_step = round(min_step_size), max_step = round(max_step_size))
 	}))
 	c(min_step = min(scores[,1]), max_step = min(scores[,2]))
@@ -121,10 +132,15 @@ is_light <- function(col) {
 	apply(colrgb * c(.299, .587, .114), MARGIN=2, sum) >= 128
 }
 
+# get hcl coordinates
+get_hcl_matrix = function(p) {
+	as(hex2RGB(p), "polarLUV")@coords
+}
+
 #' HCL characteristics
 analyse_hcl = function(pals) {
 	t(sapply(pals, function(p) {
-		m = as(hex2RGB(p), "polarLUV")@coords
+		m = get_hcl_matrix(p)
 
 		# find largest hue gap
 		hs = round(unique(m[,3][m[,2]>10]))

@@ -42,7 +42,7 @@ get_friendlyness = function(zn) {
 	with(zn, {
 		ifelse(type == "cat", min_dist >= 8,
 		ifelse(type == "seq", min_step >= 5,
-		ifelse(type == "div", inter_wing_dist >= 10 & min_step >= 5, FALSE)))
+		ifelse(type == "div", inter_wing_dist >= 10 & inter_wing_hue_dist >=100 & min_step >= 5, FALSE)))
 	})
 }
 

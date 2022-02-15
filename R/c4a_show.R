@@ -118,8 +118,8 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	tooltip_cbfriendly = if (is.null(n)) "Colorblind-friendly!" else paste0("Colorblind-friendly! (at least, for n = ", n, ")")
 	tooltip_highC = "Watch out for those intense colors!"
 
-	tooltip_RH = "Spectral palette"
-	tooltip_SH = "Single hue palette"
+	tooltip_RH = "Spectral (&#34;rainbow&#34;) palette: easy to distinguish colors, but less suitable for quantitative analysis"
+	tooltip_SH = "Single hue palette: good for quantitative analysis, but harder to distinguish colors"
 
 	if (.friendly %in% ql) e2[[.friendly]] = ifelse(!is.na(e2[[.friendly]]) & e2[[.friendly]] == 1L, kableExtra::cell_spec("&#9786;", tooltip = tooltip_cbfriendly, escape = FALSE), "")
 	if (.highC %in% ql) e2[[.highC]] = ifelse(!is.na(e2[[.highC]]) & e2[[.highC]] == 1L, kableExtra::cell_spec("&#x1f576;", tooltip = tooltip_highC, escape = FALSE), "")

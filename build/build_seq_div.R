@@ -126,26 +126,75 @@ pals_tol = list(
 
 type = ifelse(names(pals_tol) %in% c("tol.bu_rd", "tol.pr_gn", "tol.sunset"), "div", "seq")
 
-pals_tol[type == "seq"] = lapply(pals_tol[type == "seq"], function(p) {
+light_to_dark = function(p) {
 	il = is_light(p[c(1,length(p))])
 	if (il[2] && !il[1]) {
 		rev(p)
 	} else {
 		p
 	}
-})
+}
+
+
+pals_tol[type == "seq"] = lapply(pals_tol[type == "seq"], light_to_dark)
 
 
 z_tol = data.frame(name = names(pals_tol), type = type, series = "tol", palette = I(pals_tol), nmax = Inf)
 
 
-pals_lb = dichromat::colorschemes
-names(pals_lb) = paste0("lb.", c4a_name_compress(names(pals_lb)))
+remove_after_dot = function(x) sub("*\\.[0-9]+", "", x)
 
-z_lb = data.frame(name = names(pals_lb), type = "div", series = "lb", palette = I(pals_lb), nmax = Inf)
+###############
+### lb
+###############
 
 
-z_seq_div = rbind(z_hcl, z_tol, z_lb)
+
+pals_lb = dichromat::colorschemes[c(2,4,6,7:9,11,13,15:17)]
+names(pals_lb) = remove_after_dot(paste0("lb.", c4a_name_compress(names(pals_lb))))
+
+
+
+lb_seq = "lb.light_blueto_dark_blue"
+lb_cat = "lb.categorical"
+
+z_lb = data.frame(name = names(pals_lb),
+				  type = ifelse(names(pals_lb) %in% lb_seq, "seq",
+				  			  ifelse(names(pals_lb) %in% lb_cat, "cat", "div")),
+				  series = "lb",
+				  palette = I(pals_lb),
+				  nmax = ifelse(names(pals_lb) %in% lb_cat, unname(sapply(pals_lb, length)), Inf))
+
+
+###############
+### kovesi
+###############
+
+z_kovesi = local({
+	pals_syspals = pals:::syspals
+
+	kov = pals_syspals[substr(names(pals_syspals), 1, 6) == "kovesi"]
+
+	isdiv = substr(names(kov), 1, 16) == "kovesi.diverging"
+	iscyc = substr(names(kov), 1, 13) == "kovesi.cyclic"
+
+	type = ifelse(isdiv, "div", ifelse(iscyc, "cyc", "seq"))
+
+
+	kov[type == "seq"] = lapply(kov[type == "seq"], light_to_dark)
+
+
+	z_lb = data.frame(name = names(kov),
+					  type = type,
+					  series = "kovesi",
+					  palette = I(kov),
+					  nmax = Inf)
+	z_lb[z_lb$type!="cyc", ] # cyclic to be added later
+})
+
+
+
+z_seq_div = rbind(z_hcl, z_tol, z_lb, z_kovesi)
 
 
 
