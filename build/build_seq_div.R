@@ -3,7 +3,7 @@ library(rcartocolor)
 library(grid)
 library(colorblindcheck)
 library(rcartocolor)
-
+library(wesanderson)
 
 #####################################################
 ######### sequential
@@ -48,8 +48,8 @@ seq_series = c(rep("hcl", length(seq_hcl)),
 
 
 spals = lapply(seq, function(s) {
-	pal = hcl.colors(9, s)
-	il = is_light(pal[c(1,9)])
+	pal = hcl.colors(11, s)
+	il = is_light(pal[c(1,11)])
 	if (il[2] && !il[1]) {
 		rev(pal)
 	} else {
@@ -66,7 +66,7 @@ div_series = c(rep("hcl", length(div_hcl)),
 		   rep("scico", length(scico_div)))
 
 dpals = lapply(div, function(s) {
-	hcl.colors(9, s)
+	hcl.colors(11, s)
 })
 names(dpals) = paste(div_series, div, sep = ".")
 
@@ -153,10 +153,10 @@ remove_after_dot = function(x) sub("*\\.[0-9]+", "", x)
 pals_lb = dichromat::colorschemes[c(2,4,6,7:9,11,13,15:17)]
 names(pals_lb) = remove_after_dot(paste0("lb.", c4a_name_compress(names(pals_lb))))
 
+pals_lb = pals_lb[!(names(pals_lb) %in% c("lb.categorical"))] # identical to lb.paired
 
-
-lb_seq = "lb.light_blueto_dark_blue"
-lb_cat = "lb.categorical"
+lb_seq = c("lb.light_blueto_dark_blue")
+lb_cat = c("lb.categorical", "lb.stepped_sequential")
 
 z_lb = data.frame(name = names(pals_lb),
 				  type = ifelse(names(pals_lb) %in% lb_seq, "seq",
@@ -193,8 +193,25 @@ z_kovesi = local({
 })
 
 
+z_wes = local({
+	pals = wesanderson::wes_palettes
+	names(pals) = c4a_name_compress(names(pals))
 
-z_seq_div = rbind(z_hcl, z_tol, z_lb, z_kovesi)
+	names(pals)[c(18,19)] = c("isle_of_dogs1", "isle_of_dogs2")
+
+	type = ifelse(names(pals) == "zissou1", "div", "cat")
+	nmax = unname(sapply(pals, length))
+	nmax[names(pals) == "zissou1"] = Inf
+
+	data.frame(name = names(pals),
+					  type = type,
+					  series = "wes",
+					  palette = I(pals),
+					  nmax = nmax)
+
+})
+
+z_seq_div = rbind(z_hcl, z_tol, z_lb, z_kovesi, z_wes)
 
 
 

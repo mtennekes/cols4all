@@ -5,6 +5,7 @@
 #' @export
 c4a_gui = function() {
 	if (requireNamespace("shiny")) {
+		series = unique(.z$series)
 		ui = shiny::fluidPage(
 
 			# Application title
@@ -12,13 +13,13 @@ c4a_gui = function() {
 
 			shiny::sidebarLayout(
 				shiny::sidebarPanel(
+					shiny::checkboxInput("advanced", "Expert mode", value = FALSE),
 					shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = "cat"),
 					shiny::sliderInput("n", "Number of colors",
-									   min = 2, max = 36, value = 7),
+									   min = 2, max = 11, value = 9),
 					shiny::radioButtons("cvd", "Color vision deficiency", choices = c(None = "none", Deutan = "deutan", Protan = "protan", Tritan = "tritan"), selected = "none"),
-					shiny::checkboxInput("advanced", "Show underlying data", value = FALSE),
 					shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .friendly)), selected = "rank"),
-					shiny::selectizeInput("series", "Series", choices = c("hcl", "tol", "viridis", "brewer", "carto", "scico", "lb", "kovesi", "other"), selected = c("hcl", "tol", "viridis", "brewer", "carto", "scico", "lb", "kovesi", "other"), multiple = TRUE)
+					shiny::selectizeInput("series", "Series", choices = series, selected = series, multiple = TRUE)
 				),
 
 				shiny::mainPanel(
@@ -41,9 +42,8 @@ c4a_gui = function() {
 				ind = .indicators[[tp]]
 				if (!adv) ind = NULL
 
-
 				sort = shiny::isolate(input$sort)
-				choi = structure(c("name", "rank", ind, "Crel", "Hwidth"), names = c("Name", .friendly, unname(.labels[ind]), "Chroma (rel. max)", "Hue width"))
+				choi = structure(c("name", "rank", ind, .hcl), names = c("Name", .friendly, unname(.labels[c(ind, .hcl)])))
 
 				sortNew = if (sort %in% choi) sort else "name"
 

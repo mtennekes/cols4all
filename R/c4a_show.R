@@ -33,7 +33,7 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 		ql = c(.friendly, .highC)
 	}
 
-	if (all(zn$type == "seq")) {
+	if (all(zn$type %in% c("seq", "div"))) {
 		qn = c(qn, "hueType")
 		ql = c(ql, .hueType)
 	}
@@ -119,15 +119,26 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	tooltip_highC = "Watch out for those intense colors!"
 
 	tooltip_RH = "Spectral (&#34;rainbow&#34;) palette: easy to distinguish colors, but less suitable for quantitative analysis"
-	tooltip_SH = "Single hue palette: good for quantitative analysis, but harder to distinguish colors"
+	tooltip_SH_seq = "Single hue palette: good for quantitative analysis, but harder to distinguish colors"
+	tooltip_SH_div = "Each side has its own distinct hue: recommended!"
 
 	if (.friendly %in% ql) e2[[.friendly]] = ifelse(!is.na(e2[[.friendly]]) & e2[[.friendly]] == 1L, kableExtra::cell_spec("&#9786;", tooltip = tooltip_cbfriendly, escape = FALSE), "")
 	if (.highC %in% ql) e2[[.highC]] = ifelse(!is.na(e2[[.highC]]) & e2[[.highC]] == 1L, kableExtra::cell_spec("&#x1f576;", tooltip = tooltip_highC, escape = FALSE), "")
 
 
-	if (.hueType %in% ql) e2[[.hueType]] =
-		ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE),
-		ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "SH", kableExtra::cell_spec("&#128393;", tooltip = tooltip_SH, escape = FALSE), ""))
+	if (.hueType %in% ql){
+		if (type == "seq") {
+			e2[[.hueType]] = ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
+				ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "SH", kableExtra::cell_spec("&#128396;", tooltip = tooltip_SH_seq, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
+		} else if (type == "div") {
+			e2[[.hueType]] = ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
+									ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "SH", kableExtra::cell_spec("&#x262F;", tooltip = tooltip_SH_div, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
+		}
+	}
+
+
+
+
 
 
 	ql_icons = intersect(ql, c(.friendly, .highC))

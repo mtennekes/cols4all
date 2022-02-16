@@ -9,7 +9,7 @@ get_z_n = function(n = NULL, z = .z, s = .s) {
 		z2$n = n
 	} else {
 		z2 = z
-		z2$n = ifelse(is.infinite(z2$nmax), 9, z2$nmax)
+		z2$n = ifelse(is.infinite(z2$nmax), 11, z2$nmax)
 		z2$palette = do.call(mapply, c(list(FUN = get_pal_n, SIMPLIFY = FALSE), as.list(z2)))
 	}
 
@@ -30,9 +30,12 @@ get_z_n = function(n = NULL, z = .z, s = .s) {
 	a = analyse_hcl(z3$palette)
 	z3 = cbind(z3, a)
 
-	z3$highC = z3$Crel >= 95
+	z3$highC = z3$Cmax >=100
 
-	z3$hueType = ifelse(z3$Hwidth < 15, "SH", ifelse(z3$Hwidth < 180, "MH", "RH"))
+	z3$hueType = ifelse(z3$type == "div",
+						ifelse(z3$HwidthL >= 90 | z3$HwidthR >= 90, "RH", ifelse(z3$HwidthL < 20 & z3$HwidthR < 20, "SH", "MH")),
+						ifelse(z3$Hwidth < 15, "SH", ifelse(z3$Hwidth < 180, "MH", "RH")))
+
 
 	z3
 }

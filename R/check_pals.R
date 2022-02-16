@@ -30,8 +30,18 @@ check_div_pal = function(p) {
 					p)
 		m = get_hcl_matrix(p2)
 		m[,3][m[,2]<10] = NA
-		m2 = expand.grid(x1 = m[1:nh, 3], x2 = m[(nh+1+!is_even):n, 3])
-		inter_wing_hue_dist = min(abs(m2$x2 - m2$x1), na.rm = TRUE)
+
+		h1 = m[1:nh, 3]
+		h2 = m[(nh+1+!is_even):n, 3]
+
+		inter_wing_hue_dist = if (all(is.na(h1)) && all(is.na(h2))) {
+			0
+		} else if (all(is.na(h1)) || all(is.na(h2))) {
+			120 # actually depends on chroma of other hues
+		} else {
+			m2 = expand.grid(h1 = h1, h2 = h2)
+			inter_wing_hue_dist = min(abs(m2$h2 - m2$h1), na.rm = TRUE)
+		}
 
 		c(inter_wing_dist = round(inter_wing_dist), inter_wing_hue_dist = round(inter_wing_hue_dist), min_step = round(min_step_size))
 	}))
@@ -137,38 +147,70 @@ get_hcl_matrix = function(p) {
 	as(hex2RGB(p), "polarLUV")@coords
 }
 
+# hue width: how far are hues apart from each other?
+# method: find largest gap, i.e. hue range for which no hues are present. Hwidth = 360 - gap
+get_hue_width = function(hs) {
+	hs = na.omit(hs)
+	if (!length(hs)) {
+		0
+	} else {
+		hs = c(hs, hs + 360)
+		gap = 0
+		gap_max = 0
+		for (h in 0:720) {
+			if (any(hs == h)) {
+				gap = 0
+			} else {
+				gap = gap + 1
+			}
+			if (gap > gap_max) gap_max = gap
+		}
+		Hwidth = round(360 - gap_max)
+	}
+
+}
+
 #' HCL characteristics
 analyse_hcl = function(pals) {
 	t(sapply(pals, function(p) {
 		m = get_hcl_matrix(p)
 
-		# find largest hue gap
-		hs = round(unique(m[,3][m[,2]>10]))
-		if (!length(hs)) {
-			Hwidth = 0
-		} else {
-			hs = c(hs, hs + 360)
-			gap = 0
-			gap_max = 0
-			for (h in 0:720) {
-				if (any(hs == h)) {
-					gap = 0
-				} else {
-					gap = gap + 1
-				}
-				if (gap > gap_max) gap_max = gap
-			}
-			Hwidth = round(360 - gap_max)
-		}
-		Crel = min(max(round((m[,2] / .maxC[round(m[,3]) + 1]) * 100)), 100)
+		# hue width: how far are hues apart from each other?
+		h = round(m[,3])
+		h[m[,2]<=10] = NA
 
+		Hwidth = get_hue_width(h)
+
+		n = length(p)
+		is_even = ((n %% 2) != 1)
+		nh = floor(n/2)
+
+		hL = h[1:nh]
+		hR = h[(nh+1+!is_even):n]
+
+
+		Hwidth = get_hue_width(h)
+		HwidthL = get_hue_width(hL)
+		HwidthR = get_hue_width(hR)
+
+
+		Crels = pmin(round((m[,2] / .maxC[round(m[,3]) + 1]) * 100), 100)
+
+
+		Cmax = round(max(m[,2]))
+
+		Crel = max(Crels)
 
 		# Lmin = min(m[,1]), Lmax = max(m[,1]),
 		# Cmin = min(m[,2]), Cmax = max(m[,2]),
 
+		Lrange = round(max(m[,1]) - min(m[,1]))
+		Crange = round(max(Crels) - min(Crels))
+
+		LCrange = round((Lrange + Crange) / 2)
 
 
-		c(Crel = Crel, Hwidth = Hwidth)
+		c(Crel = Crel, Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, LCrange = LCrange)
 	}))
 }
 

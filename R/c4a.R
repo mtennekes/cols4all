@@ -29,7 +29,7 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div", "biv", "c
 
 	zl = as.list(.z[palid,])
 	zl$palette = zl$palette[[1]]
-	if (is.null(n)) n = ifelse(zl$type == "cat", zl$nmax, 9)
+	if (is.null(n)) n = ifelse(zl$type == "cat", zl$nmax, 11)
 	pal = do.call(get_pal_n, c(list(n = n), zl))
 
 	pal = if (!is.null(order)) {
@@ -40,3 +40,6 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div", "biv", "c
 	if (reverse) rev(pal) else pal
 }
 
+c4a_specplot = function(...) {
+	colorspace::specplot(do.call(c4a, list(...)))
+}

@@ -5,9 +5,9 @@
 
 
 .indicators = list(cat = c("min_dist"), seq = c("min_step", "max_step"), div = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"))
-.hcl = c("Crel", "Hwidth")
+.hcl = c("Crel", "Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "LCrange")
 
-.labels = c(min_dist = "Minimum distance", min_step = "Minimum step", max_step = "Maximum step", inter_wing_dist = "Inter-wing-distance", inter_wing_hue_dist = "Inter Wing Hue Dist", Crel = "Chroma max", Hwidth = "Hue width")
+.labels = c(min_dist = "Minimum distance", min_step = "Minimum step", max_step = "Maximum step", inter_wing_dist = "Inter-wing-distance", inter_wing_hue_dist = "Inter Wing Hue Dist", Crel = "Chroma (rel) max", Cmax = "Chroma max", Hwidth = "Hue width", HwidthL = "Hue width L", HwidthR = "Hue width R", Lrange = "Luminance range", Crange = "Chroma range", LCrange = "Lum/Chr range")
 
 
 
