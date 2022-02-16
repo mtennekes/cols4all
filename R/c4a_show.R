@@ -10,7 +10,7 @@
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
 #' @import kableExtra
 #' @import colorspace
-c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mode = FALSE, columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL) {
+c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mode = FALSE, columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL) {
 
 	type = match.arg(type)
 	show.ranking = (!is.null(n))
@@ -18,14 +18,14 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	if (is.na(columns)) columns = if (!is.null(n)) n else 12
 
 	# palettes for selected type, n colors, and optionally for specific series
-	zn = get_z_n(.z[.z$type == type, ], n = n)
+	zn = get_z_n(.z[.z$type == type, ], n = n, contrast = contrast)
 	if (!is.null(series)) zn = zn[zn$series %in% series, ]
 
 	columns = min(columns, max(zn$n))
 
 	k = nrow(zn)
 
-	if (any(zn$type == "cat")) {
+	if (type == "cat") {
 		qn = c("nmax", "cbfriendly", "highC")
 		ql = c(.maxn, .friendly, .highC)
 	} else {
@@ -33,10 +33,15 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 		ql = c(.friendly, .highC)
 	}
 
-	if (all(zn$type %in% c("seq", "div"))) {
+	if (type %in% c("seq", "div")) {
 		qn = c(qn, "hueType")
 		ql = c(ql, .hueType)
+	} else {
+		qn = c(qn, "harmonic")
+		ql = c(ql, .harmonic)
 	}
+
+
 
 	if (advanced.mode) {
 		qn = c(qn, .indicators[[type]], .hcl)
@@ -121,6 +126,7 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	tooltip_RH = "Spectral (&#34;rainbow&#34;) palette: easy to distinguish colors, but less suitable for quantitative analysis"
 	tooltip_SH_seq = "Single hue palette: good for quantitative analysis, but harder to distinguish colors"
 	tooltip_SH_div = "Each side has its own distinct hue: recommended!"
+	tooltip_Harm = "Harmonic, well-balanced colors"
 
 	if (.friendly %in% ql) e2[[.friendly]] = ifelse(!is.na(e2[[.friendly]]) & e2[[.friendly]] == 1L, kableExtra::cell_spec("&#9786;", tooltip = tooltip_cbfriendly, escape = FALSE), "")
 	if (.highC %in% ql) e2[[.highC]] = ifelse(!is.na(e2[[.highC]]) & e2[[.highC]] == 1L, kableExtra::cell_spec("&#x1f576;", tooltip = tooltip_highC, escape = FALSE), "")
@@ -136,6 +142,11 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 		}
 	}
 
+	if (.harmonic %in% ql) {
+		e2[[.harmonic]] = ifelse(!is.na(e2[[.harmonic]]) & e2[[.harmonic]],
+								 kableExtra::cell_spec("&#127900;", tooltip = tooltip_Harm, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"), "")
+
+	}
 
 
 

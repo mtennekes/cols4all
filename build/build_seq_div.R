@@ -153,7 +153,7 @@ remove_after_dot = function(x) sub("*\\.[0-9]+", "", x)
 pals_lb = dichromat::colorschemes[c(2,4,6,7:9,11,13,15:17)]
 names(pals_lb) = remove_after_dot(paste0("lb.", c4a_name_compress(names(pals_lb))))
 
-pals_lb = pals_lb[!(names(pals_lb) %in% c("lb.categorical"))] # identical to lb.paired
+pals_lb = pals_lb[!(names(pals_lb) %in% c("lb.categorical", "lb.stepped_sequential"))] # identical to lb.paired # stepped to be added later
 
 lb_seq = c("lb.light_blueto_dark_blue")
 lb_cat = c("lb.categorical", "lb.stepped_sequential")

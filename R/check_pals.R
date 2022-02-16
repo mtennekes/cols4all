@@ -205,9 +205,12 @@ analyse_hcl = function(pals) {
 		# Cmin = min(m[,2]), Cmax = max(m[,2]),
 
 		Lrange = round(max(m[,1]) - min(m[,1]))
-		Crange = round(max(Crels) - min(Crels))
+		#Crange = round(max(Crels) - min(Crels))
+		Crange = round(max(m[,2]) - min(m[,2]))
 
 		LCrange = round((Lrange + Crange) / 2)
+		LCrange = round((Lrange*2 + Crange) / 3)
+		LCrange = round(max(Lrange*2, Crange))
 
 
 		c(Crel = Crel, Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, LCrange = LCrange)

@@ -15,7 +15,7 @@ get_scores = function(z, nmax) {
 	for (n in 2:nmax) {
 		zn = get_z_n(z[z$type == "cat",], n =n)
 		q = do.call(rbind, lapply(zn$palette, check_cat_pal))
-		r = rank(-q, ties.method = "first")
+		r = -q#rank(-q, ties.method = "first")
 
 		mn = cbind(q,r)
 
@@ -28,7 +28,7 @@ get_scores = function(z, nmax) {
 		q = do.call(rbind, lapply(zn$palette, check_seq_pal))
 		qr = q[,1] - q[,2] / 1000 # order min_step, those with equal store to -max_step
 
-		r = rank(-qr, ties.method = "first")
+		r = -qr#rank(-qr, ties.method = "first")
 
 		mn = cbind(q,r)
 
@@ -41,7 +41,7 @@ get_scores = function(z, nmax) {
 		q = do.call(rbind, lapply(zn$palette, check_div_pal))
 		qr = pmin(q[,1], q[,3] * 2) + (q[,2] >= 100) * 1000
 
-		r = rank(-qr, ties.method = "first")
+		r = -qr#rank(-qr, ties.method = "first")
 
 		mn = cbind(q,r)
 
