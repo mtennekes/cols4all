@@ -5,25 +5,31 @@
 #' @export
 c4a_gui = function() {
 	if (requireNamespace("shiny")) {
-		series = unique(.z$series)
+		z = get(".z", envir = .C4A_CACHE)
+
+		series = unique(z$series)
 		ui = shiny::fluidPage(
-			#shinyjs::useShinyjs(),
+			shinyjs::useShinyjs(),
 
 			# Application title
 			shiny::titlePanel("col4all: colors for all!"),
 
 			shiny::sidebarLayout(
 				shiny::sidebarPanel(
+					width = 3,
 					shiny::checkboxInput("advanced", "Expert mode", value = FALSE),
-					shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = "cat"),
+					shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div")), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
+					shiny::checkboxInput("na", "Include NA", value = TRUE),
 					shiny::sliderInput("n", "Number of colors",
-									   min = 2, max = 11, value = 9),
+									   min = 2, max = 11, value = 7),
 					shiny::radioButtons("cvd", "Color vision deficiency", choices = c(None = "none", Deutan = "deutan", Protan = "protan", Tritan = "tritan"), selected = "none"),
 					shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .friendly)), selected = "rank"),
 					shiny::selectizeInput("series", "Series", choices = series, selected = series, multiple = TRUE),
-					shiny::strong("Contrast range"),
-					shiny::checkboxInput("auto_contrast", label = "Automatic", value = TRUE),
-					shiny::uiOutput("contrast")
+					shiny::conditionalPanel(
+						condition = "input.type != 'cat'",
+						shiny::strong("Contrast range"),
+						shiny::checkboxInput("auto_contrast", label = "Automatic", value = TRUE),
+						shiny::uiOutput("contrast"))
 					#shiny::sliderInput("contrast", "Contrast", min = 0, max = 1, step = 0.05, value = c(0,1))
 				),
 
@@ -35,54 +41,79 @@ c4a_gui = function() {
 		server = function(input, output, session) {
 
 			output$show = function() {
-				shiny::req(input$n, input$cvd, input$sort, input$type, input$series, input$contrast)
-
-				columns = if (input$n > 16) 12 else input$n
-				c4a_show(n = input$n, cvd.sim = input$cvd, sort = input$sort, columns = columns, type = input$type, advanced.mode = input$advanced, series = input$series, contrast = input$contrast)
+				d = plotData()
+				c4a_show(n = d$n, cvd.sim = d$cvd, sort = d$sort, columns = d$columns, type = d$type, advanced.mode = d$advanced, series = d$series, contrast = d$contrast, include.na = d$na)
 			}
 
 
-			output$contrast = shiny::renderUI({
-				if (input$type == "cat") return(NULL)
+			plotData = shiny::reactive({
+				x = list(n = input$n,
+						 type = input$type,
+						 cvd = input$cvd,
+						 sort = input$sort,
+						 series = input$series,
+						 advanced = input$advanced,
+						 columns = if (input$n > 16) 12 else input$n,
+						 na = input$na,
+						 contrast = NULL)
+				if (input$type != "cat") x$contrast = input$contrast
+				x
+			})
 
-				fun = paste0("default_contrast_", input$type)
-				rng = do.call(fun, list(k = input$m_seq))
-				if (is.null(input$auto_contrast) || input$auto_contrast) {
-					shiny::isolate({
+			get_cols = shiny::reactive({
+				res = table_columns(input$type, input$advanced)
+				structure(c("name", res$qn), names = c("Name", res$ql))
+			})
+
+
+			output$contrast = shiny::renderUI({
+				#input$auto_contrast
+				input$n
+				input$type
+				shiny::isolate({
+					if (input$type == "cat") return(NULL)
+
+					fun = paste0("default_contrast_", input$type)
+					rng = do.call(fun, list(k = input$n))
+					if (is.null(input$auto_contrast) || input$auto_contrast) {
 						shiny::div(
 							style = "font-size:0;margin-top:-20px",
 							shiny::sliderInput("contrast", "",
 											   min = 0, max = 1, value = c(rng[1], rng[2]), step = .01)
 
 						)
-					})
-				} else {
-					shiny::isolate({
+					} else {
 						crng = input$contrast
 						shiny::div(
 							style = "font-size:0;margin-top:-20px",
 							shiny::sliderInput("contrast", "",
 											   min = 0, max = 1, value = c(crng[1], crng[2]), step = .01)
 						)
-					})
-				}
+					}
+				})
 			})
 
+			# shiny::observe({
+			# 	input$n
+			# 	if (input$auto_contrast && input$type != "cat") {
+			# 		shinyjs::delay(0, {
+			# 			shinyjs::toggleState("contrast", !input$auto_contrast)
+			# 		})
+			# 	}
+			# })
 
 			observe({
 				tp = input$type
 				adv = input$advanced
+				shiny::isolate({
+					sort = shiny::isolate(input$sort)
 
-				ind = .indicators[[tp]]
-				if (!adv) ind = NULL
+					choi = get_cols()
+					sortNew = if (sort %in% choi) sort else "name"
 
-				sort = shiny::isolate(input$sort)
-				choi = structure(c("name", "rank", ind, .hcl), names = c("Name", .rank, unname(.labels[c(ind, .hcl)])))
-
-				sortNew = if (sort %in% choi) sort else "name"
-
-				updateSelectInput(session, "sort",
-								   choices  = choi,selected = sortNew)
+					updateSelectInput(session, "sort",
+									  choices  = choi,selected = sortNew)
+				})
 			})
 		}
 		shiny::shinyApp(ui = ui, server = server)

@@ -8,7 +8,7 @@ source("build/get_scores.R")
 	max(colorspace::max_chroma(h = h, l = 0:100))
 })
 
-
+.z$na = "#D9D9D9"
 save(.z, .s, .maxC, file="R/sysdata.rda", compress="xz")
 
 

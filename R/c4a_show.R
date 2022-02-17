@@ -1,3 +1,33 @@
+table_columns = function(type, advanced) {
+	if (type == "cat") {
+		qn = c("nmax", "rank", "cbfriendly", "highC")
+		ql = c(.maxn, .rank, .friendly, .highC)
+		srt = c("nmax", "rank", "rank", "Cmax")
+	} else {
+		qn = c("rank", "cbfriendly", "highC")
+		ql = c(.rank, .friendly, .highC)
+		srt = c("rank", "rank", "Cmax")
+	}
+
+	if (type %in% c("seq", "div")) {
+		qn = c(qn, "hueType")
+		ql = c(ql, .hueType)
+		srt = c(srt, {if (type == "div") "HwidthLR" else "Hwidth"})
+	} else {
+		qn = c(qn, "harmonic")
+		ql = c(ql, .harmonic)
+		srt = c(srt, "LCrange")
+	}
+
+	if (advanced) {
+		qn = c(qn, .indicators[[type]], .hcl)
+		ql = c(ql, .labels[c(.indicators[[type]], .hcl)])
+		srt = c(srt, .indicators[[type]], .hcl)
+	}
+	list(qn = qn, ql = ql, srt = srt)
+}
+
+
 #' Show cols4all palettes
 #'
 #' Show cols4all palettes
@@ -10,7 +40,7 @@
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
 #' @import kableExtra
 #' @import colorspace
-c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mode = FALSE, columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL) {
+c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mode = FALSE, columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL, include.na = TRUE) {
 
 	type = match.arg(type)
 	show.ranking = (!is.null(n))
@@ -18,39 +48,25 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	if (is.na(columns)) columns = if (!is.null(n)) n else 12
 
 	# palettes for selected type, n colors, and optionally for specific series
-	zn = get_z_n(.z[.z$type == type, ], n = n, contrast = contrast)
+	z = get(".z", envir = .C4A_CACHE)
+
+	zn = get_z_n(z[z$type == type, ], n = n, contrast = contrast)
+	zn = attach_scores(zn)
 	if (!is.null(series)) zn = zn[zn$series %in% series, ]
 
 	columns = min(columns, max(zn$n))
 
 	k = nrow(zn)
 
-	if (type == "cat") {
-		qn = c("nmax", "cbfriendly", "highC")
-		ql = c(.maxn, .friendly, .highC)
-	} else {
-		qn = c("cbfriendly", "highC")
-		ql = c(.friendly, .highC)
-	}
+	res = table_columns(type, advanced.mode)
+	qn = res$qn
+	ql = res$ql
+	srt = res$srt
 
-	if (type %in% c("seq", "div")) {
-		qn = c(qn, "hueType")
-		ql = c(ql, .hueType)
-	} else {
-		qn = c(qn, "harmonic")
-		ql = c(ql, .harmonic)
-	}
+	sortCol = if (sort == "name") "name" else srt[which(sort == qn)]
 
-
-
-	if (advanced.mode) {
-		qn = c(qn, .indicators[[type]], .hcl)
-		ql = c(ql, .labels[c(.indicators[[type]], .hcl)])
-	}
-
-
-	decreasing = !(sort %in% c("name", "rank"))
-	zn = zn[order(zn[[sort]], decreasing = decreasing), ]
+	decreasing = !(sortCol %in% c("name", "rank"))
+	zn = zn[order(zn[[sortCol]], decreasing = decreasing), ]
 
 	zn$nlines = ((zn$n-1) %/% columns) + 1
 
@@ -101,6 +117,14 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 		x
 	})
 
+	if (include.na) {
+		me = cbind(me, ' '="", 'NA' = "")
+		me[match(1:k, e$did), ncol(me)] = zn$na
+		colNames = c(1:columns, " ", "NA")
+	} else {
+		colNames = as.character(1:columns)
+	}
+
 	e2 = cbind(e, me)
 
 	sim = switch(cvd.sim,
@@ -109,12 +133,14 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 				 protan = colorspace::protan,
 				 tritan = colorspace::tritan)
 
-	for (i in 1:columns) {
-		cols = e2[[as.character(i)]]
+
+	for (cn in colNames) {
+		cols = e2[[cn]]
+		cols[is.na(cols)] = ""
 		cols_cvd = cols
 		cols_cvd[cols_cvd != ""] = sim(cols[cols_cvd != ""])
 		textcol = if (text.col == "same") cols_cvd else text.col
-		e2[[as.character(i)]] = kableExtra::cell_spec(cols, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px;")
+		e2[[cn]] = kableExtra::cell_spec(cols, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px;")
 	}
 
 
@@ -161,8 +187,8 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	}
 
 
-	e2cols = c("label", ql, as.character(1:columns))
-	e2nms = c("", ql, as.character(1:columns))
+	e2cols = c("label", ql, colNames)
+	e2nms = c("", ql, colNames)
 
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2nms, escape = F)
 #return(k)
