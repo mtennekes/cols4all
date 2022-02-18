@@ -4,6 +4,12 @@ format_name = function(x) {
 }
 
 
+c4a_submit_series_as_is = function(..., format.palette.name = FALSE, from.scratch = FALSE, take_grey_for_NA = FALSE, remove_other_greys = FALSE, remove_blacks = FALSE, light_to_dark = FALSE, remove.names = FALSE) {
+
+	args = c(list(...), list(format.palette.name = format.palette.name, from.scratch = from.scratch, take_grey_for_NA = take_grey_for_NA, remove_other_greys = remove_other_greys, remove_blacks = remove_blacks, light_to_dark = light_to_dark, remove.names = remove.names))
+	do.call(c4a_submit_series, args)
+}
+
 
 c4a_submit_series = function(x, xNA = NA, types, series, format.palette.name = TRUE, from.scratch = FALSE, take_grey_for_NA = TRUE, remove_other_greys = FALSE, remove_blacks = TRUE, light_to_dark = TRUE, remove.names = TRUE) {
 
@@ -30,21 +36,18 @@ c4a_submit_series = function(x, xNA = NA, types, series, format.palette.name = T
 
 
 
-	if (format.palette.name) {
-		nms = format_name(nms)
+	if (format.palette.name) nms = format_name(nms)
 
-		seriesID = which(series != "other")
-
-		if (length(seriesID)) nms[seriesID] = paste0(series[seriesID], ".", nms[seriesID])
-	}
-
+	seriesID = which(series != "other")
+	fnms = nms
+	if (length(seriesID)) fnms[seriesID] = paste0(series[seriesID], ".", fnms[seriesID])
 
 	res = mapply(process_palette, pal = x, type = types, colNA = xNA, SIMPLIFY = FALSE, MoreArgs = adjust.settings)
 	x = lapply(res, "[[", "pal")
 	xNA = sapply(res, "[[", "colNA", USE.NAMES = FALSE)
 
 
-	z = data.frame(name = nms, type = types, series = series, palette = I(x), na = xNA)
+	z = data.frame(name = nms, series = series, fullname = fnms, type = types, palette = I(x), na = xNA)
 	rownames(z) = NULL
 
 	z$nmax = mapply(function(pal, type) {
@@ -56,7 +59,7 @@ c4a_submit_series = function(x, xNA = NA, types, series, format.palette.name = T
 		}
 	}, z$palette, z$type, SIMPLIFY = TRUE, USE.NAMES = FALSE)
 
-	s = get_scores(z, nmax = 11)
+	s = get_scores(z, nmax = c(cat = 36, seq = 15, div = 15))
 
 
 	if (!from.scratch) {

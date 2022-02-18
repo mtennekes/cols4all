@@ -1,8 +1,11 @@
-get_scores = function(z, nmax) {
+get_scores = function(z, nmax = c(cat = 36, seq = 15, div = 15)) {
 	k = nrow(z)
 
+
+	nmaxmax = max(nmax)
+
 	sc = c("min_dist", "min_step", "max_step", "inter_wing_dist", "inter_wing_hue_dist", "rank")
-	a = array(as.integer(NA), dim = c(nrow(z), length(sc), nmax), dimnames = list(z$name, sc, NULL))
+	a = array(as.integer(NA), dim = c(nrow(z), length(sc), nmaxmax), dimnames = list(z$name, sc, NULL))
 
 	# s = list(min_dist = as.list(rep(as.integer(NA), nmax)),
 	# 		 min_step = as.list(rep(as.integer(NA), nmax)),
@@ -11,7 +14,7 @@ get_scores = function(z, nmax) {
 	# 		 rank = as.list(rep(as.integer(NA), nmax)))
 
 	# categorical
-	for (n in 2:nmax) {
+	for (n in 2:nmax['cat']) {
 		zn = get_z_n(z[z$type == "cat",], n =n)
 
 		if (!is.null(zn)) {
@@ -25,7 +28,7 @@ get_scores = function(z, nmax) {
 	}
 
 	# sequential
-	for (n in 2:nmax) {
+	for (n in 2:nmax['seq']) {
 		zn = get_z_n(z[z$type == "seq",], n =n)
 
 		if (!is.null(zn)) {
@@ -41,7 +44,7 @@ get_scores = function(z, nmax) {
 	}
 
 	# diverging
-	for (n in 2:nmax) {
+	for (n in 2:nmax['div']) {
 		zn = get_z_n(z[z$type == "div",], n =n)
 
 		if (!is.null(zn)) {

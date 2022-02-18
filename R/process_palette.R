@@ -1,4 +1,9 @@
 process_palette = function(pal, type, colNA = NA, take_grey_for_NA = TRUE, remove_other_greys = FALSE, remove_blacks = TRUE, light_to_dark = TRUE, remove.names = TRUE) {
+
+	# maybe need to reindex
+	index = attr(pal, "index")
+	orig_pal = pal
+
 	hcl = get_hcl_matrix(pal)
 
 	#specplot(hcl(h=seq(0,360,by=10), c = 0, l= 15))
@@ -44,19 +49,36 @@ process_palette = function(pal, type, colNA = NA, take_grey_for_NA = TRUE, remov
 	}
 
 	if (is.na(colNA)) {
-		greys = grey.colors(10, start = 0.5, end = 1)
+		greys = grey.colors(10, start = 0.4, end = 1)
 		pal2 = c(pal, greys)
 		m = sapply(c("pro", "deu", "tri"), function(cvd) {
 			m = colorblindcheck::palette_dist(pal2, cvd = cvd)
 			m2 = m[1L:length(pal), (length(pal) + 1L):length(pal2)]
 			apply(m2, MARGIN = 2, min)
 		})
-		colNA = greys[which.min(apply(m, MARGIN = 1, min))]
+		colNA = greys[which.max(apply(m, MARGIN = 1, min))]
 	}
 
 	if (remove.names) {
 		pal = unname(pal)
 		colNa = unname(colNA)
+	}
+
+
+	if (!is.null(index)) {
+		mat = match(as.vector(orig_pal), pal)
+		index2 = lapply(index, function(ind) {
+			i = mat[ind]
+			i[!is.na(i)]
+		})
+		ls = sapply(index2, length)
+
+		index3 = lapply(1:length(pal), function(i) {
+			w = which(i == ls)[1]
+			if (!length(w)) stop("Re-indexing failed", call. = FALSE)
+			index2[[w]]
+		})
+		attr(pal, "index") = index3
 	}
 
 	list(pal = pal, colNA = colNA)

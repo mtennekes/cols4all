@@ -70,6 +70,8 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 
 	zn$nlines = ((zn$n-1) %/% columns) + 1
 
+	zn$Name = gsub(".*\\.", "", zn$name)
+
 	# data.frame with possibly multiple lines per palette (if n > columns)
 	e = data.frame(id = unlist(mapply(function(n, i) {
 		c(i * 1000 + 1:n)
@@ -83,6 +85,8 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 		name[did>0] = zn$name[match(did[did>0], 1L:k)]
 		label = name
 		label[ind!=1] = ""
+		series = zn$series[match(did, 1L:k)]
+		series[ind!=1] = ""
 		row_h = ifelse(ind==indx, 25, 12)
 	})
 	e = cbind(e, zn[match(e$label, zn$name),qn,drop=FALSE])
@@ -187,8 +191,8 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	}
 
 
-	e2cols = c("label", ql, colNames)
-	e2nms = c("", ql, colNames)
+	e2cols = c("series", "label", ql, colNames)
+	e2nms = c("Series", "Name", ql, colNames)
 
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2nms, escape = F)
 #return(k)

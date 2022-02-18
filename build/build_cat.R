@@ -1,11 +1,20 @@
+# general color tools
+library(colorblindcheck)
+library(colorspace)
+
+# packages with colors
 library(pals)
 library(rcartocolor)
-library(grid)
-library(colorblindcheck)
-library(rcartocolor)
-library(colorspace)
 library(RColorBrewer)
 library(viridisLite)
+library(scico)
+library(ggthemes)
+
+## more:
+
+# library(paletteer)
+# https://github.com/EmilHvitfeldt/r-color-palettes
+
 
 ###################################
 ### package grDevices
@@ -13,24 +22,38 @@ library(viridisLite)
 local({
 	pals = grDevices:::.palette_colors_hex
 
-	# non-brewer
-	p1 = pals[c("R3", "R4", "ggplot2", "Okabe-Ito", "Tableau 10", "Classic Tableau", "Polychrome 36")]
-	names(p1) = c("R3", "R4", "ggplot2", "okabe", "10", "classic", "polychrome")
-	s1 = c("other", "other", "other", "other", "tableau", "tableau", "other")
+	p1 = pals[c("R3", "R4", "ggplot2", "Okabe-Ito")]
+	names(p1) = c("R3", "R4", "ggplot2", "okabe")
+	s1 = "other"
 
-	p2 = pals[c("Accent", "Dark 2", "Paired", "Pastel 1", "Pastel 2", "Set 1", "Set 2", "Set 3")]
-	s2 = "brewer"
+	# p2 = pals[c("Accent", "Dark 2", "Paired", "Pastel 1", "Pastel 2", "Set 1", "Set 2", "Set 3")]
+	# s2 = "brewer"
 
-	p3 = pals["Alphabet"]
+	p3 = pals[c("Alphabet", "Polychrome 36")]
 	s3 = "other"
 
-
 	c4a_submit_series(p1, types = "cat", series = s1, from.scratch = TRUE)
-	c4a_submit_series(p2, types = "cat", series = s2, from.scratch = FALSE)
+	#c4a_submit_series(p2, types = "cat", series = s2, from.scratch = FALSE)
 	c4a_submit_series(p3, types = "cat", series = s3, from.scratch = FALSE, take_grey_for_NA = FALSE, remove_other_greys = FALSE, remove_blacks = FALSE)
-	NULL
+	invisible(NULL)
 })
 
+
+
+###################################
+### package RColorBrewer
+###################################
+local({
+	inf = RColorBrewer::brewer.pal.info
+
+	pals = lapply(1:nrow(inf), function(i) {
+		RColorBrewer::brewer.pal(n = inf$maxcolors[i], name = rownames(inf)[i])
+	})
+	names(pals) = rownames(inf)
+	types = ifelse(inf$category == "qual", "cat", inf$category)
+
+	c4a_submit_series(pals, types = types, series = "brewer", from.scratch = FALSE)
+})
 
 
 
@@ -65,8 +88,56 @@ local({
 										 '#DC050C', '#A5170E', '#72190E', '#42150A'),
 								index = rainbow_ids))
 
+
+	p3 = list(
+		sunset = c('#364B9A', '#4A7BB7', '#6EA6CD', '#98CAE1', '#C2E4EF',
+					   '#EAECCC', '#FEDA8B', '#FDB366', '#F67E4B', '#DD3D2D',
+					   '#A50026'),
+		bu_rd = c('#2166AC', '#4393C3', '#92C5DE', '#D1E5F0', '#F7F7F7',
+					  '#FDDBC7', '#F4A582', '#D6604D', '#B2182B'),
+		pr_gn = c('#762A83', '#9970AB', '#C2A5CF', '#E7D4E8', '#F7F7F7',
+					  '#D9F0D3', '#ACD39E', '#5AAE61', '#1B7837'),
+		yl_or_br = c('#FFFFE5', '#FFF7BC', '#FEE391', '#FEC44F', '#FB9A29',
+						 '#EC7014', '#CC4C02', '#993404', '#662506'),
+		wh_or_br = c('#FFFFFF', '#FFF7BC', '#FEE391', '#FEC44F', '#FB9A29',
+						 '#EC7014', '#CC4C02', '#993404', '#662506'),
+		iridescent = c('#FEFBE9', '#FCF7D5', '#F5F3C1', '#EAF0B5', '#DDECBF',
+						   '#D0E7CA', '#C2E3D2', '#B5DDD8', '#A8D8DC', '#9BD2E1',
+						   '#8DCBE4', '#81C4E7', '#7BBCE7', '#7EB2E4', '#88A5DD',
+						   '#9398D2', '#9B8AC4', '#9D7DB2', '#9A709E', '#906388',
+						   '#805770', '#684957', '#46353A'),
+		rainbow_pu_rd = c('#6F4C9B', '#6059A9', '#5568B8', '#4E79C5', '#4D8AC6',
+							  '#4E96BC', '#549EB3', '#59A5A9', '#60AB9E', '#69B190',
+							  '#77B77D', '#8CBC68', '#A6BE54', '#BEBC48', '#D1B541',
+							  '#DDAA3C', '#E49C39', '#E78C35', '#E67932', '#E4632D',
+							  '#DF4828', '#DA2222'),
+		rainbow_pu_br = c('#6F4C9B', '#6059A9', '#5568B8', '#4E79C5', '#4D8AC6',
+							  '#4E96BC', '#549EB3', '#59A5A9', '#60AB9E', '#69B190',
+							  '#77B77D', '#8CBC68', '#A6BE54', '#BEBC48', '#D1B541',
+							  '#DDAA3C', '#E49C39', '#E78C35', '#E67932', '#E4632D',
+							  '#DF4828', '#DA2222', '#B8221E', '#95211B', '#721E17',
+							  '#521A13'),
+		rainbow_wh_rd = c('#E8ECFB', '#DDD8EF', '#D1C1E1', '#C3A8D1', '#B58FC2',
+							  '#A778B4', '#9B62A7', '#8C4E99', '#6F4C9B', '#6059A9',
+							  '#5568B8', '#4E79C5', '#4D8AC6', '#4E96BC', '#549EB3',
+							  '#59A5A9', '#60AB9E', '#69B190', '#77B77D', '#8CBC68',
+							  '#A6BE54', '#BEBC48', '#D1B541', '#DDAA3C', '#E49C39',
+							  '#E78C35', '#E67932', '#E4632D', '#DF4828', '#DA2222'),
+		rainbow_wh_br = c('#E8ECFB', '#DDD8EF', '#D1C1E1', '#C3A8D1', '#B58FC2',
+							  '#A778B4', '#9B62A7', '#8C4E99', '#6F4C9B', '#6059A9',
+							  '#5568B8', '#4E79C5', '#4D8AC6', '#4E96BC', '#549EB3',
+							  '#59A5A9', '#60AB9E', '#69B190', '#77B77D', '#8CBC68',
+							  '#A6BE54', '#BEBC48', '#D1B541', '#DDAA3C', '#E49C39',
+							  '#E78C35', '#E67932', '#E4632D', '#DF4828', '#DA2222',
+							  '#B8221E', '#95211B', '#721E17', '#521A13'))
+
+	p3_na = c("#FFFFFF", "#FFEE99", "#FFEE99", "#888888", "#888888", "#999999", "#FFFFFF", "#FFFFFF", "#666666", "#666666")
+
+	p3_types = ifelse(names(p3) %in% c("bu_rd", "pr_gn", "sunset"), "div", "seq")
+
 	c4a_submit_series(p1, types = "cat", series = "tol", from.scratch = FALSE)
 	c4a_submit_series(p2, types = "cat", series = "tol", from.scratch = FALSE, take_grey_for_NA = FALSE, remove_other_greys = FALSE, remove_blacks = FALSE)
+	c4a_submit_series(p3, types = p3_types, xNA = p3_na, series = "tol", from.scratch = FALSE)
 })
 
 
@@ -74,79 +145,103 @@ local({
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 ###################################
-### brewer
+### package viridisLite
 ###################################
-RColorBrewer::brewer.pal
 
+local({
+	nms = c("magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
+	types = ifelse(nms == "cividis", "div", "seq")
 
-names(cat_grDevices) = paste0("other2.", names(cat_grDevices))
-c4a_submit_series(cat_grDevices, types = "cat", series = "other2", from.scratch = TRUE)
-
-c4a_show(9)
-
-pal = cat_grDevices$okabe
-pal = pals::watlington()
-pal = cat_grDevices$brewer.paired
-pal = cat_grDevices$brewer.accent
-pal = cat_grDevices$tableau.10
-pal= cat_grDevices$polychrome
-pal = cat_grDevices$ggplot2
-pal = kelly()
-pal = RColorBrewer::brewer.pal(9, "Blues")
-specplot(pal)
-
-
-
-
-
-cat_pals = local({
-	pals_syspals = pals:::syspals
-	palsCat = c("alphabet", "cols25", "glasbey", "kelly", "tableau20", "watlington")
-	palsNew = c("alphabet2", "wright", "glasbey", "kelly", "tableau.20", "watlington") # alphabet2 = base "Alphabet"
-
-	pals = lapply(palsCat, function(p) {
-		if (p %in% names(pals_syspals)) {
-			pal = pals_syspals[[p]]
-			if (p != "alphabet") {
-				if (is.list(pal)) {
-					pal = lapply(pal, remove_black_white)
-				} else {
-					pal = remove_black_white(pal)
-				}
-			}
-		} else {
-			pal = unname(do.call(p, args = list()))
-			if (p != "alphabet") pal = remove_black_white(pal)
-		}
-		pal
+	pals = lapply(nms, function(nm) {
+		viridisLite::viridis(11, option = nm)
 	})
-	pals = lapply(pals, unname)
-	names(pals) = palsNew
-	pals$kelly = c(pals$kelly[-1], pals$kelly[1]) # put black at the end
-	pals
+	names(pals) = nms
+
+	c4a_submit_series(pals, types = types, series = "viridis", from.scratch = FALSE)
 })
 
 
 
-cat_carto = local({
 
-	carto_pal(name="Vivid")
+
+
+###################################
+### package pals
+###################################
+
+local({
+	syspals = pals:::syspals
+	palsCat = c("glasbey", "kelly", "watlington")
+	palsNew = c("glasbey", "kelly", "watlington")
+	series = "other"
+
+	pals = syspals[palsCat]
+	names(pals) = palsNew
+
+	pals3 = list(cols25 = pals::cols25(),
+				 alphabet2 = pals::alphabet()) # pals::alphabet2 = base "Alphabet"
+
+	pals4 = syspals[substr(names(syspals), 1, 6) == "kovesi" & substr(names(syspals), 1, 13) != "kovesi.cyclic"]
+
+	isdiv = substr(names(pals4), 1, 16) == "kovesi.diverging"
+	iscyc = substr(names(pals4), 1, 13) == "kovesi.cyclic"
+
+	pals4_type = ifelse(isdiv, "div", ifelse(iscyc, "cyc", "seq"))
+
+	c4a_submit_series(pals, types = "cat", series = series, from.scratch = T)
+	c4a_submit_series_as_is(pals3, types = "cat", series = "other", from.scratch = FALSE)
+	c4a_submit_series(pals4, types = pals4_type, series = "kovesi", from.scratch = FALSE, format.palette.name = FALSE)
+
+
+	# pals = lapply(palsCat, function(p) {
+	# 	if (p %in% names(pals_syspals)) {
+	# 		pal = pals_syspals[[p]]
+	# 		if (p != "alphabet") {
+	# 			if (is.list(pal)) {
+	# 				pal = lapply(pal, remove_black_white)
+	# 			} else {
+	# 				pal = remove_black_white(pal)
+	# 			}
+	# 		}
+	# 	} else {
+	# 		pal = unname(do.call(p, args = list()))
+	# 		if (p != "alphabet") pal = remove_black_white(pal)
+	# 	}
+	# 	pal
+	# })
+	# pals = lapply(pals, unname)
+	# names(pals) = palsNew
+	# pals$kelly = c(pals$kelly[-1], pals$kelly[1]) # put black at the end
+	# pals
+})
+
+
+
+###################################
+### package wesanderson
+###################################
+
+
+local({
+	pals = wesanderson::wes_palettes
+
+	names(pals)[c(18,19)] = c("isle_of_dogs1", "isle_of_dogs2")
+
+	type = ifelse(names(pals) == "zissou1", "div", "cat")
+
+	c4a_submit_series(pals, types = type, series = "wes", from.scratch = FALSE)
+
+})
+
+
+
+###################################
+### package rcartocolor
+###################################
+
+local({
 	cartoQual = cartocolors[cartocolors$Type == "qualitative",]
-
-	cartoQual$n12
 
 	indices = lapply(1:nrow(cartoQual), function(i) {
 		structure(lapply(1:12, function(j) {
@@ -154,79 +249,98 @@ cat_carto = local({
 		}), names = as.character(1:12))
 	})
 
-	cat_carto = mapply(function(pal, ind) {
-		structure(remove_black_white(pal), index = ind)
+	pals = mapply(function(pal, ind) {
+		structure(pal, index = ind)
 	}, cartoQual$n12, indices, SIMPLIFY = FALSE)
 
-	names(cat_carto) = paste0("carto.", tolower(cartoQual$Name))
-	cat_carto
+	names(pals) = cartoQual$Name
+
+	cartoNum = cartocolors[cartocolors$Type %in% c("quantitative", "diverging"), c("Name", "Type", "n7")]
+	pals2 = cartoNum$n7
+	names(pals2) = cartoNum$Name
+	type = ifelse(cartoNum$Type == "diverging", "div", "seq")
+
+	c4a_submit_series(pals, types = "cat", series = "carto", from.scratch = FALSE)
+	c4a_submit_series(pals2, types = type, series = "carto", from.scratch = FALSE)
+
 })
 
-cat_hcl = local({
+###################################
+### package colorspace
+###################################
+
+local({
 	hclnames = c("Pastel 1", "Dark 2", "Dark 3", "Set 2", "Set 3", "Warm", "Cold", "Harmonic", "Dynamic")
-	hclnewnm = paste0("hcl.", c("pastel1", "dark2", "dark3", "set2", "set3", "warm", "cold", "harmonic", "dynamic"))
-	structure(lapply(hclnames, function(h) {
+	pals = structure(lapply(hclnames, function(h) {
 		pals = lapply(1:20, function(i) {
 			qualitative_hcl(palette = h, n = i)
-		}) |> lapply(remove_black_white)
+		})
 		pal = unique(unlist(pals))
 		indices = structure(lapply(1:20, function(i) {
 			match(pals[[i]], pal)
 		}), names = as.character(1:20))
 		structure(pal, index = indices)
-	}), names = hclnewnm)
+	}), names = hclnames)
+
+	c4a_submit_series(pals, types = "cat", series = "hcl", from.scratch = FALSE)
 })
 
-## meta package: 2000 palettes, less organized
+###################################
+### package ggthemes (scico)
+###################################
+
+local({
+	ids = seq(1,256, length.out=16)
+	d = scico:::palettes
+	pals = lapply(d, function(x) {
+		colorRampPalette(rgb(x$r, x$g, x$b, maxColorValue = 1), space = "Lab")(15)
+	})
+	div = c("broc", "cork", "vik", "lisbon", "tofino", "berlin", "roma", "bam", "vanimo")
+	mseq = c("oleron", "bukavu", "fes")
+
+	pals_div = pals[div]
+	pals_seq = pals[setdiff(names(pals), c(div, mseq))]
+
+	c4a_submit_series(pals_div, types = "div", series = "scico", from.scratch = FALSE)
+	c4a_submit_series(pals_seq, types = "seq", series = "scico", from.scratch = FALSE)
+})
+
+
+###################################
+### package ggthemes (tableau)
+###################################
+
+local({
+	palettes = ggthemes_data[["tableau"]][["color-palettes"]][["regular"]]
+	tab_cat = lapply(palettes, function(pal) {
+		pal$value
+	})
+	names(tab_cat)[1:2] = c("10", "20")
+
+
+	palettes2 = ggthemes_data[["tableau"]][["color-palettes"]][["ordered-sequential"]]
+	tab_seq = lapply(palettes2, function(pal) {
+		pal$value
+	})
+
+	palettes3 = ggthemes_data[["tableau"]][["color-palettes"]][["ordered-diverging"]]
+	tab_div = lapply(palettes3, function(pal) {
+		pal$value
+	})
+
+	c4a_submit_series(tab_cat, types = "cat", series = "tableau", from.scratch = FALSE)
+	c4a_submit_series(tab_seq, types = "seq", series = "tableau", from.scratch = FALSE)
+	c4a_submit_series(tab_div, types = "div", series = "tableau", from.scratch = FALSE)
+})
+
+
+
+## meta package: 2000 palettes,
+# library(paletteer)
+# str(palettes_d)
 
 # library(paletteer)
 # cat_paletteer = local({
 #
 # 	cat_paletteer = do.call(c, palettes_d)
-# 	cat_paletteer = lapply(cat_paletteer, na.omit)
-# 	cat_paletteer = lapply(cat_paletteer, function(pal) {
-# 		if (any(nchar(pal) != 7)) {
-# 			do.call(rgb, c(as.list(as.data.frame(t(col2rgb(pal)))), maxColorValue = 255))
-# 		} else pal
-# 	})
-# 	names(cat_paletteer) = paste0("X.", names(cat_paletteer))
-# 	cat_paletteer
 # })
-
-
-# library(khroma)
-# khroma:::.schemes
-#
-# tols = c("bright",
-# "high contrast",
-# "vibrant",
-# "muted",
-# "medium contrast",
-# "pale",
-# "dark",
-# "light")
-#
-# k = khroma:::.schemes[tols]
-# cat_khroma_tol = lapply(k, function(ki) ki$colours)
-# names(cat_khroma_tol) = paste0("khroma_", names(cat_khroma_tol))
-
-
-
-cat_lb = local({
-	list(
-		lb.martin = unname(colorBlindness::paletteMartin),
-		lb.paired = unname(colorBlindness::PairedColor12Steps)
-	) |> lapply(remove_black_white)
-})
-
-cat_all = c(cat_grDevices, cat_pals, cat_tol, cat_carto, cat_hcl, cat_lb) #cat_paletteer
-
-series = sub("\\..*", "", names(cat_all))
-series[series == names(cat_all)] = "other"
-
-nmax = sapply(cat_all, function(x) {
-	index = attr(x, "index")
-	if (is.null(index)) length(x) else length(index[[length(index)]])
-})
-
-z_cat = data.frame(name = names(cat_all), type = "cat", series = series, palette = I(cat_all), nmax = nmax)
