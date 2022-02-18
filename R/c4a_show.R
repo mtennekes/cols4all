@@ -190,7 +190,6 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 		e2[[q]][is.na(e2[[q]])] = ""
 	}
 
-
 	e2cols = c("series", "label", ql, colNames)
 	e2nms = c("Series", "Name", ql, colNames)
 
@@ -200,7 +199,8 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	# for (i in (1:columns)+(length(ql)+1)) {
 	# 	k = kableExtra::column_spec(k, i, extra_css = 'width: 5em; overflow: hidden; background-color: #000000"')
 	# }
-	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 10px;padding-right: 10px;min-width: 120px; text-align: right")
+	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 10px;padding-right: 10px;min-width: 60px; text-align: right")
+	k = kableExtra::column_spec(k, 2, extra_css = "padding-left: 0px;padding-right: 10px;min-width: 60px; text-align: right")
 	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "max-width: 5em; vertical-align: bottom")
 
 	for (q in ql_other) {
@@ -225,6 +225,7 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	css = readLines("css/table.css")
 
 	k[1] = paste(c(css,kl), collapse="\n")
+	#k[1] = paste(kl, collapse="\n")
 	k
 
 }

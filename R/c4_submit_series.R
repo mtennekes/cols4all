@@ -70,9 +70,12 @@ c4a_submit_series = function(x, xNA = NA, types, series, format.palette.name = T
 		s = abind::abind(.s, s, along=1)
 	}
 
+	#cfa = structure(list(z = z, s = s), class = "c4a")
+
 	assign(".z", z, envir = .C4A_CACHE)
 	assign(".s", s, envir = .C4A_CACHE)
 }
+
 
 
 

@@ -42,7 +42,7 @@ process_palette = function(pal, type, colNA = NA, take_grey_for_NA = TRUE, remov
 	}
 
 	if (light_to_dark && type == "seq") {
-		if (hcl[1,1] < 30 && hcl[nrow(hcl), 1] > 70) {
+		if ((hcl[nrow(hcl), 1] - hcl[1,1]) > 40) {
 			pal = rev(pal)
 			hcl = hcl[nrow(hcl):1L,]
 		}

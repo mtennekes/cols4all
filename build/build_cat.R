@@ -17,7 +17,7 @@ library(ggthemes)
 
 
 ###################################
-### package grDevices
+### package grDevices: cat
 ###################################
 local({
 	pals = grDevices:::.palette_colors_hex
@@ -36,6 +36,45 @@ local({
 	#c4a_submit_series(p2, types = "cat", series = s2, from.scratch = FALSE)
 	c4a_submit_series(p3, types = "cat", series = s3, from.scratch = FALSE, take_grey_for_NA = FALSE, remove_other_greys = FALSE, remove_blacks = FALSE)
 	invisible(NULL)
+})
+
+###################################
+### package grDevices: seq and div
+###################################
+local({
+
+	brewer_seq = c("YlOrRd", "YlOrBr", "OrRd", "Oranges", "YlGn", "YlGnBu", "Reds", "RdPu", "PuRd", "Purples","PuBuGn", "PuBu", "Greens", "BuGn", "GnBu", "BuPu", "Blues")
+	brewer_div <- c("Spectral", "RdYlGn", "RdYlBu", "RdGy", "RdBu", "PiYG", "PRGn", "PuOr", "BrBG")
+
+	carto_seq = c("DarkMint", "Mint", "BluGrn", "Teal", "TealGrn", "Emrld", "BluYl", "ag_GrnYl", "Peach", "PinkYl", "Burg", "BurgYl", "RedOr", "OrYel", "Purp", "PurpOr", "Sunset", "Magenta", "SunsetDark", "ag_Sunset", "BrwnYl")
+	carto_div <- c("ArmyRose", "Earth", "Fall", "Geyser", "TealRose", "Temps", "Tropic")
+
+	viridis_seq = c("Viridis", "Plasma", "Inferno", "Rocket", "Mako")
+	viridis_div = "Cividis"
+
+	scico_seq = c("Oslo", "Lajolla", "Turku", "Hawaii", "Batlow")
+	scico_div = c("Broc", "Cork", "Vik", "Berlin", "Lisbon", "Tofino", "Roma")
+
+	wes_div = "Zissou 1"
+
+	seq_hcl_approx = c(brewer_seq, carto_seq, viridis_seq, scico_seq)
+	div_hcl_approx = c(brewer_div, carto_div, viridis_div, scico_div, wes_div)
+
+	hcl_lst = lapply(c("sequential", "diverging", "divergingx"), hcl.pals)
+
+	seq = setdiff(hcl_lst[[1]], seq_hcl_approx)
+	div = setdiff(c(hcl_lst[[2]],hcl_lst[[3]]), div_hcl_approx)
+
+
+	spals = lapply(seq, function(s) hcl.colors(11, s))
+	names(spals) = seq
+
+	dpals = lapply(div, function(s) hcl.colors(11, s))
+	names(dpals) = div
+
+	type = c(rep("seq", length(spals)), rep("div", length(dpals)))
+
+	c4a_submit_series(c(spals, dpals), types = type, series = "hcl", from.scratch = FALSE)
 })
 
 
@@ -172,14 +211,15 @@ local({
 
 local({
 	syspals = pals:::syspals
-	palsCat = c("glasbey", "kelly", "watlington")
-	palsNew = c("glasbey", "kelly", "watlington")
+	palsCat = c("kelly", "watlington")
+	palsNew = c("kelly", "watlington")
 	series = "other"
 
 	pals = syspals[palsCat]
 	names(pals) = palsNew
 
 	pals3 = list(cols25 = pals::cols25(),
+				 glasbey = pals::glasbey(32),
 				 alphabet2 = pals::alphabet()) # pals::alphabet2 = base "Alphabet"
 
 	pals4 = syspals[substr(names(syspals), 1, 6) == "kovesi" & substr(names(syspals), 1, 13) != "kovesi.cyclic"]
@@ -189,7 +229,8 @@ local({
 
 	pals4_type = ifelse(isdiv, "div", ifelse(iscyc, "cyc", "seq"))
 
-	c4a_submit_series(pals, types = "cat", series = series, from.scratch = T)
+	names(pals4) = substr(names(pals4), 8, nchar(names(pals4)))
+	c4a_submit_series(pals, types = "cat", series = series, from.scratch = FALSE)
 	c4a_submit_series_as_is(pals3, types = "cat", series = "other", from.scratch = FALSE)
 	c4a_submit_series(pals4, types = pals4_type, series = "kovesi", from.scratch = FALSE, format.palette.name = FALSE)
 
@@ -228,7 +269,7 @@ local({
 
 	names(pals)[c(18,19)] = c("isle_of_dogs1", "isle_of_dogs2")
 
-	type = ifelse(names(pals) == "zissou1", "div", "cat")
+	type = ifelse(names(pals) == "Zissou1", "div", "cat")
 
 	c4a_submit_series(pals, types = type, series = "wes", from.scratch = FALSE)
 
@@ -255,7 +296,7 @@ local({
 
 	names(pals) = cartoQual$Name
 
-	cartoNum = cartocolors[cartocolors$Type %in% c("quantitative", "diverging"), c("Name", "Type", "n7")]
+	cartoNum = cartocolors[cartocolors$Type %in% c("quantitative", "aggregation", "diverging"), c("Name", "Type", "n7")]
 	pals2 = cartoNum$n7
 	names(pals2) = cartoNum$Name
 	type = ifelse(cartoNum$Type == "diverging", "div", "seq")
@@ -264,6 +305,9 @@ local({
 	c4a_submit_series(pals2, types = type, series = "carto", from.scratch = FALSE)
 
 })
+
+
+
 
 ###################################
 ### package colorspace
@@ -286,7 +330,7 @@ local({
 })
 
 ###################################
-### package ggthemes (scico)
+### package scico
 ###################################
 
 local({
@@ -295,7 +339,7 @@ local({
 	pals = lapply(d, function(x) {
 		colorRampPalette(rgb(x$r, x$g, x$b, maxColorValue = 1), space = "Lab")(15)
 	})
-	div = c("broc", "cork", "vik", "lisbon", "tofino", "berlin", "roma", "bam", "vanimo")
+	div = c("broc", "brocO", "cork", "corkO", "vik", "vikO", "lisbon", "tofino", "berlin", "roma", "romaO", "bam", "bamO", "vanimo")
 	mseq = c("oleron", "bukavu", "fes")
 
 	pals_div = pals[div]
@@ -344,3 +388,18 @@ local({
 #
 # 	cat_paletteer = do.call(c, palettes_d)
 # })
+
+
+
+.z = get(".z", .C4A_CACHE)
+.s = get(".s", .C4A_CACHE)
+
+saveRDS(.z, "z.rds")
+saveRDS(.z, "s.rds")
+
+#
+# .z = readRDS("z.rds")
+# .s = readRDS("s.rds")
+
+save(.z, .s, file="R/sysdata.rda", compress="xz")
+

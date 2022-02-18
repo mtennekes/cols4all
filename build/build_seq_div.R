@@ -19,60 +19,6 @@ c4a_name_compress = function(x) {
 
 # merge diverging and divergingx
 
-brewer_seq = c("YlOrRd", "YlOrBr", "OrRd", "Oranges", "YlGn", "YlGnBu", "Reds", "RdPu", "PuRd", "Purples","PuBuGn", "PuBu", "Greens", "BuGn", "GnBu", "BuPu", "Blues")
-brewer_div <- c("Spectral", "RdYlGn", "RdYlBu", "RdGy", "RdBu", "PiYG", "PRGn", "PuOr", "BrBG")
-
-carto_seq = c("DarkMint", "Mint", "BluGrn", "Teal", "TealGrn", "Emrld", "BluYl", "ag_GrnYl", "Peach", "PinkYl", "Burg", "BurgYl", "RedOr", "OrYel", "Purp", "PurpOr", "Sunset", "Magenta", "SunsetDark", "ag_Sunset", "BrwnYl")
-carto_div <- c("ArmyRose", "Earth", "Fall", "Geyser", "TealRose", "Temps", "Tropic")
-
-viridis_seq = c("Viridis", "Plasma", "Inferno", "Rocket", "Mako")
-viridis_div = "Cividis"
-
-scico_seq = c("Oslo", "Lajolla", "Turku", "Hawaii", "Batlow")
-scico_div = c("Broc", "Cork", "Vik", "Berlin", "Lisbon", "Tofino", "Roma")
-
-seq_hcl_approx = c(brewer_seq, carto_seq, viridis_seq, scico_seq) |> c4a_name_compress()
-div_hcl_approx = c(brewer_div, carto_div, viridis_div, scico_div) |> c4a_name_compress()
-
-hcl_lst = lapply(c("sequential", "diverging", "divergingx"), hcl.pals)
-
-seq_hcl = setdiff(hcl_lst[[1]] |> c4a_name_compress(), seq_hcl_approx)
-div_hcl = setdiff(c(hcl_lst[[2]],hcl_lst[[3]]) |> c4a_name_compress(), div_hcl_approx)
-
-seq = c(seq_hcl, seq_hcl_approx)
-seq_series = c(rep("hcl", length(seq_hcl)),
-		   rep("brewer", length(brewer_seq)),
-		   rep("carto", length(carto_seq)),
-		   rep("viridis", length(viridis_seq)),
-		   rep("scico", length(scico_seq)))
-
-
-spals = lapply(seq, function(s) {
-	pal = hcl.colors(11, s)
-	il = is_light(pal[c(1,11)])
-	if (il[2] && !il[1]) {
-		rev(pal)
-	} else {
-		pal
-	}
-})
-names(spals) = paste(seq_series, seq, sep = ".")
-
-div = c(div_hcl, div_hcl_approx)
-div_series = c(rep("hcl", length(div_hcl)),
-		   rep("brewer", length(brewer_div)),
-		   rep("carto", length(carto_div)),
-		   rep("viridis", length(viridis_div)),
-		   rep("scico", length(scico_div)))
-
-dpals = lapply(div, function(s) {
-	hcl.colors(11, s)
-})
-names(dpals) = paste(div_series, div, sep = ".")
-
-type = c(rep("seq", length(spals)), rep("div", length(dpals)))
-
-z_hcl = data.frame(name = c(names(spals), names(dpals)), type = type, series = c(seq_series, div_series), palette = I(c(spals, dpals)), nmax = Inf)
 
 
 

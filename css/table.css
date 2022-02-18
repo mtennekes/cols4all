@@ -1,3 +1,11 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$('td').click(function(){
+  var txt = $(this).parent().children().text()
+
+  $("#result").text(txt)
+})
+</script>
 <style>
 table {
 	border-collapse: collapse;

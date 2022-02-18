@@ -19,9 +19,9 @@ c4a_gui = function() {
 					width = 3,
 					shiny::checkboxInput("advanced", "Expert mode", value = FALSE),
 					shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div")), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
-					shiny::checkboxInput("na", "Include NA", value = TRUE),
 					shiny::sliderInput("n", "Number of colors",
-									   min = 2, max = 11, value = 7),
+									   min = 2, max = 36, value = 7),
+					shiny::checkboxInput("na", "Include NA", value = FALSE),
 					shiny::radioButtons("cvd", "Color vision deficiency", choices = c(None = "none", Deutan = "deutan", Protan = "protan", Tritan = "tritan"), selected = "none"),
 					shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .friendly)), selected = "rank"),
 					shiny::selectizeInput("series", "Series", choices = series, selected = series, multiple = TRUE),
@@ -29,7 +29,11 @@ c4a_gui = function() {
 						condition = "input.type != 'cat'",
 						shiny::strong("Contrast range"),
 						shiny::checkboxInput("auto_contrast", label = "Automatic", value = TRUE),
-						shiny::uiOutput("contrast"))
+						shiny::div(
+							style = "font-size:0;margin-top:-20px",
+							shiny::sliderInput("contrast", "",
+											   min = 0, max = 1, value = c(0,1), step = .01)
+						))
 					#shiny::sliderInput("contrast", "Contrast", min = 0, max = 1, step = 0.05, value = c(0,1))
 				),
 
@@ -65,33 +69,19 @@ c4a_gui = function() {
 				structure(c("name", res$qn), names = c("Name", res$ql))
 			})
 
+			observe({
+				n = input$n
+				ac = input$auto_contrast
+				type = input$type
 
-			output$contrast = shiny::renderUI({
-				#input$auto_contrast
-				input$n
-				input$type
-				shiny::isolate({
-					if (input$type == "cat") return(NULL)
-
-					fun = paste0("default_contrast_", input$type)
-					rng = do.call(fun, list(k = input$n))
-					if (is.null(input$auto_contrast) || input$auto_contrast) {
-						shiny::div(
-							style = "font-size:0;margin-top:-20px",
-							shiny::sliderInput("contrast", "",
-											   min = 0, max = 1, value = c(rng[1], rng[2]), step = .01)
-
-						)
-					} else {
-						crng = input$contrast
-						shiny::div(
-							style = "font-size:0;margin-top:-20px",
-							shiny::sliderInput("contrast", "",
-											   min = 0, max = 1, value = c(crng[1], crng[2]), step = .01)
-						)
-					}
-				})
+				if (type == "cat") return(NULL)
+				fun = paste0("default_contrast_", type)
+				rng = do.call(fun, list(k = n))
+				if (ac) {
+					shiny::updateSliderInput(session, "contrast", value = c(rng[1], rng[2]))
+				}
 			})
+
 
 			# shiny::observe({
 			# 	input$n
