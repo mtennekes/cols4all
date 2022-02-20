@@ -16,10 +16,10 @@
 
 .friendly = "Colorblind-friendly"
 
-.highC = "Intense"
+.highC = "Intense colors"
 
-.hueType = "Spectrum"
+.hueType = "Hues"
 
-.harmonic = "Harmonic"
+.harmonic = "Harmonic palette"
 
-.maxn = "Max colors"
+.maxn = "Max number"

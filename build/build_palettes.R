@@ -24,13 +24,13 @@ local({
 
 	p1 = pals[c("R3", "R4", "ggplot2", "Okabe-Ito")]
 	names(p1) = c("R3", "R4", "ggplot2", "okabe")
-	s1 = "other"
+	s1 = "misc"
 
 	# p2 = pals[c("Accent", "Dark 2", "Paired", "Pastel 1", "Pastel 2", "Set 1", "Set 2", "Set 3")]
 	# s2 = "brewer"
 
 	p3 = pals[c("Alphabet", "Polychrome 36")]
-	s3 = "other"
+	s3 = "misc"
 
 	c4a_submit_series(p1, types = "cat", series = s1, from.scratch = TRUE)
 	#c4a_submit_series(p2, types = "cat", series = s2, from.scratch = FALSE)
@@ -213,7 +213,7 @@ local({
 	syspals = pals:::syspals
 	palsCat = c("kelly", "watlington")
 	palsNew = c("kelly", "watlington")
-	series = "other"
+	series = "misc"
 
 	pals = syspals[palsCat]
 	names(pals) = palsNew
@@ -231,7 +231,7 @@ local({
 
 	names(pals4) = substr(names(pals4), 8, nchar(names(pals4)))
 	c4a_submit_series(pals, types = "cat", series = series, from.scratch = FALSE)
-	c4a_submit_series_as_is(pals3, types = "cat", series = "other", from.scratch = FALSE)
+	c4a_submit_series_as_is(pals3, types = "cat", series = "misc", from.scratch = FALSE)
 	c4a_submit_series(pals4, types = pals4_type, series = "kovesi", from.scratch = FALSE, format.palette.name = FALSE)
 
 

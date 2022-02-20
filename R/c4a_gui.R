@@ -18,7 +18,7 @@ c4a_gui = function() {
 			shiny::sidebarLayout(
 				shiny::sidebarPanel(
 					width = 3,
-					shiny::checkboxInput("advanced", "Expert mode", value = FALSE),
+					shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE),
 					shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div")), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
 					shiny::sliderInput("n", "Number of colors",
 									   min = 2, max = 36, value = 7),
@@ -56,7 +56,7 @@ c4a_gui = function() {
 					 cvd = input$cvd,
 					 sort = input$sort,
 					 series = input$series,
-					 advanced = input$advanced,
+					 show.scores = input$advanced,
 					 columns = if (input$n > 16) 12 else input$n,
 					 na = input$na,
 					 contrast = input$contrast)
@@ -88,7 +88,7 @@ c4a_gui = function() {
 			output$show = function() {
 				shiny::req(get_values_d())
 				values = get_values_d()
-				c4a_show(n = values$n, cvd.sim = values$cvd, sort = values$sort, columns = values$columns, type = values$type, advanced.mode = values$advanced, series = values$series, contrast = values$contrast, include.na = values$na)
+				c4a_show(n = values$n, cvd.sim = values$cvd, sort = values$sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na)
 			}
 
 

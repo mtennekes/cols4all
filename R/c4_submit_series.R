@@ -38,7 +38,7 @@ c4a_submit_series = function(x, xNA = NA, types, series, format.palette.name = T
 
 	if (format.palette.name) nms = format_name(nms)
 
-	seriesID = which(series != "other")
+	seriesID = which(series != "")
 	fnms = nms
 	if (length(seriesID)) fnms[seriesID] = paste0(series[seriesID], ".", fnms[seriesID])
 

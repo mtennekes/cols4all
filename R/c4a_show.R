@@ -1,4 +1,4 @@
-table_columns = function(type, advanced) {
+table_columns = function(type, show.scores) {
 	if (type == "cat") {
 		qn = c("nmax", "cbfriendly", "highC")
 		ql = c(.maxn, .friendly, .highC)
@@ -23,7 +23,7 @@ table_columns = function(type, advanced) {
 	ql = c(ql, .rank)
 	srt = c(srt, "rank")
 
-	if (advanced) {
+	if (show.scores) {
 		qn = c(qn, .indicators[[type]], .hcl)
 		ql = c(ql, .labels[c(.indicators[[type]], .hcl)])
 		srt = c(srt, .indicators[[type]], .hcl)
@@ -36,15 +36,15 @@ table_columns = function(type, advanced) {
 #'
 #' Show cols4all palettes
 #'
-#' @param x named list of color palettes
-#' @param n number of colors
+#' @param type type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, and `"div"` for diverging
+#' @param n number of colors. If omitted, for `"cat"` the full palette is displayed, and for `"seq"` and `"div"`, 9 colors.
 #' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @param order.by.score order the palettes by score (`TRUE`, default) or by name?
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
 #' @import kableExtra
 #' @import colorspace
-c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mode = FALSE, columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL, include.na = TRUE) {
+c4a_show = function(type = c("cat", "seq", "div"), n = NULL, columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL, include.na = TRUE, show.scores = FALSE) {
 
 	type = match.arg(type)
 	show.ranking = (!is.null(n))
@@ -62,19 +62,19 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 
 	k = nrow(zn)
 
-	res = table_columns(type, advanced.mode)
+	res = table_columns(type, show.scores)
 	qn = res$qn
 	ql = res$ql
 	srt = res$srt
 
-	sortCol = if (sort == "name") "name" else srt[which(sort == qn)]
+	sortCol = if (sort == "name") "fullname" else srt[which(sort == qn)]
 
-	decreasing = !(sortCol %in% c("name", "rank"))
+	decreasing = !(sortCol %in% c("fullname", "rank"))
 	zn = zn[order(zn[[sortCol]], decreasing = decreasing), ]
 
 	zn$nlines = ((zn$n-1) %/% columns) + 1
 
-	zn$Name = gsub(".*\\.", "", zn$name)
+	#zn$Name = gsub(".*\\.", "", zn$name)
 
 	# data.frame with possibly multiple lines per palette (if n > columns)
 	e = data.frame(id = unlist(mapply(function(n, i) {
@@ -148,7 +148,7 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 		cols_cvd = cols
 		cols_cvd[cols_cvd != ""] = sim(cols[cols_cvd != ""])
 		textcol = if (text.col == "same") cols_cvd else text.col
-		e2[[cn]] = kableExtra::cell_spec(cols, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px; width: 100%; min-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;")
+		e2[[cn]] = kableExtra::cell_spec(cols, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;")
 	}
 
 
@@ -208,16 +208,16 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	# }
 
 
-	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 10px;padding-right: 10px;min-width: 60px; text-align: right")
-	k = kableExtra::column_spec(k, 2, extra_css = "padding-left: 0px;padding-right: 10px;min-width: 60px; text-align: right")
-	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "max-width: 5em; vertical-align: bottom")
+	k = kableExtra::column_spec(k, 1, width = "5em", extra_css = "padding-left: 10px; padding-right: 10px; text-align: right")
+	k = kableExtra::column_spec(k, 2, width = "5em", extra_css = "padding-left: 0px; padding-right: 10px; text-align: right")
+	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "padding-left: 3px; padding-right: 3px; vertical-align: bottom") #max-width: 5em;
 
 	for (q in ql_other) {
-		k = kableExtra::column_spec(k, which(q == e2nms), extra_css = "padding-right: 20px; max-width: 10em; text-align: right")
+		k = kableExtra::column_spec(k, which(q == e2nms), width = "3em", extra_css = "padding-right: 20px; text-align: right")
 	}
 
 	for (q in ql_icons) {
-		k = kableExtra::column_spec(k, which(q == e2nms), extra_css = "font-size: 250%; line-height: 40%; vertical-align: center; text-align: center; white-space: nowrap;", width = "3em")
+		k = kableExtra::column_spec(k, which(q == e2nms), extra_css = "font-size: 250%; line-height: 40%; vertical-align: center; text-align: center; white-space: nowrap;", width = "2em")
 	}
 
 	kc = k[1]
