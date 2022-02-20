@@ -12,7 +12,7 @@
 
 
 
-.rank = "Rank"
+.rank = "Ranking"
 
 .friendly = "Colorblind-friendly"
 

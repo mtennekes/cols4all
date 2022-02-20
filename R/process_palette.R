@@ -73,7 +73,9 @@ process_palette = function(pal, type, colNA = NA, take_grey_for_NA = TRUE, remov
 		})
 		ls = sapply(index2, length)
 
-		index3 = lapply(1:length(pal), function(i) {
+		newlength = max(ls)
+
+		index3 = lapply(1:newlength, function(i) {
 			w = which(i == ls)[1]
 			if (!length(w)) stop("Re-indexing failed", call. = FALSE)
 			index2[[w]]

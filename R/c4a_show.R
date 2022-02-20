@@ -1,12 +1,12 @@
 table_columns = function(type, advanced) {
 	if (type == "cat") {
-		qn = c("nmax", "rank", "cbfriendly", "highC")
-		ql = c(.maxn, .rank, .friendly, .highC)
-		srt = c("nmax", "rank", "rank", "Cmax")
+		qn = c("nmax", "cbfriendly", "highC")
+		ql = c(.maxn, .friendly, .highC)
+		srt = c("nmax", "rank", "Cmax")
 	} else {
-		qn = c("rank", "cbfriendly", "highC")
-		ql = c(.rank, .friendly, .highC)
-		srt = c("rank", "rank", "Cmax")
+		qn = c("cbfriendly", "highC")
+		ql = c(.friendly, .highC)
+		srt = c("rank", "Cmax")
 	}
 
 	if (type %in% c("seq", "div")) {
@@ -18,6 +18,10 @@ table_columns = function(type, advanced) {
 		ql = c(ql, .harmonic)
 		srt = c(srt, "LCrange")
 	}
+
+	qn = c(qn, "rank")
+	ql = c(ql, .rank)
+	srt = c(srt, "rank")
 
 	if (advanced) {
 		qn = c(qn, .indicators[[type]], .hcl)
@@ -144,7 +148,7 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 		cols_cvd = cols
 		cols_cvd[cols_cvd != ""] = sim(cols[cols_cvd != ""])
 		textcol = if (text.col == "same") cols_cvd else text.col
-		e2[[cn]] = kableExtra::cell_spec(cols, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px;")
+		e2[[cn]] = kableExtra::cell_spec(cols, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px; width: 100%; min-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;")
 	}
 
 
@@ -199,6 +203,11 @@ c4a_show = function(n = NULL, type = c("cat", "seq", "div", "biv"), advanced.mod
 	# for (i in (1:columns)+(length(ql)+1)) {
 	# 	k = kableExtra::column_spec(k, i, extra_css = 'width: 5em; overflow: hidden; background-color: #000000"')
 	# }
+	# for (cN in colNames) {
+	# 	k = kableExtra::column_spec(k, which(cN == e2nms), width = "10px")
+	# }
+
+
 	k = kableExtra::column_spec(k, 1, extra_css = "padding-left: 10px;padding-right: 10px;min-width: 60px; text-align: right")
 	k = kableExtra::column_spec(k, 2, extra_css = "padding-left: 0px;padding-right: 10px;min-width: 60px; text-align: right")
 	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "max-width: 5em; vertical-align: bottom")

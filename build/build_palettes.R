@@ -316,13 +316,13 @@ local({
 local({
 	hclnames = c("Pastel 1", "Dark 2", "Dark 3", "Set 2", "Set 3", "Warm", "Cold", "Harmonic", "Dynamic")
 	pals = structure(lapply(hclnames, function(h) {
-		pals = lapply(1:20, function(i) {
+		pals = lapply(1:36, function(i) {
 			qualitative_hcl(palette = h, n = i)
 		})
 		pal = unique(unlist(pals))
-		indices = structure(lapply(1:20, function(i) {
+		indices = structure(lapply(1:36, function(i) {
 			match(pals[[i]], pal)
-		}), names = as.character(1:20))
+		}), names = as.character(1:36))
 		structure(pal, index = indices)
 	}), names = hclnames)
 
@@ -394,8 +394,8 @@ local({
 .z = get(".z", .C4A_CACHE)
 .s = get(".s", .C4A_CACHE)
 
-saveRDS(.z, "z.rds")
-saveRDS(.z, "s.rds")
+# saveRDS(.z, "z.rds")
+# saveRDS(.z, "s.rds")
 
 #
 # .z = readRDS("z.rds")

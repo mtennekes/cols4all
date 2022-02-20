@@ -1,7 +1,8 @@
 #' List all available cols4all color palettes
 c4a_palettes = function(type = c("all", "cat", "seq", "div", "biv", "cyc")) {
 	type = match.arg(type)
-	z$name
+	z = get(".z", envir = .C4A_CACHE)
+	z$fullname
 }
 
 c4a_defaults = c(cat = "tol.muted", seq = "hcl.blues", div = "hcl.purple-green")

@@ -5,8 +5,8 @@
 #' @param name,reverse,order See \code{\link{c4a}}.
 #' @param aesthetics The ggplot2 aesthetics to which this scale should be applied.
 #' @param ... common discrete scale parameters: `name`, `breaks`, `labels`, `na.value`, `limits` and `guide`. See \code{\link[ggplot:discrete_scale]{discrete_scale}} for more details.
-
-
+#' @example ./examples/scale_color_c4a_cat.R
+#' @export
 scale_color_c4a_cat = function (palette = NULL, reverse = NULL, order = NULL, aesthetics = "colour",
 		  ...)
 {

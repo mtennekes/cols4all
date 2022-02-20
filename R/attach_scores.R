@@ -10,7 +10,10 @@ attach_scores = function(z) {
 	s2 = s[match(z$name, dimnames(s)[[1]]), , , drop = FALSE]
 
 	s3 = do.call(rbind, lapply(1:k, function(i) {
-		s2[i, , min(z$n[i], dim(s2)[3])]
+		# maximum n to take scores from (cat: dim max, seq/div, the scores for the largest palettes)
+		mmax = if (type == "cat") dim(s2)[3] else min(z$n[i], which(is.na(s2[i, "rank", ][-1]))[1])
+		m = min(z$n[i], mmax)
+		s2[i,,m]
 	}))
 	z2 = cbind(z, as.data.frame(s3))
 
