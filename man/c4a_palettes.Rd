@@ -2,10 +2,21 @@
 % Please edit documentation in R/c4a.R
 \name{c4a_palettes}
 \alias{c4a_palettes}
-\title{List all available cols4all color palettes}
+\alias{c4a_series}
+\title{List all available cols4all color palettes and series}
 \usage{
-c4a_palettes(type = c("all", "cat", "seq", "div", "biv", "cyc"))
+c4a_palettes(type = c("all", "cat", "seq", "div"), full.names = TRUE)
+
+c4a_series(type = c("all", "cat", "seq", "div"))
+}
+\arguments{
+\item{type}{type of color palette: one of `"all"` (all palettes), `"cat"` (categorical/qualitative palettes), `"seq"` (sequential palettes) and `"div"` (diverging palettes).}
+
+\item{full.names}{should full names, i.e. with the prefix "series."? By default `TRUE`.}
+}
+\value{
+names of the loaded color palettes
 }
 \description{
-List all available cols4all color palettes
+`c4a_palettes` lists all available cols4all color palettes. The used naming convention of the palettes is: series.palette_name. Palettes are also accessible (with \code{\link{c4a}})by just palette_name. `c4a_series` lists all series from which palettes are available.
 }

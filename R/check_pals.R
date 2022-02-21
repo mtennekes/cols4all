@@ -121,26 +121,6 @@ check_cat_pal = function(p) {
 }
 
 
-#' Calculate the minimum distance a palette (any color in this palette) and a color.
-dist_to_col = function(pal, col) {
-	colorblindcheck::palette_dist(c(col, pal))[1,-1]
-}
-
-#' Function to remove (near) blacks and whites
-remove_black_white = function(pal, th = 5) {
-	blcks = dist_to_col(pal, "#000000") <= th
-	almost_blcks = dist_to_col(pal, "#0D0D0D") <= th # 1/20 grey
-
-	whts = dist_to_col(pal, "#FFFFFF") <= th
-	almost_whts = dist_to_col(pal, "#F2F2F2") <= th # 19/20 grey
-	pal[!blcks & !whts & !almost_blcks & !almost_blcks]
-}
-
-#' Determine if colors are light (otherwise dark, so binary).
-is_light <- function(col) {
-	colrgb <- col2rgb(col)
-	apply(colrgb * c(.299, .587, .114), MARGIN=2, sum) >= 128
-}
 
 # get hcl coordinates
 get_hcl_matrix = function(p) {
@@ -170,50 +150,48 @@ get_hue_width = function(hs) {
 
 }
 
-#' HCL characteristics
-analyse_hcl = function(pals) {
-	t(sapply(pals, function(p) {
-		m = get_hcl_matrix(p)
+# HCL characteristics
+analyse_hcl = function(p) {
+	m = get_hcl_matrix(p)
 
-		# hue width: how far are hues apart from each other?
-		h = round(m[,3])
-		h[m[,2]<=10] = NA
+	# hue width: how far are hues apart from each other?
+	h = round(m[,3])
+	h[m[,2]<=10] = NA
 
-		Hwidth = get_hue_width(h)
+	Hwidth = get_hue_width(h)
 
-		n = length(p)
-		is_even = ((n %% 2) != 1)
-		nh = floor(n/2)
+	n = length(p)
+	is_even = ((n %% 2) != 1)
+	nh = floor(n/2)
 
-		hL = h[1:nh]
-		hR = h[(nh+1+!is_even):n]
-
-
-		Hwidth = get_hue_width(h)
-		HwidthL = get_hue_width(hL)
-		HwidthR = get_hue_width(hR)
+	hL = h[1:nh]
+	hR = h[(nh+1+!is_even):n]
 
 
-		#Crels = pmin(round((m[,2] / .maxC[round(m[,3]) + 1]) * 100), 100)
+	Hwidth = get_hue_width(h)
+	HwidthL = get_hue_width(hL)
+	HwidthR = get_hue_width(hR)
 
 
-		Cmax = round(max(m[,2]))
-
-		#Crel = max(Crels)
-
-		# Lmin = min(m[,1]), Lmax = max(m[,1]),
-		# Cmin = min(m[,2]), Cmax = max(m[,2]),
-
-		Lrange = round(max(m[,1]) - min(m[,1]))
-		#Crange = round(max(Crels) - min(Crels))
-		Crange = round(max(m[,2]) - min(m[,2]))
-
-		LCrange = round((Lrange + Crange) / 2)
-		LCrange = round((Lrange*2 + Crange) / 3)
-		LCrange = round(max(Lrange*2, Crange))
+	#Crels = pmin(round((m[,2] / .maxC[round(m[,3]) + 1]) * 100), 100)
 
 
-		c(Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, LCrange = LCrange)
-	}))
+	Cmax = round(max(m[,2]))
+
+	#Crel = max(Crels)
+
+	# Lmin = min(m[,1]), Lmax = max(m[,1]),
+	# Cmin = min(m[,2]), Cmax = max(m[,2]),
+
+	Lrange = round(max(m[,1]) - min(m[,1]))
+	#Crange = round(max(Crels) - min(Crels))
+	Crange = round(max(m[,2]) - min(m[,2]))
+
+	# LCrange = round((Lrange + Crange) / 2)
+	# LCrange = round((Lrange*2 + Crange) / 3)
+	LCrange = round(max(Lrange*2, Crange))
+
+
+	c(Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, LCrange = LCrange)
 }
 

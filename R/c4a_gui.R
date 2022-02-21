@@ -25,7 +25,7 @@ c4a_gui = function() {
 										   min = 0, max = 1, value = c(0,1), step = .01),
 						shiny::checkboxInput("auto_contrast", label = "Automatic (based on number of colors)", value = FALSE)),
 					shiny::checkboxInput("na", shiny::strong("Color for missing values"), value = FALSE),
-					shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Red-Green blind ("deutan")' = "deutan", 'Red-Green blind ("protan")' = "protan", 'Blue-Yellow blind ("tritan")' = "tritan"), selected = "none"),
+					shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
 					shiny::selectizeInput("series", "Palette Series", choices = series, selected = series, multiple = TRUE),
 					shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .friendly)), selected = "rank"),
 					shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE)

@@ -1,20 +1,48 @@
-#' List all available cols4all color palettes
-c4a_palettes = function(type = c("all", "cat", "seq", "div", "biv", "cyc")) {
+#' List all available cols4all color palettes and series
+#'
+#' `c4a_palettes` lists all available cols4all color palettes. The used naming convention of the palettes is: series.palette_name. Palettes are also accessible (with \code{\link{c4a}})by just palette_name. `c4a_series` lists all series from which palettes are available.
+#'
+#' @param type type of color palette: one of `"all"` (all palettes), `"cat"` (categorical/qualitative palettes), `"seq"` (sequential palettes) and `"div"` (diverging palettes).
+#' @param full.names should full names, i.e. with the prefix "series."? By default `TRUE`.
+#' @return names of the loaded color palettes
+#' @rdname c4a_palettes
+#' @name c4a_palettes
+#' @export
+c4a_palettes = function(type = c("all", "cat", "seq", "div"), full.names = TRUE) {
 	type = match.arg(type)
 	z = get(".z", envir = .C4A_CACHE)
-	z$fullname
+	fnames = z$fullname
+	if (type != "all") fnames[z$type == type] else fnames
 }
 
+#' @rdname c4a_palettes
+#' @name c4a_series
+c4a_series = function(type = c("all", "cat", "seq", "div")) {
+	type = match.arg(type)
+	z = get(".z", envir = .C4A_CACHE)
+	series = z$series
+	unique({if (type != "all") series[z$type == type] else series})
+}
+
+
+#' @rdname c4a
+#' @name c4a_defaults
+#' @export
 c4a_defaults = c(cat = "tol.muted", seq = "hcl.blues", div = "hcl.purple-green")
 
 #' Select a cols4all color palette
 #'
-#' Select a cols4all color palette
+#' Select a cols4all color palette.
 #'
-#' @param palette name of the palette. See \code{\link{c4a_palettes}} for options
-#' @param n
-#'
-c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div", "biv", "cyc"), reverse = FALSE, order = NULL) {
+#' @param palette name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided `c4a_defaults`
+#' @param n number of colors. If omitted then: for type `"cat"` the maximum number of colors is returned, and for types `"seq"` and `"div"`, 9 colors.
+#' @param type type of color palette, in case `palette` is not specified: one of `"cat"` (categorical/qualitative palette), `"seq"` (sequential palette) and `"div"` (diverging palette).
+#' @param reverse should the palette be reversed?
+#' @param order order of colors. Only applicable for `"cat"` palettes
+#' @param contrast vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`. See `c4a_gui`, or the internal functions `cols4all::default_contrast_seq` and `cols4all::default_contrast_div` to see what the automatic values are.
+#' @return a vector of colors
+#' @export
+c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse = FALSE, order = NULL, contrast = NULL) {
 	type = match.arg(type)
 
 	if (is.null(palette)) palette = c4a_defaults[type]
@@ -37,6 +65,7 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div", "biv", "c
 
 	zl = as.list(.z[palid,])
 	zl$palette = zl$palette[[1]]
+	zl$contrast = contrast
 	if (is.null(n)) n = ifelse(zl$type == "cat", zl$nmax, 11)
 	pal = do.call(get_pal_n, c(list(n = n), zl))
 
@@ -46,8 +75,4 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div", "biv", "c
 	} else pal
 
 	if (reverse) rev(pal) else pal
-}
-
-c4a_specplot = function(...) {
-	colorspace::specplot(do.call(c4a, list(...)))
 }

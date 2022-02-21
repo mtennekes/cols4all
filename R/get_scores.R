@@ -9,7 +9,7 @@ get_scores_zn = function(zn) {
 
 	if (type == "cat") {
 		r = -q
-	} else if (type == "cat") {
+	} else if (type == "seq") {
 		qr = q[,1] - q[,2] / 1000 # order min_step, those with equal store to -max_step
 		r = -qr#rank(-qr, ties.method = "first")
 	} else if (type == "div") {

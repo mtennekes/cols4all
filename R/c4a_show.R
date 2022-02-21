@@ -31,15 +31,59 @@ table_columns = function(type, show.scores) {
 	list(qn = qn, ql = ql, srt = srt)
 }
 
+
 #' Graphical user interface to analyse palettes
 #'
 #' Graphical user interface to analyse palettes. `c4a_show` shows a table that can be opened in the browser. `c4a_gui` is a graphical user interface around this table.
+#'
+#' The following table describes the main columns. A more precise description is provided after that
+#'
+#' | Label | Name | Description
+#' | --- | --- | --- | ---
+#' | Max n | `"nmax"` | Maximum number of colors (`"cat"` only)
+#' | Colorblind-friendly | `"cbfriendly"` | Is it color-blind friendy?
+#' | Harmonic palette | `"harmonic"` | Are the colors in harmony with each other?
+#' | Intense colors | `"highC` | Are there any intense (saturated) colors?
+#' | Hue type | `"hueType"` | How many different hue ranges are used? For a sequential (`"seq"`) palette we consider three classes. 1) "single hue" where one hue is used, which is recommended for quantitative analysis. This is indicated by a paint brush icon 2) "spectral hue" where a wide range of hues are used, e.g. a rainbow palette. This less suitable for quantitative analysis but better to read different colors. This is indicated by a rainbow icon 3) a trade-off between the two mentioned classes (no icon used). For a diverging (`"div"`) palette, we also consider similar three classes. 1) "two hues", where one hue is used for the left wing and one for the right wing. 2) "spectral hue" and 3) trade-off.
+#' | Ranking | `"rank"` | Ranking of palettes taking the above into account
+#'
+#' The following table are the quality indicators that have been applied to determine color-blind friendliness. These indicators are visible when `show.scores` is set to `TRUE`.
+#
+#' | Label | Name | Description
+#' | --- | --- | --- | ---
+#' | Minimum distance | `"min_dist"` | Minimum distance between any two colors for any color vision deficiency type. This is a measure to which extend categorical palettes (type `"cat"`) are suitable for people with color vision deficiency
+#' | Minimum step | `"min_step"` | Minimum distance between two neighboring colors in a sequential (`"seq"`) or diverging (`"div"`) palette, for any color vision deficiency type. The larger, the better.
+#' | Maximum step | `"max_step"` | Maximum distance between two neighboring colors in a sequential (`"seq"`) palette, for any color vision deficiency type. For sequential palettes that score the same on `"min_step"`, the ones with lower `"max_step"` values are slightly preferable, because this means that the distances between neighboring colors is more homogeneous.
+#' | Inter-wing-distance | `"inter_wing_dist"` | Minimum distance between any color in the left wing to any color in the right wing of a diverging (`"div"`) palette, for any color vision deficiency type. The larger, the better.
+#' | Inter-wing hue distance | `"inter_wing_hue_dist"` | Distance between the two hue ranges in both wings of a (`"div"`) palette, for any color vision deficiency type. The larger the better. We consider 100 degrees as sufficient to discriminate two hues.
+#'
+#' Color-blind friendliness scores are calculated as:
+#'
+#' * `"cat"` `min_step`
+#' * `"seq"` `min_step` - `max_step` / 1000
+#' * `"div"` min(`inter_wing_dist`, `min_step`) + (`inter_wing_hue_dist` >= 100) * 1000
+#'
+#' The following table describes the indicators that we used to determine whether we call palette is harmonic, and whether there are intense colors. We use the HCL color space, where H is the hue, C the chroma and L the lightness. See the `colorspace` package (that is used under the hood) for details.
+#'
+#' | Label | Name | Description
+#' | --- | --- | --- | ---
+#' | Chroma max | `"Cmax"` | Maximum chroma value. We have set the threshold for the label "intense colors" at 100.
+#' | Hue width | `"Hwidth"` | The width/range of hue values that are used. For instance, if a palette has hue values 100, 140, and 220, the Hwidth is 120. Since hues are provided in degrees, a hue width close to 360 means that many hues are used (e.g. in a rainbow palette). The primary use is to determine the hue type (see above).
+#' | Hue width L | `"HwidthL"` | Same, but only for the left wing of the palette (useful for diverging palettes)
+#' | Hue width R | `"HwidthR"` | Same, but only for the right wing of the palette (useful for diverging palettes)
+#' | Luminance range | `"Lrange"` | The range of luminance values of the colors. The smaller, the better for a what we call harmonic palette. However, this is at the expense of having distinguishable colors (which contribute to color-blind-friendliness).
+#' | Chroma range | `"Crange` | The range of chroma values of the colors. Like `"Lrange"`, the lower the better.
+#' | Lum/Chr range | `"LCrange"` | Defined as max(2 * `Lrange`, `Crange`), and used to label a palette "harmonic". This formula is determined by some trial-and-error, so suggestions for improvement are welcome.
 #'
 #' @param type type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, and `"div"` for diverging
 #' @param n number of colors. If omitted: for `"cat"` the full palette is displayed, and for `"seq"` and `"div"`, 9 colors.
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @param sort column name to sort the data. For column names, see details
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
+#' @param series Series of palettes to show. See \code{\link{c4a_series}} for options.
+#' @param contrast vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`. See `c4a_gui`, or the internal functions `cols4all::default_contrast_seq` and `cols4all::default_contrast_div` to see what the automatic values are.
+#' @param include.na should color for missing values be shown? `FALSE` by default
+#' @param show.scores should scores of the quality indicators be printed? See details for a description of those indicators.
 #' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
 #' @import kableExtra
 #' @import colorspace

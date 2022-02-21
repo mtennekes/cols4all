@@ -13,11 +13,11 @@ scale_color_c4a_cat(
 )
 }
 \arguments{
+\item{palette, reverse, order}{See \code{\link{c4a}}.}
+
 \item{aesthetics}{The ggplot2 aesthetics to which this scale should be applied.}
 
 \item{...}{common discrete scale parameters: `name`, `breaks`, `labels`, `na.value`, `limits` and `guide`. See \code{\link[ggplot:discrete_scale]{discrete_scale}} for more details.}
-
-\item{name, reverse, order}{See \code{\link{c4a}}.}
 }
 \description{
 col4all scales for ggplot2
@@ -28,11 +28,11 @@ library("ggplot2")
 data("diamonds")
 
 # find suitable palette
-c4a_show(nlevels(diamonds$color))
+c4a_show(n = nlevels(diamonds$color), sort = "rank")
 
-# select "kelly"
+# select "carto.safe"
 ggplot(diamonds[diamonds$price >= 15000, ], aes(x = carat, y = price, color = color)) +
 	geom_point(size = 2) +
-	scale_color_c4a_cat("kelly") +
+	scale_color_c4a_cat("carto.safe") +
 	theme_light()
 }
