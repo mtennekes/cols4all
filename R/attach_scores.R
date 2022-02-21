@@ -1,6 +1,9 @@
-attach_scores = function(z) {
+attach_scores = function(z, contrast) {
 
 	type = if (all(z$type == "cat")) "cat" else if (all(z$type == "seq")) "seq" else if (all(z$type == "div")) "div" else "mixed"
+
+	# needed to approx decrease of min step
+
 
 	k = nrow(z)
 
@@ -9,22 +12,33 @@ attach_scores = function(z) {
 
 	s2 = s[match(z$fullname, dimnames(s)[[1]]), , , drop = FALSE]
 
+
 	s3 = do.call(rbind, lapply(1:k, function(i) {
 		# maximum n to take scores from (cat: dim max, seq/div, the scores for the largest palettes)
 		mmax = if (type == "cat") dim(s2)[3] else min(z$n[i], which(is.na(s2[i, "rank", ][-1]))[1])
 		m = min(z$n[i], mmax)
 		s2[i,,m]
 	}))
+
+
+	if (!is.null(contrast)) {
+		rng = contrast[2] - contrast[1]
+		s3[, "min_step"] = round(s3[, "min_step"] * rng)
+		s3[, "max_step"] = round(s3[, "max_step"] * rng)
+	}
+
+
+
+
 	z2 = cbind(z, as.data.frame(s3))
 
-	# remove ranking if multiple types are included or multiple n
-	#if (is.null(n) || (!all(z2$type == z2$type[1]))) z2$rank = NULL
 
 	z2$cbfriendly = get_friendlyness(z2)
 	a = analyse_hcl(z2$palette)
 	z2 = cbind(z2, a)
 
 	z2$highC = z2$Cmax >= 100
+
 
 	if (type == "div") {
 		z2$hueType = ifelse(z2$HwidthL >= 90 | z2$HwidthR >= 90, "RH",

@@ -31,20 +31,23 @@ table_columns = function(type, show.scores) {
 	list(qn = qn, ql = ql, srt = srt)
 }
 
-
-#' Show cols4all palettes
+#' Graphical user interface to analyse palettes
 #'
-#' Show cols4all palettes
+#' Graphical user interface to analyse palettes. `c4a_show` shows a table that can be opened in the browser. `c4a_gui` is a graphical user interface around this table.
 #'
 #' @param type type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, and `"div"` for diverging
-#' @param n number of colors. If omitted, for `"cat"` the full palette is displayed, and for `"seq"` and `"div"`, 9 colors.
-#' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
+#' @param n number of colors. If omitted: for `"cat"` the full palette is displayed, and for `"seq"` and `"div"`, 9 colors.
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
-#' @param order.by.score order the palettes by score (`TRUE`, default) or by name?
+#' @param sort column name to sort the data. For column names, see details
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
+#' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
 #' @import kableExtra
 #' @import colorspace
-c4a_show = function(type = c("cat", "seq", "div"), n = NULL, columns = NA, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL, include.na = TRUE, show.scores = FALSE) {
+#' @example ./examples/c4a_show.R
+#' @export
+#' @rdname c4a_gui
+#' @name c4a_gui
+c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL, include.na = TRUE, show.scores = FALSE, columns = NA) {
 
 	type = match.arg(type)
 	show.ranking = (!is.null(n))
@@ -55,7 +58,11 @@ c4a_show = function(type = c("cat", "seq", "div"), n = NULL, columns = NA, cvd.s
 	z = get(".z", envir = .C4A_CACHE)
 
 	zn = get_z_n(z[z$type == type, ], n = n, contrast = contrast)
-	zn = attach_scores(zn)
+
+
+	zn = attach_scores(zn, contrast = contrast)
+	# better but slower alternative: calculate all scores read time:
+	#zn = get_scores_zn(zn)
 	if (!is.null(series)) zn = zn[zn$series %in% series, ]
 
 	columns = min(columns, max(zn$n))

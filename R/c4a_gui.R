@@ -1,8 +1,5 @@
-#' Graphical user interface to select palettes
-#'
-#' Graphical user interface to select palettes. See \code{\link{c4a_show}} for description of the color palette table. Input controls should be self explanatory (if not, let us know).
-#'
-#' @example ./examples/c4a_gui.R
+#' @rdname c4a_gui
+#' @name c4a_gui
 #' @export
 c4a_gui = function() {
 	if (requireNamespace("shiny")) {
@@ -18,20 +15,20 @@ c4a_gui = function() {
 			shiny::sidebarLayout(
 				shiny::sidebarPanel(
 					width = 3,
-					shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE),
 					shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div")), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
 					shiny::sliderInput("n", "Number of colors",
-									   min = 2, max = 36, value = 7),
+									   min = 2, max = 36, value = 9),
 					shiny::conditionalPanel(
 						condition = "input.type != 'cat'",
 						shiny::strong("Contrast range"),
 						shiny::sliderInput("contrast", "",
 										   min = 0, max = 1, value = c(0,1), step = .01),
 						shiny::checkboxInput("auto_contrast", label = "Automatic (based on number of colors)", value = FALSE)),
-					shiny::checkboxInput("na", "Include color for NA", value = FALSE),
+					shiny::checkboxInput("na", shiny::strong("Color for missing values"), value = FALSE),
 					shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Red-Green blind ("deutan")' = "deutan", 'Red-Green blind ("protan")' = "protan", 'Blue-Yellow blind ("tritan")' = "tritan"), selected = "none"),
 					shiny::selectizeInput("series", "Palette Series", choices = series, selected = series, multiple = TRUE),
 					shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .friendly)), selected = "rank"),
+					shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE)
 				),
 
 				shiny::mainPanel(

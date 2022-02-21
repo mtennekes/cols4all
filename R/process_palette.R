@@ -49,7 +49,11 @@ process_palette = function(pal, type, colNA = NA, take_grey_for_NA = TRUE, remov
 	}
 
 	if (is.na(colNA)) {
-		greys = grey.colors(10, start = 0.4, end = 1)
+		# choose NA from greys, such that luminance is at most 0.2 darker or lighter than darkest/lightest color.
+		# prefer lightest grey
+		grey_range = c(max(0, (min(hcl[,1]/100) - 0.2)), min(1, (max(hcl[,1]/100) + 0.2)))
+
+		greys = grey.colors(10, start = grey_range[1], end = grey_range[2])
 		pal2 = c(pal, greys)
 		m = sapply(c("pro", "deu", "tri"), function(cvd) {
 			m = colorblindcheck::palette_dist(pal2, cvd = cvd)
