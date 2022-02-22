@@ -5,7 +5,11 @@
 \alias{c4a_series}
 \title{List all available cols4all color palettes and series}
 \usage{
-c4a_palettes(type = c("all", "cat", "seq", "div"), full.names = TRUE)
+c4a_palettes(
+  type = c("all", "cat", "seq", "div"),
+  series = NULL,
+  full.names = TRUE
+)
 
 c4a_series(type = c("all", "cat", "seq", "div"))
 }

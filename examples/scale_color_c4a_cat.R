@@ -1,12 +1,24 @@
 library("ggplot2")
 
 data("diamonds")
+diam_exp = diamonds[diamonds$price >= 15000, ]
+diam_exp$clarity[1:500] = NA
 
-# find suitable palette
-c4a_show(n = nlevels(diamonds$color), sort = "rank")
-
-# select "carto.safe"
-ggplot(diamonds[diamonds$price >= 15000, ], aes(x = carat, y = price, color = color)) +
+# discrete categorical scale
+ggplot(diam_exp, aes(x = carat, y = price, color = color)) +
 	geom_point(size = 2) +
 	scale_color_c4a_cat("carto.safe") +
+	theme_light()
+
+
+# missing values
+ggplot(diam_exp, aes(x = carat, y = price, fill = clarity)) +
+	geom_point(size = 2, shape = 21) +
+	scale_fill_c4a_cat("carto.safe") +
+	theme_light()
+
+# discrete sequential scale
+ggplot(diam_exp, aes(x = carat, y = price, color = cut)) +
+	geom_point(size = 2) +
+	scale_color_c4a_seq("scico.hawaii") +
 	theme_light()

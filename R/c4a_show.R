@@ -91,7 +91,7 @@ table_columns = function(type, show.scores) {
 #' @export
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL, include.na = TRUE, show.scores = FALSE, columns = NA) {
+c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL, include.na = FALSE, show.scores = FALSE, columns = NA) {
 
 	type = match.arg(type)
 	show.ranking = (!is.null(n))

@@ -42,7 +42,7 @@ attach_scores = function(z, contrast) {
 		z2$rank[z2$cbfriendly] = z2$rank[z2$cbfriendly] - 1e9 + ((z2$LCrange[z2$cbfriendly]) * 1e6) + (z2$highC[z2$cbfriendly] * 1e3)
 		z2$rank[!z2$cbfriendly] = z2$rank[!z2$cbfriendly] + ((z2$LCrange[!z2$cbfriendly]) * 1e-3) + (z2$highC[!z2$cbfriendly] * 1e-6)
 	}
-	z2$rank = floor(rank(z2$rank))
+	z2$rank = floor(rank(z2$rank, ties.method = "min"))
 	z2
 }
 

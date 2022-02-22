@@ -15,7 +15,7 @@ c4a_show(
   text.col = "same",
   series = NULL,
   contrast = NULL,
-  include.na = TRUE,
+  include.na = FALSE,
   show.scores = FALSE,
   columns = NA
 )

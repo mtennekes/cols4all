@@ -4,7 +4,8 @@
 \name{c4a_defaults}
 \alias{c4a_defaults}
 \alias{c4a}
-\title{Select a cols4all color palette}
+\alias{c4a_na}
+\title{Get a cols4all color palette}
 \format{
 An object of class \code{character} of length 3.
 }
@@ -19,6 +20,8 @@ c4a(
   order = NULL,
   contrast = NULL
 )
+
+c4a_na(palette = NULL, type = c("cat", "seq", "div"))
 }
 \arguments{
 \item{palette}{name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided `c4a_defaults`}
@@ -37,6 +40,6 @@ c4a(
 a vector of colors
 }
 \description{
-Select a cols4all color palette.
+Get a cols4all color palette. The function `c4a` returns the colors of the specified palette, and the function `c4a_na` returns the color for missing value that is associated with the specified palette.
 }
 \keyword{datasets}

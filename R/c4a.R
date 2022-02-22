@@ -8,11 +8,13 @@
 #' @rdname c4a_palettes
 #' @name c4a_palettes
 #' @export
-c4a_palettes = function(type = c("all", "cat", "seq", "div"), full.names = TRUE) {
+c4a_palettes = function(type = c("all", "cat", "seq", "div"), series = NULL, full.names = TRUE) {
 	type = match.arg(type)
 	z = get(".z", envir = .C4A_CACHE)
 	fnames = z$fullname
-	if (type != "all") fnames[z$type == type] else fnames
+	sel_type = if (type != "all") z$type == type else TRUE
+	sel_series = if (is.null(series)) TRUE else (z$series %in% series)
+	fnames[sel_type & sel_series]
 }
 
 #' @rdname c4a_palettes
@@ -28,11 +30,11 @@ c4a_series = function(type = c("all", "cat", "seq", "div")) {
 #' @rdname c4a
 #' @name c4a_defaults
 #' @export
-c4a_defaults = c(cat = "tol.muted", seq = "hcl.blues", div = "hcl.purple-green")
+c4a_defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green")
 
-#' Select a cols4all color palette
+#' Get a cols4all color palette
 #'
-#' Select a cols4all color palette.
+#' Get a cols4all color palette. The function `c4a` returns the colors of the specified palette, and the function `c4a_na` returns the color for missing value that is associated with the specified palette.
 #'
 #' @param palette name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided `c4a_defaults`
 #' @param n number of colors. If omitted then: for type `"cat"` the maximum number of colors is returned, and for types `"seq"` and `"div"`, 9 colors.
@@ -41,11 +43,17 @@ c4a_defaults = c(cat = "tol.muted", seq = "hcl.blues", div = "hcl.purple-green")
 #' @param order order of colors. Only applicable for `"cat"` palettes
 #' @param contrast vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`. See `c4a_gui`, or the internal functions `cols4all::default_contrast_seq` and `cols4all::default_contrast_div` to see what the automatic values are.
 #' @return a vector of colors
+#' @rdname c4a
+#' @name c4a
 #' @export
 c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse = FALSE, order = NULL, contrast = NULL) {
 	type = match.arg(type)
-
-	if (is.null(palette)) palette = c4a_defaults[type]
+	if (is.null(palette)) {
+		palette = c4a_defaults[type]
+		mes = paste0("These are the colors from palette \"", palette, "\", the default for type \"", type, "\":")
+	} else {
+		mes = NULL
+	}
 
 	palid = which(palette == .z$fullname)
 	if (!length(palid)) {
@@ -74,5 +82,33 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse 
 		pal[order]
 	} else pal
 
+	if (!is.null(mes)) message(mes)
 	if (reverse) rev(pal) else pal
+}
+
+#' @rdname c4a
+#' @name c4a_na
+#' @export
+c4a_na = function(palette = NULL, type = c("cat", "seq", "div")) {
+	type = match.arg(type)
+	if (is.null(palette)) {
+		palette = c4a_defaults[type]
+		mes = paste0("This is the color for missing values associated with palette \"", palette, "\", the default for type \"", type, "\":")
+	} else {
+		mes = NULL
+	}
+
+
+	palid = which(palette == .z$fullname)
+	if (!length(palid)) {
+		palid = which(palette == .z$name)
+		if (length(palid) > 1) {
+			stop(paste0("Multiple palettes called \"", palette, " found. Please use the full name \"<series>.<name>\""))
+		}
+		if (!length(palid)) stop("Unknown palette. See c4a_palettes() for options, and c4a_show / c4a_gui to see them.")
+	}
+
+	if (!is.null(mes)) message(mes)
+
+	.z$na[palid]
 }
