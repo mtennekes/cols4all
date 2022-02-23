@@ -6,18 +6,25 @@
 The **cols4all** is an R package in development for selecting color
 palettes. “Color for all” refers to our mission that colors should be
 usable for not just people with normal color vision, but also for people
-with color vision deficiency. This package contains palettes from
-several popular color palette series, such as Color Brewer, Viridis, and
-Kovesi, but also the lesser known [palettes from Paul
-Tol](https://personal.sron.nl/~pault/). Own palettes series can be added
-as well. Color palettes are well organized. Currently we support three
-types: *categorical* (qualitative) palettes, *sequential* palettes, and
-*diverging* palettes. In the near future, more palette types will be
-added, namely *cyclic*, *bivariate*, and *hierarchical*.
+with color vision deficiency. Currently, this package contains palettes
+from several popular and lesser known color palette series: [Color
+Brewer](https://colorbrewer2.org),
+[Viridis](http://bids.github.io/colormap/),
+[Kovesi](https://colorcet.com/), [Paul
+Tol](https://personal.sron.nl/~pault/),
+[Scico](https://www.fabiocrameri.ch/colourmaps/),
+[Carto](https://carto.com/carto-colors/),
+[Tableau](https://www.tableau.com/about/blog/2016/7/colors-upgrade-tableau-10-56782)
+and [Wes Anderson](https://github.com/karthik/wesanderson). Own palettes
+series can be added as well. Color palettes are well organized.
+Currently we support three types: *categorical* (qualitative) palettes,
+*sequential* palettes, and *diverging* palettes. In the near future,
+more palette types will be added, namely *cyclic*, *bivariate*, and
+*hierarchical*.
 
 ## Installation
 
-**cols4all** will be available on CRAN soon! Until then it can be
+**cols4all** will be available on CRAN soon. Until then it can be
 installed using:
 
 ``` r
@@ -30,6 +37,7 @@ getwd()
 #> [1] "/home/mtes/git/cols4all"
 devtools::load_all(".")
 #> ℹ Loading cols4all
+#> Loading required package: abind
 #> Loading required package: colorspace
 ```
 
@@ -39,6 +47,8 @@ Navigation through the color palettes is easy:
 
 ``` r
 library(cols4all)
+# For the GUI, shiny, shinyjs and kableExtra are required
+# install.packages(c("shiny", "shinyjs", "kableExtra"))
 c4a_gui()
 ```
 
@@ -49,9 +59,7 @@ palettes)](https://user-images.githubusercontent.com/2444081/155185615-9356443d-
 ![diverging
 palettes)](https://user-images.githubusercontent.com/2444081/155185638-3d05a045-c794-4eab-b994-88c0b58196e2.png)
 
-Selecting a palette is easy. Palette names are in the format
-<series>.<palette_name>. So all letters are in small caps, and
-underscores are used to separate words.
+Selecting a palette is easy:
 
 ``` r
 # Select the palette "kelly" with 7 colors
@@ -78,13 +86,14 @@ c4a_na("hcl.purple_green")
 
 The foundation of this package is another R package:
 [**colorspace**](https://colorspace.r-forge.r-project.org/). We use this
-package to analyse colors. For this purpose, we also use
+package to analyse colors. For this purpose and specifically for color
+blind friendliness checks, we also use
 [**colorblindcheck**](https://github.com/Nowosad/colorblindcheck).
 
-There are a few features that distinguishes **cols4all** from other
-(great) color palette packages, in particular
-[**pals**](https://kwstat.github.io/pals/) and
-[**paletteer**](https://github.com/EmilHvitfeldt/paletteer):
+There are a few other pacakges with a large collection of color
+palettes, in particular [**pals**](https://kwstat.github.io/pals/) and
+[**paletteer**](https://github.com/EmilHvitfeldt/paletteer). There are a
+few features that distinguishes **cols4all** from those packages:
 
 -   Colors for missing values are made explicit. For this, either a
     greyscale color that is already contained in the palette is used, or
@@ -98,11 +107,21 @@ There are a few features that distinguishes **cols4all** from other
     practical reasons: white or light grey is almost always used as
     background color and black for annotation.
 
--   With the gui (see below), a user is able to analyse characteristics
-    of color palettes, such as color-blind-friendliness, harmony, and
-    the presence of intense colors.
+-   The GUI enables users to analyse characteristics of color palettes,
+    such as color-blind-friendliness, harmony, and the presence of
+    intense colors.
+
+-   There is native support for **ggplot2** and **tmap** (as of the
+    upcoming version 4).
 
 -   It will be possible to submit an own series of color palettes.
 
-There will be native support for **ggplot2** and **tmap** (as of the
-upcoming version 4)
+## Feedback welcome!
+
+-   Is everything working as expected?
+
+-   Do you miss certain palettes or series?
+
+-   Do you have ideas for improvement how to measure palette properties?
+
+Let us know! (via github issues)

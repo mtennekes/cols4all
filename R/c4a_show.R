@@ -91,7 +91,7 @@ table_columns = function(type, show.scores) {
 #' @rdname c4a_gui
 #' @name c4a_gui
 c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL, include.na = FALSE, show.scores = FALSE, columns = NA) {
-	rm(id)
+	id = NULL
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
 
 	type = match.arg(type)

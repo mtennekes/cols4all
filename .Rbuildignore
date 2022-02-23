@@ -1,2 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^README\.Rmd$
+^build$
+^sandbox$
+^examples$

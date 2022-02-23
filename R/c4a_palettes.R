@@ -21,6 +21,7 @@ c4a_palettes = function(type = c("all", "cat", "seq", "div"), series = NULL, ful
 
 #' @rdname c4a_palettes
 #' @name c4a_series
+#' @export
 c4a_series = function(type = c("all", "cat", "seq", "div")) {
 	type = match.arg(type)
 	z = get(".z", envir = .C4A_CACHE)

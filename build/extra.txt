@@ -1,0 +1,18 @@
+<style>
+table {
+	border-collapse: collapse;
+	font-size: 12px;
+	border-collapse: collapse;
+}
+
+td {
+	border-radius: 0px;
+	border: 1px solid white;
+	border-collapse: collapse;
+}
+
+th {
+	text-align: center;
+}
+
+</style>
