@@ -14,8 +14,14 @@ knitr::opts_chunk$set(
 
 # Colors for all!
 
-The **cols4all** is an R package in development for selecting color palettes. "Color for all" refers to our mission that colors should be usable for not just people with normal color vision, but also for people with color vision deficiency. Currently, this package contains palettes from several popular and lesser known color palette series: [Color Brewer](https://colorbrewer2.org), [Viridis](http://bids.github.io/colormap/), [Kovesi](https://colorcet.com/), [Paul Tol](https://personal.sron.nl/~pault/), [Scico](https://www.fabiocrameri.ch/colourmaps/), [Carto](https://carto.com/carto-colors/), [Tableau](https://www.tableau.com/about/blog/2016/7/colors-upgrade-tableau-10-56782) and [Wes Anderson](https://github.com/karthik/wesanderson). Own palettes series can be added as well. Color palettes are well organized. Currently we support three types: *categorical* (qualitative) palettes, *sequential* palettes, and *diverging* palettes. In the near future, more palette types will be added, namely *cyclic*, *bivariate*, and *hierarchical*. 
+The **cols4all** is a new R package for selecting color palettes. "Color for all" refers to our mission that colors should be usable for not just people with normal color vision, but also for people with color vision deficiency. Currently, this package contains palettes from several popular and lesser known color palette series: [Color Brewer](https://colorbrewer2.org), [Viridis](http://bids.github.io/colormap/), [Kovesi](https://colorcet.com/), [Paul Tol](https://personal.sron.nl/~pault/), [Scico](https://www.fabiocrameri.ch/colourmaps/), [Carto](https://carto.com/carto-colors/), [Tableau](https://www.tableau.com/about/blog/2016/7/colors-upgrade-tableau-10-56782) and [Wes Anderson](https://github.com/karthik/wesanderson). Own palettes series can be added as well.
 
+![categorical palettes)](https://user-images.githubusercontent.com/2444081/155185594-a52c361f-7113-40fe-82ea-94e782c27be4.png)
+![sequential palettes)](https://user-images.githubusercontent.com/2444081/155185615-9356443d-8a18-40a6-bc9e-d2e0d8e26eb4.png)
+![diverging palettes)](https://user-images.githubusercontent.com/2444081/155185638-3d05a045-c794-4eab-b994-88c0b58196e2.png)
+
+
+Color palettes are well organized and made consistent with each other. Moreover, they are scored on several aspects: color-blind-friendliness, the presence of intense colors (which should be avoided), the overall aesthetic harmony, and how many different hues are used. Finally, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support three types: *categorical* (qualitative) palettes, *sequential* palettes, and *diverging* palettes. In the near future, more palette types will be added, such as *cyclic*, *bivariate*, and *hierarchical*. 
 
 ## Installation
 
@@ -33,20 +39,15 @@ devtools::load_all(".")
 
 ## Get started
 
-Navigation through the color palettes is easy:
+Navigation through the color palettes is easy via the gui shown above, which is started with:
 
 
 ```{r, eval=FALSE}
 library(cols4all)
-# For the GUI, shiny, shinyjs and kableExtra are required
+# For the GUI, shiny, shinyjs, and kableExtra are required
 # install.packages(c("shiny", "shinyjs", "kableExtra"))
 c4a_gui()
 ```
-
-![categorical palettes)](https://user-images.githubusercontent.com/2444081/155185594-a52c361f-7113-40fe-82ea-94e782c27be4.png)
-![sequential palettes)](https://user-images.githubusercontent.com/2444081/155185615-9356443d-8a18-40a6-bc9e-d2e0d8e26eb4.png)
-![diverging palettes)](https://user-images.githubusercontent.com/2444081/155185638-3d05a045-c794-4eab-b994-88c0b58196e2.png)
-
 
 Selecting a palette is easy:
 
