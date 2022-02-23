@@ -19,7 +19,10 @@ Depends:
     colorspace
 Suggests:
 	colorblindcheck,
-	shiny
+	shiny,
+	ggplot2,
+	scales,
+	tmap
 URL: https://github.com/mtennekes/cols4all
 BugReports: https://github.com/mtennekes/cols4all/issues
 VignetteBuilder: knitr

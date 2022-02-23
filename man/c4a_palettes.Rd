@@ -16,6 +16,8 @@ c4a_series(type = c("all", "cat", "seq", "div"))
 \arguments{
 \item{type}{type of color palette: one of `"all"` (all palettes), `"cat"` (categorical/qualitative palettes), `"seq"` (sequential palettes) and `"div"` (diverging palettes).}
 
+\item{series}{series to list the palettes from. Run `c4a_series` to see the options.}
+
 \item{full.names}{should full names, i.e. with the prefix "series."? By default `TRUE`.}
 }
 \value{

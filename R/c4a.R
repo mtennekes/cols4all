@@ -3,6 +3,7 @@
 #' `c4a_palettes` lists all available cols4all color palettes. The used naming convention of the palettes is: series.palette_name. Palettes are also accessible (with \code{\link{c4a}})by just palette_name. `c4a_series` lists all series from which palettes are available.
 #'
 #' @param type type of color palette: one of `"all"` (all palettes), `"cat"` (categorical/qualitative palettes), `"seq"` (sequential palettes) and `"div"` (diverging palettes).
+#' @param series series to list the palettes from. Run `c4a_series` to see the options.
 #' @param full.names should full names, i.e. with the prefix "series."? By default `TRUE`.
 #' @return names of the loaded color palettes
 #' @rdname c4a_palettes

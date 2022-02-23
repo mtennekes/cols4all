@@ -104,5 +104,5 @@ There are a few features that distinguishes **cols4all** from other
 
 -   It will be possible to submit an own series of color palettes.
 
-There will be native support for **ggplot** and **tmap** (as of the
+There will be native support for **ggplot2** and **tmap** (as of the
 upcoming version 4)
