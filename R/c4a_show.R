@@ -85,13 +85,14 @@ table_columns = function(type, show.scores) {
 #' @param include.na should color for missing values be shown? `FALSE` by default
 #' @param show.scores should scores of the quality indicators be printed? See details for a description of those indicators.
 #' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
-#' @import kableExtra
-#' @import colorspace
+#' @import colorspace abind
 #' @example ./examples/c4a_show.R
 #' @export
 #' @rdname c4a_gui
 #' @name c4a_gui
 c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL, include.na = FALSE, show.scores = FALSE, columns = NA) {
+	rm(id)
+	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
 
 	type = match.arg(type)
 	show.ranking = (!is.null(n))
@@ -282,9 +283,13 @@ c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none",
 	kl[rws2] = paste0("  <tr style=\"height: ", e2$row_h[e2$ind!=1], "px;vertical-align:top;\">")
 	#kl[rws[-1]] = paste0("  <tr style=\"vertical-align:top;\">")
 
-	css = readLines("css/table.css")
+	extra = c("<style>", "table {", "\tborder-collapse: collapse;", "\tfont-size: 12px;",
+			  "\tborder-collapse: collapse;", "}", "", "td {", "\tborder-radius: 0px;",
+			  "\tborder: 1px solid white;", "\tborder-collapse: collapse;",
+			  "}", "", "th {", "\ttext-align: center;", "}", "", "</style>"
+	) # extra = readLines("build/extra.txt"); dput(extra)
 
-	k[1] = paste(c(css,kl), collapse="\n")
+	k[1] = paste(c(extra,kl), collapse="\n")
 	#k[1] = paste(kl, collapse="\n")
 	k
 

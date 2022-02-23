@@ -16,6 +16,12 @@
 \alias{scale_color_continuous_c4a_div}
 \alias{scale_colour_continuous_c4a_div}
 \alias{scale_fill_continuous_c4a_div}
+\alias{scale_color_binned_c4a_seq}
+\alias{scale_colour_binned_c4a_seq}
+\alias{scale_fill_binned_c4a_seq}
+\alias{scale_color_binned_c4a_div}
+\alias{scale_colour_binned_c4a_div}
+\alias{scale_fill_binned_c4a_div}
 \title{col4all scales for ggplot2}
 \usage{
 scale_color_discrete_c4a_cat(
@@ -129,18 +135,72 @@ scale_fill_continuous_c4a_div(
   n_interp = 11,
   ...
 )
+
+scale_color_binned_c4a_seq(
+  palette = NULL,
+  reverse = FALSE,
+  contrast = NULL,
+  mid = 0,
+  n_interp = 11,
+  ...
+)
+
+scale_colour_binned_c4a_seq(
+  palette = NULL,
+  reverse = FALSE,
+  contrast = NULL,
+  mid = 0,
+  n_interp = 11,
+  ...
+)
+
+scale_fill_binned_c4a_seq(
+  palette = NULL,
+  reverse = FALSE,
+  contrast = NULL,
+  mid = 0,
+  n_interp = 11,
+  ...
+)
+
+scale_color_binned_c4a_div(
+  palette = NULL,
+  reverse = FALSE,
+  contrast = NULL,
+  mid = 0,
+  n_interp = 11,
+  ...
+)
+
+scale_colour_binned_c4a_div(
+  palette = NULL,
+  reverse = FALSE,
+  contrast = NULL,
+  mid = 0,
+  n_interp = 11,
+  ...
+)
+
+scale_fill_binned_c4a_div(
+  palette = NULL,
+  reverse = FALSE,
+  contrast = NULL,
+  mid = 0,
+  n_interp = 11,
+  ...
+)
 }
 \arguments{
 \item{palette, reverse, order, contrast}{See \code{\link{c4a}}.}
 
-\item{...}{common discrete scale parameters: `name`, `breaks`, `labels`, `na.value`, `limits` and `guide`. See \code{\link[ggplot2:discrete_scale]{discrete_scale}} for more details.}
+\item{...}{parameters passed on to the underlying scale functions: \code{\link[ggplot2:discrete_scale]{discrete_scale}}, \code{\link[ggplot2:continuous_scale]{continuous_scale}}, and \code{\link[ggplot2:binned_scale]{binned_scale}}.}
 
 \item{mid}{data value that should be mapped to the mid-point of the diverging color scale}
 
 \item{n_interp}{number of discrete colors that should be used to interpolate the continuous color scale. Recommended to use an odd number to include the midpoint}
 }
 \description{
-col4all scales for ggplot2
+col4all scales for ggplot2. The scale functions are organized as `scale_<aesthetic>_<mapping>_c4a_<type>`, where the `<aesthetic>` should be either `colo(u)r` or `fill`, `<mapping>` refers to the mapping that is applied (`discrete`, `continuous` or `binned`), and `<type>` is the palette type: `cat`, `seq`, or `div`.
 }
 \examples{
 library("ggplot2")
@@ -174,9 +234,15 @@ ggplot(diam_exp, aes(x = carat, y = price, color = depth)) +
 	scale_color_continuous_c4a_seq("hcl.blues2", contrast = c(0.4, 1)) +
 	theme_light()
 
-# continuous sequential scale
+# continuous diverging scale
 ggplot(diam_exp, aes(x = carat, y = depth, color = price)) +
 	geom_point(size = 2) +
 	scale_color_continuous_c4a_div("wes.zissou1", mid = mean(diam_exp$price)) +
+	theme_light()
+
+# binned sequential scale
+ggplot(diam_exp, aes(x = carat, y = price, color = depth)) +
+	geom_point(size = 2) +
+	scale_color_binned_c4a_seq("scico.batlow", contrast = c(0.4, 1)) +
 	theme_light()
 }

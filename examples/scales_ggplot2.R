@@ -29,8 +29,14 @@ ggplot(diam_exp, aes(x = carat, y = price, color = depth)) +
 	scale_color_continuous_c4a_seq("hcl.blues2", contrast = c(0.4, 1)) +
 	theme_light()
 
-# continuous sequential scale
+# continuous diverging scale
 ggplot(diam_exp, aes(x = carat, y = depth, color = price)) +
 	geom_point(size = 2) +
 	scale_color_continuous_c4a_div("wes.zissou1", mid = mean(diam_exp$price)) +
+	theme_light()
+
+# binned sequential scale
+ggplot(diam_exp, aes(x = carat, y = price, color = depth)) +
+	geom_point(size = 2) +
+	scale_color_binned_c4a_seq("scico.batlow", contrast = c(0.4, 1)) +
 	theme_light()
