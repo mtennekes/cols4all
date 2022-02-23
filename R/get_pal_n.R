@@ -1,8 +1,12 @@
-get_pal_n = function(n, name, type, series, palette, nmax, contrast = NULL, ...) {
-	if (n > nmax) return(NULL)
+get_pal_n = function(n, name, type, series, palette, nmax, contrast = NULL, n_too_large = "error",...) {
+	n_orig = n
+	if (n > nmax) {
+		if (n_too_large == "error") return(NULL)
+		n = nmax
+	}
 	index = attr(palette, "index")
 
-	if (is.null(index)) {
+	x = if (is.null(index)) {
 		if (type == "cat") {
 			palette[1:n]
 		} else {
@@ -25,6 +29,14 @@ get_pal_n = function(n, name, type, series, palette, nmax, contrast = NULL, ...)
 	} else {
 		palette[index[[n]]]
 	}
+	if (n_orig != n) {
+		if (n_too_large == "repeat") {
+			x = rep(x, length.out = n_orig)
+		} else if (n_too_large == "interpolate") {
+			x = colorRampPalette(x, space = "Lab")(n_orig)
+		}
+	}
+	x
 }
 
 
