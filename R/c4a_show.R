@@ -299,7 +299,8 @@ c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none",
 	extra = c("<style>", "table {", "\tborder-collapse: collapse;", "\tfont-size: 12px;",
 			  "\tborder-collapse: collapse;", "}", "", "td {", "\tborder-radius: 0px;",
 			  "\tborder: 1px solid white;", "\tborder-collapse: collapse;",
-			  "}", "", "th {", "\ttext-align: center;", "}", "", "</style>"
+			  "}", "", "th {", "\ttext-align: center;", "}", "", 
+			  "a:link {color: black;}", "</style>"
 	) # extra = readLines("build/extra.txt"); dput(extra)
 
 	k[1] = paste(c(extra,kl), collapse="\n")
