@@ -186,7 +186,20 @@ c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none",
 	}
 
 	e2 = cbind(e, me)
-
+	
+	if (show.ranking) {
+		# add hyperlinks to Ranking column for copying row colors to Clipboard
+		links <- c()
+		for (rw in 1:nrow(e2)) {
+			js.code <- "javascript:navigator.clipboard.writeText(`c("
+			for(cl in colNames) js.code <- paste0(js.code, "'",e2[rw,cl],"',")
+			js.code <- sub(",([^,]*)$", ")`)\\1", js.code)
+			links <- c(links, js.code)
+		}
+		e2[['Ranking']] = kableExtra::cell_spec(e2[['Ranking']], link=links, 
+			tooltip='click to copy palette to Clipboard')
+	}
+	
 	sim = switch(cvd.sim,
 				 none = function(x) x,
 				 deutan = colorspace::deutan,
