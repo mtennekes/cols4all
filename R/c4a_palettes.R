@@ -28,3 +28,4 @@ c4a_series = function(type = c("all", "cat", "seq", "div")) {
 	series = z$series
 	unique({if (type != "all") series[z$type == type] else series})
 }
+

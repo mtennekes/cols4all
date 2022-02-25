@@ -27,7 +27,6 @@ get_scores = function(z, nmax = c(cat = 36, seq = 15, div = 15)) {
 
 	nmaxmax = max(nmax)
 
-	sc = c("min_dist", "min_step", "max_step", "inter_wing_dist", "inter_wing_hue_dist", "rank")
 	a = array(as.integer(NA), dim = c(nrow(z), length(sc), nmaxmax), dimnames = list(z$fullname, sc, NULL))
 
 	# s = list(min_dist = as.list(rep(as.integer(NA), nmax)),

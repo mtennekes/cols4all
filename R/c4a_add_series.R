@@ -1,0 +1,154 @@
+#' Add and remove palette series
+#'
+#' Add and remove palette series. `c4a_add_series` can be used to add own palette series and  `c4a_remove_series` to remove palette series. `c4a_add_series_as_is` is the same as `c4a_add_series`, but by default without any processing.
+#'
+#' Indexing: for a categorical `"cat"` palette, an optional `"index"` attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See `cols4all::.z$palette$rainbow` and  for an example.
+#'
+#' @param x named list of color palettes. See details for indexing.
+#' @param xNA colors for missing values. Vector of the same length as x (or length 1). For `NA` values, the color for missing values is automatically determined.
+#' @param types character vector of the same length as x (or length 1), which determines the type of palette `"cat"`, `"seq"`, or `"div"`.
+#' @param series for `c4a_add_series`, a character vector of the same length as x (or length 1), which determines the series. For `c4a_remove_series` a character vector of series names that should be removed (use `"all"` to remove all).
+#' @param format.palette.name should palette names be formatted to lowercase/underscore format?
+#' @param remove.blacks,take.gray.for.NA,remove.other.grays These arguments determine the processing of grayscale colors for categorical `"cat"` palettes: if `remove.blacks` and there are (near) blacks, these are removed first. Next, if `take.gray.for.NA`, `xNA` is `NA`, and a palette contains at least one grayscale color (which can also be white), this is used as color for missing values. In case there are more than one grayscale color, the lightest is taken. `remove.other.grays` determines what happens with the other grays.
+#' @param light.to.dark should sequential `"seq"` palettes be automatically ordered from light to dark?
+#' @param remove.names should individual color names be removed?
+#' @param are.you.sure are you sure you want to remove series?
+#' @param ... passed on to `c4a_add_series`
+#' @example ./examples/c4a_add_series.R
+#' @rdname c4a_add_series
+#' @name c4a_add_series
+#' @export
+c4a_add_series = function(x, xNA = NA, types, series, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE) {
+
+
+	adjust.settings = list(take.gray.for.NA = take.gray.for.NA, remove.other.grays = remove.other.grays, remove.blacks = remove.blacks, light.to.dark = light.to.dark, remove.names = remove.names)
+
+	k = length(x)
+	types = rep(types, length.out = k)
+	series = rep(series, length.out = k)
+
+	xNA = rep(xNA, length.out = k)
+
+	if (!is.list(x)) stop("x is not a list")
+
+	nms = names(x)
+
+	if (anyDuplicated(nms)) stop("Duplicated names found")
+
+	x = lapply(x, validate_colors)
+
+	if (any(!is.na(xNA))) xNA[!is.na(xNA)] = validate_colors(xNA[!is.na(xNA)])
+
+	if (!all(types %in% c("div", "seq", "cat"))) stop("Unknown types found. Currently only \"cat\", \"seq\", and \"div\" are supported")
+
+
+
+	if (format.palette.name) nms = format_name(nms)
+
+	seriesID = which(series != "")
+	fnms = nms
+	if (length(seriesID)) fnms[seriesID] = paste0(series[seriesID], ".", fnms[seriesID])
+
+	res = mapply(process_palette, pal = x, type = types, colNA = xNA, SIMPLIFY = FALSE, MoreArgs = adjust.settings)
+	x = lapply(res, "[[", "pal")
+	xNA = sapply(res, "[[", "colNA", USE.NAMES = FALSE)
+
+
+	z = data.frame(name = nms, series = series, fullname = fnms, type = types, palette = I(x), na = xNA)
+	rownames(z) = NULL
+
+	z$nmax = mapply(function(pal, type) {
+		if (type == "cat") {
+			index = attr(pal, "index")
+			if (is.null(index)) length(pal) else length(index[[length(index)]])
+		} else {
+			Inf
+		}
+	}, z$palette, z$type, SIMPLIFY = TRUE, USE.NAMES = FALSE)
+
+	s = get_scores(z, nmax = c(cat = nmax.cat, seq = nmax.seq, div = nmax.div))
+
+
+	.z = get(".z", envir = .C4A_CACHE)
+	.s = get(".s", envir = .C4A_CACHE)
+
+	if (!is.null(.z)) {
+		z = rbind(.z, z)
+		s = abind::abind(.s, s, along=1)
+	}
+
+	#cfa = structure(list(z = z, s = s), class = "c4a")
+
+	assign(".z", z, envir = .C4A_CACHE)
+	assign(".s", s, envir = .C4A_CACHE)
+}
+
+#' @rdname c4a_add_series
+#' @name c4a_add_series_as_is
+#' @export
+c4a_add_series_as_is = function(..., format.palette.name = FALSE, remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE, light.to.dark = FALSE, remove.names = FALSE) {
+
+	args = c(list(...), list(format.palette.name = format.palette.name, take.gray.for.NA = take.gray.for.NA, remove.other.grays = remove.other.grays, remove.blacks = remove.blacks, light.to.dark = light.to.dark, remove.names = remove.names))
+	do.call(c4a_add_series, args)
+}
+
+
+
+
+check_z = function(z) {
+	name <- series <- fullname <- type <- nmax <- NULL
+	if (!is.data.frame(z) || !setequal(c("name", "series", "fullname", "type", "palette", "na", "nmax"), names(z))) stop("z should be a dataframe of colums: name, series, fullname, type, palette, na, and nmax")
+
+	within(z, {
+		if (!is.character(name)) stop("x$z$name should be a character column", call. = FALSE)
+		if (!is.character(series)) stop("x$z$series should be a character column", call. = FALSE)
+		if (!is.character(fullname)) stop("x$z$fullname should be a character column", call. = FALSE)
+		if (!is.character(type)) stop("x$z$type should be a character column", call. = FALSE)
+		if (!is.list(palette)) stop("x$z$palette should be a list column", call. = FALSE)
+		if (!is.character(na) || all(is.na(na))) stop("x$z$na should be a character column", call. = FALSE)
+
+		if (anyDuplicated(fullname)) stop("x$z$fullname should consist of unique values", call. = FALSE)
+		if (!all(type %in% c("cat", "seq", "div"))) stop("x$z$type should consist of \"cat\", \"seq\", and \"div\" values only", call. = FALSE)
+		if (!is.numeric(nmax)) stop("x$z$nmax should be a numeric column", call. = FALSE)
+
+		palette = I(lapply(palette, validate_colors))
+		if (any(!is.na(na))) na[!is.na(na)] = validate_colors(na[!is.na(na)])
+	})
+}
+
+check_s = function(s, n) {
+	if (!is.array(s)) stop("x$s is not an array", call. = FALSE)
+	d = dim(s)
+
+	if (d[1] != n) stop("number of rows (first dim) of x$s does not correspond to the number of rows in x$z", call. = FALSE)
+	if (!setequal(dimnames(s)[[2]], sc)) stop("columns (second dim) in x$s should correspond to", paste(sc, collapse = ","), call. = FALSE)
+	if (d[3] != max(nmax.cat, nmax.seq, nmax.div)) stop("Third dimension of x$s should be", d[3], call. = FALSE)
+	s
+}
+
+
+#' @rdname c4a_add_series
+#' @name c4a_remove_series
+#' @export
+c4a_remove_series = function(series = "all", are.you.sure = FALSE) {
+	if (!are.you.sure) stop("Please set are.you.sure to TRUE if you are", call. = FALSE)
+
+	z = get(".z", envir = .C4A_CACHE)
+	s = get(".s", envir = .C4A_CACHE)
+
+	sel = if (series[1] == "all") TRUE else (z$series %in% series)
+
+	if (all(sel)) {
+		message("all cols4all series removed")
+
+		z2 = NULL
+		s2 = NULL
+	} else {
+		message("cols4all series \"", paste(series, collapse = "\", \""), "\" removed")
+
+		z2 = z[!sel, ]
+		s2 = s[!sel, ,]
+	}
+	assign(".z", z2, envir = .C4A_CACHE)
+	assign(".s", s2, envir = .C4A_CACHE)
+}

@@ -1,0 +1,5 @@
+c4a_convert_name("Blues")
+c4a_convert_name("Jazz", no.match = "null")
+c4a_convert_name("Rainbow")
+c4a_convert_name("RdYlBu")
+c4a_convert_name("magma")

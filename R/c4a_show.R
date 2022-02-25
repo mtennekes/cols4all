@@ -75,12 +75,12 @@ table_columns = function(type, show.scores) {
 #' | Chroma range | `"Crange` | The range of chroma values of the colors. Like `"Lrange"`, the lower the better.
 #' | Lum/Chr range | `"LCrange"` | Defined as max(2 * `Lrange`, `Crange`), and used to label a palette "harmonic". This formula is determined by some trial-and-error, so suggestions for improvement are welcome.
 #'
-#' @param type type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, and `"div"` for diverging
-#' @param n number of colors. If omitted: for `"cat"` the full palette is displayed, and for `"seq"` and `"div"`, 9 colors.
+#' @param type type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, and `"div"` for diverging. For `c4a_gui` it only determines which type is shown initially.
+#' @param n number of colors. If omitted: for `"cat"` the full palette is displayed, and for `"seq"` and `"div"`, 9 colors. For `c4a_gui` it only determines which number of colors initially.
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @param sort column name to sort the data. For column names, see details
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
-#' @param series Series of palettes to show. See \code{\link{c4a_series}} for options.
+#' @param series Series of palettes to show. See \code{\link{c4a_series}} for options. By default, `"all"`, which means all series. For `c4a_gui` it only determines which series are shown initially.
 #' @param contrast vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`. See `c4a_gui`, or the internal functions `cols4all::default_contrast_seq` and `cols4all::default_contrast_div` to see what the automatic values are.
 #' @param include.na should color for missing values be shown? `FALSE` by default
 #' @param show.scores should scores of the quality indicators be printed? See details for a description of those indicators.
@@ -90,7 +90,7 @@ table_columns = function(type, show.scores) {
 #' @export
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = NULL, contrast = NULL, include.na = FALSE, show.scores = FALSE, columns = NA) {
+c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = "all", contrast = NULL, include.na = FALSE, show.scores = FALSE, columns = NA) {
 	id = NULL
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
 
@@ -102,13 +102,20 @@ c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none",
 	# palettes for selected type, n colors, and optionally for specific series
 	z = get(".z", envir = .C4A_CACHE)
 
-	zn = get_z_n(z[z$type == type, ], n = n, contrast = contrast)
+	if (is.null(z)) {
+		message("No palette series loaded. Please reload cols4all, add series with c4a_add_series, or import data with c4a_import")
+		return(invisible(NULL))
+	}
 
+
+	zn = get_z_n(z[z$type == type, ], n = n, contrast = contrast)
+	if (!series[1] == "all") zn = zn[zn$series %in% series, ]
+
+	if (nrow(zn) == 0) return(NULL)
 
 	zn = attach_scores(zn, contrast = contrast)
 	# better but slower alternative: calculate all scores read time:
 	#zn = get_scores_zn(zn)
-	if (!is.null(series)) zn = zn[zn$series %in% series, ]
 
 	columns = min(columns, max(zn$n))
 

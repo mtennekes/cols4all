@@ -15,7 +15,7 @@ c4a_defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green"
 #' @param contrast vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`. See `c4a_gui`, or the internal functions `cols4all::default_contrast_seq` and `cols4all::default_contrast_div` to see what the automatic values are.
 #' @param n_too_large what should be done in case `n` is larger than the maximum amount of colors? Options are `"error"` (an error is returned), `"repeat"`, the palette is repeated, `"interpolate"` colors are interpolated. For categorical `"cat"` palettes only.
 #' @return a vector of colors
-#' @importFrom grDevices col2rgb colorRampPalette colors grey.colors rgb
+#' @importFrom grDevices col2rgb colorRampPalette colors gray.colors rgb
 #' @importFrom methods as
 #' @importFrom stats na.omit
 #' @example ./examples/c4a.R
@@ -38,25 +38,14 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse 
 	if (isrev) palette = substr(palette, 2, nchar(palette))
 	reverse = xor(reverse, isrev)
 
-	palid = which(palette == .z$fullname)
-	if (!length(palid)) {
-		palid = which(palette == .z$name)
-		if (length(palid) > 1) {
-			nms = .z$fullname[palid]
-			message(paste0("Multiple palettes called \"", palette, " found: \"", paste(nms, collapse = "\", \""), "\". The first one, \"", nms[1], "\", is returned."))
-			palid = palid[1]
-		}
-		if (!length(palid)) stop("Unknown palette. See c4a_palettes() for options, and c4a_show / c4a_gui to see them.")
-	}
+	z = get(".z", envir = .C4A_CACHE)
 
-	if (length(palid) > 1) {
-		warning("There are ", length(palid), " palettes with that name. The first one is taken")
-		palid = palid[1]
-	}
+	fullname = c4a_convert_name(palette)
+	palid = which(fullname == z$fullname)
 
-	if (!is.null(n) && n > .z$nmax[palid] && n_too_large == "error") stop("Palette ", palette, " only supports ", .z$nmax[palid], " colors.")
+	if (!is.null(n) && n > z$nmax[palid] && n_too_large == "error") stop("Palette ", palette, " only supports ", z$nmax[palid], " colors.")
 
-	zl = as.list(.z[palid,])
+	zl = as.list(z[palid,])
 	zl$palette = zl$palette[[1]]
 	zl$contrast = contrast
 	zl$n_too_large = n_too_large
@@ -84,10 +73,11 @@ c4a_na = function(palette = NULL, type = c("cat", "seq", "div")) {
 		mes = NULL
 	}
 
+	z = get(".z", envir = .C4A_CACHE)
 
-	palid = which(palette == .z$fullname)
+	palid = which(palette == z$fullname)
 	if (!length(palid)) {
-		palid = which(palette == .z$name)
+		palid = which(palette == z$name)
 		if (length(palid) > 1) {
 			stop(paste0("Multiple palettes called \"", palette, " found. Please use the full name \"<series>.<name>\""))
 		}
@@ -96,5 +86,5 @@ c4a_na = function(palette = NULL, type = c("cat", "seq", "div")) {
 
 	if (!is.null(mes)) message(mes)
 
-	.z$na[palid]
+	z$na[palid]
 }

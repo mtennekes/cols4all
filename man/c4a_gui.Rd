@@ -5,7 +5,7 @@
 \alias{c4a_show}
 \title{Graphical user interface to analyse palettes}
 \usage{
-c4a_gui()
+c4a_gui(type = "cat", n = 9, series = "all")
 
 c4a_show(
   type = c("cat", "seq", "div"),
@@ -13,7 +13,7 @@ c4a_show(
   cvd.sim = c("none", "deutan", "protan", "tritan"),
   sort = "name",
   text.col = "same",
-  series = NULL,
+  series = "all",
   contrast = NULL,
   include.na = FALSE,
   show.scores = FALSE,
@@ -21,17 +21,17 @@ c4a_show(
 )
 }
 \arguments{
-\item{type}{type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, and `"div"` for diverging}
+\item{type}{type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, and `"div"` for diverging. For `c4a_gui` it only determines which type is shown initially.}
 
-\item{n}{number of colors. If omitted: for `"cat"` the full palette is displayed, and for `"seq"` and `"div"`, 9 colors.}
+\item{n}{number of colors. If omitted: for `"cat"` the full palette is displayed, and for `"seq"` and `"div"`, 9 colors. For `c4a_gui` it only determines which number of colors initially.}
+
+\item{series}{Series of palettes to show. See \code{\link{c4a_series}} for options. By default, `"all"`, which means all series. For `c4a_gui` it only determines which series are shown initially.}
 
 \item{cvd.sim}{color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`}
 
 \item{sort}{column name to sort the data. For column names, see details}
 
 \item{text.col}{The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).}
-
-\item{series}{Series of palettes to show. See \code{\link{c4a_series}} for options.}
 
 \item{contrast}{vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`. See `c4a_gui`, or the internal functions `cols4all::default_contrast_seq` and `cols4all::default_contrast_div` to see what the automatic values are.}
 

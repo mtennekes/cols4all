@@ -1,13 +1,19 @@
 #' @rdname c4a_gui
 #' @name c4a_gui
 #' @export
-c4a_gui = function() {
+c4a_gui = function(type = "cat", n = 9, series = "all") {
 	if (!requireNamespace("shiny")) stop("Please install shiny")
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
 
 	z = get(".z", envir = .C4A_CACHE)
 
-	series = unique(z$series)
+	allseries = unique(z$series)
+	if (series[1] == "all") {
+		series = allseries
+	} else {
+		if (!all(series %in% allseries)) stop("These series do not exist: \"", paste(setdiff(series, allseries), collapse = "\", \""), "\"")
+	}
+
 	ui = shiny::fluidPage(
 		#shinyjs::useShinyjs(),
 
@@ -27,8 +33,8 @@ c4a_gui = function() {
 									   min = 0, max = 1, value = c(0,1), step = .01),
 					shiny::checkboxInput("auto_contrast", label = "Automatic (based on number of colors)", value = FALSE)),
 				shiny::checkboxInput("na", shiny::strong("Color for missing values"), value = FALSE),
+				shiny::selectizeInput("series", "Palette Series", choices = allseries, selected = series, multiple = TRUE),
 				shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
-				shiny::selectizeInput("series", "Palette Series", choices = series, selected = series, multiple = TRUE),
 				shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .friendly)), selected = "rank"),
 				shiny::selectInput("textcol", "Text color", choices = c("No text" = "same", Black = "#000000", White = "#FFFFFF")),
 				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE)
@@ -63,6 +69,17 @@ c4a_gui = function() {
 		get_cols = shiny::reactive({
 			res = table_columns(input$type, input$advanced)
 			structure(c("name", res$qn), names = c("Name", res$ql))
+		})
+
+
+		shiny::observeEvent(input$type, {
+			type = input$type
+			n = input$n
+			if (type == "cat") {
+				shiny::updateSliderInput(session, "n", min = 2, max = 36, value = n)
+			} else {
+				shiny::updateSliderInput(session, "n", min = 3, max = 15,  value = max(min(n, 15), 3))
+			}
 		})
 
 		shiny::observe({
