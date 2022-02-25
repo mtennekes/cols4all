@@ -215,7 +215,6 @@ ggplot(diam_exp, aes(x = carat, y = price, color = color)) +
 	scale_color_discrete_c4a_cat("carto.safe") +
 	theme_light()
 
-
 # missing values
 ggplot(diam_exp, aes(x = carat, y = price, fill = clarity)) +
 	geom_point(size = 2, shape = 21) +

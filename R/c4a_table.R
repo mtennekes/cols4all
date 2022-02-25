@@ -1,79 +1,82 @@
 table_columns = function(type, show.scores) {
 	if (type == "cat") {
 		qn = c("nmax", "cbfriendly", "highC")
-		ql = c(.maxn, .friendly, .highC)
 		srt = c("nmax", "rank", "Cmax")
 	} else {
 		qn = c("cbfriendly", "highC")
-		ql = c(.friendly, .highC)
 		srt = c("rank", "Cmax")
 	}
 
 	if (type %in% c("seq", "div")) {
 		qn = c(qn, "hueType")
-		ql = c(ql, .hueType)
 		srt = c(srt, {if (type == "div") "HwidthLR" else "Hwidth"})
 	} else {
 		qn = c(qn, "harmonic")
-		ql = c(ql, .harmonic)
 		srt = c(srt, "LCrange")
 	}
 
 	qn = c(qn, "rank")
-	ql = c(ql, .rank)
 	srt = c(srt, "rank")
 
 	if (show.scores) {
-		qn = c(qn, .indicators[[type]], .hcl)
-		ql = c(ql, .labels[c(.indicators[[type]], .hcl)])
-		srt = c(srt, .indicators[[type]], .hcl)
+		qn = c(qn, .C4A$indicators[[type]], .C4A$hcl)
+		srt = c(srt, .C4A$indicators[[type]], .C4A$hcl)
 	}
+	ql = .C4A$labels[qn]
+
 	list(qn = qn, ql = ql, srt = srt)
 }
 
 
 #' Graphical user interface to analyse palettes
 #'
-#' Graphical user interface to analyse palettes. `c4a_show` shows a table that can be opened in the browser. `c4a_gui` is a graphical user interface around this table.
+#' Graphical user interface to analyse palettes. `c4a_table` shows a table that can be opened in the browser. `c4a_gui` is a graphical user interface around this table.
 #'
-#' The following table describes the main columns. A more precise description is provided after that
+#' @section Main variables:
 #'
-#' | Label | Name | Description
-#' | --- | --- | --- | ---
-#' | Max n | `"nmax"` | Maximum number of colors (`"cat"` only)
-#' | Colorblind-friendly | `"cbfriendly"` | Is it color-blind friendy?
-#' | Harmonic palette | `"harmonic"` | Are the colors in harmony with each other?
-#' | Intense colors | `"highC` | Are there any intense (saturated) colors?
-#' | Hue type | `"hueType"` | How many different hue ranges are used? For a sequential (`"seq"`) palette we consider three classes. 1) "single hue" where one hue is used, which is recommended for quantitative analysis. This is indicated by a paint brush icon 2) "spectral hue" where a wide range of hues are used, e.g. a rainbow palette. This less suitable for quantitative analysis but better to read different colors. This is indicated by a rainbow icon 3) a trade-off between the two mentioned classes (no icon used). For a diverging (`"div"`) palette, we also consider similar three classes. 1) "two hues", where one hue is used for the left wing and one for the right wing. 2) "spectral hue" and 3) trade-off.
-#' | Ranking | `"rank"` | Ranking of palettes taking the above into account
+#' \tabular{lll}{
+#'   \strong{Column&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} \tab \strong{Name} \tab \strong{Description} \cr
+#' Max n \tab `"nmax"` \tab Maximum number of colors (`"cat"` only) \cr
+#' Colorblind-friendly \tab `"cbfriendly"` \tab Is it color-blind friendy? \cr
+#' Harmonic palette \tab `"harmonic"` \tab Are the colors in harmony with each other? \cr
+#' Intense colors \tab `"highC` \tab Are there any intense (saturated) colors? \cr
+#' Hue type \tab `"hueType"` \tab How many different hue ranges are used? For a sequential (`"seq"`) palette we consider three classes. 1) "single hue" where one hue is used, which is recommended for quantitative analysis. This is indicated by a paint brush icon 2) "spectral hue" where a wide range of hues are used, e.g. a rainbow palette. This less suitable for quantitative analysis but better to read different colors. This is indicated by a rainbow icon 3) a trade-off between the two mentioned classes (no icon used). For a diverging (`"div"`) palette, we also consider similar three classes. 1) "two hues", where one hue is used for the left wing and one for the right wing. 2) "spectral hue" and 3) trade-off. \cr
+#' Ranking \tab `"rank"` \tab Ranking of palettes taking the above into account
+#' }
 #'
-#' The following table are the quality indicators that have been applied to determine color-blind friendliness. These indicators are visible when `show.scores` is set to `TRUE`.
-#
-#' | Label | Name | Description
-#' | --- | --- | --- | ---
-#' | Minimum distance | `"min_dist"` | Minimum distance between any two colors for any color vision deficiency type. This is a measure to which extend categorical palettes (type `"cat"`) are suitable for people with color vision deficiency
-#' | Minimum step | `"min_step"` | Minimum distance between two neighboring colors in a sequential (`"seq"`) or diverging (`"div"`) palette, for any color vision deficiency type. The larger, the better.
-#' | Maximum step | `"max_step"` | Maximum distance between two neighboring colors in a sequential (`"seq"`) palette, for any color vision deficiency type. For sequential palettes that score the same on `"min_step"`, the ones with lower `"max_step"` values are slightly preferable, because this means that the distances between neighboring colors is more homogeneous.
-#' | Inter-wing-distance | `"inter_wing_dist"` | Minimum distance between any color in the left wing to any color in the right wing of a diverging (`"div"`) palette, for any color vision deficiency type. The larger, the better.
-#' | Inter-wing hue distance | `"inter_wing_hue_dist"` | Distance between the two hue ranges in both wings of a (`"div"`) palette, for any color vision deficiency type. The larger the better. We consider 100 degrees as sufficient to discriminate two hues.
+#' @section Color-blind-friendliness indicators:
+#'
+#' \tabular{lll}{
+#'   \strong{Indicator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} \tab \strong{Name} \tab \strong{Description} \cr
+#' Minimum distance \tab `"min_dist"` \tab Minimum distance between any two colors for any color vision deficiency type. This is a measure to which extend categorical palettes (type `"cat"`) are suitable for people with color vision deficiency \cr
+#' Minimum step \tab `"min_step"` \tab Minimum distance between two neighboring colors in a sequential (`"seq"`) or diverging (`"div"`) palette, for any color vision deficiency type. The larger, the better. \cr
+#' Maximum step \tab `"max_step"` \tab Maximum distance between two neighboring colors in a sequential (`"seq"`) palette, for any color vision deficiency type. For sequential palettes that score the same on `"min_step"`, the ones with lower `"max_step"` values are slightly preferable, because this means that the distances between neighboring colors is more homogeneous. \cr
+#' Inter-wing-distance \tab `"inter_wing_dist"` \tab Minimum distance between any color in the left wing to any color in the right wing of a diverging (`"div"`) palette, for any color vision deficiency type. The larger, the better. \cr
+#' Inter-wing hue distance \tab `"inter_wing_hue_dist"` \tab Distance between the two hue ranges in both wings of a (`"div"`) palette, for any color vision deficiency type. The larger the better. We consider 100 degrees as sufficient to discriminate two hues.
+#' }
 #'
 #' Color-blind friendliness scores are calculated as:
 #'
 #' * `"cat"` `min_step`
 #' * `"seq"` `min_step` - `max_step` / 1000
-#' * `"div"` min(`inter_wing_dist`, `min_step`) + (`inter_wing_hue_dist` >= 100) * 1000
+#' * `"div"` min(`inter_wing_dist`, `min_step` * 2) + (`inter_wing_hue_dist` >= 100) * 1000
 #'
-#' The following table describes the indicators that we used to determine whether we call palette is harmonic, and whether there are intense colors. We use the HCL color space, where H is the hue, C the chroma and L the lightness. See the `colorspace` package (that is used under the hood) for details.
+#' Note: these formulas are in development, and not stable. Suggestions are welcome (via github issues).
 #'
-#' | Label | Name | Description
-#' | --- | --- | --- | ---
-#' | Chroma max | `"Cmax"` | Maximum chroma value. We have set the threshold for the label "intense colors" at 100.
-#' | Hue width | `"Hwidth"` | The width/range of hue values that are used. For instance, if a palette has hue values 100, 140, and 220, the Hwidth is 120. Since hues are provided in degrees, a hue width close to 360 means that many hues are used (e.g. in a rainbow palette). The primary use is to determine the hue type (see above).
-#' | Hue width L | `"HwidthL"` | Same, but only for the left wing of the palette (useful for diverging palettes)
-#' | Hue width R | `"HwidthR"` | Same, but only for the right wing of the palette (useful for diverging palettes)
-#' | Luminance range | `"Lrange"` | The range of luminance values of the colors. The smaller, the better for a what we call harmonic palette. However, this is at the expense of having distinguishable colors (which contribute to color-blind-friendliness).
-#' | Chroma range | `"Crange` | The range of chroma values of the colors. Like `"Lrange"`, the lower the better.
-#' | Lum/Chr range | `"LCrange"` | Defined as max(2 * `Lrange`, `Crange`), and used to label a palette "harmonic". This formula is determined by some trial-and-error, so suggestions for improvement are welcome.
+#' @section General indicators:
+#'
+#' We use the HCL color space, where H is the hue, C the chroma and L the lightness. See the `colorspace` package (that is used under the hood) for details.
+#'
+#' \tabular{lll}{
+#'   \strong{Indicator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} \tab \strong{Name} \tab \strong{Description} \cr
+#'   Chroma max \tab `"Cmax"` \tab Maximum chroma value. We have set the threshold for the label "intense colors" at 100. \cr
+#' Hue width \tab `"Hwidth"` \tab The width/range of hue values that are used. For instance, if a palette has hue values 100, 140, and 220, the Hwidth is 120. Since hues are provided in degrees, a hue width close to 360 means that many hues are used (e.g. in a rainbow palette). The primary use is to determine the hue type (see above). \cr
+#' Hue width L \tab `"HwidthL"` \tab Same, but only for the left wing of the palette (useful for diverging palettes) \cr
+#' Hue width R \tab `"HwidthR"` \tab Same, but only for the right wing of the palette (useful for diverging palettes) \cr
+#' Luminance range \tab `"Lrange"` \tab The range of luminance values of the colors. The smaller, the better for a what we call harmonic palette. However, this is at the expense of having distinguishable colors (which contribute to color-blind-friendliness). \cr
+#' Chroma range \tab `"Crange` \tab The range of chroma values of the colors. Like `"Lrange"`, the lower the better. \cr
+#' Lum/Chr range \tab `"LCrange"` \tab Defined as max(2 * `Lrange`, `Crange`), and used to label a palette "harmonic". This formula is determined by some trial-and-error, so suggestions for improvement are welcome.
+#' }
 #'
 #' @param type type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, and `"div"` for diverging. For `c4a_gui` it only determines which type is shown initially.
 #' @param n number of colors. If omitted: for `"cat"` the full palette is displayed, and for `"seq"` and `"div"`, 9 colors. For `c4a_gui` it only determines which number of colors initially.
@@ -86,13 +89,16 @@ table_columns = function(type, show.scores) {
 #' @param show.scores should scores of the quality indicators be printed? See details for a description of those indicators.
 #' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
 #' @import colorspace abind
-#' @example ./examples/c4a_show.R
+#' @md
+#' @example ./examples/c4a_table.R
 #' @export
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = "all", contrast = NULL, include.na = FALSE, show.scores = FALSE, columns = NA) {
+c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = "all", contrast = NULL, include.na = FALSE, show.scores = FALSE, columns = NA) {
 	id = NULL
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
+
+	.labels = .C4A$labels
 
 	type = match.arg(type)
 	show.ranking = (!is.null(n))
@@ -100,10 +106,10 @@ c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none",
 	if (is.na(columns)) columns = if (!is.null(n)) n else 12
 
 	# palettes for selected type, n colors, and optionally for specific series
-	z = get(".z", envir = .C4A_CACHE)
+	z = .C4A$z
 
 	if (is.null(z)) {
-		message("No palette series loaded. Please reload cols4all, add series with c4a_add_series, or import data with c4a_import")
+		message("No palette series loaded. Please reload cols4all, add series with c4a_series_add, or import data with c4a_sysdata_import")
 		return(invisible(NULL))
 	}
 
@@ -113,7 +119,7 @@ c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none",
 
 	if (nrow(zn) == 0) return(NULL)
 
-	zn = attach_scores(zn, contrast = contrast)
+	zn = show_attach_scores(zn, contrast = contrast)
 	# better but slower alternative: calculate all scores read time:
 	#zn = get_scores_zn(zn)
 
@@ -188,25 +194,34 @@ c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none",
 		me = cbind(me, ' '="", 'NA' = "")
 		me[match(1:k, e$did), ncol(me)] = zn$na
 		colNames = c(1:columns, " ", "NA")
+		palList = mapply(c, zn$palette, zn$na, SIMPLIFY = FALSE, USE.NAMES = FALSE)
 	} else {
 		colNames = as.character(1:columns)
+		palList = unname(zn$palette)
 	}
 
 	e2 = cbind(e, me)
-	
+
 	if (show.ranking) {
 		# add hyperlinks to Ranking column for copying row colors to Clipboard
-		links <- c()
-		for (rw in 1:nrow(e2)) {
-			js.code <- "javascript:navigator.clipboard.writeText(`c("
-			for(cl in colNames) js.code <- paste0(js.code, "'",e2[rw,cl],"',")
-			js.code <- sub(",([^,]*)$", ")`)\\1", js.code)
-			links <- c(links, js.code)
-		}
-		e2[['Ranking']] = kableExtra::cell_spec(e2[['Ranking']], link=links, 
-			tooltip='click to copy palette to Clipboard')
+		links = c()
+		txt = as.character(e2[['Ranking']])
+		txt[is.na(txt)] = ""
+
+		links = sapply(1:nrow(e2), function(rw) {
+			if (txt[rw] == "") {
+				""
+			} else{
+				did = e2$did[rw]
+				paste0("javascript:navigator.clipboard.writeText(`c('",
+					   paste(palList[[did]], collapse = "', '"), "')`)")
+			}
+		}, USE.NAMES = FALSE)
+
+		e2[['Ranking']] = kableExtra::cell_spec(txt, link=links,
+			tooltip='Click to copy palette to Clipboard')
 	}
-	
+
 	sim = switch(cvd.sim,
 				 none = function(x) x,
 				 deutan = colorspace::deutan,
@@ -234,22 +249,24 @@ c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none",
 	tooltip_SH_div = "Each side has its own distinct hue: recommended!"
 	tooltip_Harm = "Harmonic, well-balanced colors"
 
-	if (.friendly %in% ql) e2[[.friendly]] = ifelse(!is.na(e2[[.friendly]]) & e2[[.friendly]] == 1L, kableExtra::cell_spec("&#9786;", tooltip = tooltip_cbfriendly, escape = FALSE), "")
-	if (.highC %in% ql) e2[[.highC]] = ifelse(!is.na(e2[[.highC]]) & e2[[.highC]] == 1L, kableExtra::cell_spec("&#x1f576;", tooltip = tooltip_highC, escape = FALSE), "")
+	if ("cbfriendly" %in% qn) e2[[.labels["cbfriendly"]]] = ifelse(!is.na(e2[[.labels["cbfriendly"]]]) & e2[[.labels["cbfriendly"]]] == 1L, kableExtra::cell_spec("&#9786;", tooltip = tooltip_cbfriendly, escape = FALSE), "")
+	if ("highC" %in% qn) e2[[.labels["highC"]]] = ifelse(!is.na(e2[[.labels["highC"]]]) & e2[[.labels["highC"]]] == 1L, kableExtra::cell_spec("&#x1f576;", tooltip = tooltip_highC, escape = FALSE), "")
 
 
-	if (.hueType %in% ql){
+	if ("hueType" %in% qn){
+		lab = .labels["hueType"]
 		if (type == "seq") {
-			e2[[.hueType]] = ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
-				ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "SH", kableExtra::cell_spec("&#128396;", tooltip = tooltip_SH_seq, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
+			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
+				ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#128396;", tooltip = tooltip_SH_seq, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
 		} else if (type == "div") {
-			e2[[.hueType]] = ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
-									ifelse(!is.na(e2[[.hueType]]) & e2[[.hueType]] == "SH", kableExtra::cell_spec("&#x262F;", tooltip = tooltip_SH_div, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
+			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
+									ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#x262F;", tooltip = tooltip_SH_div, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
 		}
 	}
 
-	if (.harmonic %in% ql) {
-		e2[[.harmonic]] = ifelse(!is.na(e2[[.harmonic]]) & e2[[.harmonic]],
+	if ("harmonic" %in% qn) {
+		hlab = .labels["harmonic"]
+		e2[[hlab]] = ifelse(!is.na(e2[[hlab]]) & e2[[hlab]],
 								 kableExtra::cell_spec("&#127900;", tooltip = tooltip_Harm, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"), "")
 
 	}
@@ -258,8 +275,8 @@ c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none",
 
 
 
-	ql_icons = intersect(ql, c(.friendly, .highC))
-	ql_other = setdiff(ql, c(.friendly, .highC))
+	ql_icons = intersect(ql, c(.labels[c("cbfriendly", "highC")]))
+	ql_other = setdiff(ql, c(.labels[c("cbfriendly", "highC")]))
 
 	for (q in ql_other) {
 		e2[[q]] = as.character(e2[[q]])
@@ -306,7 +323,7 @@ c4a_show = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none",
 	extra = c("<style>", "table {", "\tborder-collapse: collapse;", "\tfont-size: 12px;",
 			  "\tborder-collapse: collapse;", "}", "", "td {", "\tborder-radius: 0px;",
 			  "\tborder: 1px solid white;", "\tborder-collapse: collapse;",
-			  "}", "", "th {", "\ttext-align: center;", "}", "", 
+			  "}", "", "th {", "\ttext-align: center;", "}", "",
 			  "a:link {color: black;}", "</style>"
 	) # extra = readLines("build/extra.txt"); dput(extra)
 

@@ -165,23 +165,9 @@ analyse_hcl = function(p) {
 	HwidthL = get_hue_width(hL)
 	HwidthR = get_hue_width(hR)
 
-
-	#Crels = pmin(round((m[,2] / .maxC[round(m[,3]) + 1]) * 100), 100)
-
-
 	Cmax = round(max(m[,2]))
-
-	#Crel = max(Crels)
-
-	# Lmin = min(m[,1]), Lmax = max(m[,1]),
-	# Cmin = min(m[,2]), Cmax = max(m[,2]),
-
 	Lrange = round(max(m[,1]) - min(m[,1]))
-	#Crange = round(max(Crels) - min(Crels))
 	Crange = round(max(m[,2]) - min(m[,2]))
-
-	# LCrange = round((Lrange + Crange) / 2)
-	# LCrange = round((Lrange*2 + Crange) / 3)
 	LCrange = round(max(Lrange*2, Crange))
 
 

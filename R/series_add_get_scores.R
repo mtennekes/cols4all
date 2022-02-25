@@ -1,33 +1,11 @@
-get_scores_zn = function(zn) {
-	type = zn$type[1]
-	if (any(zn$type != type)) stop("get_scores_zn only works for one type")
-	n = zn$n[1]
-
-	fun = paste0("check_", type, "_pal")
-
-	q = do.call(rbind, lapply(zn$palette, get(fun)))
-
-	if (type == "cat") {
-		r = -q
-	} else if (type == "seq") {
-		qr = q[,1] - q[,2] / 1000 # order min_step, those with equal store to -max_step
-		r = -qr#rank(-qr, ties.method = "first")
-	} else if (type == "div") {
-		qr = pmin(q[,1], q[,3] * 2) + (q[,2] >= 100) * 1000
-		r = -qr#rank(-qr, ties.method = "first")
-	}
-	colnames(r) = "rank"
-	mn = cbind(q,r)
-	cbind(zn, mn)
-}
-
-get_scores = function(z, nmax = c(cat = 36, seq = 15, div = 15)) {
+series_add_get_scores = function(z) {
+	nmax = .C4A$nmax
 	k = nrow(z)
 
 
 	nmaxmax = max(nmax)
 
-	a = array(as.integer(NA), dim = c(nrow(z), length(sc), nmaxmax), dimnames = list(z$fullname, sc, NULL))
+	a = array(as.integer(NA), dim = c(nrow(z), length(.C4A$sc), nmaxmax), dimnames = list(z$fullname, .C4A$sc, NULL))
 
 	# s = list(min_dist = as.list(rep(as.integer(NA), nmax)),
 	# 		 min_step = as.list(rep(as.integer(NA), nmax)),

@@ -5,7 +5,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 	if (!requireNamespace("shiny")) stop("Please install shiny")
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
 
-	z = get(".z", envir = .C4A_CACHE)
+	z = .C4A$z
 
 	allseries = unique(z$series)
 	if (series[1] == "all") {
@@ -23,19 +23,19 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 		shiny::sidebarLayout(
 			shiny::sidebarPanel(
 				width = 3,
-				shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div")), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
+				shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = type), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
 				shiny::sliderInput("n", "Number of colors",
-								   min = 2, max = 36, value = 9),
+								   min = 2, max = 36, value = n),
+				shiny::checkboxInput("na", shiny::strong("Color for missing values"), value = FALSE),
 				shiny::conditionalPanel(
 					condition = "input.type != 'cat'",
 					shiny::strong("Contrast range"),
 					shiny::sliderInput("contrast", "",
 									   min = 0, max = 1, value = c(0,1), step = .01),
 					shiny::checkboxInput("auto_contrast", label = "Automatic (based on number of colors)", value = FALSE)),
-				shiny::checkboxInput("na", shiny::strong("Color for missing values"), value = FALSE),
 				shiny::selectizeInput("series", "Palette Series", choices = allseries, selected = series, multiple = TRUE),
 				shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
-				shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .friendly)), selected = "rank"),
+				shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "rank"),
 				shiny::selectInput("textcol", "Text color", choices = c("No text" = "same", Black = "#000000", White = "#FFFFFF")),
 				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE)
 			),
@@ -99,7 +99,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 		output$show = function() {
 			shiny::req(get_values_d())
 			values = get_values_d()
-			c4a_show(n = values$n, cvd.sim = values$cvd, sort = values$sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol)
+			c4a_table(n = values$n, cvd.sim = values$cvd, sort = values$sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol)
 		}
 	}
 	shiny::shinyApp(ui = ui, server = server)

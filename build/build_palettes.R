@@ -391,8 +391,8 @@ local({
 
 
 
-.z = get(".z", .C4A_CACHE)
-.s = get(".s", .C4A_CACHE)
+.z = get(".z", .C4A)
+.s = get(".s", .C4A)
 
 # saveRDS(.z, "z.rds")
 # saveRDS(.z, "s.rds")

@@ -1,24 +1,24 @@
 #' Add and remove palette series
 #'
-#' Add and remove palette series. `c4a_add_series` can be used to add own palette series and  `c4a_remove_series` to remove palette series. `c4a_add_series_as_is` is the same as `c4a_add_series`, but by default without any processing.
+#' Add and remove palette series. `c4a_series_add` can be used to add own palette series and  `c4a_series_remove` to remove palette series. `c4a_series_add_as_is` is the same as `c4a_series_add`, but by default without any processing.
 #'
 #' Indexing: for a categorical `"cat"` palette, an optional `"index"` attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See `cols4all::.z$palette$rainbow` and  for an example.
 #'
 #' @param x named list of color palettes. See details for indexing.
 #' @param xNA colors for missing values. Vector of the same length as x (or length 1). For `NA` values, the color for missing values is automatically determined.
 #' @param types character vector of the same length as x (or length 1), which determines the type of palette `"cat"`, `"seq"`, or `"div"`.
-#' @param series for `c4a_add_series`, a character vector of the same length as x (or length 1), which determines the series. For `c4a_remove_series` a character vector of series names that should be removed (use `"all"` to remove all).
+#' @param series for `c4a_series_add`, a character vector of the same length as x (or length 1), which determines the series. For `c4a_series_remove` a character vector of series names that should be removed (use `"all"` to remove all).
 #' @param format.palette.name should palette names be formatted to lowercase/underscore format?
 #' @param remove.blacks,take.gray.for.NA,remove.other.grays These arguments determine the processing of grayscale colors for categorical `"cat"` palettes: if `remove.blacks` and there are (near) blacks, these are removed first. Next, if `take.gray.for.NA`, `xNA` is `NA`, and a palette contains at least one grayscale color (which can also be white), this is used as color for missing values. In case there are more than one grayscale color, the lightest is taken. `remove.other.grays` determines what happens with the other grays.
 #' @param light.to.dark should sequential `"seq"` palettes be automatically ordered from light to dark?
 #' @param remove.names should individual color names be removed?
 #' @param are.you.sure are you sure you want to remove series?
-#' @param ... passed on to `c4a_add_series`
-#' @example ./examples/c4a_add_series.R
-#' @rdname c4a_add_series
-#' @name c4a_add_series
+#' @param ... passed on to `c4a_series_add`
+#' @example ./examples/c4a_series_add.R
+#' @rdname c4a_series_add
+#' @name c4a_series_add
 #' @export
-c4a_add_series = function(x, xNA = NA, types, series, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE) {
+c4a_series_add = function(x, xNA = NA, types, series, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE) {
 
 
 	adjust.settings = list(take.gray.for.NA = take.gray.for.NA, remove.other.grays = remove.other.grays, remove.blacks = remove.blacks, light.to.dark = light.to.dark, remove.names = remove.names)
@@ -66,11 +66,11 @@ c4a_add_series = function(x, xNA = NA, types, series, format.palette.name = TRUE
 		}
 	}, z$palette, z$type, SIMPLIFY = TRUE, USE.NAMES = FALSE)
 
-	s = get_scores(z, nmax = c(cat = nmax.cat, seq = nmax.seq, div = nmax.div))
+	s = series_add_get_scores(z)
 
 
-	.z = get(".z", envir = .C4A_CACHE)
-	.s = get(".s", envir = .C4A_CACHE)
+	.z = .C4A$z
+	.s = .C4A$s
 
 	if (!is.null(.z)) {
 		z = rbind(.z, z)
@@ -79,17 +79,17 @@ c4a_add_series = function(x, xNA = NA, types, series, format.palette.name = TRUE
 
 	#cfa = structure(list(z = z, s = s), class = "c4a")
 
-	assign(".z", z, envir = .C4A_CACHE)
-	assign(".s", s, envir = .C4A_CACHE)
+	.C4A$z = z
+	.C4A$s = s
 }
 
-#' @rdname c4a_add_series
-#' @name c4a_add_series_as_is
+#' @rdname c4a_series_add
+#' @name c4a_series_add_as_is
 #' @export
-c4a_add_series_as_is = function(..., format.palette.name = FALSE, remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE, light.to.dark = FALSE, remove.names = FALSE) {
+c4a_series_add_as_is = function(..., format.palette.name = FALSE, remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE, light.to.dark = FALSE, remove.names = FALSE) {
 
 	args = c(list(...), list(format.palette.name = format.palette.name, take.gray.for.NA = take.gray.for.NA, remove.other.grays = remove.other.grays, remove.blacks = remove.blacks, light.to.dark = light.to.dark, remove.names = remove.names))
-	do.call(c4a_add_series, args)
+	do.call(c4a_series_add, args)
 }
 
 
@@ -121,20 +121,20 @@ check_s = function(s, n) {
 	d = dim(s)
 
 	if (d[1] != n) stop("number of rows (first dim) of x$s does not correspond to the number of rows in x$z", call. = FALSE)
-	if (!setequal(dimnames(s)[[2]], sc)) stop("columns (second dim) in x$s should correspond to", paste(sc, collapse = ","), call. = FALSE)
-	if (d[3] != max(nmax.cat, nmax.seq, nmax.div)) stop("Third dimension of x$s should be", d[3], call. = FALSE)
+	if (!setequal(dimnames(s)[[2]], .C4A$sc)) stop("columns (second dim) in x$s should correspond to", paste(.C4A$sc, collapse = ","), call. = FALSE)
+	if (d[3] != max(.C4A$nmax)) stop("Third dimension of x$s should be", d[3], call. = FALSE)
 	s
 }
 
 
-#' @rdname c4a_add_series
-#' @name c4a_remove_series
+#' @rdname c4a_series_add
+#' @name c4a_series_remove
 #' @export
-c4a_remove_series = function(series = "all", are.you.sure = FALSE) {
+c4a_series_remove = function(series = "all", are.you.sure = FALSE) {
 	if (!are.you.sure) stop("Please set are.you.sure to TRUE if you are", call. = FALSE)
 
-	z = get(".z", envir = .C4A_CACHE)
-	s = get(".s", envir = .C4A_CACHE)
+	z = .C4A$z
+	s = .C4A$s
 
 	sel = if (series[1] == "all") TRUE else (z$series %in% series)
 
@@ -149,6 +149,6 @@ c4a_remove_series = function(series = "all", are.you.sure = FALSE) {
 		z2 = z[!sel, ]
 		s2 = s[!sel, ,]
 	}
-	assign(".z", z2, envir = .C4A_CACHE)
-	assign(".s", s2, envir = .C4A_CACHE)
+	.C4A$z = z2
+	.C4A$s = s2
 }

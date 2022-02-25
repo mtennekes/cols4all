@@ -1,9 +1,9 @@
-attach_scores = function(z, contrast) {
+show_attach_scores = function(z, contrast) {
 	type = if (all(z$type == "cat")) "cat" else if (all(z$type == "seq")) "seq" else if (all(z$type == "div")) "div" else "mixed"
 
 	k = nrow(z)
 
-	s = get(".s", envir = .C4A_CACHE)
+	s = .C4A$s
 	s2 = s[match(z$fullname, dimnames(s)[[1]]), , , drop = FALSE]
 	s3 = do.call(rbind, lapply(1:k, function(i) {
 		# maximum n to take scores from (cat: dim max, seq/div, the scores for the largest palettes)

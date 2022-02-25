@@ -11,8 +11,8 @@ cbsnl_cols = list(
 
 cbsnl_types = c("cat", "cat", "seq", "seq", "seq", "seq")
 
-c4a_add_series(cbsnl_cols, xNA = "grey88", types = cbsnl_types, series = "cbsnl")
+c4a_series_add(cbsnl_cols, xNA = "grey88", types = cbsnl_types, series = "cbsnl")
 
 \dontrun{
-c4a_gui(series = "cbsnl")
+c4a_gui(series = "cbsnl", n = 8)
 }

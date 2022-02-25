@@ -173,18 +173,18 @@ scale_fill_binned_c4a_div = function (palette = NULL, reverse = FALSE, contrast 
 scale_discrete  = function(aes, type, palette = NULL, reverse = FALSE, order = NULL, contrast = NULL, ...) {
 	args = list(palette = palette, reverse = reverse, order = order, contrast = contrast, type = type)
 	pal <- function(n) {
-		args = c(args, list(n = n))
+		args = c(args, list(n = n, verbose = FALSE))
 		do.call(c4a, args, envir = parent.frame())
 	}
-	na = c4a_na(palette = palette, type = type)
+	na = c4a_na(palette = palette, type = type, verbose = FALSE)
 	ggplot2::discrete_scale(aesthetics = aes, "manual", pal, na.value = na, ...)
 }
 
 
 scale_continuous  = function(aes, type, palette = NULL, reverse = FALSE, contrast = NULL, mid = 0, n_interp = 11, ...) {
-	args = list(palette = palette, reverse = reverse, contrast = contrast, type = type, n = n_interp)
+	args = list(palette = palette, reverse = reverse, contrast = contrast, type = type, n = n_interp, verbose = FALSE)
 	cols = do.call(c4a, args)
-	na = c4a_na(palette = palette, type = type)
+	na = c4a_na(palette = palette, type = type, verbose = FALSE)
 
 	scale_label = if(type == "seq") "continuous_diverging" else "continuous_diverging"
 
@@ -202,9 +202,9 @@ scale_continuous  = function(aes, type, palette = NULL, reverse = FALSE, contras
 
 
 scale_binned  = function(aes, type, palette = NULL, reverse = FALSE, contrast = NULL, mid = 0, n_interp = 11, ...) {
-	args = list(palette = palette, reverse = reverse, contrast = contrast, type = type, n = n_interp)
+	args = list(palette = palette, reverse = reverse, contrast = contrast, type = type, n = n_interp, verbose = FALSE)
 	cols = do.call(c4a, args)
-	na = c4a_na(palette = palette, type = type)
+	na = c4a_na(palette = palette, type = type, verbose = FALSE)
 
 	scale_label = if(type == "seq") "binned_diverging" else "binned_diverging"
 

@@ -1,8 +1,3 @@
-#' @rdname c4a
-#' @name c4a_defaults
-#' @export
-c4a_defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green")
-
 #' Get a cols4all color palette
 #'
 #' Get a cols4all color palette. The function `c4a` returns the colors of the specified palette, and the function `c4a_na` returns the color for missing value that is associated with the specified palette.
@@ -14,6 +9,7 @@ c4a_defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green"
 #' @param order order of colors. Only applicable for `"cat"` palettes
 #' @param contrast vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`. See `c4a_gui`, or the internal functions `cols4all::default_contrast_seq` and `cols4all::default_contrast_div` to see what the automatic values are.
 #' @param n_too_large what should be done in case `n` is larger than the maximum amount of colors? Options are `"error"` (an error is returned), `"repeat"`, the palette is repeated, `"interpolate"` colors are interpolated. For categorical `"cat"` palettes only.
+#' @param verbose should messages be printed?
 #' @return a vector of colors
 #' @importFrom grDevices col2rgb colorRampPalette colors gray.colors rgb
 #' @importFrom methods as
@@ -22,7 +18,7 @@ c4a_defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green"
 #' @rdname c4a
 #' @name c4a
 #' @export
-c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse = FALSE, order = NULL, contrast = NULL, n_too_large = c("error", "repeat", "interpolate")) {
+c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse = FALSE, order = NULL, contrast = NULL, n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
 	type = match.arg(type)
 	n_too_large = match.arg(n_too_large)
 
@@ -38,9 +34,9 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse 
 	if (isrev) palette = substr(palette, 2, nchar(palette))
 	reverse = xor(reverse, isrev)
 
-	z = get(".z", envir = .C4A_CACHE)
+	z = .C4A$z
 
-	fullname = c4a_convert_name(palette)
+	fullname = c4a_name_convert(palette)
 	palid = which(fullname == z$fullname)
 
 	if (!is.null(n) && n > z$nmax[palid] && n_too_large == "error") stop("Palette ", palette, " only supports ", z$nmax[palid], " colors.")
@@ -57,14 +53,14 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse 
 		pal[order]
 	} else pal
 
-	if (!is.null(mes)) message(mes)
+	if (!is.null(mes) && verbose) message(mes)
 	if (reverse) rev(pal) else pal
 }
 
 #' @rdname c4a
 #' @name c4a_na
 #' @export
-c4a_na = function(palette = NULL, type = c("cat", "seq", "div")) {
+c4a_na = function(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE) {
 	type = match.arg(type)
 	if (is.null(palette)) {
 		palette = c4a_defaults[type]
@@ -73,7 +69,7 @@ c4a_na = function(palette = NULL, type = c("cat", "seq", "div")) {
 		mes = NULL
 	}
 
-	z = get(".z", envir = .C4A_CACHE)
+	z = .C4A$z
 
 	palid = which(palette == z$fullname)
 	if (!length(palid)) {
@@ -81,10 +77,10 @@ c4a_na = function(palette = NULL, type = c("cat", "seq", "div")) {
 		if (length(palid) > 1) {
 			stop(paste0("Multiple palettes called \"", palette, " found. Please use the full name \"<series>.<name>\""))
 		}
-		if (!length(palid)) stop("Unknown palette. See c4a_palettes() for options, and c4a_show / c4a_gui to see them.")
+		if (!length(palid)) stop("Unknown palette. See c4a_palettes() for options, and c4a_table / c4a_gui to see them.")
 	}
 
-	if (!is.null(mes)) message(mes)
+	if (!is.null(mes) && verbose) message(mes)
 
 	z$na[palid]
 }

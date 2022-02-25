@@ -30,10 +30,10 @@ check_name_presence = function(name, fullnames) {
 #'
 #' @param name palette name to be converted
 #' @param no.match what happens is no match is found? Options: `"error"`: an error is thrown, `"null"`: `NULL` is returned
-#' @example ./examples/c4a_convert_name.R
+#' @example ./examples/c4a_name_convert.R
 #' @export
-c4a_convert_name = function(name, no.match = c("error", "null")) {
-	fullnames = get(".z", envir = .C4A_CACHE)$fullname
+c4a_name_convert = function(name, no.match = c("error", "null")) {
+	fullnames = .C4A$z$fullname
 	no.match = match.arg(no.match)
 	name2 = check_name_presence(name, fullnames)
 	if (!is.null(name2)) return(name2)
@@ -43,7 +43,7 @@ c4a_convert_name = function(name, no.match = c("error", "null")) {
 
 	if (is.null(fname2)) {
 		if (no.match == "error") {
-			stop("Unknown palette name. See c4a_palettes() for options, and c4a_show / c4a_gui to see them.", call. = FALSE)
+			stop("Unknown palette name. See c4a_palettes() for options, and c4a_table / c4a_gui to see them.", call. = FALSE)
 		} else {
 			return(NULL)
 		}
