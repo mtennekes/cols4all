@@ -21,18 +21,42 @@ c4a_series(type = c("all", "cat", "seq", "div"))
 c4a_defaults
 }
 \arguments{
-\item{type}{type of color palette: one of `"all"` (all palettes), `"cat"` (categorical/qualitative palettes), `"seq"` (sequential palettes) and `"div"` (diverging palettes).}
+\item{type}{type of color palette: one of \code{"all"} (all palettes), \code{"cat"} (categorical/qualitative palettes), \code{"seq"} (sequential palettes) and \code{"div"} (diverging palettes).}
 
-\item{series}{series to list the palettes from. Run `c4a_series` to see the options.}
+\item{series}{series to list the palettes from. Run \code{c4a_series} to see the options.}
 
-\item{full.names}{should full names, i.e. with the prefix "series."? By default `TRUE`.}
+\item{full.names}{should full names, i.e. with the prefix "series."? By default \code{TRUE}.}
 }
 \value{
 names of the loaded color palettes
 }
 \description{
-`c4a_palettes` lists all available cols4all color palettes. The used naming convention of the palettes is: series.palette_name. Palettes are also accessible (with \code{\link{c4a}})by just palette_name. `c4a_series` lists all series from which palettes are available. `c4a_defaults` returns the one default (recommended) palette per type
+\code{c4a_palettes} lists all available cols4all color palettes. The used naming convention of the palettes is: series.palette_name. Palettes are also accessible (with \code{\link{c4a}})by just palette_name. \code{c4a_series} lists all series from which palettes are available. \code{c4a_defaults} returns the one default (recommended) palette per type
 }
+\section{Source / Credits}{
+
+
+\strong{misc}
+\itemize{
+\item \code{r3} and \code{r4} base R colors, from the \code{grDevices} package
+\item \code{ggplot2} from the \code{ggplot2} package (also included in \code{grDevices})
+\item \code{okabe} by Okabe-Ito (2002, revised 2008), Color Universal Design (CUD) - How to make figures and presentations that are friendly to Colorblind people -, \url{https://jfly.uni-koeln.de/color/} (also included in \code{grDevices})
+\item \code{alphabet} from the \code{Polychroma} package (also included in \code{grDevices})
+\item \code{alphabet2} by P.Green-Armytage (2010): A Colour Alphabet and the Limits of Colour Coding. Colour: Design & Creativity (5) (2010): 10, 1-23. www.aic-color.org/journal/v5/jaic_v5_06.pdf
+\item \code{polychrome36} from the \code{Polychrome} package (also included in \code{grDevices})
+\item \code{kelly} by K. Kelly (1965): Twenty-two colors of maximum contrast. Color Eng., 3(6), 1965. http://www.iscc.org/pdf/PC54_1724_001.pdf (from the \code{pals} package)
+\item \code{watlington} John Watlington. An Optimum 16 Color Palette. \url{http://alumni.media.mit.edu/~wad/color/palette.html} (from the \code{pals} package)
+\item \code{cols25}by K. Wright \url{https://stackoverflow.com/a/9568659/1393348} (from the \code{pals} package)
+\item \code{glasbey}by Chris Glasbey, Gerie van der Heijden, Vivian F. K. Toh, Alision Gray (2007). Colour Displays for Categorical Images. Color Research and Application, 32, 304-309. (from the \code{pals} package)
+}
+
+\strong{hcl}
+
+From the \code{colorspace} package
+
+Zeileis A, Fisher JC, Hornik K, Ihaka R, McWhite CD, Murrell P, Stauffer R, Wilke CO (2020). colorspace: A Toolbox for Manipulating and Assessing Colors and Palettes. Journal of Statistical Software, 96 (1), 1-49.
+}
+
 \examples{
 c4a_palettes()
 

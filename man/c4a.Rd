@@ -56,5 +56,8 @@ c4a("hcl.set2")
 c4a("hcl.set2", n = 8)
 
 # reversed palette
+c4a("hcl.set2", reverse = TRUE, n = 8)
+
+# handy shortcut
 c4a("-hcl.set2", n = 8)
 }
