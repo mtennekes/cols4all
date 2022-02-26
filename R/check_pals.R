@@ -143,13 +143,15 @@ get_hue_width = function(hs) {
 
 }
 
+
+
 # HCL characteristics
 analyse_hcl = function(p) {
 	m = get_hcl_matrix(p)
 
 	# hue width: how far are hues apart from each other?
 	h = round(m[,3])
-	h[m[,2]<=10] = NA
+	h[m[,2]<=.C4A$Cgray] = NA
 
 	Hwidth = get_hue_width(h)
 
@@ -168,7 +170,7 @@ analyse_hcl = function(p) {
 	Cmax = round(max(m[,2]))
 	Lrange = round(max(m[,1]) - min(m[,1]))
 	Crange = round(max(m[,2]) - min(m[,2]))
-	LCrange = round(max(Lrange*2, Crange))
+	LCrange = round(max(Lrange * .C4A$LrangeWeight, Crange * (1-.C4A$LrangeWeight)))
 
 
 	c(Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, LCrange = LCrange)

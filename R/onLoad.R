@@ -4,9 +4,18 @@
 
 	with(.C4A,{
 		defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green")
-		scores = list(cat = c(min_dist = 8),
-					   seq = c(min_step = 5, max_step = -Inf),
-					   div = c(inter_wing_dist = 10, min_step = 5))
+		CBF_th = list(cat = c(min_dist = 10),
+					   seq = c(min_step = 5),
+					   div = c(inter_wing_dist = 10, inter_wing_hue_dist = 100, min_step = 5)) #color-blind-friendly threshold
+
+		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth)
+		LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
+		LCrangeHarmonic = 80/3 # Maximum LCrange values for which the palette is labeled "harmonic"
+		Cintense = 100 # chroma of colors that are considered intense
+		HwidthDivRainbow = 90 # a diverging palette is labeled as 'rainbow hue' if HwidthL or HwidthR are at least HwidthDivRainbow
+		HwidthDivSingle = 20 # a diverging palette is labeled as 'single hue' if HwidthL and HwidthR are at most HwidthDivSingle
+		HwidthSeqRainbow = 180 # a sequential palette is labeled as 'rainbow hue' if Hwidth is at least HwidthSeqRainbow
+		HwidthSeqSingle = 15 # a sequential palette is labeled as 'single hue' if Hwidth is at most HwidthSeqSingle
 
 		sc = c("min_dist", "min_step", "max_step", "inter_wing_dist", "inter_wing_hue_dist", "rank")
 

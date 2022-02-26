@@ -25,20 +25,20 @@ show_attach_scores = function(z, contrast) {
 	a = t(sapply(z2$palette, analyse_hcl))
 	z2 = cbind(z2, a)
 
-	z2$highC = z2$Cmax >= 100
+	z2$highC = z2$Cmax >= .C4A$Cintense
 
 	if (type == "div") {
-		z2$hueType = ifelse(z2$HwidthL >= 90 | z2$HwidthR >= 90, "RH",
-					 ifelse(z2$HwidthL < 20 & z2$HwidthR < 20, "SH", "MH"))
+		z2$hueType = ifelse(z2$HwidthL >= .C4A$HwidthDivRainbow | z2$HwidthR >= .C4A$HwidthDivRainbow, "RH",
+					 ifelse(z2$HwidthL < .C4A$HwidthDivSingle & z2$HwidthR < .C4A$HwidthDivSingle, "SH", "MH"))
 		z2$HwidthLR = pmax(z2$HwidthL, z2$HwidthR)
 		z2$rank[z2$cbfriendly] = z2$rank[z2$cbfriendly] - 1e9 - ((!z2$highC[z2$cbfriendly]) * 1e6) - ((z2$hueType[z2$cbfriendly] == "SH") * 1e3)
 		z2$rank[!z2$cbfriendly] = z2$rank[!z2$cbfriendly] - ((!z2$highC[!z2$cbfriendly]) * 1e-3) - ((z2$hueType[!z2$cbfriendly] == "SH") * 1e-6)
 	} else if (type == "seq") {
-		z2$hueType = ifelse(z2$Hwidth < 15, "SH", ifelse(z2$Hwidth < 180, "MH", "RH"))
+		z2$hueType = ifelse(z2$Hwidth < .C4A$HwidthSeqSingle, "SH", ifelse(z2$Hwidth < .C4A$HwidthSeqRainbow, "MH", "RH"))
 		z2$rank[z2$cbfriendly] = z2$rank[z2$cbfriendly] - 1e9 - ((!z2$highC[z2$cbfriendly]) * 1e6)
 		z2$rank[!z2$cbfriendly] = z2$rank[!z2$cbfriendly] - ((!z2$highC[!z2$cbfriendly]) * 1e-3)
 	} else if (type == "cat") {
-		z2$harmonic = (z2$LCrange < 80)
+		z2$harmonic = (z2$LCrange < .C4A$LCrangeHarmonic)
 		z2$rank[z2$cbfriendly] = z2$rank[z2$cbfriendly] - 1e9 + ((z2$LCrange[z2$cbfriendly]) * 1e6) + (z2$highC[z2$cbfriendly] * 1e3)
 		z2$rank[!z2$cbfriendly] = z2$rank[!z2$cbfriendly] + ((z2$LCrange[!z2$cbfriendly]) * 1e-3) + (z2$highC[!z2$cbfriendly] * 1e-6)
 	}
@@ -49,8 +49,8 @@ show_attach_scores = function(z, contrast) {
 
 get_friendlyness = function(zn) {
 	with(zn, {
-		ifelse(type == "cat", min_dist >= 10,
-		ifelse(type == "seq", min_step >= 5,
-		ifelse(type == "div", inter_wing_dist >= 10 & inter_wing_hue_dist >=100 & min_step >= 5, FALSE)))
+		ifelse(type == "cat", min_dist >= .C4A$CBF_th$cat["min_dist"],
+		ifelse(type == "seq", min_step >= .C4A$CBF_th$seq["min_step"],
+		ifelse(type == "div", inter_wing_dist >= .C4A$CBF_th$div["inter_wing_dist"] & inter_wing_hue_dist >= .C4A$CBF_th$div["inter_wing_hue_dist"] & min_step >= .C4A$CBF_th$div["min_step"], FALSE)))
 	})
 }

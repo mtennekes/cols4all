@@ -16,6 +16,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 
 	ui = shiny::fluidPage(
 		#shinyjs::useShinyjs(),
+		tags$style(type = "text/css", ".irs-grid-pol.small {height: 0px;}"),
 
 		# Application title
 		shiny::titlePanel("col4all: colors for all!"),
@@ -25,7 +26,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 				width = 3,
 				shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = type), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
 				shiny::sliderInput("n", "Number of colors",
-								   min = 2, max = 36, value = n),
+								   min = 2, max = 36, value = n, ticks = FALSE),
 				shiny::checkboxInput("na", shiny::strong("Color for missing values"), value = FALSE),
 				shiny::conditionalPanel(
 					condition = "input.type != 'cat'",
@@ -77,8 +78,10 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 			n = input$n
 			if (type == "cat") {
 				shiny::updateSliderInput(session, "n", min = 2, max = 36, value = n)
+			} else if (type == "seq") {
+				shiny::updateSliderInput(session, "n", min = 3, max = 11,  value = max(min(n, 11), 3))
 			} else {
-				shiny::updateSliderInput(session, "n", min = 3, max = 15,  value = max(min(n, 15), 3))
+				shiny::updateSliderInput(session, "n", min = 3, max = 13,  value = max(min(n, 13), 3))
 			}
 		})
 
