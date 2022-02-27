@@ -11,7 +11,7 @@ c4a(
   type = c("cat", "seq", "div"),
   reverse = FALSE,
   order = NULL,
-  contrast = NULL,
+  contrast = NA,
   n_too_large = c("error", "repeat", "interpolate"),
   verbose = TRUE
 )
@@ -19,7 +19,7 @@ c4a(
 c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 }
 \arguments{
-\item{palette}{name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided by `c4a_defaults`. The palette name can be prefixed with a `"-"` symbol, which will reverse the palette (this can also be done with the `reverse` argument).}
+\item{palette}{name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided by `c4a_default_palette`. The palette name can be prefixed with a `"-"` symbol, which will reverse the palette (this can also be done with the `reverse` argument).}
 
 \item{n}{number of colors. If omitted then: for type `"cat"` the maximum number of colors is returned, and for types `"seq"` and `"div"`, 9 colors.}
 

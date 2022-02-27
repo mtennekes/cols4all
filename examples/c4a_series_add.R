@@ -21,6 +21,8 @@ c4a_gui(series = "cbsnl", n = 8)
 # Palettes proposed by
 # M.A. Petroff (2021), Accessible Color Sequences for Data Visualization,
 # https://arxiv.org/pdf/2107.02270.pdf
+rgb2hex = function(x) rgb(x[1], x[2], x[3], maxColorValue = 255)
+
 petroff = local({
 	rgb6 = list(c(87,144,252),
 		 c(248,156,32),
@@ -49,12 +51,13 @@ petroff = local({
 		 c(113,117,129),
 		 c(146,218,221))
 
-	rgb2hex = function(x) rgb(x[1], x[2], x[3], maxColorValue = 255)
 
 	list(petroff6 = sapply(rgb6, rgb2hex),
 		 petroff8 = sapply(rgb8, rgb2hex),
 		 petroff10 = sapply(rgb10, rgb2hex))
 })
+petroff2 = list(petroff9 = petroff$petroff10[-9])
 
-c4a_series_add(petroff, xNA = NA, types = "cat", series = "petroff")
+c4a_series_add_as_is(petroff, xNA = NA, types = "cat", series = "petroff")
+c4a_series_add_as_is(petroff2, xNA = petroff$petroff10[9], types = "cat", series = "petroff")
 

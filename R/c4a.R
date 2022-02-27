@@ -2,7 +2,7 @@
 #'
 #' Get a cols4all color palette. The function `c4a` returns the colors of the specified palette, and the function `c4a_na` returns the color for missing value that is associated with the specified palette.
 #'
-#' @param palette name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided by `c4a_defaults`. The palette name can be prefixed with a `"-"` symbol, which will reverse the palette (this can also be done with the `reverse` argument).
+#' @param palette name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided by `c4a_default_palette`. The palette name can be prefixed with a `"-"` symbol, which will reverse the palette (this can also be done with the `reverse` argument).
 #' @param n number of colors. If omitted then: for type `"cat"` the maximum number of colors is returned, and for types `"seq"` and `"div"`, 9 colors.
 #' @param type type of color palette, in case `palette` is not specified: one of `"cat"` (categorical/qualitative palette), `"seq"` (sequential palette) and `"div"` (diverging palette).
 #' @param reverse should the palette be reversed?
@@ -18,35 +18,28 @@
 #' @rdname c4a
 #' @name c4a
 #' @export
-c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse = FALSE, order = NULL, contrast = NULL, n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
+c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse = FALSE, order = NULL, contrast = NA, n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
 	type = match.arg(type)
 	n_too_large = match.arg(n_too_large)
 
 	if (is.null(palette)) {
-		palette = c4a_defaults[type]
+		palette = c4a_default_palette(type)
 		mes = paste0("These are the colors from palette \"", palette, "\", the default for type \"", type, "\":")
 	} else {
 		mes = NULL
 	}
 
-	# palettes can also be reversed with a "-" sign
-	isrev = (substr(palette, 1, 1) == "-")
-	if (isrev) palette = substr(palette, 2, nchar(palette))
-	reverse = xor(reverse, isrev)
+	x = c4a_meta(palette)
 
-	z = .C4A$z
+	reverse = xor(reverse, x$reverse)
 
-	fullname = c4a_name_convert(palette)
-	palid = which(fullname == z$fullname)
 
-	if (!is.null(n) && n > z$nmax[palid] && n_too_large == "error") stop("Palette ", palette, " only supports ", z$nmax[palid], " colors.")
+	if (!is.null(n) && n > x$nmax && n_too_large == "error") stop("Palette ", palette, " only supports ", x$nmax, " colors.")
 
-	zl = as.list(z[palid,])
-	zl$palette = zl$palette[[1]]
-	zl$contrast = contrast
-	zl$n_too_large = n_too_large
-	if (is.null(n)) n = ifelse(zl$type == "cat", zl$nmax, 11)
-	pal = do.call(get_pal_n, c(list(n = n), zl))
+	x$contrast = contrast
+	x$n_too_large = n_too_large
+	if (is.null(n)) n = ifelse(x$type == "cat", x$nmax, 11)
+	pal = do.call(get_pal_n, c(list(n = n), x))
 
 	pal = if (!is.null(order)) {
 		if (!all(order %in% 1L:n)) stop("order should consist of numbers 1 to ", n)
@@ -57,13 +50,42 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse 
 	if (reverse) rev(pal) else pal
 }
 
+#' Get meta information from a cols4all palette
+#'
+#' Get meta information from a cols4all palette
+#'
+#' @param palette name of the palette
+#' @param no.match what happens is no match is found? Options: `"error"`: an error is thrown, `"null"`: `NULL` is returned
+#' @return list with the following items: name, series, fullname, type, palette (colors), na (color), nmax, and reverse. The latter is `TRUE` when there is a `"-"` prefix before the palette name.
+#' @export
+c4a_meta = function(palette, no.match = c("error", "null")) {
+	isrev = (substr(palette, 1, 1) == "-")
+	if (isrev) palette = substr(palette, 2, nchar(palette))
+
+	z = .C4A$z
+
+	fullname = c4a_name_convert(palette, no.match = no.match)
+
+	if (is.null(fullname)) return(NULL)
+
+	palid = which(fullname == z$fullname)
+
+	x = as.list(z[palid, ])
+	x$reverse = isrev
+	x$palette = x$palette[[1]]
+	x
+}
+
+
+
+
 #' @rdname c4a
 #' @name c4a_na
 #' @export
 c4a_na = function(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE) {
 	type = match.arg(type)
 	if (is.null(palette)) {
-		palette = c4a_defaults[type]
+		palette = c4a_default_palette(type)
 		mes = paste0("This is the color for missing values associated with palette \"", palette, "\", the default for type \"", type, "\":")
 	} else {
 		mes = NULL

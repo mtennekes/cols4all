@@ -1,4 +1,4 @@
-get_pal_n = function(n, name, type, series, palette, nmax, contrast = NULL, n_too_large = "error",...) {
+get_pal_n = function(n, name, type, series, palette, nmax, contrast = NA, n_too_large = "error",...) {
 	n_orig = n
 	if (n > nmax) {
 		if (n_too_large == "error") return(NULL)
@@ -10,10 +10,7 @@ get_pal_n = function(n, name, type, series, palette, nmax, contrast = NULL, n_to
 		if (type == "cat") {
 			palette[1:n]
 		} else {
-			if (is.null(contrast)) {
-				fun = paste0("default_contrast_", type)
-				contrast = do.call(fun, list(k = n))
-			}
+			if (is.na(contrast[1])) contrast = c4a_default_contrast(n, type)
 
 			if (contrast[1] == 0 && contrast[2] == 1) {
 				colorRampPalette(palette, space = "Lab")(n)
@@ -40,15 +37,7 @@ get_pal_n = function(n, name, type, series, palette, nmax, contrast = NULL, n_to
 }
 
 
-default_contrast_seq <- function(k) {
-	c1 <- max((9-k) * (.15/6), 0)
-	c2 <- min(.7 + (k-3) * (.3/6), 1)
-	c(c1,c2)
-}
 
-default_contrast_div <- function(k) {
-	c(0, min(.6 + (k-3) * (.4/8), 1))
-}
 
 map2divscaleID <- function(breaks, n=101, contrast=1) {
 	nbrks <- length(breaks)

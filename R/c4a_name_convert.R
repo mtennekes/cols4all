@@ -3,14 +3,18 @@ format_name = function(x) {
 	tolower(gsub("([a-z])([A-Z])", "\\1_\\L\\2", x2, perl = TRUE))
 }
 
-check_name_presence = function(name, fullnames) {
+check_name_presence = function(name) {
+	fullnames = .C4A$z$fullname
+	nnames = .C4A$z$name
+
+
 	# 1. full name
 	isfn = which(name == fullnames)[1]
 
 	if (!is.na(isfn)) return(name)
 
 	# 2. palette name only
-	palid = which(name == .z$name)
+	palid = which(name == nnames)
 	if (length(palid)) {
 		nms = fullnames[palid]
 		if (length(palid) > 1) {
@@ -33,13 +37,12 @@ check_name_presence = function(name, fullnames) {
 #' @example ./examples/c4a_name_convert.R
 #' @export
 c4a_name_convert = function(name, no.match = c("error", "null")) {
-	fullnames = .C4A$z$fullname
 	no.match = match.arg(no.match)
-	name2 = check_name_presence(name, fullnames)
+	name2 = check_name_presence(name)
 	if (!is.null(name2)) return(name2)
 
 	fname = format_name(name)
-	fname2 = check_name_presence(fname, fullnames)
+	fname2 = check_name_presence(fname)
 
 	if (is.null(fname2)) {
 		if (no.match == "error") {
