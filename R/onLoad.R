@@ -8,7 +8,7 @@
 					   seq = c(min_step = 5),
 					   div = c(inter_wing_dist = 10, inter_wing_hue_dist = 100, min_step = 5)) #color-blind-friendly threshold
 
-		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth)
+		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
 		LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
 		LCrangeHarmonic = 80/3 # Maximum LCrange values for which the palette is labeled "harmonic"
 		Cintense = 100 # chroma of colors that are considered intense

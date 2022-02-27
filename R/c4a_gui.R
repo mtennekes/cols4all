@@ -16,7 +16,6 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 
 	ui = shiny::fluidPage(
 		#shinyjs::useShinyjs(),
-		tags$style(type = "text/css", ".irs-grid-pol.small {height: 0px;}"),
 
 		# Application title
 		shiny::titlePanel("col4all: colors for all!"),
@@ -102,6 +101,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 		output$show = function() {
 			shiny::req(get_values_d())
 			values = get_values_d()
+			print(values)
 			c4a_table(n = values$n, cvd.sim = values$cvd, sort = values$sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol)
 		}
 	}

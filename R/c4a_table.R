@@ -96,6 +96,9 @@ table_columns = function(type, show.scores) {
 #' @name c4a_gui
 c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = "all", contrast = NULL, include.na = FALSE, show.scores = FALSE, columns = NA) {
 	id = NULL
+
+	#if (length(series) == 2) browser()
+
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
 
 	.labels = .C4A$labels
@@ -158,7 +161,7 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 		series[ind!=1] = ""
 		row_h = ifelse(ind==indx, 25, 12)
 	})
-	e = cbind(e, zn[match(e$label, zn$name),qn,drop=FALSE])
+	e = cbind(e, zn[match(paste(e$series, e$label, sep = "."), zn$fullname),qn,drop=FALSE])
 	colnames(e)[match(qn, colnames(e))] = ql
 
 	# total number of columns

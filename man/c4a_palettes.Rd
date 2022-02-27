@@ -52,9 +52,31 @@ names of the loaded color palettes
 
 \strong{hcl}
 
-From the \code{colorspace} package
+From the \code{colorspace} package, citation:
 
 Zeileis A, Fisher JC, Hornik K, Ihaka R, McWhite CD, Murrell P, Stauffer R, Wilke CO (2020). colorspace: A Toolbox for Manipulating and Assessing Colors and Palettes. Journal of Statistical Software, 96 (1), 1-49.
+
+\strong{brewer}
+
+From the \code{RColorBrewer} package, by Cynthia Brewer:
+
+Harrower, Mark, and Cynthia A. Brewer. "ColorBrewer.org: an online tool for selecting colour schemes for maps." The Cartographic Journal 40.1 (2003): 27-37.
+
+\strong{tol}
+
+Color schemes by Paul Tol. \url{https://personal.sron.nl/~pault/}
+
+\strong{viridis}
+
+\strong{kovesi}
+
+\strong{wes}
+
+\strong{carto}
+
+\strong{scico}
+
+\strong{tableau}
 }
 
 \examples{

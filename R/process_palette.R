@@ -21,7 +21,7 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	# take lightest gray as NA color
 	if (type == "cat") {
 		if (take.gray.for.NA) {
-			wG = which(hcl[,2] < 10)
+			wG = which(hcl[,2] < .C4A$Cgray)
 			if (length(wG) && is.na(colNA)) {
 				wNA = wG[which.max(hcl[wG, 1])]
 				colNA = pal[wNA]
@@ -32,7 +32,7 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 
 		# remove other grays
 		if (remove.other.grays) {
-			wG = which(hcl[,2] < 10)
+			wG = which(hcl[,2] < .C4A$Cgray)
 			if (length(wG)) {
 				pal = pal[-wG]
 				hcl = hcl[-wG,]
