@@ -1,12 +1,14 @@
 if (requireNamespace("shiny") && requireNamespace("kableExtra") && interactive()) {
-	c4a_gui()
 
-	# categorical palettes with maximum number of colors
-	c4a_table(type = "cat")
+c4a_gui()
 
-	# sort sequential palettes by rank (based on color blind-friendliness, and color balance)
-	c4a_table(type = "seq", n = 7, sort = "rank")
+# categorical palettes with maximum number of colors
+c4a_table(type = "cat")
 
-	# sort by hue type, which is indication how many hues are used.
-	c4a_table(type = "seq", n = 5, sort = "hueType")
+# sort sequential palettes by rank (based on color blind-friendliness, and color balance)
+c4a_table(type = "seq", n = 7, sort = "rank")
+
+# sort by hue type, which is indication how many hues are used.
+c4a_table(type = "seq", n = 5, sort = "hueType")
+
 }

@@ -30,9 +30,9 @@ table_columns = function(type, show.scores) {
 
 #' Graphical user interface to analyse palettes
 #'
-#' Graphical user interface to analyse palettes. `c4a_table` shows a table that can be opened in the browser. `c4a_gui` is a graphical user interface around this table.
+#' Graphical user interface to analyse palettes. `c4a_table` shows a table that can be opened in the browser. `c4a_gui` is a graphical user interface (shiny app) around this table.
 #'
-#' @section Main variables:
+#' @section Table Columns:
 #'
 #' \tabular{lll}{
 #'   \strong{Column&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} \tab \strong{Name} \tab \strong{Description} \cr

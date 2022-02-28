@@ -40,10 +40,10 @@ names of the loaded color palettes
 \item \code{alphabet} from the \code{Polychroma} package (also included in \code{grDevices})
 \item \code{alphabet2} by P.Green-Armytage (2010): A Colour Alphabet and the Limits of Colour Coding. Colour: Design & Creativity (5) (2010): 10, 1-23. www.aic-color.org/journal/v5/jaic_v5_06.pdf
 \item \code{polychrome36} from the \code{Polychrome} package (also included in \code{grDevices})
-\item \code{kelly} by K. Kelly (1965): Twenty-two colors of maximum contrast. Color Eng., 3(6), 1965. http://www.iscc.org/pdf/PC54_1724_001.pdf (from the \code{pals} package)
-\item \code{watlington} John Watlington. An Optimum 16 Color Palette. \url{http://alumni.media.mit.edu/~wad/color/palette.html} (from the \code{pals} package)
-\item \code{cols25}by K. Wright \url{https://stackoverflow.com/a/9568659/1393348} (from the \code{pals} package)
-\item \code{glasbey}by Chris Glasbey, Gerie van der Heijden, Vivian F. K. Toh, Alision Gray (2007). Colour Displays for Categorical Images. Color Research and Application, 32, 304-309. (from the \code{pals} package)
+\item \code{kelly} by K. Kelly (1965): Twenty-two colors of maximum contrast. Color Eng., 3(6), 1965. http://www.iscc.org/pdf/PC54_1724_001.pdf (obtained from the \code{pals} package)
+\item \code{watlington} by John Watlington. \url{http://alumni.media.mit.edu/~wad/color/palette.html} (obtained from the \code{pals} package)
+\item \code{cols25} by K. Wright \url{https://stackoverflow.com/a/9568659/1393348} (obtained from the \code{pals} package)
+\item \code{glasbey} by Chris Glasbey, Gerie van der Heijden, Vivian F. K. Toh, Alision Gray (2007). Colour Displays for Categorical Images. Color Research and Application, 32, 304-309. (from the \code{pals} package)
 }
 
 \strong{hcl}
@@ -64,15 +64,49 @@ Color schemes by Paul Tol. \url{https://personal.sron.nl/~pault/}
 
 \strong{viridis}
 
+Color schemes used in the Python library matplotlib:
+
+J. D. Hunter, "Matplotlib: A 2D Graphics Environment", Computing in Science & Engineering, vol. 9, no. 3, pp. 90-95, 2007.
+
+In R obtained via the package \code{viridisLite}
+
 \strong{kovesi}
+
+Color schemes by Peter Kovesi:
+
+Peter Kovesi (2016). CET Perceptually Uniform Colour Maps. \url{https://colorcet.com/}
+Peter Kovesi (2015). Good Colour Maps: How to Design Them. Arxiv. \url{https://arxiv.org/abs/1509.03700}
+
+Obtained via the R package \code{pals} (by Kevin Wright)
 
 \strong{wes}
 
+Palettes from Wes Anderson movies
+
+Obtained via the package \code{wesanderson}
+
 \strong{carto}
+
+Palettes by CARTO.
+
+Obtained via the package \code{rcartocolors}
 
 \strong{scico}
 
+Palettes developed by Fabio Crameri
+
+\url{http://www.fabiocrameri.ch/colourmaps.php}
+
+Crameri, Fabio. (2018, May 8). Scientific colour maps (Version 3.0.1). Zenodo.
+Crameri, Fabio. (2018). Geodynamic diagnostics, scientific visualisation and StagLab 3.0. Geosci. Model Dev. Discuss.
+
+Obtained via the R package \code{scico}
+
 \strong{tableau}
+
+Palettes by Tableau Software
+
+Obtained via the R package \code{ggthemes}
 }
 
 \examples{

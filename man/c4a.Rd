@@ -29,17 +29,17 @@ c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 
 \item{order}{order of colors. Only applicable for \code{"cat"} palettes}
 
-\item{contrast}{a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential \code{"seq"} palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging \code{"seq"} palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start).}
+\item{contrast}{a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential \code{"seq"} palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging \code{"seq"} palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). The default values (that depend on the \code{n}n and \code{type}) are provided by \code{\link{c4a_default_contrast}}.}
 
 \item{n_too_large}{what should be done in case \code{n} is larger than the maximum amount of colors? Options are \code{"error"} (an error is returned), \code{"repeat"}, the palette is repeated, \code{"interpolate"} colors are interpolated. For categorical \code{"cat"} palettes only.}
 
 \item{verbose}{should messages be printed?}
 }
 \value{
-a vector of colors
+A vector of colors
 }
 \description{
-Get a cols4all color palette. The function \code{c4a} returns the colors of the specified palette, and the function \code{c4a_na} returns the color for missing value that is associated with the specified palette.
+Get a cols4all color palette: \code{c4a} returns the colors of the specified palette, and \code{c4a_na} returns the color for missing value that is associated with the specified palette. Run \code{\link{c4a_gui}} to see all available palettes, which are also listed with \code{\link{c4a_palettes}}.
 }
 \examples{
 c4a_palettes("div")

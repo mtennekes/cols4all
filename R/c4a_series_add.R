@@ -20,6 +20,7 @@
 #' @export
 c4a_series_add = function(x, xNA = NA, types, series, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE) {
 
+	if (!requireNamespace("colorblindcheck")) stop("Please install colorblindcheck")
 
 	adjust.settings = list(take.gray.for.NA = take.gray.for.NA, remove.other.grays = remove.other.grays, remove.blacks = remove.blacks, light.to.dark = light.to.dark, remove.names = remove.names)
 

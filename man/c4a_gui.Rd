@@ -42,9 +42,9 @@ c4a_table(
 \item{columns}{number of columns. By default equal to \code{n} or, if not specified, 12. Cannot be higher than the palette}
 }
 \description{
-Graphical user interface to analyse palettes. \code{c4a_table} shows a table that can be opened in the browser. \code{c4a_gui} is a graphical user interface around this table.
+Graphical user interface to analyse palettes. \code{c4a_table} shows a table that can be opened in the browser. \code{c4a_gui} is a graphical user interface (shiny app) around this table.
 }
-\section{Main variables}{
+\section{Table Columns}{
 
 
 \tabular{lll}{
@@ -99,15 +99,17 @@ Lum/Chr range \tab \code{"LCrange"} \tab Defined as max(2 * \code{Lrange}, \code
 
 \examples{
 if (requireNamespace("shiny") && requireNamespace("kableExtra") && interactive()) {
-	c4a_gui()
 
-	# categorical palettes with maximum number of colors
-	c4a_table(type = "cat")
+c4a_gui()
 
-	# sort sequential palettes by rank (based on color blind-friendliness, and color balance)
-	c4a_table(type = "seq", n = 7, sort = "rank")
+# categorical palettes with maximum number of colors
+c4a_table(type = "cat")
 
-	# sort by hue type, which is indication how many hues are used.
-	c4a_table(type = "seq", n = 5, sort = "hueType")
+# sort sequential palettes by rank (based on color blind-friendliness, and color balance)
+c4a_table(type = "seq", n = 7, sort = "rank")
+
+# sort by hue type, which is indication how many hues are used.
+c4a_table(type = "seq", n = 5, sort = "hueType")
+
 }
 }
