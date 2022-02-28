@@ -52,7 +52,6 @@
 #' @return names of the loaded color palettes
 #' @example ./examples/c4a_palettes.R
 #' @rdname c4a_palettes
-#' @md
 #' @name c4a_palettes
 #' @export
 c4a_palettes = function(type = c("all", "cat", "seq", "div"), series = NULL, full.names = TRUE) {

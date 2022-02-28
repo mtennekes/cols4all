@@ -89,7 +89,6 @@ table_columns = function(type, show.scores) {
 #' @param show.scores should scores of the quality indicators be printed? See details for a description of those indicators.
 #' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
 #' @import colorspace abind
-#' @md
 #' @example ./examples/c4a_table.R
 #' @export
 #' @rdname c4a_gui

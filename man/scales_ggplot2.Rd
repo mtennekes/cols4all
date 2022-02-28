@@ -200,7 +200,7 @@ scale_fill_binned_c4a_div(
 \item{n_interp}{number of discrete colors that should be used to interpolate the continuous color scale. Recommended to use an odd number to include the midpoint}
 }
 \description{
-col4all scales for ggplot2. The scale functions are organized as `scale_<aesthetic>_<mapping>_c4a_<type>`, where the `<aesthetic>` should be either `colo(u)r` or `fill`, `<mapping>` refers to the mapping that is applied (`discrete`, `continuous` or `binned`), and `<type>` is the palette type: `cat`, `seq`, or `div`.
+col4all scales for ggplot2. The scale functions are organized as \verb{scale_<aesthetic>_<mapping>_c4a_<type>}, where the \verb{<aesthetic>} should be either \verb{colo(u)r} or \code{fill}, \verb{<mapping>} refers to the mapping that is applied (\code{discrete}, \code{continuous} or \code{binned}), and \verb{<type>} is the palette type: \code{cat}, \code{seq}, or \code{div}.
 }
 \examples{
 library("ggplot2")

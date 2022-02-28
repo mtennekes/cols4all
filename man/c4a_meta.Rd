@@ -9,10 +9,10 @@ c4a_meta(palette, no.match = c("error", "null"))
 \arguments{
 \item{palette}{name of the palette}
 
-\item{no.match}{what happens is no match is found? Options: `"error"`: an error is thrown, `"null"`: `NULL` is returned}
+\item{no.match}{what happens is no match is found? Options: \code{"error"}: an error is thrown, \code{"null"}: \code{NULL} is returned}
 }
 \value{
-list with the following items: name, series, fullname, type, palette (colors), na (color), nmax, and reverse. The latter is `TRUE` when there is a `"-"` prefix before the palette name.
+list with the following items: name, series, fullname, type, palette (colors), na (color), nmax, and reverse. The latter is \code{TRUE} when there is a \code{"-"} prefix before the palette name.
 }
 \description{
 Get meta information from a cols4all palette

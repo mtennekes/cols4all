@@ -29,5 +29,6 @@ Suggests:
 	tmap
 URL: https://github.com/mtennekes/cols4all
 BugReports: https://github.com/mtennekes/cols4all/issues
+Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2

@@ -19,19 +19,19 @@ c4a(
 c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 }
 \arguments{
-\item{palette}{name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided by `c4a_default_palette`. The palette name can be prefixed with a `"-"` symbol, which will reverse the palette (this can also be done with the `reverse` argument).}
+\item{palette}{name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided by \code{c4a_default_palette}. The palette name can be prefixed with a \code{"-"} symbol, which will reverse the palette (this can also be done with the \code{reverse} argument).}
 
-\item{n}{number of colors. If omitted then: for type `"cat"` the maximum number of colors is returned, and for types `"seq"` and `"div"`, 9 colors.}
+\item{n}{number of colors. If omitted then: for type \code{"cat"} the maximum number of colors is returned, and for types \code{"seq"} and \code{"div"}, 9 colors.}
 
-\item{type}{type of color palette, in case `palette` is not specified: one of `"cat"` (categorical/qualitative palette), `"seq"` (sequential palette) and `"div"` (diverging palette).}
+\item{type}{type of color palette, in case \code{palette} is not specified: one of \code{"cat"} (categorical/qualitative palette), \code{"seq"} (sequential palette) and \code{"div"} (diverging palette).}
 
 \item{reverse}{should the palette be reversed?}
 
-\item{order}{order of colors. Only applicable for `"cat"` palettes}
+\item{order}{order of colors. Only applicable for \code{"cat"} palettes}
 
-\item{contrast}{vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`. See `c4a_gui`, or the internal functions `cols4all::default_contrast_seq` and `cols4all::default_contrast_div` to see what the automatic values are.}
+\item{contrast}{vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on \code{n}. See \code{c4a_gui}, or the internal functions \code{cols4all::default_contrast_seq} and \code{cols4all::default_contrast_div} to see what the automatic values are.}
 
-\item{n_too_large}{what should be done in case `n` is larger than the maximum amount of colors? Options are `"error"` (an error is returned), `"repeat"`, the palette is repeated, `"interpolate"` colors are interpolated. For categorical `"cat"` palettes only.}
+\item{n_too_large}{what should be done in case \code{n} is larger than the maximum amount of colors? Options are \code{"error"} (an error is returned), \code{"repeat"}, the palette is repeated, \code{"interpolate"} colors are interpolated. For categorical \code{"cat"} palettes only.}
 
 \item{verbose}{should messages be printed?}
 }
@@ -39,7 +39,7 @@ c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 a vector of colors
 }
 \description{
-Get a cols4all color palette. The function `c4a` returns the colors of the specified palette, and the function `c4a_na` returns the color for missing value that is associated with the specified palette.
+Get a cols4all color palette. The function \code{c4a} returns the colors of the specified palette, and the function \code{c4a_na} returns the color for missing value that is associated with the specified palette.
 }
 \examples{
 c4a_palettes("div")

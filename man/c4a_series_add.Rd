@@ -34,29 +34,29 @@ c4a_series_remove(series = "all", are.you.sure = FALSE)
 \arguments{
 \item{x}{named list of color palettes. See details for indexing.}
 
-\item{xNA}{colors for missing values. Vector of the same length as x (or length 1). For `NA` values, the color for missing values is automatically determined.}
+\item{xNA}{colors for missing values. Vector of the same length as x (or length 1). For \code{NA} values, the color for missing values is automatically determined.}
 
-\item{types}{character vector of the same length as x (or length 1), which determines the type of palette `"cat"`, `"seq"`, or `"div"`.}
+\item{types}{character vector of the same length as x (or length 1), which determines the type of palette \code{"cat"}, \code{"seq"}, or \code{"div"}.}
 
-\item{series}{for `c4a_series_add`, a character vector of the same length as x (or length 1), which determines the series. For `c4a_series_remove` a character vector of series names that should be removed (use `"all"` to remove all).}
+\item{series}{for \code{c4a_series_add}, a character vector of the same length as x (or length 1), which determines the series. For \code{c4a_series_remove} a character vector of series names that should be removed (use \code{"all"} to remove all).}
 
 \item{format.palette.name}{should palette names be formatted to lowercase/underscore format?}
 
-\item{remove.blacks, take.gray.for.NA, remove.other.grays}{These arguments determine the processing of grayscale colors for categorical `"cat"` palettes: if `remove.blacks` and there are (near) blacks, these are removed first. Next, if `take.gray.for.NA`, `xNA` is `NA`, and a palette contains at least one grayscale color (which can also be white), this is used as color for missing values. In case there are more than one grayscale color, the lightest is taken. `remove.other.grays` determines what happens with the other grays.}
+\item{remove.blacks, take.gray.for.NA, remove.other.grays}{These arguments determine the processing of grayscale colors for categorical \code{"cat"} palettes: if \code{remove.blacks} and there are (near) blacks, these are removed first. Next, if \code{take.gray.for.NA}, \code{xNA} is \code{NA}, and a palette contains at least one grayscale color (which can also be white), this is used as color for missing values. In case there are more than one grayscale color, the lightest is taken. \code{remove.other.grays} determines what happens with the other grays.}
 
-\item{light.to.dark}{should sequential `"seq"` palettes be automatically ordered from light to dark?}
+\item{light.to.dark}{should sequential \code{"seq"} palettes be automatically ordered from light to dark?}
 
 \item{remove.names}{should individual color names be removed?}
 
-\item{...}{passed on to `c4a_series_add`}
+\item{...}{passed on to \code{c4a_series_add}}
 
 \item{are.you.sure}{are you sure you want to remove series?}
 }
 \description{
-Add and remove palette series. `c4a_series_add` can be used to add own palette series and  `c4a_series_remove` to remove palette series. `c4a_series_add_as_is` is the same as `c4a_series_add`, but by default without any processing.
+Add and remove palette series. \code{c4a_series_add} can be used to add own palette series and  \code{c4a_series_remove} to remove palette series. \code{c4a_series_add_as_is} is the same as \code{c4a_series_add}, but by default without any processing.
 }
 \details{
-Indexing: for a categorical `"cat"` palette, an optional `"index"` attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See `cols4all::.z$palette$rainbow` and  for an example.
+Indexing: for a categorical \code{"cat"} palette, an optional \code{"index"} attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See \code{cols4all::.z$palette$rainbow} and  for an example.
 }
 \examples{
 # Palettes from Statistics Netherlands

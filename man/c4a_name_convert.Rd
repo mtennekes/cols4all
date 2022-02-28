@@ -9,10 +9,10 @@ c4a_name_convert(name, no.match = c("error", "null"))
 \arguments{
 \item{name}{palette name to be converted}
 
-\item{no.match}{what happens is no match is found? Options: `"error"`: an error is thrown, `"null"`: `NULL` is returned}
+\item{no.match}{what happens is no match is found? Options: \code{"error"}: an error is thrown, \code{"null"}: \code{NULL} is returned}
 }
 \description{
-Converts a name to a known palette name, if it exists. Otherwise, either an error is thrown or `NULL` is returned
+Converts a name to a known palette name, if it exists. Otherwise, either an error is thrown or \code{NULL} is returned
 }
 \examples{
 c4a_name_convert("Blues")
