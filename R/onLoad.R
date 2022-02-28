@@ -24,6 +24,8 @@
 						  div = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"))
 		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange")
 
+		sortRev = c("Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
+
 		labels = c(min_dist = "Minimum distance",
 					min_step = "Minimum step",
 					max_step = "Maximum step",

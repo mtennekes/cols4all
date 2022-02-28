@@ -30,7 +30,7 @@ c4a_table(
 
 \item{cvd.sim}{color vision deficiency simulation: one of \code{"none"}, \code{"deutan"}, \code{"protan"}, \code{"tritan"}}
 
-\item{sort}{column name to sort the data. For column names, see details}
+\item{sort}{column name to sort the data. For column names, see details. Use a \code{"-"} prefix to reverse the order.}
 
 \item{text.format}{The format of the text of the colors. One of \code{"hex"}, \code{"RGB"} or \code{"HCL"}.}
 

@@ -81,7 +81,7 @@ table_columns = function(type, show.scores) {
 #' @param type type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, and `"div"` for diverging. For `c4a_gui` it only determines which type is shown initially.
 #' @param n number of colors. If omitted: for `"cat"` the full palette is displayed, and for `"seq"` and `"div"`, 9 colors. For `c4a_gui` it only determines which number of colors initially.
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
-#' @param sort column name to sort the data. For column names, see details
+#' @param sort column name to sort the data. For column names, see details. Use a `"-"` prefix to reverse the order.
 #' @param text.format The format of the text of the colors. One of `"hex"`, `"RGB"` or `"HCL"`.
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
 #' @param series Series of palettes to show. See \code{\link{c4a_series}} for options. By default, `"all"`, which means all series. For `c4a_gui` it only determines which series are shown initially.
@@ -135,9 +135,12 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 	ql = res$ql
 	srt = res$srt
 
-	sortCol = if (sort == "name") "fullname" else srt[which(sort == qn)]
+	isrev = (substr(sort, 1, 1) == "-")
+	if (isrev) sort = substr(sort, 2, nchar(sort))
 
-	decreasing = !(sortCol %in% c("fullname", "rank"))
+
+	sortCol = if (sort == "name") "fullname" else srt[which(sort == qn)]
+	decreasing = xor(isrev, sortCol %in% .C4A$sortRev)
 	zn = zn[order(zn[[sortCol]], decreasing = decreasing), ]
 
 	zn$nlines = ((zn$n-1) %/% columns) + 1

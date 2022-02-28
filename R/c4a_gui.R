@@ -27,6 +27,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 
 		shiny::sidebarLayout(
 			shiny::sidebarPanel(
+
 				width = 3,
 				shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = type), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
 				shiny::sliderInput("n", "Number of colors",
@@ -40,7 +41,14 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 					shiny::checkboxInput("auto_contrast", label = "Automatic (based on number of colors)", value = FALSE)),
 				shiny::selectizeInput("series", "Palette Series", choices = allseries, selected = series, multiple = TRUE),
 				shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
-				shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "rank"),
+
+				shiny::fluidRow(
+					shiny::column(6,
+						shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "rank")),
+					shiny::column(6,
+						shiny::br(),
+						shiny::checkboxInput("sortRev", "Reverse", value = FALSE))),
+
 				shiny::selectInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF")),
 				shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = TRUE),
 				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE)
@@ -63,6 +71,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 				 type = input$type,
 				 cvd = input$cvd,
 				 sort = input$sort,
+				 sortRev = input$sortRev,
 				 series = input$series,
 				 show.scores = input$advanced,
 				 columns = if (input$n > 16) 12 else input$n,
@@ -108,7 +117,8 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 		output$show = function() {
 			shiny::req(get_values_d())
 			values = get_values_d()
-			c4a_table(n = values$n, cvd.sim = values$cvd, sort = values$sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol, text.format = values$format)
+			sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
+			c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol, text.format = values$format)
 		}
 	}
 	shiny::shinyApp(ui = ui, server = server)
