@@ -94,7 +94,7 @@ table_columns = function(type, show.scores) {
 #' @export
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", contrast = NULL, include.na = FALSE, show.scores = FALSE, columns = NA) {
+c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", contrast = NA, include.na = FALSE, show.scores = FALSE, columns = NA) {
 	id = NULL
 
 	#if (length(series) == 2) browser()
@@ -115,6 +115,8 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 		message("No palette series loaded. Please reload cols4all, add series with c4a_series_add, or import data with c4a_sysdata_import")
 		return(invisible(NULL))
 	}
+
+	if (is.na(contrast[1])) contrast = c4a_default_contrast(n, type)
 
 
 	zn = get_z_n(z[z$type == type, ], n = n, contrast = contrast)
