@@ -12,6 +12,7 @@ c4a_table(
   n = NULL,
   cvd.sim = c("none", "deutan", "protan", "tritan"),
   sort = "name",
+  text.format = "hex",
   text.col = "same",
   series = "all",
   contrast = NULL,
@@ -30,6 +31,8 @@ c4a_table(
 \item{cvd.sim}{color vision deficiency simulation: one of \code{"none"}, \code{"deutan"}, \code{"protan"}, \code{"tritan"}}
 
 \item{sort}{column name to sort the data. For column names, see details}
+
+\item{text.format}{The format of the text of the colors. One of \code{"hex"}, \code{"RGB"} or \code{"HCL"}.}
 
 \item{text.col}{The text color of the colors. By default \code{"same"}, which means that they are the same as the colors themselves (so invisible, but available for selection).}
 

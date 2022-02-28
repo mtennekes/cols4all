@@ -41,7 +41,8 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 				shiny::selectizeInput("series", "Palette Series", choices = allseries, selected = series, multiple = TRUE),
 				shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
 				shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "rank"),
-				shiny::selectInput("textcol", "Text color", choices = c("No text" = "same", Black = "#000000", White = "#FFFFFF")),
+				shiny::selectInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF")),
+				shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = TRUE),
 				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE)
 			),
 
@@ -67,7 +68,8 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 				 columns = if (input$n > 16) 12 else input$n,
 				 na = input$na,
 				 contrast = input$contrast,
-				 textcol = input$textcol)
+				 textcol = input$textcol,
+				 format = input$format)
 		})
 		get_values_d = shiny::debounce(get_values, 300)
 
@@ -106,7 +108,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 		output$show = function() {
 			shiny::req(get_values_d())
 			values = get_values_d()
-			c4a_table(n = values$n, cvd.sim = values$cvd, sort = values$sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol)
+			c4a_table(n = values$n, cvd.sim = values$cvd, sort = values$sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol, text.format = values$format)
 		}
 	}
 	shiny::shinyApp(ui = ui, server = server)

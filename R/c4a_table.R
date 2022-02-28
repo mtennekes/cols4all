@@ -82,6 +82,7 @@ table_columns = function(type, show.scores) {
 #' @param n number of colors. If omitted: for `"cat"` the full palette is displayed, and for `"seq"` and `"div"`, 9 colors. For `c4a_gui` it only determines which number of colors initially.
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @param sort column name to sort the data. For column names, see details
+#' @param text.format The format of the text of the colors. One of `"hex"`, `"RGB"` or `"HCL"`.
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
 #' @param series Series of palettes to show. See \code{\link{c4a_series}} for options. By default, `"all"`, which means all series. For `c4a_gui` it only determines which series are shown initially.
 #' @param contrast vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`. See `c4a_gui`, or the internal functions `cols4all::default_contrast_seq` and `cols4all::default_contrast_div` to see what the automatic values are.
@@ -93,7 +94,7 @@ table_columns = function(type, show.scores) {
 #' @export
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.col = "same", series = "all", contrast = NULL, include.na = FALSE, show.scores = FALSE, columns = NA) {
+c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", contrast = NULL, include.na = FALSE, show.scores = FALSE, columns = NA) {
 	id = NULL
 
 	#if (length(series) == 2) browser()
@@ -237,7 +238,10 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 		cols_cvd = cols
 		cols_cvd[cols_cvd != ""] = sim(cols[cols_cvd != ""])
 		textcol = if (text.col == "same") cols_cvd else text.col
-		e2[[cn]] = kableExtra::cell_spec(cols, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;")
+
+		txt = switch(text.format, hex = cols, RGB = get_rgb_triple(cols), HCL = get_hcl_triple(cols))
+
+		e2[[cn]] = kableExtra::cell_spec(txt, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;")
 	}
 
 
@@ -295,7 +299,7 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 	# 	k = kableExtra::column_spec(k, i, extra_css = 'width: 5em; overflow: hidden; background-color: #000000"')
 	# }
 	# for (cN in colNames) {
-	# 	k = kableExtra::column_spec(k, which(cN == e2nms), width = "10px")
+	# 	k = kableExtra::column_spec(k, which(cN == e2nms), width = "3em")
 	# }
 
 

@@ -116,9 +116,21 @@ check_cat_pal = function(p) {
 
 
 # get hcl coordinates
-get_hcl_matrix = function(p) {
-	as(hex2RGB(p), "polarLUV")@coords
+get_hcl_matrix = function(p, rounded = FALSE) {
+	x = as(hex2RGB(p), "polarLUV")@coords
+	if (rounded) round(x) else x
 }
+
+get_hcl_triple = function(p) {
+	x = get_hcl_matrix(p, rounded = TRUE)[,c("H", "C", "L")]
+	paste0("(", apply(x, MARGIN = 1, paste, collapse = ", "), ")")
+}
+
+get_rgb_triple = function(p) {
+	x = round(colorspace::hex2RGB(p)@coords * 255)
+	paste0("(", apply(x, MARGIN = 1, paste, collapse = ", "), ")")
+}
+
 
 # hue width: how far are hues apart from each other?
 # method: find largest gap, i.e. hue range for which no hues are present. Hwidth = 360 - gap
