@@ -234,12 +234,14 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 
 	for (cn in colNames) {
 		cols = e2[[cn]]
-		cols[is.na(cols)] = ""
+		sel = (!is.na(cols) & cols != "")
+		cols[!sel] = ""
 		cols_cvd = cols
-		cols_cvd[cols_cvd != ""] = sim(cols[cols_cvd != ""])
+		cols_cvd[sel] = sim(cols[sel])
 		textcol = if (text.col == "same") cols_cvd else text.col
 
-		txt = switch(text.format, hex = cols, RGB = get_rgb_triple(cols), HCL = get_hcl_triple(cols))
+		txt = cols
+		if (any(sel)) txt[sel] = switch(text.format, hex = cols[sel], RGB = get_rgb_triple(cols[sel]), HCL = get_hcl_triple(cols[sel]))
 
 		e2[[cn]] = kableExtra::cell_spec(txt, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;")
 	}
