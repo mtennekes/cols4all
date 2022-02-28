@@ -32,9 +32,9 @@ local({
 	p3 = pals[c("Alphabet", "Polychrome 36")]
 	s3 = "misc"
 
-	c4a_submit_series(p1, types = "cat", series = s1, from.scratch = TRUE)
-	#c4a_submit_series(p2, types = "cat", series = s2, from.scratch = FALSE)
-	c4a_submit_series(p3, types = "cat", series = s3, from.scratch = FALSE, take_grey_for_NA = FALSE, remove_other_greys = FALSE, remove_blacks = FALSE)
+	c4a_series_add(p1, types = "cat", series = s1, from.scratch = TRUE)
+	#c4a_series_add(p2, types = "cat", series = s2c4a_series_add)
+	c4a_series_add(p3, types = "cat", series = s3c4a_series_add, take_grey_for_NA = FALSE, remove_other_greys = FALSE, remove_blacks = FALSE)
 	invisible(NULL)
 })
 
@@ -74,7 +74,7 @@ local({
 
 	type = c(rep("seq", length(spals)), rep("div", length(dpals)))
 
-	c4a_submit_series(c(spals, dpals), types = type, series = "hcl", from.scratch = FALSE)
+	c4a_series_add(c(spals, dpals), types = type, series = "hcl"c4a_series_add)
 })
 
 
@@ -91,7 +91,7 @@ local({
 	names(pals) = rownames(inf)
 	types = ifelse(inf$category == "qual", "cat", inf$category)
 
-	c4a_submit_series(pals, types = types, series = "brewer", from.scratch = FALSE)
+	c4a_series_add(pals, types = types, series = "brewer"c4a_series_add)
 })
 
 
@@ -174,9 +174,9 @@ local({
 
 	p3_types = ifelse(names(p3) %in% c("bu_rd", "pr_gn", "sunset"), "div", "seq")
 
-	c4a_submit_series(p1, types = "cat", series = "tol", from.scratch = FALSE)
-	c4a_submit_series(p2, types = "cat", series = "tol", from.scratch = FALSE, take_grey_for_NA = FALSE, remove_other_greys = FALSE, remove_blacks = FALSE)
-	c4a_submit_series(p3, types = p3_types, xNA = p3_na, series = "tol", from.scratch = FALSE)
+	c4a_series_add(p1, types = "cat", series = "tol"c4a_series_add)
+	c4a_series_add(p2, types = "cat", series = "tol"c4a_series_add, take_grey_for_NA = FALSE, remove_other_greys = FALSE, remove_blacks = FALSE)
+	c4a_series_add(p3, types = p3_types, xNA = p3_na, series = "tol"c4a_series_add)
 })
 
 
@@ -197,7 +197,7 @@ local({
 	})
 	names(pals) = nms
 
-	c4a_submit_series(pals, types = types, series = "viridis", from.scratch = FALSE)
+	c4a_series_add(pals, types = types, series = "viridis"c4a_series_add)
 })
 
 
@@ -230,9 +230,9 @@ local({
 	pals4_type = ifelse(isdiv, "div", ifelse(iscyc, "cyc", "seq"))
 
 	names(pals4) = substr(names(pals4), 8, nchar(names(pals4)))
-	c4a_submit_series(pals, types = "cat", series = series, from.scratch = FALSE)
-	c4a_submit_series_as_is(pals3, types = "cat", series = "misc", from.scratch = FALSE)
-	c4a_submit_series(pals4, types = pals4_type, series = "kovesi", from.scratch = FALSE, format.palette.name = FALSE)
+	c4a_series_add(pals, types = "cat", series = seriesc4a_series_add)
+	c4a_series_add_as_is(pals3, types = "cat", series = "misc"c4a_series_add)
+	c4a_series_add(pals4, types = pals4_type, series = "kovesi"c4a_series_add, format.palette.name = FALSE)
 
 
 	# pals = lapply(palsCat, function(p) {
@@ -271,7 +271,7 @@ local({
 
 	type = ifelse(names(pals) == "Zissou1", "div", "cat")
 
-	c4a_submit_series(pals, types = type, series = "wes", from.scratch = FALSE)
+	c4a_series_add(pals, types = type, series = "wes"c4a_series_add)
 
 })
 
@@ -301,8 +301,8 @@ local({
 	names(pals2) = cartoNum$Name
 	type = ifelse(cartoNum$Type == "diverging", "div", "seq")
 
-	c4a_submit_series(pals, types = "cat", series = "carto", from.scratch = FALSE)
-	c4a_submit_series(pals2, types = type, series = "carto", from.scratch = FALSE)
+	c4a_series_add(pals, types = "cat", series = "carto"c4a_series_add)
+	c4a_series_add(pals2, types = type, series = "carto"c4a_series_add)
 
 })
 
@@ -326,7 +326,7 @@ local({
 		structure(pal, index = indices)
 	}), names = hclnames)
 
-	c4a_submit_series(pals, types = "cat", series = "hcl", from.scratch = FALSE)
+	c4a_series_add(pals, types = "cat", series = "hcl"c4a_series_add)
 })
 
 ###################################
@@ -345,8 +345,8 @@ local({
 	pals_div = pals[div]
 	pals_seq = pals[setdiff(names(pals), c(div, mseq))]
 
-	c4a_submit_series(pals_div, types = "div", series = "scico", from.scratch = FALSE)
-	c4a_submit_series(pals_seq, types = "seq", series = "scico", from.scratch = FALSE)
+	c4a_series_add(pals_div, types = "div", series = "scico"c4a_series_add)
+	c4a_series_add(pals_seq, types = "seq", series = "scico"c4a_series_add)
 })
 
 
@@ -372,9 +372,9 @@ local({
 		pal$value
 	})
 
-	c4a_submit_series(tab_cat, types = "cat", series = "tableau", from.scratch = FALSE)
-	c4a_submit_series(tab_seq, types = "seq", series = "tableau", from.scratch = FALSE)
-	c4a_submit_series(tab_div, types = "div", series = "tableau", from.scratch = FALSE)
+	c4a_series_add(tab_cat, types = "cat", series = "tableau")
+	c4a_series_add(tab_seq, types = "seq", series = "tableau")
+	c4a_series_add(tab_div, types = "div", series = "tableau")
 })
 
 

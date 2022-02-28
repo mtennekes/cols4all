@@ -11,7 +11,12 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 	if (series[1] == "all") {
 		series = allseries
 	} else {
-		if (!all(series %in% allseries)) stop("These series do not exist: \"", paste(setdiff(series, allseries), collapse = "\", \""), "\"")
+		if (!all(series %in% allseries)) message("These series do not exist: \"", paste(setdiff(series, allseries), collapse = "\", \""), "\"")
+		series = intersect(series, allseries)
+	}
+	if (!length(series)) {
+		message("No palette series loaded. Please reload cols4all, add series with c4a_series_add, or import data with c4a_sysdata_import")
+		return(invisible(NULL))
 	}
 
 	ui = shiny::fluidPage(

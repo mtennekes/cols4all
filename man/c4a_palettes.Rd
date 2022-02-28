@@ -4,7 +4,6 @@
 \alias{c4a_palettes}
 \alias{c4a_series}
 \alias{c4a_default_palette}
-\alias{c4a_default_contrast}
 \title{List all available cols4all color palettes and series}
 \usage{
 c4a_palettes(
@@ -16,8 +15,6 @@ c4a_palettes(
 c4a_series(type = c("all", "cat", "seq", "div"))
 
 c4a_default_palette(type = c("cat", "seq", "div"))
-
-c4a_default_contrast(n, type = c("seq", "div", "cat"))
 }
 \arguments{
 \item{type}{type of color palette: one of \code{"all"} (all palettes), \code{"cat"} (categorical/qualitative palettes), \code{"seq"} (sequential palettes) and \code{"div"} (diverging palettes).}
@@ -25,16 +22,14 @@ c4a_default_contrast(n, type = c("seq", "div", "cat"))
 \item{series}{series to list the palettes from. Run \code{c4a_series} to see the options.}
 
 \item{full.names}{should full names, i.e. with the prefix "series."? By default \code{TRUE}.}
-
-\item{n}{number of colors}
 }
 \value{
 names of the loaded color palettes
 }
 \description{
-\code{c4a_palettes} lists all available cols4all color palettes. The used naming convention of the palettes is: series.palette_name. Palettes are also accessible (with \code{\link{c4a}})by just palette_name. \code{c4a_series} lists all series from which palettes are available. \code{c4a_default_palette} returns the one default (recommended) palette per type and \code{c4a_default_contrast} returns the default contrast for sequential and diverging palette (see argument \code{contrast} of \code{\link{c4a}}).
+\code{c4a_palettes} lists all available cols4all color palettes. Palettes are organized by series. The available series are listed with \code{c4a_series}. The references are provided below. Palettes are also organized per functional type, where we currently support: categorical \code{"cat"}, sequential \code{"seq"}, and diverging \code{"div"}" palette types. The function \code{c4a_default_palette} returns the default (recommended) palette per type.
 }
-\section{Source / Credits}{
+\section{References}{
 
 
 \strong{misc}

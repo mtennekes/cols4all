@@ -1,8 +1,8 @@
 #' List all available cols4all color palettes and series
 #'
-#' `c4a_palettes` lists all available cols4all color palettes. The used naming convention of the palettes is: series.palette_name. Palettes are also accessible (with \code{\link{c4a}})by just palette_name. `c4a_series` lists all series from which palettes are available. `c4a_default_palette` returns the one default (recommended) palette per type and `c4a_default_contrast` returns the default contrast for sequential and diverging palette (see argument `contrast` of \code{\link{c4a}}).
+#' `c4a_palettes` lists all available cols4all color palettes. Palettes are organized by series. The available series are listed with `c4a_series`. The references are provided below. Palettes are also organized per functional type, where we currently support: categorical `"cat"`, sequential `"seq"`, and diverging `"div"`" palette types. The function `c4a_default_palette` returns the default (recommended) palette per type.
 #'
-#' @section Source / Credits:
+#' @section References:
 #'
 #' \strong{misc}
 #'
@@ -48,7 +48,6 @@
 #' @param type type of color palette: one of `"all"` (all palettes), `"cat"` (categorical/qualitative palettes), `"seq"` (sequential palettes) and `"div"` (diverging palettes).
 #' @param series series to list the palettes from. Run `c4a_series` to see the options.
 #' @param full.names should full names, i.e. with the prefix "series."? By default `TRUE`.
-#' @param n number of colors
 #' @return names of the loaded color palettes
 #' @example ./examples/c4a_palettes.R
 #' @rdname c4a_palettes
@@ -80,26 +79,3 @@ c4a_default_palette = function(type = c("cat", "seq", "div")) {
 	type = match.arg(type)
 	.C4A$defaults[type]
 }
-
-
-#' @rdname c4a_palettes
-#' @name c4a_default_contrast
-#' @export
-c4a_default_contrast = function(n, type = c("seq", "div", "cat")) {
-	type = match.arg(type)
-	if (type == "cat") return(c(0,1))
-	fun = paste0("default_contrast_", type)
-	do.call(fun, list(k = n))
-}
-
-
-default_contrast_seq <- function(k) {
-	c1 <- max((9-k) * (.15/6), 0)
-	c2 <- min(.7 + (k-3) * (.3/6), 1)
-	c(c1,c2)
-}
-
-default_contrast_div <- function(k) {
-	c(0, min(.6 + (k-3) * (.4/8), 1))
-}
-
