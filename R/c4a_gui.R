@@ -20,14 +20,19 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 	}
 
 	ui = shiny::fluidPage(
+		tags$style(HTML("div.sticky {
+		  position: -webkit-sticky;
+		  position: sticky;
+		  top: 0;
+		  z-index: 1;
+		}")),
 		#shinyjs::useShinyjs(),
 
 		# Application title
 		shiny::titlePanel("col4all: colors for all!"),
 
 		shiny::sidebarLayout(
-			shiny::sidebarPanel(
-
+			tagAppendAttributes(shiny::sidebarPanel(
 				width = 3,
 				shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = type), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
 				shiny::sliderInput("n", "Number of colors",
@@ -52,7 +57,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 				shiny::selectInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF")),
 				shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = TRUE),
 				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE)
-			),
+			), class = "sticky"),
 
 			shiny::mainPanel(
 				shiny::tableOutput("show")
