@@ -26,7 +26,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 		  top: 0;
 		  z-index: 1;
 		}")),
-		#shinyjs::useShinyjs(),
+		shinyjs::useShinyjs(),
 
 		# Application title
 		shiny::titlePanel("col4all: colors for all!"),
@@ -40,10 +40,13 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 				shiny::checkboxInput("na", shiny::strong("Color for missing values"), value = FALSE),
 				shiny::conditionalPanel(
 					condition = "input.type != 'cat'",
-					shiny::strong("Contrast range"),
-					shiny::sliderInput("contrast", "",
-									   min = 0, max = 1, value = c(0,1), step = .01),
-					shiny::checkboxInput("auto_contrast", label = "Automatic (based on number of colors)", value = FALSE)),
+					shiny::fluidRow(
+						shiny::column(4,
+							shiny::radioButtons("auto_contrast", label = "Contrast range", choices = c("Maximum", "Automatic", "Manual"), selected = "Maximum")),
+							shiny::column(8,
+								shiny::br(),
+								shinyjs::disabled(shiny::sliderInput("contrast", "",
+												   min = 0, max = 1, value = c(0,1), step = .05))))),
 				shiny::selectizeInput("series", "Palette Series", choices = allseries, selected = series, multiple = TRUE),
 				shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
 
@@ -111,11 +114,18 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 			type = input$type
 
 			if (type == "cat") return(NULL)
-			fun = paste0("default_contrast_", type)
-			rng = do.call(fun, list(k = n))
-			if (ac) {
+			if (ac != "Manual") {
 				shiny::freezeReactiveValue(input, "contrast")
+				shinyjs::disable("contrast")
+				if (ac == "Maximum") {
+					rng = c(0, 1)
+				} else {
+					fun = paste0("default_contrast_", type)
+					rng = do.call(fun, list(k = n))
+				}
 				shiny::updateSliderInput(session, "contrast", value = c(rng[1], rng[2]))
+			} else {
+				shinyjs::enable("contrast")
 			}
 		})
 

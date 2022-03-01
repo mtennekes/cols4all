@@ -44,15 +44,32 @@ c4a_series_add = function(x, xNA = NA, types, series, format.palette.name = TRUE
 
 
 
-	if (format.palette.name) nms = format_name(nms)
+
+	res = mapply(process_palette, pal = x, type = types, colNA = xNA, SIMPLIFY = FALSE, MoreArgs = adjust.settings)
+	x = lapply(res, "[[", "pal")
+	xNA = sapply(res, "[[", "colNA", USE.NAMES = FALSE)
+	reversed = sapply(res, "[[", "reversed")
+
+
+
+	if (format.palette.name) {
+		nms = format_name(nms)
+		if (any(reversed)) {
+			nms2 = nms[reversed]
+			ss = strsplit(nms2, "_", fixed = TRUE)
+			ss2 = sapply(ss, function(s) {
+				s2 = if (length(s) == 2 && !(s[1] %in% c("light", "dark"))) rev(s) else s
+				paste(s2, collapse = "_")
+			}, USE.NAMES = FALSE)
+			message("Palettes ", paste(nms2, collapse = ", "), " have been reversed.\nTherefore they have been renamed to ", paste(ss2, collapse = ", "), ". Please check and if needed change the argument settings of tm_series_add")
+		}
+	}
+
 
 	seriesID = which(series != "")
 	fnms = nms
 	if (length(seriesID)) fnms[seriesID] = paste0(series[seriesID], ".", fnms[seriesID])
 
-	res = mapply(process_palette, pal = x, type = types, colNA = xNA, SIMPLIFY = FALSE, MoreArgs = adjust.settings)
-	x = lapply(res, "[[", "pal")
-	xNA = sapply(res, "[[", "colNA", USE.NAMES = FALSE)
 
 
 	z = data.frame(name = nms, series = series, fullname = fnms, type = types, palette = I(x), na = xNA)

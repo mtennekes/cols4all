@@ -15,7 +15,7 @@ c4a_table(
   text.format = "hex",
   text.col = "same",
   series = "all",
-  contrast = NULL,
+  contrast = NA,
   include.na = FALSE,
   show.scores = FALSE,
   columns = NA

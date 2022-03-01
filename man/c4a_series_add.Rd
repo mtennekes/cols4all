@@ -59,7 +59,9 @@ Add and remove palette series. \code{c4a_series_add} can be used to add own pale
 Indexing: for a categorical \code{"cat"} palette, an optional \code{"index"} attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See \code{cols4all::.z$palette$rainbow} and  for an example.
 }
 \examples{
+#######################################
 # Palettes from Statistics Netherlands
+#######################################
 cbsnl_cols = list(
 	cool = c("#00a1cd", "#0058b8", "#afcb05", "#53a31d",
 		"#f39200", "#af0e80", "#ffcc00", "#e94c0a"),
@@ -121,5 +123,14 @@ petroff2 = list(petroff9 = petroff$petroff10[-9])
 
 c4a_series_add_as_is(petroff, xNA = NA, types = "cat", series = "petroff")
 c4a_series_add_as_is(petroff2, xNA = petroff$petroff10[9], types = "cat", series = "petroff")
+
+
+#######################################
+# From Robin Lovelace
+#######################################
+
+pals = list(cycling = sequential_hcl(n = 11, h = c(141, 6), c = c(70, NA, 86), l = c(73, 52), power = c(0.7, 1.9)))
+c4a_series_add_as_is(pals, xNA = NA, types = "seq", series = "robin")
+
 
 }

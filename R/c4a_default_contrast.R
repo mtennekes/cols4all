@@ -15,11 +15,20 @@ c4a_default_contrast = function(n, type = c("seq", "div", "cat")) {
 
 
 default_contrast_seq <- function(k) {
-	c1 <- max((9-k) * (.15/6), 0)
-	c2 <- min(.7 + (k-3) * (.3/6), 1)
-	c(c1,c2)
+	if (k == 1) {
+		c(0.5, 0.5)
+	} else {
+		if (k == 2) k = 3
+		c(max(0, ((9 - k) / 6) * 0.2),
+		  min(1, 1 - (((9 - k) / 6) * 0.2)))
+	}
 }
 
 default_contrast_div <- function(k) {
-	c(0, min(.6 + (k-3) * (.4/8), 1))
+	if (k == 1) {
+		c(0, 0)
+	} else {
+		if (k == 2) k = 3
+		c(0, min(1, 1 - (((11 - k) / 8) * 0.4)))
+	}
 }

@@ -45,7 +45,12 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 		if ((hcl[nrow(hcl), 1] - hcl[1,1]) > 40) {
 			pal = rev(pal)
 			hcl = hcl[nrow(hcl):1L,]
+			reversed = TRUE
+		} else {
+			reversed = FALSE
 		}
+	} else {
+		reversed = FALSE
 	}
 
 	if (is.na(colNA)) {
@@ -87,5 +92,5 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 		attr(pal, "index") = index3
 	}
 
-	list(pal = pal, colNA = colNA)
+	list(pal = pal, colNA = colNA, reversed = reversed)
 }
