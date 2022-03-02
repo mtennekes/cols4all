@@ -5,7 +5,7 @@
 #' Indexing: for a categorical `"cat"` palette, an optional `"index"` attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See `cols4all::.z$palette$rainbow` and  for an example.
 #'
 #' @param x named list of color palettes. See details for indexing.
-#' @param xNA colors for missing values. Vector of the same length as x (or length 1). For `NA` values, the color for missing values is automatically determined.
+#' @param xNA colors for missing values. Vector of the same length as x (or length 1). For `NA` values, the color for missing values is automatically determined (preferable a light grayscale color, but if it is indistinguishable by color blind people, a light color with a low chroma value is selected)
 #' @param types character vector of the same length as x (or length 1), which determines the type of palette `"cat"`, `"seq"`, or `"div"`.
 #' @param series for `c4a_series_add`, a character vector of the same length as x (or length 1), which determines the series. For `c4a_series_remove` a character vector of series names that should be removed (use `"all"` to remove all).
 #' @param format.palette.name should palette names be formatted to lowercase/underscore format?
@@ -61,7 +61,19 @@ c4a_series_add = function(x, xNA = NA, types, series, format.palette.name = TRUE
 				s2 = if (length(s) == 2 && !(s[1] %in% c("light", "dark"))) rev(s) else s
 				paste(s2, collapse = "_")
 			}, USE.NAMES = FALSE)
-			message("Palettes ", paste(nms2, collapse = ", "), " have been reversed.\nTherefore they have been renamed to ", paste(ss2, collapse = ", "), ". Please check and if needed change the argument settings of tm_series_add")
+			isdiff = (ss2 != nms2)
+			if (any(isdiff)) {
+				message("Some palettes have been reversed. Therefore they may have automatically be renamed. Please check and if needed change the argument settings of tm_series_add.\nOld names: ", paste(nms2[isdiff], collapse = ", "), "\nNew names: ", paste(ss2[isdiff], collapse = ", "))
+			}
+			if (any(!isdiff)) {
+				message("Some palettes have been reversed, but the names have not been changed. Please check and if needed change names manually.\nThe palettes are: ", paste(nms2[!isdiff], collapse = ", "), ".")
+			}
+			nms[reversed] = ss2
+		}
+	} else {
+		if (any(reversed)) {
+			nms2 = nms[reversed]
+			message("Some palettes have been reversed, but the names have not been changed. Please check and if needed change names manually or try with format.palette.name.\nThe palettes are: ", paste(nms2, collapse = ", "), ".")
 		}
 	}
 
@@ -91,6 +103,8 @@ c4a_series_add = function(x, xNA = NA, types, series, format.palette.name = TRUE
 	.s = .C4A$s
 
 	if (!is.null(.z)) {
+		if (any(fnms %in% .z$fullname)) stop("Fulnames already exist: ", paste(intersect(fnms, .z$fullname), collapse = ", "))
+
 		z = rbind(.z, z)
 		s = abind::abind(.s, s, along=1)
 	}

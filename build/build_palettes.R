@@ -44,6 +44,8 @@ local({
 ###################################
 local({
 
+	# select palettes that are not approximations (those are added later on from the original sources)
+
 	brewer_seq = c("YlOrRd", "YlOrBr", "OrRd", "Oranges", "YlGn", "YlGnBu", "Reds", "RdPu", "PuRd", "Purples","PuBuGn", "PuBu", "Greens", "BuGn", "GnBu", "BuPu", "Blues")
 	brewer_div <- c("Spectral", "RdYlGn", "RdYlBu", "RdGy", "RdBu", "PiYG", "PRGn", "PuOr", "BrBG")
 
@@ -63,7 +65,9 @@ local({
 
 	hcl_lst = lapply(c("sequential", "diverging", "divergingx"), hcl.pals)
 
-	seq = setdiff(hcl_lst[[1]], seq_hcl_approx)
+	terrain = c("Terrain", "Terrain 2")
+
+	seq = setdiff(hcl_lst[[1]], c(seq_hcl_approx, terrain))
 	div = setdiff(c(hcl_lst[[2]],hcl_lst[[3]]), div_hcl_approx)
 
 
@@ -73,9 +77,13 @@ local({
 	dpals = lapply(div, function(s) hcl.colors(11, s))
 	names(dpals) = div
 
+	tpals = lapply(terrain, function(s) hcl.colors(11, s))
+	names(tpals) = c("terrain", "terrain2")
+
 	type = c(rep("seq", length(spals)), rep("div", length(dpals)))
 
 	c4a_series_add(c(spals, dpals), types = type, series = "hcl")
+	c4a_series_add_as_is(tpals, types = "seq", series = "hcl")
 })
 
 
@@ -92,7 +100,7 @@ local({
 	names(pals) = rownames(inf)
 	types = ifelse(inf$category == "qual", "cat", inf$category)
 
-	c4a_series_add(pals, types = types, series = "brewer")
+	c4a_series_add(pals[6], types = types[6], series = "brewer")
 })
 
 
@@ -135,7 +143,7 @@ local({
 					   '#A50026'),
 		bu_rd = c('#2166AC', '#4393C3', '#92C5DE', '#D1E5F0', '#F7F7F7',
 					  '#FDDBC7', '#F4A582', '#D6604D', '#B2182B'),
-		pr_gn = c('#762A83', '#9970AB', '#C2A5CF', '#E7D4E8', '#F7F7F7',
+		pu_gn = c('#762A83', '#9970AB', '#C2A5CF', '#E7D4E8', '#F7F7F7',
 					  '#D9F0D3', '#ACD39E', '#5AAE61', '#1B7837'),
 		yl_or_br = c('#FFFFE5', '#FFF7BC', '#FEE391', '#FEC44F', '#FB9A29',
 						 '#EC7014', '#CC4C02', '#993404', '#662506'),
@@ -231,31 +239,93 @@ local({
 	pals4_type = ifelse(isdiv, "div", ifelse(iscyc, "cyc", "seq"))
 
 	names(pals4) = substr(names(pals4), 8, nchar(names(pals4)))
+
+	orig = c("linear_grey_10_95_c0",
+			 "rainbow_bgyr_35_85_c72",
+			 "rainbow_bgyrm_35_85_c69",
+			 "linear_ternary_blue_0_44_c57",
+			 "linear_ternary_green_0_46_c42",
+			 "linear_ternary_red_0_50_c52",
+			 "linear_kry_5_95_c72",
+			 "linear_kryw_5_100_c64",
+			 "linear_green_5_95_c69",
+			 "linear_bmy_10_95_c71",
+			 "linear_bmw_5_95_c86",
+			 "linear_blue_95_50_c20",
+			 "linear_blue_5_95_c73",
+			 "linear_bgyw_15_100_c67",
+			 "linear_bgy_10_95_c74",
+			 "isoluminant_cgo_70_c39")
+
+	new = c("linear_grey",
+			"rainbow_bu_rd",
+			"rainbow_bu_pk",
+			"linear_ternary_blue",
+			"linear_ternary_green",
+			"linear_ternary_red",
+			"linear_yl_rd_bk",
+			"linear_wh_rd_bk",
+			"linear_green",
+			"linear_yl_mg_bu",
+			"linear_wh_mg_bu",
+			"linear_blue",
+			"linear_tq_bu",
+			"linear_wh_yl_gn_bu",
+			"linear_yl_gn_bu",
+			"isoluminant_tq_or")
+
+	ids = match(orig, names(pals4))
+	pals4_sel = pals4[ids]
+	pals4_type_sel = pals4_type[ids]
+	names(pals4_sel) = new
+
+
+	pals_ter = pals4["linear_gow_65_90_c35"]
+	names(pals_ter) = "linear_terrain"
+
+
+
+	orig_div = c("diverging_gwv_55_95_c39",
+				 "diverging_bky_60_10_c30",
+				 "diverging_bwr_40_95_c42",
+				 "diverging_bwr_55_98_c37",
+				 "diverging_linear_bjy_30_90_c45",
+				 "diverging_bkr_55_10_c35",
+				 "diverging_linear_bjr_30_55_c53",
+				 "diverging_isoluminant_cjo_70_c25",
+				 "diverging_rainbow_bgymr_45_85_c67",
+				 "diverging_cwm_80_100_c22",
+				 "diverging_isoluminant_cjm_75_c24",
+				 "diverging_gwr_55_95_c38",
+				 "diverging_gkr_60_10_c40")
+
+
+	new_div = c("div_gn_wh_pu",
+				"div_bu_bk_br",
+				"div_bu_wh_rd",
+				"div_bu_wh_rd2",
+				"div_bu_gy_yl",
+				"div_bu_bk_rd",
+				"div_bu_gy_rd",
+				"div_isoluminant_tq_or",
+				"div_rainbow",
+				"div_tq_wh_pk",
+				"div_tq_gy_pk",
+				"div_gn_wh_rd",
+				"div_gn_bk_rd")
+
+	ids = match(orig_div, names(pals4))
+	pals5 = pals4[ids]
+	pals5_type = pals4_type[ids]
+	names(pals5) = new_div
+
+
 	c4a_series_add(pals, types = "cat", series = series)
 	c4a_series_add_as_is(pals3, types = "cat", series = "misc")
-	c4a_series_add(pals4, types = pals4_type, series = "kovesi", format.palette.name = FALSE)
+	c4a_series_add(pals4_sel, types = pals4_type_sel, series = "kovesi", format.palette.name = FALSE)
+	c4a_series_add_as_is(pals_ter, types = "seq", series = "kovesi", format.palette.name = FALSE)
+	c4a_series_add(pals5, types = pals5_type, series = "kovesi", format.palette.name = FALSE)
 
-
-	# pals = lapply(palsCat, function(p) {
-	# 	if (p %in% names(pals_syspals)) {
-	# 		pal = pals_syspals[[p]]
-	# 		if (p != "alphabet") {
-	# 			if (is.list(pal)) {
-	# 				pal = lapply(pal, remove_black_white)
-	# 			} else {
-	# 				pal = remove_black_white(pal)
-	# 			}
-	# 		}
-	# 	} else {
-	# 		pal = unname(do.call(p, args = list()))
-	# 		if (p != "alphabet") pal = remove_black_white(pal)
-	# 	}
-	# 	pal
-	# })
-	# pals = lapply(pals, unname)
-	# names(pals) = palsNew
-	# pals$kelly = c(pals$kelly[-1], pals$kelly[1]) # put black at the end
-	# pals
 })
 
 
@@ -297,13 +367,22 @@ local({
 
 	names(pals) = cartoQual$Name
 
-	cartoNum = cartocolors[cartocolors$Type %in% c("quantitative", "aggregation", "diverging"), c("Name", "Type", "n7")]
+	cartoNum = cartocolors[cartocolors$Type %in% c("quantitative", "diverging"), c("Name", "Type", "n7")]
 	pals2 = cartoNum$n7
 	names(pals2) = cartoNum$Name
 	type = ifelse(cartoNum$Type == "diverging", "div", "seq")
 
+	pals2rev = lapply(pals2, rev) # trick to reverse names
+	pals2rev["SunsetDark"] = rev(pals2rev["SunsetDark"]) # another reverse to undo
+
+	cartoAgg = cartocolors[cartocolors$Type %in% c("aggregation"), c("Name", "Type", "n7")]
+	pals3 = cartoAgg$n7
+	names(pals3) = tolower(cartoAgg$Name)
+	names(pals3)[2] = "ag_grn_yl"
+
 	c4a_series_add(pals, types = "cat", series = "carto")
-	c4a_series_add(pals2, types = type, series = "carto")
+	c4a_series_add(pals2rev, types = type, series = "carto")
+	c4a_series_add(pals3, types = "seq", series = "carto", format.palette.name = FALSE)
 
 })
 
