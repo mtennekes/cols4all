@@ -20,19 +20,19 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 	}
 
 	ui = shiny::fluidPage(
-		tags$style(HTML("div.sticky {
+		#shinyjs::useShinyjs(),
+		shiny::tags$style(shiny::HTML("div.sticky {
 		  position: -webkit-sticky;
 		  position: sticky;
 		  top: 0;
 		  z-index: 1;
 		}")),
-		shinyjs::useShinyjs(),
 
 		# Application title
 		shiny::titlePanel("col4all: colors for all!"),
 
 		shiny::sidebarLayout(
-			tagAppendAttributes(shiny::sidebarPanel(
+			shiny::tagAppendAttributes(shiny::sidebarPanel(
 				width = 3,
 				shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = type), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
 				shiny::sliderInput("n", "Number of colors",
