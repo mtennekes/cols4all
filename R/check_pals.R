@@ -123,12 +123,13 @@ get_hcl_matrix = function(p, rounded = FALSE) {
 
 get_hcl_triple = function(p) {
 	x = get_hcl_matrix(p, rounded = TRUE)[,c("H", "C", "L")]
-	paste0("(", apply(x, MARGIN = 1, paste, collapse = ", "), ")")
+	apply(x, MARGIN = 1, paste, collapse = ",")
 }
 
 get_rgb_triple = function(p) {
 	x = round(colorspace::hex2RGB(p)@coords * 255)
-	paste0("(", apply(x, MARGIN = 1, paste, collapse = ", "), ")")
+	#paste0("(", apply(x, MARGIN = 1, paste, collapse = ", "), ")")
+	apply(x, MARGIN = 1, paste, collapse = ",")
 }
 
 

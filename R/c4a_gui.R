@@ -3,6 +3,7 @@
 #' @export
 c4a_gui = function(type = "cat", n = 9, series = "all") {
 	if (!requireNamespace("shiny")) stop("Please install shiny")
+	if (!requireNamespace("shinyjs")) stop("Please install shinyjs")
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
 
 	z = .C4A$z
@@ -35,6 +36,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 			shiny::tagAppendAttributes(shiny::sidebarPanel(
 				width = 3,
 				shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = type), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
+				shiny::selectizeInput("series", "Palette Series", choices = allseries, selected = series, multiple = TRUE),
 				shiny::sliderInput("n", "Number of colors",
 								   min = 2, max = 36, value = n, ticks = FALSE),
 				shiny::checkboxInput("na", shiny::strong("Color for missing values"), value = FALSE),
@@ -47,8 +49,8 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 								shiny::br(),
 								shinyjs::disabled(shiny::sliderInput("contrast", "",
 												   min = 0, max = 1, value = c(0,1), step = .05))))),
-				shiny::selectizeInput("series", "Palette Series", choices = allseries, selected = series, multiple = TRUE),
 				shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
+				shiny::checkboxInput("advanced", shiny::strong("Show underlying scores"), value = FALSE),
 
 				shiny::fluidRow(
 					shiny::column(6,
@@ -57,10 +59,9 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 						shiny::br(),
 						shiny::checkboxInput("sortRev", "Reverse", value = FALSE))),
 
-				shiny::selectInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF")),
 				shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = TRUE),
-				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE)
-			), class = "sticky"),
+				shiny::selectInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF")),
+				shiny::radioButtons("copy", "Copy format", choices = c('c("#111111", "#222222")' = "R", '["#111111", "#222222"]' = "other"), inline = TRUE)), class = "sticky"),
 
 			shiny::mainPanel(
 				shiny::tableOutput("show")
@@ -86,7 +87,8 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 				 na = input$na,
 				 contrast = input$contrast,
 				 textcol = input$textcol,
-				 format = input$format)
+				 format = input$format,
+				 copy = input$copy)
 		})
 		get_values_d = shiny::debounce(get_values, 300)
 
@@ -133,7 +135,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 			shiny::req(get_values_d())
 			values = get_values_d()
 			sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
-			c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol, text.format = values$format)
+			c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol, text.format = values$format, text.copy = values$copy)
 		}
 	}
 	shiny::shinyApp(ui = ui, server = server)

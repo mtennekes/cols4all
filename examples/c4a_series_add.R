@@ -62,13 +62,3 @@ petroff2 = list(petroff9 = petroff$petroff10[-9])
 
 c4a_series_add_as_is(petroff, xNA = NA, types = "cat", series = "petroff")
 c4a_series_add_as_is(petroff2, xNA = petroff$petroff10[9], types = "cat", series = "petroff")
-
-
-#######################################
-# From Robin Lovelace
-#######################################
-
-pals = list(cycling = sequential_hcl(n = 11, h = c(141, 6), c = c(70, NA, 86), l = c(73, 52), power = c(0.7, 1.9)))
-c4a_series_add_as_is(pals, xNA = NA, types = "seq", series = "robin")
-
-

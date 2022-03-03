@@ -84,6 +84,7 @@ table_columns = function(type, show.scores) {
 #' @param sort column name to sort the data. For column names, see details. Use a `"-"` prefix to reverse the order.
 #' @param text.format The format of the text of the colors. One of `"hex"`, `"RGB"` or `"HCL"`.
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
+#' @param text.copy Copy format. `"R"` stands for `c("#111111", "#222222")` and `"other"` stands for `["#111111", "#222222"]`.
 #' @param series Series of palettes to show. See \code{\link{c4a_series}} for options. By default, `"all"`, which means all series. For `c4a_gui` it only determines which series are shown initially.
 #' @param contrast vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`. See `c4a_gui`, or the internal functions `cols4all::default_contrast_seq` and `cols4all::default_contrast_div` to see what the automatic values are.
 #' @param include.na should color for missing values be shown? `FALSE` by default
@@ -94,7 +95,7 @@ table_columns = function(type, show.scores) {
 #' @export
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", contrast = NA, include.na = FALSE, show.scores = FALSE, columns = NA) {
+c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", text.copy = "R", series = "all", contrast = NA, include.na = FALSE, show.scores = FALSE, columns = NA) {
 	id = NULL
 
 	#if (length(series) == 2) browser()
@@ -164,7 +165,7 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 		label[ind!=1] = ""
 		series = zn$series[match(did, 1L:k)]
 		series[ind!=1] = ""
-		row_h = ifelse(ind==indx, 25, 12)
+		row_h = ifelse(ind==indx, 2, 1.4)
 	})
 	e = cbind(e, zn[match(paste(e$series, e$label, sep = "."), zn$fullname),qn,drop=FALSE])
 	colnames(e)[match(qn, colnames(e))] = ql
@@ -210,25 +211,27 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 
 	e2 = cbind(e, me)
 
-	if (show.ranking) {
-		# add hyperlinks to Ranking column for copying row colors to Clipboard
-		links = c()
-		txt = as.character(e2[['Ranking']])
-		txt[is.na(txt)] = ""
+	# copy links
+	txt = rep("&#128471;", nrow(e2))
+	txt[e2$ind !=1 ] = ""
 
-		links = sapply(1:nrow(e2), function(rw) {
-			if (txt[rw] == "") {
-				""
-			} else{
-				did = e2$did[rw]
-				paste0("javascript:navigator.clipboard.writeText(`c('",
-					   paste(palList[[did]], collapse = "', '"), "')`)")
+	links = sapply(1:nrow(e2), function(rw) {
+		if (txt[rw] == "") {
+			""
+		} else{
+			did = e2$did[rw]
+			if (text.copy == "R") {
+				paste0("javascript:navigator.clipboard.writeText(`c(&quot;",
+					   paste(palList[[did]], collapse = "&quot;, &quot;"), "&quot;)`)")
+			} else {
+				paste0("javascript:navigator.clipboard.writeText(`[&quot;",
+					   paste(palList[[did]], collapse = "&quot;, &quot;"), "&quot;]`)")
 			}
-		}, USE.NAMES = FALSE)
+		}
+	}, USE.NAMES = FALSE)
 
-		e2[['Ranking']] = kableExtra::cell_spec(txt, link=links,
-			tooltip='Click to copy palette to Clipboard')
-	}
+	e2[['Copy']] = kableExtra::cell_spec(txt, link=links, tooltip='Click to copy palette to Clipboard', escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
+
 
 	sim = switch(cvd.sim,
 				 none = function(x) x,
@@ -248,7 +251,13 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 		txt = cols
 		if (any(sel)) txt[sel] = switch(text.format, hex = cols[sel], RGB = get_rgb_triple(cols[sel]), HCL = get_hcl_triple(cols[sel]))
 
-		e2[[cn]] = kableExtra::cell_spec(txt, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;")
+		#e2[[cn]] = kableExtra::cell_spec(txt, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;")
+
+		fz = switch(text.format, hex = "height: 1.5em; font-size: 80%;", "height: 1.5em; font-size: 80%;")
+
+		e2[[cn]] = kableExtra::cell_spec(txt, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = paste0("border-radius: 0px; max-width: 18em; display:block; white-space: nowrap; overflow: auto; text-overflow: ellipsis; ", fz))
+
+
 	}
 
 
@@ -270,17 +279,17 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 		lab = .labels["hueType"]
 		if (type == "seq") {
 			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
-				ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#128396;", tooltip = tooltip_SH_seq, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
+							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#128396;", tooltip = tooltip_SH_seq, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
 		} else if (type == "div") {
 			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
-									ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#x262F;", tooltip = tooltip_SH_div, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
+							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#x262F;", tooltip = tooltip_SH_div, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
 		}
 	}
 
 	if ("harmonic" %in% qn) {
 		hlab = .labels["harmonic"]
 		e2[[hlab]] = ifelse(!is.na(e2[[hlab]]) & e2[[hlab]],
-								 kableExtra::cell_spec("&#127900;", tooltip = tooltip_Harm, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"), "")
+							kableExtra::cell_spec("&#127900;", tooltip = tooltip_Harm, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"), "")
 
 	}
 
@@ -296,22 +305,23 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 		e2[[q]][is.na(e2[[q]])] = ""
 	}
 
-	e2cols = c("series", "label", ql, colNames)
-	e2nms = c("Series", "Name", ql, colNames)
+	e2cols = c("series", "label", ql, colNames, "Copy")
+	e2nms = c("Series", "Name", ql, colNames, "")
 
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2nms, escape = F)
-#return(k)
+	#return(k)
 
 	# for (i in (1:columns)+(length(ql)+1)) {
 	# 	k = kableExtra::column_spec(k, i, extra_css = 'width: 5em; overflow: hidden; background-color: #000000"')
 	# }
-	# for (cN in colNames) {
-	# 	k = kableExtra::column_spec(k, which(cN == e2nms), width = "3em")
-	# }
+	for (cN in colNames) {
+		k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "6em")
+	}
 
 
 	k = kableExtra::column_spec(k, 1, width = "5em", extra_css = "padding-left: 10px; padding-right: 10px; text-align: right")
 	k = kableExtra::column_spec(k, 2, width = "5em", extra_css = "padding-left: 0px; padding-right: 10px; text-align: right")
+	k = kableExtra::column_spec(k, which(e2cols == "Copy"), width = "2em", extra_css = "padding-left: 10px; padding-right: 0px; text-align: right")
 	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "padding-left: 3px; padding-right: 3px; vertical-align: bottom") #max-width: 5em;
 
 	for (q in ql_other) {
@@ -329,8 +339,8 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 	rws1 = trIDs[e2$ind==1] # first line per palette
 	rws2 = trIDs[e2$ind!=1] # other lines
 	#browser()
-	kl[rws1] = paste0("  <tr style=\"height: ", e2$row_h[e2$ind==1], "px;vertical-align:center;max-height: 20px; overflow-y: auto;\">")
-	kl[rws2] = paste0("  <tr style=\"height: ", e2$row_h[e2$ind!=1], "px;vertical-align:top;\">")
+	kl[rws1] = paste0("  <tr style=\"height: ", e2$row_h[e2$ind==1], "em;vertical-align:center;max-height: 10px; overflow-y: auto;\">")
+	kl[rws2] = paste0("  <tr style=\"height: ", e2$row_h[e2$ind!=1], "em;vertical-align:top;\">")
 	#kl[rws[-1]] = paste0("  <tr style=\"vertical-align:top;\">")
 
 	extra = c("<style>", "table {", "\tborder-collapse: collapse;", "\tfont-size: 12px;",

@@ -24,6 +24,7 @@ Suggests:
 	kableExtra,
 	knitr,
 	shiny,
+	shinyjs,
 	ggplot2,
 	scales,
 	tmap

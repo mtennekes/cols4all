@@ -34,7 +34,7 @@ c4a_series_remove(series = "all", are.you.sure = FALSE)
 \arguments{
 \item{x}{named list of color palettes. See details for indexing.}
 
-\item{xNA}{colors for missing values. Vector of the same length as x (or length 1). For \code{NA} values, the color for missing values is automatically determined.}
+\item{xNA}{colors for missing values. Vector of the same length as x (or length 1). For \code{NA} values, the color for missing values is automatically determined (preferable a light grayscale color, but if it is indistinguishable by color blind people, a light color with a low chroma value is selected)}
 
 \item{types}{character vector of the same length as x (or length 1), which determines the type of palette \code{"cat"}, \code{"seq"}, or \code{"div"}.}
 
@@ -123,14 +123,4 @@ petroff2 = list(petroff9 = petroff$petroff10[-9])
 
 c4a_series_add_as_is(petroff, xNA = NA, types = "cat", series = "petroff")
 c4a_series_add_as_is(petroff2, xNA = petroff$petroff10[9], types = "cat", series = "petroff")
-
-
-#######################################
-# From Robin Lovelace
-#######################################
-
-pals = list(cycling = sequential_hcl(n = 11, h = c(141, 6), c = c(70, NA, 86), l = c(73, 52), power = c(0.7, 1.9)))
-c4a_series_add_as_is(pals, xNA = NA, types = "seq", series = "robin")
-
-
 }

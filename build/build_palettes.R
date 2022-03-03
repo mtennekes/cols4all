@@ -9,6 +9,8 @@ library(RColorBrewer)
 library(viridisLite)
 library(scico)
 library(ggthemes)
+library(reticulate) # to get seaborn
+
 
 ## more:
 
@@ -77,6 +79,8 @@ local({
 	dpals = lapply(div, function(s) hcl.colors(11, s))
 	names(dpals) = div
 
+	names(dpals)[1] = "Blue-Red 1" #to prevent conflict with reversed "Red-Blue"
+
 	tpals = lapply(terrain, function(s) hcl.colors(11, s))
 	names(tpals) = c("terrain", "terrain2")
 
@@ -100,7 +104,7 @@ local({
 	names(pals) = rownames(inf)
 	types = ifelse(inf$category == "qual", "cat", inf$category)
 
-	c4a_series_add(pals[6], types = types[6], series = "brewer")
+	c4a_series_add(pals, types = types, series = "brewer")
 })
 
 
@@ -425,6 +429,9 @@ local({
 	pals_div = pals[div]
 	pals_seq = pals[setdiff(names(pals), c(div, mseq))]
 
+
+	names(pals_seq)[match(c("batlowK", "batlowW"), names(pals_seq))] = c("k_batlow", "w_batlow") # reverse names (because palettes will be reversed)
+
 	c4a_series_add(pals_div, types = "div", series = "scico")
 	c4a_series_add(pals_seq, types = "seq", series = "scico")
 })
@@ -459,6 +466,38 @@ local({
 
 
 
+local({
+	sns = import("seaborn")
+	mpc = import("matplotlib.colors")
+
+	sb_cat_names = c("deep", "muted", "pastel", "bright", "dark", "colorblind")
+	sb_cat = lapply(sb_cat_names, sns$color_palette, as_cmap = TRUE)
+	names(sb_cat) = sb_cat_names
+
+	sb_seq_names = c("rocket", "mako", "flare", "crest")
+	sb_seq = lapply(sb_seq_names, function(nm) {
+		pal = sns$color_palette(nm)
+		m = as.data.frame(t(sapply(0:(length(pal)-1), function(i) pal[[i]])))
+		names(m) = c("red", "green", "blue")
+		do.call(rgb, as.list(m))
+	})
+	names(sb_seq) = sb_seq_names
+
+	sb_div_names = c("vlag", "icefire")
+	sb_div = lapply(sb_div_names, function(nm) {
+		pal = sns$color_palette(nm)
+		m = as.data.frame(t(sapply(0:(length(pal)-1), function(i) pal[[i]])))
+		names(m) = c("red", "green", "blue")
+		do.call(rgb, as.list(m))
+	})
+	names(sb_div) = sb_div_names
+
+	c4a_series_add(sb_cat, types = "cat", series = "seaborn")
+	c4a_series_add(sb_seq, types = "seq", series = "seaborn")
+	c4a_series_add(sb_div, types = "div", series = "seaborn")
+})
+
+
 ## meta package: 2000 palettes,
 # library(paletteer)
 # str(palettes_d)
@@ -468,11 +507,11 @@ local({
 #
 # 	cat_paletteer = do.call(c, palettes_d)
 # })
+# paletteer::palettes_c_names
 
 
-
-.z = get(".z", .C4A)
-.s = get(".s", .C4A)
+.z = get("z", .C4A)
+.s = get("s", .C4A)
 
 # saveRDS(.z, "z.rds")
 # saveRDS(.z, "s.rds")

@@ -106,6 +106,8 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 		})
 		attr(pal, "index") = index3
 	}
+	pal[] = toupper(pal[])
+	colNA = toupper(colNA)
 
 	list(pal = pal, colNA = colNA, reversed = reversed)
 }
