@@ -33,8 +33,8 @@
    showguides="false"
    inkscape:guide-bbox="true"
    inkscape:zoom="0.70710678"
-   inkscape:cx="707.81389"
-   inkscape:cy="625.7895"
+   inkscape:cx="586.19152"
+   inkscape:cy="406.5864"
    inkscape:window-width="1864"
    inkscape:window-height="1016"
    inkscape:window-x="56"
@@ -5197,7 +5197,7 @@
    id="metadata9740"><rdf:RDF><cc:Work
        rdf:about=""><dc:title>tibble</dc:title></cc:Work></rdf:RDF></metadata><path
    sodipodi:type="star"
-   style="fill:none;stroke:#a4a4a4;stroke-width:22.7365;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+   style="fill:#ffffff;stroke:#a4a4a4;stroke-width:22.7365;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke;fill-opacity:1"
    id="path876"
    inkscape:flatsided="true"
    sodipodi:sides="6"

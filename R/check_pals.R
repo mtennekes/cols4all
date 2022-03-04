@@ -29,10 +29,10 @@ check_div_pal = function(p) {
 					tri = colorspace::tritan(p),
 					p)
 		m = get_hcl_matrix(p2)
-		m[,3][m[,2]<10] = NA
+		m[,1][m[,2]<10] = NA
 
-		h1 = m[1:nh, 3]
-		h2 = m[(nh+1+!is_even):n, 3]
+		h1 = m[1:nh, 1]
+		h2 = m[(nh+1+!is_even):n, 1]
 
 		inter_wing_hue_dist = if (all(is.na(h1)) && all(is.na(h2))) {
 			0
@@ -117,12 +117,12 @@ check_cat_pal = function(p) {
 
 # get hcl coordinates
 get_hcl_matrix = function(p, rounded = FALSE) {
-	x = as(hex2RGB(p), "polarLUV")@coords
+	x = as(hex2RGB(p), "polarLUV")@coords[,c("H", "C", "L")]
 	if (rounded) round(x) else x
 }
 
 get_hcl_triple = function(p) {
-	x = get_hcl_matrix(p, rounded = TRUE)[,c("H", "C", "L")]
+	x = get_hcl_matrix(p, rounded = TRUE)
 	apply(x, MARGIN = 1, paste, collapse = ",")
 }
 
@@ -163,7 +163,7 @@ analyse_hcl = function(p) {
 	m = get_hcl_matrix(p)
 
 	# hue width: how far are hues apart from each other?
-	h = round(m[,3])
+	h = round(m[,1])
 	h[m[,2]<=.C4A$Cgray] = NA
 
 	Hwidth = get_hue_width(h)
@@ -181,7 +181,7 @@ analyse_hcl = function(p) {
 	HwidthR = get_hue_width(hR)
 
 	Cmax = round(max(m[,2]))
-	Lrange = round(max(m[,1]) - min(m[,1]))
+	Lrange = round(max(m[,3]) - min(m[,3]))
 	Crange = round(max(m[,2]) - min(m[,2]))
 	LCrange = round(max(Lrange * .C4A$LrangeWeight, Crange * (1-.C4A$LrangeWeight)))
 

@@ -1,3 +1,40 @@
+#' cols4all
+#'
+#' Color palettes for all people, including those with color vision deficiency. Palettes, organized by source and type, and scores on several properties such as color-blind-friendliness and harmony. Furthermore each palette is assigned a distinct color for missing values. Own palettes can be loaded as well. ggplot2 scales are included.
+#'
+#' This page provides a brief overview of all package functions.
+#'
+#' @section Main functions:
+#' \tabular{ll}{
+#' \code{\link{c4a_gui}}\tab GUI (shiny app) to see and analyse the palettes \cr
+#' \code{\link{c4a}}\tab Get the colors of a palette \cr
+#' }
+#'
+#' @section Palette names and properties:
+#' \tabular{ll}{
+#' \code{\link{c4a_palettes}}\tab Get available palette names \cr
+#' \code{\link{c4a_series}}\tab Get available series \cr
+#' \code{\link{c4a_meta}}\tab Get meta information (such as type and maximum number of colors ) \cr
+#' \code{\link{c4a_ls}}\tab Environment via which palette names can be browsed with auto-completion (using `$`) \cr
+#' }
+#'
+#' @section Importing and exporting palettes:
+#' \tabular{ll}{
+#' \code{\link{c4a_series_add}}\tab Add color palettes \cr
+#' \code{\link{c4a_series_remove}}\tab Remove color palettes \cr
+#' \code{\link{c4a_sysdata_import}}\tab Import system data \cr
+#' \code{\link{c4a_sysdata_export}}\tab Export system data \cr
+#' }
+#'
+#' @name cols4all-package
+#' @aliases cols4all
+#' @docType package
+#' @author Martijn Tennekes \email{mtennekes@@gmail.com}
+#' @seealso \url{https://github.com/mtennekes/cols4all}
+#' @concept color
+#' @concept visualization
+NULL
+
 .onLoad <- function(...) {
 	assign("z", .z, envir = .C4A)
 	assign("s", .s, envir = .C4A)
@@ -53,13 +90,6 @@
 
 .C4A <- new.env(FALSE, parent=globalenv())
 
-
-#' Nested list of cols4all palette names
-#'
-#' Nested list of cols4all palette names, which is handy for auto-completion
-#'
-#' @export
-c4a_ls <- new.env(FALSE, parent=globalenv())
 
 
 fill_ls = function() {

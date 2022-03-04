@@ -8,6 +8,7 @@
 #' @param reverse should the palette be reversed?
 #' @param order order of colors. Only applicable for `"cat"` palettes
 #' @param contrast a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential `"seq"` palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging `"seq"` palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). The default values (that depend on the `n`n and `type`) are provided by \code{\link{c4a_default_contrast}}.
+#' @param format format of the colors. One of: `"hex"` character vector of hex color values, `"RGB"` 3 column matrix of RGB values, or `"HCL"` 3-column matrix of HCL values
 #' @param n_too_large what should be done in case `n` is larger than the maximum amount of colors? Options are `"error"` (an error is returned), `"repeat"`, the palette is repeated, `"interpolate"` colors are interpolated. For categorical `"cat"` palettes only.
 #' @param verbose should messages be printed?
 #' @return A vector of colors
@@ -18,8 +19,10 @@
 #' @rdname c4a
 #' @name c4a
 #' @export
-c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse = FALSE, order = NULL, contrast = NA, n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
+c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse = FALSE, order = NULL, contrast = NA, format = c("hex", "RGB", "HCL"), n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
 	type = match.arg(type)
+	format = match.arg(format)
+
 	n_too_large = match.arg(n_too_large)
 
 	if (is.null(palette)) {
@@ -47,7 +50,15 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse 
 	} else pal
 
 	if (!is.null(mes) && verbose) message(mes)
-	if (reverse) rev(pal) else pal
+	pal2 = if (reverse) rev(pal) else pal
+
+	if (format == "hex") {
+		pal2
+	} else if (format == "RGB") {
+		colorspace::hex2RGB(pal)@coords * 255
+	} else if (format == "HCL") {
+		get_hcl_matrix(pal)
+	}
 }
 
 #' Get meta information from a cols4all palette

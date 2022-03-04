@@ -20,6 +20,8 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 		return(invisible(NULL))
 	}
 
+	shiny::addResourcePath(prefix = "imgResources", directoryPath = "inst/img")
+
 	ui = shiny::fluidPage(
 		#shinyjs::useShinyjs(),
 		shiny::tags$style(shiny::HTML("div.sticky {
@@ -30,12 +32,20 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 		}")),
 
 		# Application title
-		shiny::titlePanel("col4all: colors for all!"),
+		#shiny::titlePanel("col4all: colors for all!"),
+
+		shiny::titlePanel(title = "Colors for all!"),
+
 
 		shiny::sidebarLayout(
 			shiny::tagAppendAttributes(shiny::sidebarPanel(
 				width = 3,
-				shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = type), #, Cyclic = "cyc", Bivariate = "biv", Tree = "tree"), selected = "cat"),
+				shiny::fluidRow(
+				shiny::column(9,
+					shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = type)
+				), shiny::column(3,
+					shiny::img(align = "right", alt = "test", src = "imgResources/cols4all_logo.png", height = 100)
+				)),
 				shiny::selectizeInput("series", "Palette Series", choices = allseries, selected = series, multiple = TRUE),
 				shiny::sliderInput("n", "Number of colors",
 								   min = 2, max = 36, value = n, ticks = FALSE),

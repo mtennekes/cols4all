@@ -11,7 +11,7 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	#specplot(hcl(h=seq(0,360,by=10), c = 10, l= 5))
 	#specplot(hcl(h=seq(0,360,by=10), c = 15, l= 0))
 	if (remove.blacks && type == "cat") {
-		isB = (hcl[,1] + hcl[,2]) <= 15
+		isB = (hcl[,3] + hcl[,2]) <= 15
 		if (any(isB)) {
 			pal = pal[!isB]
 			hcl = hcl[!isB,]
@@ -23,7 +23,7 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 		if (take.gray.for.NA) {
 			wG = which(hcl[,2] < .C4A$Cgray)
 			if (length(wG) && is.na(colNA)) {
-				wNA = wG[which.max(hcl[wG, 1])]
+				wNA = wG[which.max(hcl[wG, 3])]
 				colNA = pal[wNA]
 				pal = pal[-wNA]
 				hcl = hcl[-wNA,]
@@ -42,7 +42,7 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	}
 
 	if (light.to.dark && type == "seq") {
-		ls = hcl[,1]
+		ls = hcl[,3]
 		ls_sg = sign(ls[-1] - ls[-length(ls)])
 		if (all(ls_sg>=0)) {
 		#if ((hcl[nrow(hcl), 1] - hcl[1,1]) > 30) {
@@ -62,7 +62,7 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 		# first candidates: choose NA from grays, such that luminance is at most 0.3 lighter and not darker than the lightest resp. darkest color.
 		# prefer lightest gray
 
-		gray_range = c(min(hcl[,1]/100), min(1, (max(hcl[,1]/100) + 0.3)))
+		gray_range = c(min(hcl[,3]/100), min(1, (max(hcl[,3]/100) + 0.3)))
 		candidates = list(grDevices::gray.colors(10, start = gray_range[1], end = gray_range[2]),
 						  grDevices::hcl(h = seq(0, 340, by = 20), c = 30, l = 70),
 						  grDevices::hcl(h = seq(0, 340, by = 20), c = 50, l = 70))

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Colors for all!
+# Colors for all! <img src='inst/img/cols4all_logo.png' align="right" height="139" />
 
 The **cols4all** is a new R package for selecting color palettes. “Color
 for all” refers to our mission that colors should be usable for not just
@@ -14,16 +14,14 @@ Brewer](https://colorbrewer2.org),
 Tol](https://personal.sron.nl/~pault/),
 [Scico](https://www.fabiocrameri.ch/colourmaps/),
 [Carto](https://carto.com/carto-colors/),
-[Tableau](https://www.tableau.com/about/blog/2016/7/colors-upgrade-tableau-10-56782)
-and [Wes Anderson](https://github.com/karthik/wesanderson). Own palettes
-series can be added as well.
+[Tableau](https://www.tableau.com/about/blog/2016/7/colors-upgrade-tableau-10-56782),
+[Wes Anderson](https://github.com/karthik/wesanderson), and
+[Seaborn](https://seaborn.pydata.org/tutorial/color_palettes.html). Own
+palettes series can be added as well.
 
-![categorical
-palettes)](https://user-images.githubusercontent.com/2444081/155185594-a52c361f-7113-40fe-82ea-94e782c27be4.png)
-![sequential
-palettes)](https://user-images.githubusercontent.com/2444081/155185615-9356443d-8a18-40a6-bc9e-d2e0d8e26eb4.png)
-![diverging
-palettes)](https://user-images.githubusercontent.com/2444081/155185638-3d05a045-c794-4eab-b994-88c0b58196e2.png)
+|                                                                                                    Categorical                                                                                                    |                                                                                                    Sequential                                                                                                     |                                                                                                      Diverging                                                                                                      |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| [![](https://user-images.githubusercontent.com/2444081/156847689-7e1a4608-9b03-45f5-9ccf-56e6d8844d47.png)](https://user-images.githubusercontent.com/2444081/156847689-7e1a4608-9b03-45f5-9ccf-56e6d8844d47.png) | [![](https://user-images.githubusercontent.com/2444081/156847703-b429c521-89d5-4e14-85c1-0f100ca93b45.png)](https://user-images.githubusercontent.com/2444081/156847703-b429c521-89d5-4e14-85c1-0f100ca93b45.png) | [![](https://user-images.githubusercontent.com/2444081/156847712-33a3cd22-a50b-44e2-9666-b67fcb0d2853.png)]((https://user-images.githubusercontent.com/2444081/156847712-33a3cd22-a50b-44e2-9666-b67fcb0d2853.png)) |
 
 Color palettes are well organized and made consistent with each other.
 Moreover, they are scored on several aspects: color-blind-friendliness,
@@ -45,18 +43,14 @@ installed using:
 devtools::install_github("mtennekes/cols4all")
 ```
 
-``` r
-getwd()
-#> [1] "/home/mtes/git/cols4all"
-devtools::load_all(".")
-#> ℹ Loading cols4all
-#> Loading required package: abind
-#> Loading required package: colorspace
-```
+    #> [1] "/home/mtes/git/cols4all"
+    #> ℹ Loading cols4all
+    #> Loading required package: abind
+    #> Loading required package: colorspace
 
-## Get started
+## Getting started
 
-Navigation through the color palettes is easy via the gui shown above,
+Navigation through the color palettes is easy via the GUI shown above,
 which is started with:
 
 ``` r
@@ -65,6 +59,14 @@ library(cols4all)
 # install.packages(c("shiny", "shinyjs", "kableExtra"))
 c4a_gui()
 ```
+
+Besides browsing through palettes, it is also easy to copy color codes
+to the clipboard, either by selecting the hidden text in the color
+tables or by clicking on the icons at the right-hand-side:
+
+<img
+src="https://user-images.githubusercontent.com/2444081/156849917-59af1dc1-ee5e-40be-bf87-5c7384351ae0.png"
+style="width:50.0%" />
 
 Selecting a palette is easy:
 
@@ -75,7 +77,7 @@ c4a("kelly", 7)
 
 # find names of hcl palettes that are diverging
 c4a_palettes(type = "div", series = "hcl")
-#>  [1] "hcl.blue_red"     "hcl.blue_red2"    "hcl.blue_red3"    "hcl.red_green"   
+#>  [1] "hcl.blue_red1"    "hcl.blue_red2"    "hcl.blue_red3"    "hcl.red_green"   
 #>  [5] "hcl.purple_green" "hcl.purple_brown" "hcl.green_brown"  "hcl.blue_yellow2"
 #>  [9] "hcl.blue_yellow3" "hcl.green_orange" "hcl.cyan_magenta"
 
@@ -86,8 +88,36 @@ c4a("hcl.purple_green", 11)
 
 # get the associated color for missing values
 c4a_na("hcl.purple_green")
-#> [1] "#818181"
+#> [1] "#868686"
 ```
+
+## Overview of functions
+
+Main functions:
+
+-   `c4a_gui` GUI (shiny app) to see and analyse the palettes
+-   `c4a` Get the colors of a palette
+
+Palette names and properties:
+
+-   `c4a_palettes` Get available palette names
+-   `c4a_series` Get available series
+-   `c4a_meta` Get meta information (such as type and maximum number of
+    colors )
+-   `c4a_ls` Environment via which palette names can be browsed with
+    auto-completion (using `$`)
+
+Importing and exporting palettes:
+
+-   `c4a_series_add` Add color palettes
+-   `c4a_series_remove` Remove color palettes
+-   `c4a_sysdata_import` Import system data
+-   `c4a_sysdata_export` Export system data
+
+ggplot2
+
+-   `scale_<aesthetic>_<mapping>_c4a_<type>`
+    e.g. `scale_color_continuous_c4a_div` Add scale to ggplot2.
 
 ## Related R packages
 

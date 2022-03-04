@@ -1,6 +1,6 @@
-#' List all available cols4all color palettes and series
+#' Get available palette names and series
 #'
-#' `c4a_palettes` lists all available cols4all color palettes. Palettes are organized by series. The available series are listed with `c4a_series`. The references are provided below. Palettes are also organized per functional type, where we currently support: categorical `"cat"`, sequential `"seq"`, and diverging `"div"`" palette types. The function `c4a_default_palette` returns the default (recommended) palette per type.
+#' `c4a_palettes` lists all available cols4all color palettes. Palettes are organized by series. The available series are listed with `c4a_series`. In an IDE with auto-completion (such as RStudio) it is possible to browse through the palette names with `c4a_ls` (using `$` like in lists). Palettes are also organized per functional type, where we currently support: categorical `"cat"`, sequential `"seq"`, and diverging `"div"`" palette types. The function `c4a_default_palette` returns the default (recommended) palette per type. The references are provided below.
 #'
 #' @section References:
 #'
@@ -79,6 +79,10 @@
 #'
 #' Obtained via the R package `ggthemes`
 #'
+#' \strong{seaborn}
+#'
+#' Palettes by Python library `seaborn` by Michael Waskom. \url{https://seaborn.pydata.org/tutorial/color_palettes.html}
+#'
 #' @param type type of color palette: one of `"all"` (all palettes), `"cat"` (categorical/qualitative palettes), `"seq"` (sequential palettes) and `"div"` (diverging palettes).
 #' @param series series to list the palettes from. Run `c4a_series` to see the options.
 #' @param full.names should full names, i.e. with the prefix "series."? By default `TRUE`.
@@ -113,3 +117,9 @@ c4a_default_palette = function(type = c("cat", "seq", "div")) {
 	type = match.arg(type)
 	.C4A$defaults[type]
 }
+
+
+#' @rdname c4a_palettes
+#' @name c4a_ls
+#' @export
+c4a_ls <- new.env(FALSE, parent=globalenv())
