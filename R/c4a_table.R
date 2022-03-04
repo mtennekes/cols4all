@@ -30,7 +30,7 @@ table_columns = function(type, show.scores) {
 
 #' Graphical user interface to analyse palettes
 #'
-#' Graphical user interface to analyse palettes. `c4a_table` shows a table that can be opened in the browser. `c4a_gui` is a graphical user interface (shiny app) around this table.
+#' Graphical user interface to analyse palettes. `c4a_table` shows a table that can be opened in the browser. `c4a_gui` is a graphical user interface (shiny app) around this table. The package `kableExtra` is required for `c4a_table` and for `c4a_gui` the pacakges `shiny` and `shinyjs`.
 #'
 #' @section Table Columns:
 #'
@@ -84,7 +84,6 @@ table_columns = function(type, show.scores) {
 #' @param sort column name to sort the data. For column names, see details. Use a `"-"` prefix to reverse the order.
 #' @param text.format The format of the text of the colors. One of `"hex"`, `"RGB"` or `"HCL"`.
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection).
-#' @param text.copy Copy format. `"R"` stands for `c("#111111", "#222222")` and `"other"` stands for `["#111111", "#222222"]`.
 #' @param series Series of palettes to show. See \code{\link{c4a_series}} for options. By default, `"all"`, which means all series. For `c4a_gui` it only determines which series are shown initially.
 #' @param contrast vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`. See `c4a_gui`, or the internal functions `cols4all::default_contrast_seq` and `cols4all::default_contrast_div` to see what the automatic values are.
 #' @param include.na should color for missing values be shown? `FALSE` by default
@@ -95,7 +94,7 @@ table_columns = function(type, show.scores) {
 #' @export
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", text.copy = "R", series = "all", contrast = NA, include.na = FALSE, show.scores = FALSE, columns = NA) {
+c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", contrast = NA, include.na = FALSE, show.scores = FALSE, columns = NA) {
 	id = NULL
 
 	#if (length(series) == 2) browser()
@@ -200,9 +199,9 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 	})
 
 	if (include.na) {
-		me = cbind(me, ' '="", 'NA' = "")
+		me = cbind(me, ' '="", 'Missings' = "")
 		me[match(1:k, e$did), ncol(me)] = zn$na
-		colNames = c(1:columns, " ", "NA")
+		colNames = c(1:columns, " ", "Missings")
 		palList = mapply(c, zn$palette, zn$na, SIMPLIFY = FALSE, USE.NAMES = FALSE)
 	} else {
 		colNames = as.character(1:columns)
@@ -212,25 +211,31 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 	e2 = cbind(e, me)
 
 	# copy links
-	txt = rep("&#128471;", nrow(e2))
-	txt[e2$ind !=1 ] = ""
-
-	links = sapply(1:nrow(e2), function(rw) {
-		if (txt[rw] == "") {
+	txt1 = rep("&#128471;", nrow(e2))
+	txt1[e2$ind !=1 ] = ""
+	links1 = sapply(1:nrow(e2), function(rw) {
+		if (txt1[rw] == "") {
 			""
 		} else{
 			did = e2$did[rw]
-			if (text.copy == "R") {
-				paste0("javascript:navigator.clipboard.writeText(`c(&quot;",
-					   paste(palList[[did]], collapse = "&quot;, &quot;"), "&quot;)`)")
-			} else {
-				paste0("javascript:navigator.clipboard.writeText(`[&quot;",
-					   paste(palList[[did]], collapse = "&quot;, &quot;"), "&quot;]`)")
-			}
+			paste0("javascript:navigator.clipboard.writeText(`[&quot;",
+				   paste(palList[[did]], collapse = "&quot;, &quot;"), "&quot;]`)")
+		}
+	}, USE.NAMES = FALSE)
+	txt2 = rep("R", nrow(e2))
+	txt2[e2$ind !=1 ] = ""
+	links2 = sapply(1:nrow(e2), function(rw) {
+		if (txt2[rw] == "") {
+			""
+		} else{
+			did = e2$did[rw]
+			paste0("javascript:navigator.clipboard.writeText(`c(&quot;",
+				   paste(palList[[did]], collapse = "&quot;, &quot;"), "&quot;)`)")
 		}
 	}, USE.NAMES = FALSE)
 
-	e2[['Copy']] = kableExtra::cell_spec(txt, link=links, tooltip='Click to copy palette to Clipboard', escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
+	e2[['Copy1']] = kableExtra::cell_spec(txt1, link=links1, tooltip='Copy colors: [&quot;#111111&quot;, &quot;#222222&quot;]', escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
+	e2[['Copy2']] = kableExtra::cell_spec(txt2, link=links2, tooltip='Copy colors: c(&quot;#111111&quot;, &quot;#222222&quot;)', escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
 
 
 	sim = switch(cvd.sim,
@@ -305,19 +310,17 @@ c4a_table = function(type = c("cat", "seq", "div"), n = NULL, cvd.sim = c("none"
 		e2[[q]][is.na(e2[[q]])] = ""
 	}
 
-	e2cols = c("series", "label", ql, colNames, "Copy")
-	e2nms = c("Series", "Name", ql, colNames, "")
+	e2cols = c("series", "label", ql, colNames, "Copy1", "Copy2")
+	e2nms = c("Series", "Name", ql, colNames, " ", " ")
 
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2nms, escape = F)
-	#return(k)
 
-	# for (i in (1:columns)+(length(ql)+1)) {
-	# 	k = kableExtra::column_spec(k, i, extra_css = 'width: 5em; overflow: hidden; background-color: #000000"')
-	# }
-	for (cN in colNames) {
-		k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "6em")
+	for (cN in setdiff(colNames, " ")) {
+		k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "6em", width_max = "6em")
 	}
-
+	for (i in which(e2nms == " ")) {
+		k = kableExtra::column_spec(k, i, width = "1em", extra_css = "padding-left: 10px; padding-right: 0px; text-align: right") #width_min = "1em", width_max = "1em")
+	}
 
 	k = kableExtra::column_spec(k, 1, width = "5em", extra_css = "padding-left: 10px; padding-right: 10px; text-align: right")
 	k = kableExtra::column_spec(k, 2, width = "5em", extra_css = "padding-left: 0px; padding-right: 10px; text-align: right")

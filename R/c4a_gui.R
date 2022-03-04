@@ -60,8 +60,8 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 						shiny::checkboxInput("sortRev", "Reverse", value = FALSE))),
 
 				shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = TRUE),
-				shiny::selectInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF")),
-				shiny::radioButtons("copy", "Copy format", choices = c('c("#111111", "#222222")' = "R", '["#111111", "#222222"]' = "other"), inline = TRUE)), class = "sticky"),
+				shiny::selectInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF"))
+			), class = "sticky"),
 
 			shiny::mainPanel(
 				shiny::tableOutput("show")
@@ -87,8 +87,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 				 na = input$na,
 				 contrast = input$contrast,
 				 textcol = input$textcol,
-				 format = input$format,
-				 copy = input$copy)
+				 format = input$format)
 		})
 		get_values_d = shiny::debounce(get_values, 300)
 
@@ -135,7 +134,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 			shiny::req(get_values_d())
 			values = get_values_d()
 			sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
-			c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol, text.format = values$format, text.copy = values$copy)
+			c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol, text.format = values$format)
 		}
 	}
 	shiny::shinyApp(ui = ui, server = server)

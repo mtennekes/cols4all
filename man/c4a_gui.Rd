@@ -14,7 +14,6 @@ c4a_table(
   sort = "name",
   text.format = "hex",
   text.col = "same",
-  text.copy = "R",
   series = "all",
   contrast = NA,
   include.na = FALSE,
@@ -37,8 +36,6 @@ c4a_table(
 
 \item{text.col}{The text color of the colors. By default \code{"same"}, which means that they are the same as the colors themselves (so invisible, but available for selection).}
 
-\item{text.copy}{Copy format. \code{"R"} stands for \code{c("#111111", "#222222")} and \code{"other"} stands for \verb{["#111111", "#222222"]}.}
-
 \item{contrast}{vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on \code{n}. See \code{c4a_gui}, or the internal functions \code{cols4all::default_contrast_seq} and \code{cols4all::default_contrast_div} to see what the automatic values are.}
 
 \item{include.na}{should color for missing values be shown? \code{FALSE} by default}
@@ -48,7 +45,7 @@ c4a_table(
 \item{columns}{number of columns. By default equal to \code{n} or, if not specified, 12. Cannot be higher than the palette}
 }
 \description{
-Graphical user interface to analyse palettes. \code{c4a_table} shows a table that can be opened in the browser. \code{c4a_gui} is a graphical user interface (shiny app) around this table.
+Graphical user interface to analyse palettes. \code{c4a_table} shows a table that can be opened in the browser. \code{c4a_gui} is a graphical user interface (shiny app) around this table. The package \code{kableExtra} is required for \code{c4a_table} and for \code{c4a_gui} the pacakges \code{shiny} and \code{shinyjs}.
 }
 \section{Table Columns}{
 

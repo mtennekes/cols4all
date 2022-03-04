@@ -1,6 +1,6 @@
 #' Add and remove palette series
 #'
-#' Add and remove palette series. `c4a_series_add` can be used to add own palette series and  `c4a_series_remove` to remove palette series. `c4a_series_add_as_is` is the same as `c4a_series_add`, but by default without any processing.
+#' Add and remove palette series. `c4a_series_add` can be used to add own palette series and  `c4a_series_remove` to remove palette series. `c4a_series_add_as_is` is the same as `c4a_series_add`, but by default without any processing. These functions require the R package `colorblindcheck`.
 #'
 #' Indexing: for a categorical `"cat"` palette, an optional `"index"` attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See `cols4all::.z$palette$rainbow` and  for an example.
 #'
@@ -113,6 +113,8 @@ c4a_series_add = function(x, xNA = NA, types, series, format.palette.name = TRUE
 
 	.C4A$z = z
 	.C4A$s = s
+	fill_ls()
+	invisible(NULL)
 }
 
 #' @rdname c4a_series_add
@@ -183,4 +185,6 @@ c4a_series_remove = function(series = "all", are.you.sure = FALSE) {
 	}
 	.C4A$z = z2
 	.C4A$s = s2
+	fill_ls()
+	invisible(NULL)
 }

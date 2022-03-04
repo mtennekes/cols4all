@@ -19,6 +19,8 @@ c4a_sysdata_import = function(x) {
 
 	.C4A$z = z
 	.C4A$s = s
+	fill_ls()
+	invisible(NULL)
 }
 
 #' @rdname c4a_sysdata_import

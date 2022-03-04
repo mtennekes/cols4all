@@ -53,7 +53,7 @@ c4a_series_remove(series = "all", are.you.sure = FALSE)
 \item{are.you.sure}{are you sure you want to remove series?}
 }
 \description{
-Add and remove palette series. \code{c4a_series_add} can be used to add own palette series and  \code{c4a_series_remove} to remove palette series. \code{c4a_series_add_as_is} is the same as \code{c4a_series_add}, but by default without any processing.
+Add and remove palette series. \code{c4a_series_add} can be used to add own palette series and  \code{c4a_series_remove} to remove palette series. \code{c4a_series_add_as_is} is the same as \code{c4a_series_add}, but by default without any processing. These functions require the R package \code{colorblindcheck}.
 }
 \details{
 Indexing: for a categorical \code{"cat"} palette, an optional \code{"index"} attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See \code{cols4all::.z$palette$rainbow} and  for an example.

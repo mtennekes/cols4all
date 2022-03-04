@@ -48,6 +48,27 @@
 
 		nmax = c(cat = 36, seq = 15, div = 15)
 	})
+	fill_ls()
 }
 
 .C4A <- new.env(FALSE, parent=globalenv())
+
+
+#' Nested list of cols4all palette names
+#'
+#' Nested list of cols4all palette names, which is handy for auto-completion
+#'
+#' @export
+c4a_ls <- new.env(FALSE, parent=globalenv())
+
+
+fill_ls = function() {
+	z = .C4A$z
+	x = sort(unique(z$series))
+	y = structure(lapply(x, function(xi) {
+		zi = z[z$series == xi, ]
+		structure(as.list(zi$fullname), names = zi$name)
+	}), names = x)
+	list2env(y, envir = c4a_ls)
+}
+
