@@ -80,7 +80,7 @@ Color-blind friendliness scores are calculated as:
 \item \code{"div"} min(\code{inter_wing_dist}, \code{min_step} * 2) + (\code{inter_wing_hue_dist} >= 100) * 1000
 }
 
-Note: these formulas are in development, and not stable. Suggestions are welcome (via github issues).
+Note: these formulas are in development, and may change in the near future. Suggestions are welcome (via github issues).
 }
 
 \section{General indicators}{
@@ -115,4 +115,7 @@ c4a_table(type = "seq", n = 7, sort = "rank")
 c4a_table(type = "seq", n = 5, sort = "hueType")
 
 }
+}
+\seealso{
+References of the palettes: \code{\link{cols4all-package}}.
 }

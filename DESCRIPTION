@@ -10,7 +10,7 @@ Authors@R: c(
 	person("Robin", "Lovelace", email = "rob00x@gmail.com", role = "ctb"),
 	person("Helgasoft", email = "contact@helgasoft.com", role = "ctb")
 	)
-Description: Color palettes for all people, including those with color vision deficiency. Palettes, organized by source and type, and scores on several properties such as color-blind-friendliness and harmony. Furthermore each palette is assigned a distinct color for missing values. Own palettes can be loaded as well. ggplot2 scales are included.
+Description: Color palettes for all people, including those with color vision deficiency. Palettes, organized by source and type, are scored on several properties such as color-blind-friendliness and harmony. Furthermore each palette is assigned a distinct color for missing values. Own palettes can be loaded as well. ggplot2 scales are included.
 Version: 0.2
 Date: 2022-03-04
 Encoding: UTF-8

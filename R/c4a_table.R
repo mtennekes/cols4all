@@ -61,7 +61,7 @@ table_columns = function(type, show.scores) {
 #' * `"seq"` `min_step` - `max_step` / 1000
 #' * `"div"` min(`inter_wing_dist`, `min_step` * 2) + (`inter_wing_hue_dist` >= 100) * 1000
 #'
-#' Note: these formulas are in development, and not stable. Suggestions are welcome (via github issues).
+#' Note: these formulas are in development, and may change in the near future. Suggestions are welcome (via github issues).
 #'
 #' @section General indicators:
 #'
@@ -91,6 +91,7 @@ table_columns = function(type, show.scores) {
 #' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
 #' @import colorspace abind
 #' @example ./examples/c4a_table.R
+#' @seealso References of the palettes: \code{\link{cols4all-package}}.
 #' @export
 #' @rdname c4a_gui
 #' @name c4a_gui
