@@ -1,4 +1,4 @@
-get_pal_n = function(n, name, type, series, palette, nmax, contrast = NA, n_too_large = "error",...) {
+get_pal_n = function(n, name, type, series, palette, nmax, range = NA, n_too_large = "error",...) {
 	n_orig = n
 	if (n > nmax) {
 		if (n_too_large == "error") return(NULL)
@@ -10,17 +10,17 @@ get_pal_n = function(n, name, type, series, palette, nmax, contrast = NA, n_too_
 		if (type == "cat") {
 			palette[1:n]
 		} else {
-			if (is.na(contrast[1])) contrast = c4a_default_contrast(n, type)
+			if (is.na(range[1])) range = c4a_default_range(n, type)
 
-			if (contrast[1] == 0 && contrast[2] == 1) {
+			if (range[1] == 0 && range[2] == 1) {
 				colorRampPalette(palette, space = "Lab")(n)
 			} else {
 				if (type == "seq") {
-					contrastIDs <- round(seq(contrast[1]*100, contrast[2]*100, length.out=n))+1
+					rangeIDs <- round(seq(range[1]*100, range[2]*100, length.out=n))+1
 				} else if (type == "div") {
-					contrastIDs <- map2divscaleID(breaks=seq(-10,10, length.out=n+1), contrast=contrast)
+					rangeIDs <- map2divscaleID(breaks=seq(-10,10, length.out=n+1), range=range)
 				}
-				colorRampPalette(palette, space = "Lab")(101)[contrastIDs]
+				colorRampPalette(palette, space = "Lab")(101)[rangeIDs]
 			}
 		}
 	} else {
@@ -39,13 +39,13 @@ get_pal_n = function(n, name, type, series, palette, nmax, contrast = NA, n_too_
 
 
 
-map2divscaleID <- function(breaks, n=101, contrast=1) {
+map2divscaleID <- function(breaks, n=101, range=1) {
 	nbrks <- length(breaks)
 
-	if (length(contrast)==1) {
-		contrast <- c(0, contrast)
+	if (length(range)==1) {
+		range <- c(0, range)
 	}
-	crange <- contrast[2] - contrast[1]
+	crange <- range[2] - range[1]
 
 	lw <- breaks[1]
 	hg <- breaks[nbrks]
@@ -77,8 +77,8 @@ map2divscaleID <- function(breaks, n=101, contrast=1) {
 
 	ids <- rep(h, nbrks-1)
 	if (npos>0) ids[(nbrks-npos):(nbrks-1)] <- pid +
-		seq((n-pid)/mx*hg*contrast[1], (n-pid)/mx*hg*contrast[2], length.out=npos)
-	if (nneg>0) ids[1:nneg] <- seq(nid-((nid-1)/mx*-lw*contrast[2]), nid-((nid-1)/mx*-lw*contrast[1]),
+		seq((n-pid)/mx*hg*range[1], (n-pid)/mx*hg*range[2], length.out=npos)
+	if (nneg>0) ids[1:nneg] <- seq(nid-((nid-1)/mx*-lw*range[2]), nid-((nid-1)/mx*-lw*range[1]),
 								   length.out=nneg)
 	if (is.div && cat0) ids[nneg] <- h
 	round(ids)

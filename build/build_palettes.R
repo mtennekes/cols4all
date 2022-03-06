@@ -185,7 +185,7 @@ local({
 
 	p3_na = c("#FFFFFF", "#FFEE99", "#FFEE99", "#888888", "#888888", "#999999", "#FFFFFF", "#FFFFFF", "#666666", "#666666")
 
-	p3_types = ifelse(names(p3) %in% c("bu_rd", "pr_gn", "sunset"), "div", "seq")
+	p3_types = ifelse(names(p3) %in% c("bu_rd", "pu_gn", "sunset"), "div", "seq")
 
 	c4a_series_add(p1, types = "cat", series = "tol")
 	c4a_series_add(p2, types = "cat", series = "tol", take.gray.for.NA = FALSE, remove.other.grays = FALSE, remove.blacks = FALSE)

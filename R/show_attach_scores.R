@@ -1,4 +1,4 @@
-show_attach_scores = function(z, contrast) {
+show_attach_scores = function(z, range) {
 	type = if (all(z$type == "cat")) "cat" else if (all(z$type == "seq")) "seq" else if (all(z$type == "div")) "div" else "mixed"
 
 	k = nrow(z)
@@ -12,9 +12,9 @@ show_attach_scores = function(z, contrast) {
 		s2[i,,m]
 	}))
 
-	# approximation of min step for decreased contrast
-	if (!is.null(contrast)) {
-		rng = contrast[2] - contrast[1]
+	# approximation of min step for decreased range
+	if (!is.null(range)) {
+		rng = range[2] - range[1]
 		s3[, "min_step"] = round(s3[, "min_step"] * rng)
 		s3[, "max_step"] = round(s3[, "max_step"] * rng)
 	}

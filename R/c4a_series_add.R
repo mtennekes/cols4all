@@ -4,6 +4,8 @@
 #'
 #' Indexing: for a categorical `"cat"` palette, an optional `"index"` attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See `cols4all::.z$palette$rainbow` and  for an example.
 #'
+#' It may take some time to process, especially large categorical palettes, because of calculations of the color blind checks
+#'
 #' @param x named list of color palettes. See details for indexing.
 #' @param xNA colors for missing values. Vector of the same length as x (or length 1). For `NA` values, the color for missing values is automatically determined (preferable a light grayscale color, but if it is indistinguishable by color blind people, a light color with a low chroma value is selected)
 #' @param types character vector of the same length as x (or length 1), which determines the type of palette `"cat"`, `"seq"`, or `"div"`.

@@ -61,7 +61,7 @@
 #'
 #' Color schemes used in the Python library matplotlib:
 #'
-#' J. D. Hunter, "Matplotlib: A 2D Graphics Environment", Computing in Science & Engineering, vol. 9, no. 3, pp. 90-95, 2007.
+#' Smith, Nathaniel, and Stéfan Van der Walt. 2015. “A Better Default Colormap for Matplotlib.” In SciPy 2015 – Scientific Computing with Python. Austin.
 #'
 #' In R obtained via the package `viridisLite`
 #'
@@ -83,6 +83,8 @@
 #' \strong{carto}
 #'
 #' Palettes by CARTO.
+#'
+#' CARTO. 2022. CARTOColors – Data-Driven Color Schemes.” https://carto.com/carto-colors/.
 #'
 #' Obtained via the package `rcartocolors`
 #'

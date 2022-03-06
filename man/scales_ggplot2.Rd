@@ -43,49 +43,39 @@ scale_fill_discrete_c4a_cat(palette = NULL, reverse = FALSE, order = NULL, ...)
 scale_color_discrete_c4a_seq(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   ...
 )
 
 scale_colour_discrete_c4a_seq(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   ...
 )
 
-scale_fill_discrete_c4a_seq(
-  palette = NULL,
-  reverse = FALSE,
-  contrast = NULL,
-  ...
-)
+scale_fill_discrete_c4a_seq(palette = NULL, reverse = FALSE, range = NULL, ...)
 
 scale_color_discrete_c4a_div(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   ...
 )
 
 scale_colour_discrete_c4a_div(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   ...
 )
 
-scale_fill_discrete_c4a_div(
-  palette = NULL,
-  reverse = FALSE,
-  contrast = NULL,
-  ...
-)
+scale_fill_discrete_c4a_div(palette = NULL, reverse = FALSE, range = NULL, ...)
 
 scale_color_continuous_c4a_seq(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
@@ -94,7 +84,7 @@ scale_color_continuous_c4a_seq(
 scale_colour_continuous_c4a_seq(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
@@ -103,7 +93,7 @@ scale_colour_continuous_c4a_seq(
 scale_fill_continuous_c4a_seq(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
@@ -112,7 +102,7 @@ scale_fill_continuous_c4a_seq(
 scale_color_continuous_c4a_div(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
@@ -121,7 +111,7 @@ scale_color_continuous_c4a_div(
 scale_colour_continuous_c4a_div(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
@@ -130,7 +120,7 @@ scale_colour_continuous_c4a_div(
 scale_fill_continuous_c4a_div(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
@@ -139,7 +129,7 @@ scale_fill_continuous_c4a_div(
 scale_color_binned_c4a_seq(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
@@ -148,7 +138,7 @@ scale_color_binned_c4a_seq(
 scale_colour_binned_c4a_seq(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
@@ -157,7 +147,7 @@ scale_colour_binned_c4a_seq(
 scale_fill_binned_c4a_seq(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
@@ -166,7 +156,7 @@ scale_fill_binned_c4a_seq(
 scale_color_binned_c4a_div(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
@@ -175,7 +165,7 @@ scale_color_binned_c4a_div(
 scale_colour_binned_c4a_div(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
@@ -184,14 +174,14 @@ scale_colour_binned_c4a_div(
 scale_fill_binned_c4a_div(
   palette = NULL,
   reverse = FALSE,
-  contrast = NULL,
+  range = NULL,
   mid = 0,
   n_interp = 11,
   ...
 )
 }
 \arguments{
-\item{palette, reverse, order, contrast}{See \code{\link{c4a}}.}
+\item{palette, reverse, order, range}{See \code{\link{c4a}}.}
 
 \item{...}{parameters passed on to the underlying scale functions: \code{\link[ggplot2:discrete_scale]{discrete_scale}}, \code{\link[ggplot2:continuous_scale]{continuous_scale}}, and \code{\link[ggplot2:binned_scale]{binned_scale}}.}
 

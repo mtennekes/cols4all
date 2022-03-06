@@ -57,6 +57,8 @@ Add and remove palette series. \code{c4a_series_add} can be used to add own pale
 }
 \details{
 Indexing: for a categorical \code{"cat"} palette, an optional \code{"index"} attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See \code{cols4all::.z$palette$rainbow} and  for an example.
+
+It may take some time to process, especially large categorical palettes, because of calculations of the color blind checks
 }
 \examples{
 #######################################

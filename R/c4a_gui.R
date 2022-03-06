@@ -20,10 +20,10 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 		return(invisible(NULL))
 	}
 
-	shiny::addResourcePath(prefix = "imgResources", directoryPath = "inst/img")
+	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
 
 	ui = shiny::fluidPage(
-		#shinyjs::useShinyjs(),
+		shinyjs::useShinyjs(),
 		shiny::tags$style(shiny::HTML("div.sticky {
 		  position: -webkit-sticky;
 		  position: sticky;
@@ -54,11 +54,12 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 					condition = "input.type != 'cat'",
 					shiny::fluidRow(
 						shiny::column(4,
-							shiny::radioButtons("auto_contrast", label = "Contrast range", choices = c("Maximum", "Automatic", "Manual"), selected = "Maximum")),
+							shiny::br(),
+							shiny::radioButtons("auto_range", label = "Range", choices = c("Maximum", "Automatic", "Manual"), selected = "Maximum")),
 							shiny::column(8,
-								shiny::br(),
-								shinyjs::disabled(shiny::sliderInput("contrast", "",
-												   min = 0, max = 1, value = c(0,1), step = .05))))),
+								shinyjs::disabled(shiny::div(style = "font-size:0;margin-bottom:-20px", shiny::sliderInput("range", "",
+												   min = 0, max = 1, value = c(0,1), step = .05))),
+								shiny::uiOutput("range_info")))),
 				shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
 				shiny::checkboxInput("advanced", shiny::strong("Show underlying scores"), value = FALSE),
 
@@ -95,7 +96,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 				 show.scores = input$advanced,
 				 columns = if (input$n > 16) 12 else input$n,
 				 na = input$na,
-				 contrast = input$contrast,
+				 range = input$range,
 				 textcol = input$textcol,
 				 format = input$format)
 		})
@@ -105,6 +106,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 			res = table_columns(input$type, input$advanced)
 			structure(c("name", res$qn), names = c("Name", res$ql))
 		})
+
 
 
 		shiny::observeEvent(input$type, {
@@ -121,30 +123,41 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 
 		shiny::observe({
 			n = input$n
-			ac = input$auto_contrast
+			ac = input$auto_range
 			type = input$type
 
 			if (type == "cat") return(NULL)
 			if (ac != "Manual") {
-				shiny::freezeReactiveValue(input, "contrast")
-				shinyjs::disable("contrast")
+				shiny::freezeReactiveValue(input, "range")
+				shinyjs::disable("range")
 				if (ac == "Maximum") {
 					rng = c(0, 1)
 				} else {
-					fun = paste0("default_contrast_", type)
+					fun = paste0("default_range_", type)
 					rng = do.call(fun, list(k = n))
 				}
-				shiny::updateSliderInput(session, "contrast", value = c(rng[1], rng[2]))
+				shinyjs::disable("range")
+				shiny::updateSliderInput(session, "range", value = c(rng[1], rng[2]))
 			} else {
-				shinyjs::enable("contrast")
+				shinyjs::enable("range")
 			}
 		})
+
+		output$range_info = shiny::renderUI({
+			#if (input$type == "div") shiny::div(style="text-align:left;", shiny::tagList("middle", shiny::span(stype = "float:right;", "each side"))) else ""
+			if (input$type == "div") {
+				shiny::HTML("<div style='font-size:70%; color:#111111; text-align:left;'>Middle<span style='float:right;'>Both sides</span></div>")
+			} else {
+				shiny::HTML("<div style='font-size:70%; color:#111111; text-align:left;'>Left<span style='float:right;'>Right</span></div>")
+			}
+		})
+
 
 		output$show = function() {
 			shiny::req(get_values_d())
 			values = get_values_d()
 			sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
-			c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, contrast = values$contrast, include.na = values$na, text.col = values$textcol, text.format = values$format)
+			c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format)
 		}
 	}
 	shiny::shinyApp(ui = ui, server = server)

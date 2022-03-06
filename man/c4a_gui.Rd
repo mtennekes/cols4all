@@ -15,7 +15,7 @@ c4a_table(
   text.format = "hex",
   text.col = "same",
   series = "all",
-  contrast = NA,
+  range = NA,
   include.na = FALSE,
   show.scores = FALSE,
   columns = NA
@@ -36,7 +36,7 @@ c4a_table(
 
 \item{text.col}{The text color of the colors. By default \code{"same"}, which means that they are the same as the colors themselves (so invisible, but available for selection).}
 
-\item{contrast}{vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on \code{n}. See \code{c4a_gui}, or the internal functions \code{cols4all::default_contrast_seq} and \code{cols4all::default_contrast_div} to see what the automatic values are.}
+\item{range}{vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on \code{n}. See \code{c4a_gui}, or the internal functions \code{cols4all::default_range_seq} and \code{cols4all::default_range_div} to see what the automatic values are.}
 
 \item{include.na}{should color for missing values be shown? \code{FALSE} by default}
 

@@ -7,7 +7,7 @@
 #' @param type type of color palette, in case `palette` is not specified: one of `"cat"` (categorical/qualitative palette), `"seq"` (sequential palette) and `"div"` (diverging palette).
 #' @param reverse should the palette be reversed?
 #' @param order order of colors. Only applicable for `"cat"` palettes
-#' @param contrast a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential `"seq"` palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging `"seq"` palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). The default values (that depend on the `n`n and `type`) are provided by \code{\link{c4a_default_contrast}}.
+#' @param range a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential `"seq"` palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging `"seq"` palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). The default values (that depend on the `n`n and `type`) are provided by \code{\link{c4a_default_range}}.
 #' @param format format of the colors. One of: `"hex"` character vector of hex color values, `"RGB"` 3 column matrix of RGB values, or `"HCL"` 3-column matrix of HCL values
 #' @param n_too_large what should be done in case `n` is larger than the maximum amount of colors? Options are `"error"` (an error is returned), `"repeat"`, the palette is repeated, `"interpolate"` colors are interpolated. For categorical `"cat"` palettes only.
 #' @param verbose should messages be printed?
@@ -19,7 +19,7 @@
 #' @rdname c4a
 #' @name c4a
 #' @export
-c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse = FALSE, order = NULL, contrast = NA, format = c("hex", "RGB", "HCL"), n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
+c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse = FALSE, order = NULL, range = NA, format = c("hex", "RGB", "HCL"), n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
 	type = match.arg(type)
 	format = match.arg(format)
 
@@ -39,7 +39,7 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse 
 
 	if (!is.null(n) && n > x$nmax && n_too_large == "error") stop("Palette ", palette, " only supports ", x$nmax, " colors.")
 
-	x$contrast = contrast
+	x$range = range
 	x$n_too_large = n_too_large
 	if (is.null(n)) n = ifelse(x$type == "cat", x$nmax, 11)
 	pal = do.call(get_pal_n, c(list(n = n), x))
