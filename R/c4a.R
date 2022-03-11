@@ -19,7 +19,7 @@
 #' @rdname c4a
 #' @name c4a
 #' @export
-c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse = FALSE, order = NULL, range = NA, format = c("hex", "RGB", "HCL"), n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
+c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div", "biv"), reverse = FALSE, order = NULL, range = NA, format = c("hex", "RGB", "HCL"), n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
 	type = match.arg(type)
 	format = match.arg(format)
 
@@ -41,7 +41,7 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div"), reverse 
 
 	x$range = range
 	x$n_too_large = n_too_large
-	if (is.null(n)) n = ifelse(x$type == "cat", x$nmax, 11)
+	if (is.null(n)) n = ifelse(x$type == "cat", x$nmax, ifelse(x$type == "biv", 3, 11))
 	pal = do.call(get_pal_n, c(list(n = n), x))
 
 	pal = if (!is.null(order)) {

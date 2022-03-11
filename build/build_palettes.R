@@ -10,7 +10,7 @@ library(viridisLite)
 library(scico)
 library(ggthemes)
 library(reticulate) # to get seaborn
-
+library(Polychrome)
 
 ## more:
 
@@ -32,12 +32,12 @@ local({
 	# p2 = pals[c("Accent", "Dark 2", "Paired", "Pastel 1", "Pastel 2", "Set 1", "Set 2", "Set 3")]
 	# s2 = "brewer"
 
-	p3 = pals[c("Alphabet", "Polychrome 36")]
-	s3 = "misc"
+	#p3 = pals[c("Alphabet", "Polychrome 36")]
+	#s3 = "misc"
 
 	c4a_series_add(p1, types = "cat", series = s1)
 	#c4a_series_add(p2, types = "cat", series = s2c4a_series_add)
-	c4a_series_add(p3, types = "cat", series = s3, take.gray.for.NA = FALSE, remove.other.grays = FALSE, remove.blacks = FALSE)
+	#c4a_series_add(p3, types = "cat", series = s3, take.gray.for.NA = FALSE, remove.other.grays = FALSE, remove.blacks = FALSE)
 	invisible(NULL)
 })
 
@@ -224,16 +224,12 @@ local({
 
 local({
 	syspals = pals:::syspals
-	palsCat = c("kelly", "watlington")
-	palsNew = c("kelly", "watlington")
+	palsCat = "watlington"
+	palsNew = "watlington"
 	series = "misc"
 
 	pals = syspals[palsCat]
 	names(pals) = palsNew
-
-	pals3 = list(cols25 = pals::cols25(),
-				 glasbey = pals::glasbey(32),
-				 alphabet2 = pals::alphabet()) # pals::alphabet2 = base "Alphabet"
 
 	pals4 = syspals[substr(names(syspals), 1, 6) == "kovesi" & substr(names(syspals), 1, 13) != "kovesi.cyclic"]
 
@@ -325,7 +321,6 @@ local({
 
 
 	c4a_series_add(pals, types = "cat", series = series)
-	c4a_series_add_as_is(pals3, types = "cat", series = "misc")
 	c4a_series_add(pals4_sel, types = pals4_type_sel, series = "kovesi", format.palette.name = FALSE)
 	c4a_series_add_as_is(pals_ter, types = "seq", series = "kovesi", format.palette.name = FALSE)
 	c4a_series_add(pals5, types = pals5_type, series = "kovesi", format.palette.name = FALSE)
@@ -497,6 +492,23 @@ local({
 	c4a_series_add(sb_div, types = "div", series = "seaborn")
 })
 
+local({
+	p = list(kelly = Polychrome::kelly.colors(n = 22),
+			 glasbey = Polychrome::glasbey.colors(n = 32),
+			 alphabet2 = Polychrome::green.armytage.colors(n = 26),
+			 wright25 = pals::cols25(),
+			 palette36 = Polychrome::palette36.colors(n = 36),
+			 alphabet = Polychrome::alphabet.colors(n = 26),
+			 light24 = Polychrome::light.colors(n = 24),
+			 dark24 = Polychrome::dark.colors(n = 24),
+			 sky24 = Polychrome::sky.colors(n = 24))
+	c4a_series_add(p, types = "cat", series = "poly", remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE)
+})
+
+
+
+
+
 
 ## meta package: 2000 palettes,
 # library(paletteer)
@@ -510,15 +522,45 @@ local({
 # paletteer::palettes_c_names
 
 
+
+
+
+########################################################################################
+######################################## BIVARIATE #####################################
+########################################################################################
+
+local({
+	#c4a_palettes(type = "div")
+	pals = c("hcl.purple_brown", "hcl.purple_green", "hcl.blue_red3", "hcl.red_green", "hcl.green_brown")
+
+	b = .C4A$z[match(pals, .C4A$z$fullname), ]
+	p = b$palette
+	names(p) = paste(b$name, "_x")
+
+	p = lapply(p, function(pal)pal[3:9])
+
+	c4a_series_add(p, types = "biv", series = "hcl", biv.method = "fromdiv")
+
+	pals2 = list(pinkgreen = pals::stevens.pinkgreen(n = 9),
+				 bluered = pals::stevens.bluered(n = 9),
+				 pinkblue = pals::stevens.pinkblue(n = 9),
+				 greenblue = pals::stevens.greenblue(n = 9),
+				 purplegold = pals::stevens.purplegold(n = 9))
+
+	c4a_series_add(pals2, types = "biv", series = "stevens", biv.method = "bycol")
+
+	pals3 = list(divseq = brewer.divseq(n = 9),
+				 qualseq = brewer.qualseq(n = 9),
+				 divdiv = brewer.divdiv(n = 9),
+				 seqseq1 = brewer.seqseq1(n = 9),
+				 seqseq2 = brewer.seqseq2(n = 9))
+	c4a_series_add(pals3, types = "biv", series = "brewer", biv.method = "bycol")
+
+})
+
 .z = get("z", .C4A)
 .s = get("s", .C4A)
 
-# saveRDS(.z, "z.rds")
-# saveRDS(.z, "s.rds")
-
-#
-# .z = readRDS("z.rds")
-# .s = readRDS("s.rds")
 
 save(.z, .s, file="R/sysdata.rda", compress="xz")
 

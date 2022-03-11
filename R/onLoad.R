@@ -109,6 +109,12 @@
 #'
 #' Palettes contained in the Python library `seaborn` by Michael Waskom. \url{https://seaborn.pydata.org/tutorial/color_palettes.html}
 #'
+#' \strong{stevens}
+#'
+#' Bivariate palettes by Joshua Stevens
+#'
+#' \url{https://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map}. Obtained via the R package `pals`.
+#'
 #' @name cols4all-package
 #' @aliases cols4all
 #' @docType package
@@ -125,8 +131,9 @@ NULL
 	with(.C4A,{
 		defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green")
 		CBF_th = list(cat = c(min_dist = 10),
-					   seq = c(min_step = 5),
-					   div = c(inter_wing_dist = 10, inter_wing_hue_dist = 100, min_step = 5)) #color-blind-friendly threshold
+					  seq = c(min_step = 5),
+					  div = c(inter_wing_dist = 10, inter_wing_hue_dist = 100, min_step = 5),
+					  biv = c(inter_wing_dist = 5, inter_wing_hue_dist = 100, min_step = 3)) #color-blind-friendly thresholds
 
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
 		LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
@@ -141,7 +148,8 @@ NULL
 
 		indicators = list(cat = c("min_dist"),
 						  seq = c("min_step", "max_step"),
-						  div = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"))
+						  div = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"),
+						  biv = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"))
 		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange")
 
 		sortRev = c("Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
@@ -166,7 +174,7 @@ NULL
 					harmonic = "Harmonic palette",
 					nmax = "Max number")
 
-		nmax = c(cat = 36, seq = 15, div = 15)
+		nmax = c(cat = 36, seq = 15, div = 15, biv = 4)
 	})
 	fill_ls()
 }

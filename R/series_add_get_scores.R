@@ -60,5 +60,22 @@ series_add_get_scores = function(z) {
 		}
 	}
 
+	# bivariate
+	for (n in 2:nmax['biv']) {
+		zn = get_z_n(z[z$type == "biv",], n =n)
+
+		if (!is.null(zn)) {
+
+			q = do.call(rbind, lapply(zn$palette, check_biv_pal))
+			qr = pmin(q[,1], q[,3] * 2) + (q[,2] >= 100) * 1000
+
+			r = -qr#rank(-qr, ties.method = "first")
+
+			mn = cbind(q,r)
+
+			a[match(zn$fullname, dimnames(a)[[1]]), c("inter_wing_dist", "inter_wing_hue_dist", "min_step", "rank"), n] = mn
+		}
+	}
+
 	a
 }

@@ -1,4 +1,4 @@
-get_pal_n = function(n, name, type, series, palette, nmax, range = NA, n_too_large = "error",...) {
+get_pal_n = function(n, m = n, name, type, series, palette, nmax, range = NA, n_too_large = "error",...) {
 	n_orig = n
 	if (n > nmax) {
 		if (n_too_large == "error") return(NULL)
@@ -6,31 +6,50 @@ get_pal_n = function(n, name, type, series, palette, nmax, range = NA, n_too_lar
 	}
 	index = attr(palette, "index")
 
-	x = if (is.null(index)) {
-		if (type == "cat") {
+	if (is.na(range[1])) range = c4a_default_range(n, type)
+
+	x = if (type == "cat") {
+		if (is.null(index)) {
 			palette[1:n]
 		} else {
-			if (is.na(range[1])) range = c4a_default_range(n, type)
-
-			if (range[1] == 0 && range[2] == 1) {
-				colorRampPalette(palette, space = "Lab")(n)
-			} else {
-				if (type == "seq") {
-					rangeIDs <- round(seq(range[1]*100, range[2]*100, length.out=n))+1
-				} else if (type == "div") {
-					rangeIDs <- map2divscaleID(breaks=seq(-10,10, length.out=n+1), range=range)
-				}
-				colorRampPalette(palette, space = "Lab")(101)[rangeIDs]
-			}
+			palette[index[[n]]]
 		}
-	} else {
-		palette[index[[n]]]
+	} else if (type == "seq") {
+		if (range[1] == 0 && range[2] == 1) {
+			colorRampPalette(palette, space = "Lab")(n)
+		} else {
+			rangeIDs <- round(seq(range[1]*100, range[2]*100, length.out=n))+1
+			colorRampPalette(palette, space = "Lab")(101)[rangeIDs]
+		}
+	} else if (type == "div") {
+		if (range[1] == 0 && range[2] == 1) {
+			colorRampPalette(palette, space = "Lab")(n)
+		} else {
+			breaks = seq(-10,10, length.out=n+1)
+			rangeIDs <- map2divscaleID(breaks=breaks, range=range)
+			colorRampPalette(palette, space = "Lab")(101)[rangeIDs]
+		}
+	} else if (type == "biv") {
+		rangeIDsm <- round(seq(range[1]*100, range[2]*100, length.out=m))+1
+		rangeIDsn <- round(seq(range[1]*100, range[2]*100, length.out=n))+1
+
+		p2 = t(apply(palette, MARGIN = 1, FUN = function(x) {
+			colorRampPalette(x, space = "Lab")(101)[rangeIDsn]
+		}))
+		t(apply(p2, MARGIN = 2, FUN = function(x) {
+			colorRampPalette(x, space = "Lab")(101)[rangeIDsm]
+		}))
 	}
-	if (n_orig != n) {
-		if (n_too_large == "repeat") {
-			x = rep(x, length.out = n_orig)
-		} else if (n_too_large == "interpolate") {
-			x = colorRampPalette(x, space = "Lab")(n_orig)
+
+
+	# for cat only?
+	if (type == "cat") {
+		if (n_orig != n) {
+			if (n_too_large == "repeat") {
+				x = rep(x, length.out = n_orig)
+			} else if (n_too_large == "interpolate") {
+				x = colorRampPalette(x, space = "Lab")(n_orig)
+			}
 		}
 	}
 	x

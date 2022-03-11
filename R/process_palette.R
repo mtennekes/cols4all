@@ -1,8 +1,12 @@
-process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remove.other.grays = FALSE, remove.blacks = TRUE, light.to.dark = TRUE, remove.names = TRUE) {
+process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remove.other.grays = FALSE, remove.blacks = TRUE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow") {
 
 	# maybe need to reindex
 	index = attr(pal, "index")
 	orig_pal = pal
+
+	if (type == "biv") {
+		pal = create_biv_palette(pal, biv.method)
+	}
 
 	hcl = get_hcl_matrix(pal)
 
@@ -57,7 +61,6 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	}
 
 	if (is.na(colNA)) {
-
 
 		# first candidates: choose NA from grays, such that luminance is at most 0.3 lighter and not darker than the lightest resp. darkest color.
 		# prefer lightest gray

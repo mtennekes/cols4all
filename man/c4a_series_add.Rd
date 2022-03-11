@@ -16,7 +16,8 @@ c4a_series_add(
   take.gray.for.NA = TRUE,
   remove.other.grays = FALSE,
   light.to.dark = TRUE,
-  remove.names = TRUE
+  remove.names = TRUE,
+  biv.method = "byrow"
 )
 
 c4a_series_add_as_is(
@@ -47,6 +48,8 @@ c4a_series_remove(series = "all", are.you.sure = FALSE)
 \item{light.to.dark}{should sequential \code{"seq"} palettes be automatically ordered from light to dark?}
 
 \item{remove.names}{should individual color names be removed?}
+
+\item{biv.method}{method to a create bivariate palette. Options are \code{"byrow"} means that the colors are wrapped row-wise to a color matrix where the number of rows and columns is automatically determined, \code{"byrowX"} the same but with X (integer between 2 and 9) columns, \code{"bycol"} and \verb{"bycolX} similar but wrapped column-wise. \code{"fromdiv"} means that the margins are taken from a diverging palette.}
 
 \item{...}{passed on to \code{c4a_series_add}}
 

@@ -8,7 +8,7 @@
 c4a(
   palette = NULL,
   n = NULL,
-  type = c("cat", "seq", "div"),
+  type = c("cat", "seq", "div", "biv"),
   reverse = FALSE,
   order = NULL,
   range = NA,

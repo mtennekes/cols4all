@@ -54,6 +54,23 @@ check_div_pal = function(p) {
 }
 
 
+check_biv_pal = function(p) {
+	if (nrow(p) != ncol(p)) {
+		stop("ncol != nrow", call. = FALSE)
+	}
+
+	p1 = p[1,]
+	p2 = p[,1]
+	pd = diag(p)
+
+	x12 = check_div_pal(c(rev(p1[-1]), p2))
+	x1d = check_div_pal(c(rev(p1[-1]), pd))
+	x2d = check_div_pal(c(rev(p2[-1]), pd))
+
+	pmin(x12, x1d, x2d)
+}
+
+
 # Check sequential palette
 #
 # Check sequential palette. It computes two quality indices. \code{min_step} and \code{max_step} are the minimum and maximum step respectively, where a step is the distance from one color to a neighboring color. \code{min_step} is the leading indicator: the higher, the better the palette. From palettes with equal \code{min_step}, those with the lowest \code{max_step} can be considered as better, because the steps are more uniform. These two quality indices are computed for all three color vision deficiency types: per quality indicator, the worst score is returned.
@@ -160,6 +177,12 @@ get_hue_width = function(hs) {
 
 # HCL characteristics
 analyse_hcl = function(p) {
+
+	if (is.matrix(p)) {
+		p = c(as.vector(p[lower.tri(p)]), p[1,1], as.vector(p[upper.tri(p)]))
+	}
+
+
 	m = get_hcl_matrix(p)
 
 	# hue width: how far are hues apart from each other?

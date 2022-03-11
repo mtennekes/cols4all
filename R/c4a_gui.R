@@ -1,14 +1,14 @@
 #' @rdname c4a_gui
 #' @name c4a_gui
 #' @export
-c4a_gui = function(type = "cat", n = 9, series = "all") {
+c4a_gui = function(type = "cat", n = 9, series = c("misc", "brewer", "hcl", "tol", "viridis")) {
 	if (!requireNamespace("shiny")) stop("Please install shiny")
 	if (!requireNamespace("shinyjs")) stop("Please install shinyjs")
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
 
 	z = .C4A$z
 
-	allseries = unique(z$series)
+	allseries = sort(unique(z$series))
 	if (series[1] == "all") {
 		series = allseries
 	} else {
@@ -42,7 +42,7 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 				width = 3,
 				shiny::fluidRow(
 				shiny::column(9,
-					shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div"), selected = type)
+					shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div", Bivariate = "biv"), selected = type)
 				), shiny::column(3,
 					shiny::img(align = "right", alt = "test", src = "imgResources/cols4all_logo.png", height = 100)
 				)),
@@ -116,8 +116,10 @@ c4a_gui = function(type = "cat", n = 9, series = "all") {
 				shiny::updateSliderInput(session, "n", min = 2, max = 36, value = n)
 			} else if (type == "seq") {
 				shiny::updateSliderInput(session, "n", min = 3, max = 11,  value = max(min(n, 11), 3))
-			} else {
+			} else if (type == "div") {
 				shiny::updateSliderInput(session, "n", min = 3, max = 13,  value = max(min(n, 13), 3))
+			} else if (type == "biv") {
+				shiny::updateSliderInput(session, "n", min = 3, max = 5,  value = max(min(n, 5), 3))
 			}
 		})
 

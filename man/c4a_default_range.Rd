@@ -4,7 +4,7 @@
 \alias{c4a_default_range}
 \title{Get the default range}
 \usage{
-c4a_default_range(n, type = c("seq", "div", "cat"))
+c4a_default_range(n, type = c("seq", "div", "biv", "cat"))
 }
 \arguments{
 \item{n}{number of colors}
