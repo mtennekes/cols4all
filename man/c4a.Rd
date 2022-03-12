@@ -8,7 +8,8 @@
 c4a(
   palette = NULL,
   n = NULL,
-  type = c("cat", "seq", "div", "biv"),
+  m = NULL,
+  type = c("cat", "seq", "div", "bivs", "bivc"),
   reverse = FALSE,
   order = NULL,
   range = NA,
@@ -22,9 +23,11 @@ c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 \arguments{
 \item{palette}{name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided by \code{c4a_default_palette}. The palette name can be prefixed with a \code{"-"} symbol, which will reverse the palette (this can also be done with the \code{reverse} argument).}
 
-\item{n}{number of colors. If omitted then: for type \code{"cat"} the maximum number of colors is returned, and for types \code{"seq"} and \code{"div"}, 9 colors.}
+\item{n}{number of colors. If omitted then: for type \code{"cat"} the maximum number of colors is returned, for types \code{"seq"} and \code{"div"}, 9 colors.}
 
-\item{type}{type of color palette, in case \code{palette} is not specified: one of \code{"cat"} (categorical/qualitative palette), \code{"seq"} (sequential palette) and \code{"div"} (diverging palette).}
+\item{m}{number of rows in case type is \code{"bivs"} or \code{"bivc"}.}
+
+\item{type}{type of color palette, in case \code{palette} is not specified: one of \code{"cat"} (categorical/qualitative palette), \code{"seq"} (sequential palette), \code{"div"} (diverging palette), and \code{"bivs"}/\code{"bivc"} (bivariate, where the former is seq-seq and the latter cat-seq).}
 
 \item{reverse}{should the palette be reversed?}
 

@@ -4,7 +4,7 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	index = attr(pal, "index")
 	orig_pal = pal
 
-	if (type == "biv") {
+	if (type %in% c("bivs", "bivc")) {
 		pal = create_biv_palette(pal, biv.method)
 	}
 

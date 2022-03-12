@@ -7,12 +7,12 @@
 \usage{
 c4a_gui(
   type = "cat",
-  n = 9,
+  n = NA,
   series = c("misc", "brewer", "hcl", "tol", "viridis")
 )
 
 c4a_table(
-  type = c("cat", "seq", "div", "biv"),
+  type = c("cat", "seq", "div", "bivs", "bivc"),
   n = NULL,
   m = NULL,
   cvd.sim = c("none", "deutan", "protan", "tritan"),
@@ -27,9 +27,9 @@ c4a_table(
 )
 }
 \arguments{
-\item{type}{type of palette: \code{"cat"} for categorical (aka qualitative), \code{"seq"} for sequential, \code{"div"} for diverging, and \code{"biv"} for bivariate. For \code{c4a_gui} it only determines which type is shown initially.}
+\item{type}{type of palette: \code{"cat"} for categorical (aka qualitative), \code{"seq"} for sequential, \code{"div"} for diverging, and \code{"bivs"}/\code{"bivc"} for bivariate (the former is seq-seq, the latter cat-seq). For \code{c4a_gui} it only determines which type is shown initially.}
 
-\item{n, m}{for univariate palettes, \code{n} is the number of displayed colors. For bivariate palettes \code{"biv"}, \code{n} and \code{m} are the number of columns and rows respectively. If omitted: for \code{"cat"} the full palette is displayed, for \code{"seq"} and \code{"div"}, 9 colors, and for \code{"biv"} 4 columns and rows. For \code{c4a_gui} it only determines which number of colors initially.}
+\item{n, m}{for univariate palettes, \code{n} is the number of displayed colors. For bivariate palettes \code{"biv"}, \code{n} and \code{m} are the number of columns and rows respectively. If omitted: for \code{"cat"} the full palette is displayed, for \code{"seq"} and \code{"div"}, 9 colors, and for \code{"bivs"}/\code{"bivc"} 4 columns and rows. For \code{c4a_gui} it only determines which number of colors initially.}
 
 \item{series}{Series of palettes to show. See \code{\link{c4a_series}} for options. By default, \code{"all"}, which means all series. For \code{c4a_gui} it only determines which series are shown initially.}
 

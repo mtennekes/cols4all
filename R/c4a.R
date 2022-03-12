@@ -3,8 +3,9 @@
 #' Get a cols4all color palette: `c4a` returns the colors of the specified palette, and `c4a_na` returns the color for missing value that is associated with the specified palette. Run \code{\link{c4a_gui}} to see all available palettes, which are also listed with \code{\link{c4a_palettes}}.
 #'
 #' @param palette name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided by `c4a_default_palette`. The palette name can be prefixed with a `"-"` symbol, which will reverse the palette (this can also be done with the `reverse` argument).
-#' @param n number of colors. If omitted then: for type `"cat"` the maximum number of colors is returned, and for types `"seq"` and `"div"`, 9 colors.
-#' @param type type of color palette, in case `palette` is not specified: one of `"cat"` (categorical/qualitative palette), `"seq"` (sequential palette) and `"div"` (diverging palette).
+#' @param n number of colors. If omitted then: for type `"cat"` the maximum number of colors is returned, for types `"seq"` and `"div"`, 9 colors.
+#' @param m number of rows in case type is `"bivs"` or `"bivc"`.
+#' @param type type of color palette, in case `palette` is not specified: one of `"cat"` (categorical/qualitative palette), `"seq"` (sequential palette), `"div"` (diverging palette), and `"bivs"`/`"bivc"` (bivariate, where the former is seq-seq and the latter cat-seq).
 #' @param reverse should the palette be reversed?
 #' @param order order of colors. Only applicable for `"cat"` palettes
 #' @param range a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential `"seq"` palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging `"seq"` palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). The default values (that depend on the `n`n and `type`) are provided by \code{\link{c4a_default_range}}.
@@ -19,7 +20,9 @@
 #' @rdname c4a
 #' @name c4a
 #' @export
-c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div", "biv"), reverse = FALSE, order = NULL, range = NA, format = c("hex", "RGB", "HCL"), n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
+c4a = function(palette = NULL, n = NULL, m = NULL, type = c("cat", "seq", "div", "bivs", "bivc"), reverse = FALSE, order = NULL, range = NA, format = c("hex", "RGB", "HCL"), n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
+	calls = names(match.call(expand.dots = TRUE)[-1])
+
 	type = match.arg(type)
 	format = match.arg(format)
 
@@ -27,6 +30,7 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div", "biv"), r
 
 	if (is.null(palette)) {
 		palette = c4a_default_palette(type)
+		if ("palette" %in% calls) message("Argument palette is specified as NULL, therefore returning default palette: \"", palette, "\"")
 		mes = paste0("These are the colors from palette \"", palette, "\", the default for type \"", type, "\":")
 	} else {
 		mes = NULL
@@ -41,8 +45,11 @@ c4a = function(palette = NULL, n = NULL, type = c("cat", "seq", "div", "biv"), r
 
 	x$range = range
 	x$n_too_large = n_too_large
-	if (is.null(n)) n = ifelse(x$type == "cat", x$nmax, ifelse(x$type == "biv", 3, 11))
-	pal = do.call(get_pal_n, c(list(n = n), x))
+	if (is.null(n)) n = ifelse(x$type == "cat", x$nmax, ifelse(x$type %in% c("bivs", "bivc"), 3, 11))
+	if (type %in% c("bivs", "bivc") && is.null(m)) m = n
+
+
+	pal = do.call(get_pal_n, c(list(n = n, m = m), x))
 
 	pal = if (!is.null(order)) {
 		if (!all(order %in% 1L:n)) stop("order should consist of numbers 1 to ", n)

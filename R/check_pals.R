@@ -54,7 +54,7 @@ check_div_pal = function(p) {
 }
 
 
-check_biv_pal = function(p) {
+check_bivs_pal = function(p) {
 	if (nrow(p) != ncol(p)) {
 		stop("ncol != nrow", call. = FALSE)
 	}
@@ -69,6 +69,19 @@ check_biv_pal = function(p) {
 
 	pmin(x12, x1d, x2d)
 }
+
+check_bivc_pal = function(p) {
+	if (ncol(p) != 3) {
+		stop("ncol != 3", call. = FALSE)
+	}
+
+	x13 = check_div_pal(c(rev(p[,1]), "#FFFFFF", p[,3]))
+	x12 = check_div_pal(c(rev(p[,1]), "#FFFFFF", p[,2]))
+	x23 = check_div_pal(c(rev(p[,2]), "#FFFFFF", p[,3]))
+
+	pmin(x12, x13, x23)
+}
+
 
 
 # Check sequential palette

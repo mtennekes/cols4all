@@ -1,12 +1,18 @@
 create_biv_palette = function(palette, biv.method) {
-	if (!(biv.method %in% c("fromdiv", "byrow", "bycol"))) {
+	if (!(biv.method %in% c("div2seqseq", "div2divseq", "byrow", "bycol"))) {
 		n = as.integer(substr(biv.method, nchar(biv.method), nchar(biv.method)))
 		biv.method = substr(biv.method, 1, nchar(biv.method) - 1)
-		if (!(biv.method %in% c("fromdiv", "byrow", "bycol"))) stop("Invalid biv.method", call. = FALSE)
+		if (!(biv.method %in% c("div2seqseq", "byrow", "bycol"))) stop("Invalid biv.method", call. = FALSE)
 	} else {
-		if (biv.method == "fromdiv") {
-			n = (length(palette) - 1L)/2 + 1L
+		np = length(palette)
+		if (biv.method == "div2seqseq") {
+			if ((np %% 2) != 1) stop("n is even but should be odd", call. = FALSE)
+			n = (np - 1L)/2 + 1L
 			m = n
+		} else if (biv.method == "div2divseq") {
+			if ((np %% 2) != 1) stop("n is even but should be odd", call. = FALSE)
+			n = (np - 1L)/2 + 1L
+			m = n - 1L
 		} else {
 			n = round(sqrt(length(palette)))
 			m = round(length(palette) / n)
@@ -14,10 +20,9 @@ create_biv_palette = function(palette, biv.method) {
 		}
 	}
 
-	if (biv.method == "fromdiv") {
+	if (biv.method == "div2seqseq") {
 		a = get_hcl_matrix(palette)
 
-		np = length(palette)
 
 		h1 = matrix(a[n:1, 1], nrow = n, ncol = n, byrow = FALSE)
 		h2 = matrix(a[n:np, 1], nrow = n, ncol = n, byrow = TRUE)
@@ -63,9 +68,26 @@ create_biv_palette = function(palette, biv.method) {
 		# l[lower.tri(l)] = l1[lower.tri(l1)]
 		# l[upper.tri(l)] = l2[upper.tri(l2)]
 
-		matrix(do.call(hcl, list(h = h, c = cr, l = l)), ncol = n, byrow = TRUE)
+		t(matrix(do.call(hcl, list(h = h, c = cr, l = l)), ncol = n, byrow = TRUE))
+	} else if (biv.method == "div2divseq") {
+		a = get_hcl_matrix(palette)
+
+		l1 = a[m:1, 3]
+		l2 = a[(m+2):np, 3]
+		l0 = (l1 + l2) / 2
+		h1 = a[m:1, 1]
+		h2 = a[(m+2):np, 1]
+
+		c1 = a[m:1, 2]
+		c2 = a[(m+2):np, 2]
+
+		h = matrix(c(h1, h1, h1, h2, h2), ncol = n, byrow = FALSE)
+		cr = matrix(c(c1, c1/2, rep(0,m), c2/2, c2), ncol = n, byrow = FALSE)
+		l = matrix(c(l1, (l1+l0)/2, l0, (l2+l0)/2, l2), ncol = n, byrow = FALSE)
+		matrix(do.call(hcl, list(h = h, c = cr, l = l)), ncol = n, byrow = FALSE)
 	} else {
 		matrix(palette, ncol = n, byrow = biv.method == "byrow")
 	}
 }
+
 

@@ -1,5 +1,6 @@
-get_pal_n = function(n, m = n, name, type, series, palette, nmax, range = NA, n_too_large = "error",...) {
+get_pal_n = function(n, m = NA, name, type, series, palette, nmax, range = NA, n_too_large = "error",...) {
 	n_orig = n
+	if (is.na(m)) m = n
 	if (n > nmax) {
 		if (n_too_large == "error") return(NULL)
 		n = nmax
@@ -29,16 +30,20 @@ get_pal_n = function(n, m = n, name, type, series, palette, nmax, range = NA, n_
 			rangeIDs <- map2divscaleID(breaks=breaks, range=range)
 			colorRampPalette(palette, space = "Lab")(101)[rangeIDs]
 		}
-	} else if (type == "biv") {
-		rangeIDsm <- round(seq(range[1]*100, range[2]*100, length.out=m))+1
-		rangeIDsn <- round(seq(range[1]*100, range[2]*100, length.out=n))+1
+	} else if (type %in% c("bivs", "bivc")) {
+		if (all(dim(palette) == c(m, n))) {
+			palette
+		} else {
+			rangeIDsm <- round(seq(range[1]*100, range[2]*100, length.out=m))+1
+			rangeIDsn <- round(seq(range[1]*100, range[2]*100, length.out=n))+1
 
-		p2 = t(apply(palette, MARGIN = 1, FUN = function(x) {
-			colorRampPalette(x, space = "Lab")(101)[rangeIDsn]
-		}))
-		t(apply(p2, MARGIN = 2, FUN = function(x) {
-			colorRampPalette(x, space = "Lab")(101)[rangeIDsm]
-		}))
+			p2 = t(apply(palette, MARGIN = 1, FUN = function(x) {
+				colorRampPalette(x, space = "Lab")(101)[rangeIDsn]
+			}))
+			apply(p2, MARGIN = 2, FUN = function(x) {
+				colorRampPalette(x, space = "Lab")(101)[rangeIDsm]
+			})
+		}
 	}
 
 

@@ -7,9 +7,9 @@ table_columns = function(type, show.scores) {
 		srt = c("rank", "Cmax")
 	}
 
-	if (type %in% c("seq", "div", "biv")) {
+	if (type %in% c("seq", "div", "bivs", "bivc")) {
 		qn = c(qn, "hueType")
-		srt = c(srt, {if (type %in% c("div", "biv")) "HwidthLR" else "Hwidth"})
+		srt = c(srt, {if (type %in% c("div", "bivs", "bivc")) "HwidthLR" else "Hwidth"})
 	} else {
 		qn = c(qn, "harmonic")
 		srt = c(srt, "LCrange")
@@ -78,8 +78,8 @@ table_columns = function(type, show.scores) {
 #' Lum/Chr range \tab `"LCrange"` \tab Defined as max(2 * `Lrange`, `Crange`), and used to label a palette "harmonic". This formula is determined by some trial-and-error, so suggestions for improvement are welcome.
 #' }
 #'
-#' @param type type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, `"div"` for diverging, and `"biv"` for bivariate. For `c4a_gui` it only determines which type is shown initially.
-#' @param n,m for univariate palettes, `n` is the number of displayed colors. For bivariate palettes `"biv"`, `n` and `m` are the number of columns and rows respectively. If omitted: for `"cat"` the full palette is displayed, for `"seq"` and `"div"`, 9 colors, and for `"biv"` 4 columns and rows. For `c4a_gui` it only determines which number of colors initially.
+#' @param type type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, `"div"` for diverging, and `"bivs"`/`"bivc"` for bivariate (the former is seq-seq, the latter cat-seq). For `c4a_gui` it only determines which type is shown initially.
+#' @param n,m for univariate palettes, `n` is the number of displayed colors. For bivariate palettes `"biv"`, `n` and `m` are the number of columns and rows respectively. If omitted: for `"cat"` the full palette is displayed, for `"seq"` and `"div"`, 9 colors, and for `"bivs"`/`"bivc"` 4 columns and rows. For `c4a_gui` it only determines which number of colors initially.
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @param sort column name to sort the data. For column names, see details. Use a `"-"` prefix to reverse the order.
 #' @param text.format The format of the text of the colors. One of `"hex"`, `"RGB"` or `"HCL"`.
@@ -95,7 +95,7 @@ table_columns = function(type, show.scores) {
 #' @export
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div", "biv"), n = NULL, m = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, include.na = FALSE, show.scores = FALSE, columns = NA) {
+c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc"), n = NULL, m = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, include.na = FALSE, show.scores = FALSE, columns = NA) {
 	id = NULL
 
 	#if (length(series) == 2) browser()
@@ -108,8 +108,8 @@ c4a_table = function(type = c("cat", "seq", "div", "biv"), n = NULL, m = NULL, c
 	show.ranking = (!is.null(n))
 	cvd.sim = match.arg(cvd.sim)
 
-	if (type == "biv") {
-		if (is.null(n)) n = 4
+	if (type %in% c("bivs", "bivc")) {
+		if (is.null(n)) n = 3
 		if (is.null(m)) m = n
 	} else {
 		m = 1
@@ -135,7 +135,7 @@ c4a_table = function(type = c("cat", "seq", "div", "biv"), n = NULL, m = NULL, c
 	}
 
 
-	zn = get_z_n(z[z$type == type, ], n = n, range = range)
+	zn = get_z_n(z[z$type == type, ], n = n, m = m, range = range)
 	if (!is.null(zn)) {
 		if (!series[1] == "all") zn = zn[zn$series %in% series, ]
 	}
@@ -168,7 +168,7 @@ c4a_table = function(type = c("cat", "seq", "div", "biv"), n = NULL, m = NULL, c
 
 	zn$nlines = ((zn$n * m -1) %/% columns) + 1
 
-	if (type == "biv") {
+	if (type %in% c("bivs", "bivc")) {
 		zn$palette = lapply(zn$palette, function(p) as.vector(t(p[nrow(p):1L,])))
 	}
 
@@ -310,7 +310,7 @@ c4a_table = function(type = c("cat", "seq", "div", "biv"), n = NULL, m = NULL, c
 		if (type == "seq") {
 			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
 							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#128396;", tooltip = tooltip_SH_seq, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
-		} else if (type %in% c("div", "biv")) {
+		} else if (type %in% c("div", "bivs", "bivc")) {
 			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
 							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#x262F;", tooltip = tooltip_SH_div, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
 		}

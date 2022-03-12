@@ -133,7 +133,8 @@ NULL
 		CBF_th = list(cat = c(min_dist = 10),
 					  seq = c(min_step = 5),
 					  div = c(inter_wing_dist = 10, inter_wing_hue_dist = 100, min_step = 5),
-					  biv = c(inter_wing_dist = 5, inter_wing_hue_dist = 100, min_step = 3)) #color-blind-friendly thresholds
+					  bivs = c(inter_wing_dist = 5, inter_wing_hue_dist = 100, min_step = 3),
+					  bivc = c(inter_wing_dist = 5, inter_wing_hue_dist = 100, min_step = 3)) #color-blind-friendly thresholds
 
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
 		LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
@@ -149,7 +150,8 @@ NULL
 		indicators = list(cat = c("min_dist"),
 						  seq = c("min_step", "max_step"),
 						  div = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"),
-						  biv = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"))
+						  bivs = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"),
+						  bivc = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"))
 		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange")
 
 		sortRev = c("Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
@@ -174,7 +176,7 @@ NULL
 					harmonic = "Harmonic palette",
 					nmax = "Max number")
 
-		nmax = c(cat = 36, seq = 15, div = 15, biv = 4)
+		nmax = c(cat = 36, seq = 15, div = 15, bivs = 5, bivc = 5)
 	})
 	fill_ls()
 }

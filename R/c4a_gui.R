@@ -1,10 +1,16 @@
+def_n = function(type) switch(type, cat = 7, seq = 7, div = 9, 3)
+
+
+
 #' @rdname c4a_gui
 #' @name c4a_gui
 #' @export
-c4a_gui = function(type = "cat", n = 9, series = c("misc", "brewer", "hcl", "tol", "viridis")) {
+c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "tol", "viridis")) {
 	if (!requireNamespace("shiny")) stop("Please install shiny")
 	if (!requireNamespace("shinyjs")) stop("Please install shinyjs")
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
+
+	if (is.na(n)) n = def_n(type)
 
 	z = .C4A$z
 
@@ -19,6 +25,13 @@ c4a_gui = function(type = "cat", n = 9, series = c("misc", "brewer", "hcl", "tol
 		message("No palette series loaded. Please reload cols4all, add series with c4a_series_add, or import data with c4a_sysdata_import")
 		return(invisible(NULL))
 	}
+
+	types = c(Categorical = "cat", Sequential = "seq", Diverging = "div", 'Bivariate (seq-seq)' = "bivs", 'Bivariate (cat-seq)' = "bivc")
+	series_per_type = structure(lapply(types, function(tp) {
+		sort(unique(z$series[z$type == tp]))
+	}), names = unname(types))
+	first_series = sort(intersect(series, series_per_type[[type]]))
+
 
 	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
 
@@ -42,19 +55,28 @@ c4a_gui = function(type = "cat", n = 9, series = c("misc", "brewer", "hcl", "tol
 				width = 3,
 				shiny::fluidRow(
 				shiny::column(9,
-					shiny::radioButtons("type", "Type", choices = c(Categorical = "cat", Sequential = "seq", Diverging = "div", Bivariate = "biv"), selected = type)
+					shiny::radioButtons("type", "Type", choices = types, selected = type)
 				), shiny::column(3,
 					shiny::img(align = "right", alt = "test", src = "imgResources/cols4all_logo.png", height = 100)
 				)),
-				shiny::selectizeInput("series", "Palette Series", choices = allseries, selected = series, multiple = TRUE),
-				shiny::sliderInput("n", "Number of colors",
-								   min = 2, max = 36, value = n, ticks = FALSE),
+				shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE),
+				shiny::conditionalPanel(
+					condition = "input.type != 'biv'",
+					shiny::sliderInput("n", "Number of colors", min = 2, max = 36, value = n, ticks = FALSE)),
+				shiny::conditionalPanel(
+					condition = "input.type == 'biv'",
+					shiny::fluidRow(
+						shiny::column(6,
+							shiny::sliderInput("nbiv", "Number of columns", min = 3, max = 5, value = 3, ticks = FALSE)),
+						shiny::column(6,
+							shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 5, value = 3, ticks = FALSE)))),
+					shiny::div(style = "margin-top:-20px", checkboxInput("misn", "Square color matrix", value = TRUE))),
 				shiny::checkboxInput("na", shiny::strong("Color for missing values"), value = FALSE),
 				shiny::conditionalPanel(
 					condition = "input.type != 'cat'",
 					shiny::fluidRow(
 						shiny::column(4,
-							shiny::br(),
+							#shiny::br(),
 							shiny::radioButtons("auto_range", label = "Range", choices = c("Maximum", "Automatic", "Manual"), selected = "Maximum")),
 							shiny::column(8,
 								shinyjs::disabled(shiny::div(style = "font-size:0;margin-bottom:-20px", shiny::sliderInput("range", "",
@@ -80,6 +102,11 @@ c4a_gui = function(type = "cat", n = 9, series = c("misc", "brewer", "hcl", "tol
 		)
 	)
 	server = function(input, output, session) {
+
+
+		rv <- reactiveValues(selected_series = first_series,
+							 current_type = type)
+
 		shiny::observeEvent(get_cols(), {
 			cols = get_cols()
 			sortNew = if (input$sort %in% cols) input$sort else "name"
@@ -88,6 +115,8 @@ c4a_gui = function(type = "cat", n = 9, series = c("misc", "brewer", "hcl", "tol
 
 		get_values = shiny::reactive({
 			list(n = input$n,
+				 nbiv = input$nbiv,
+				 mbiv = input$mbiv,
 				 type = input$type,
 				 cvd = input$cvd,
 				 sort = input$sort,
@@ -108,18 +137,36 @@ c4a_gui = function(type = "cat", n = 9, series = c("misc", "brewer", "hcl", "tol
 		})
 
 
-
 		shiny::observeEvent(input$type, {
 			type = input$type
-			n = input$n
+			n = def_n(type)
+
+			choices = series_per_type[[type]]
+			not_selected = setdiff(series_per_type[[rv$current_type]], input$series)
+			rv$selected_series = union(setdiff(rv$selected_series, not_selected), input$series)
+			rv$current_type = type
+
+			selected = intersect(choices, rv$selected_series)
+
+			shiny::updateSelectizeInput(session, "series", choices = choices, selected = selected)
 			if (type == "cat") {
 				shiny::updateSliderInput(session, "n", min = 2, max = 36, value = n)
 			} else if (type == "seq") {
-				shiny::updateSliderInput(session, "n", min = 3, max = 11,  value = max(min(n, 11), 3))
+				shiny::updateSliderInput(session, "n", min = 3, max = 11,  value = n)
 			} else if (type == "div") {
-				shiny::updateSliderInput(session, "n", min = 3, max = 13,  value = max(min(n, 13), 3))
-			} else if (type == "biv") {
-				shiny::updateSliderInput(session, "n", min = 3, max = 5,  value = max(min(n, 5), 3))
+				shiny::updateSliderInput(session, "n", min = 3, max = 13,  value = n)
+			}
+		})
+
+		shiny::observe({
+			n = input$nbiv
+			misn = input$misn
+
+			if (misn) {
+				shinyjs::disable("mbiv")
+				shiny::updateSliderInput(session, "mbiv", value = n)
+			} else {
+				shinyjs::enable("mbiv")
 			}
 		})
 
@@ -159,7 +206,11 @@ c4a_gui = function(type = "cat", n = 9, series = c("misc", "brewer", "hcl", "tol
 			shiny::req(get_values_d())
 			values = get_values_d()
 			sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
-			c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format)
+			if (values$type %in% c("bivs", "bivc")) {
+				c4a_table(n = values$nbiv, m = values$mbiv, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format)
+			} else {
+				c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format)
+			}
 		}
 	}
 	shiny::shinyApp(ui = ui, server = server)

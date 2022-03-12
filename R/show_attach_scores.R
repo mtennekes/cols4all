@@ -1,5 +1,5 @@
 show_attach_scores = function(z, range) {
-	type = if (all(z$type == "cat")) "cat" else if (all(z$type == "seq")) "seq" else if (all(z$type == "div")) "div" else if (all(z$type == "biv")) "biv" else "mixed"
+	type = if (all(z$type == "cat")) "cat" else if (all(z$type == "seq")) "seq" else if (all(z$type == "div")) "div" else if (all(z$type == "bivs")) "bivs" else if (all(z$type == "bivc")) "bivc" else "mixed"
 
 	k = nrow(z)
 
@@ -7,7 +7,7 @@ show_attach_scores = function(z, range) {
 	s2 = s[match(z$fullname, dimnames(s)[[1]]), , , drop = FALSE]
 	s3 = do.call(rbind, lapply(1:k, function(i) {
 		# maximum n to take scores from (cat: dim max, seq/div, the scores for the largest palettes)
-		mmax = if (type == "cat") dim(s2)[3] else min(z$n[i], which(is.na(s2[i, "rank", ][-1]))[1])
+		mmax = if (type == "cat") dim(s2)[3] else min(z$n[i], tail(which(!is.na(s2[i, "rank", ])), 1))
 		m = min(z$n[i], mmax)
 		s2[i,,m]
 	}))
@@ -41,7 +41,7 @@ show_attach_scores = function(z, range) {
 		z2$harmonic = (z2$LCrange < .C4A$LCrangeHarmonic)
 		z2$rank[z2$cbfriendly] = z2$rank[z2$cbfriendly] - 1e9 + ((z2$LCrange[z2$cbfriendly]) * 1e6) + (z2$highC[z2$cbfriendly] * 1e3)
 		z2$rank[!z2$cbfriendly] = z2$rank[!z2$cbfriendly] + ((z2$LCrange[!z2$cbfriendly]) * 1e-3) + (z2$highC[!z2$cbfriendly] * 1e-6)
-	} else if (type == "biv") {
+	} else if (type %in% c("bivs", "bivc")) {
 		z2$hueType = ifelse(z2$HwidthL >= .C4A$HwidthDivRainbow | z2$HwidthR >= .C4A$HwidthDivRainbow, "RH",
 							ifelse(z2$HwidthL < .C4A$HwidthDivSingle & z2$HwidthR < .C4A$HwidthDivSingle, "SH", "MH"))
 		z2$HwidthLR = pmax(z2$HwidthL, z2$HwidthR)
@@ -58,6 +58,7 @@ get_friendlyness = function(zn) {
 		ifelse(type == "cat", min_dist >= .C4A$CBF_th$cat["min_dist"],
 		ifelse(type == "seq", min_step >= .C4A$CBF_th$seq["min_step"],
 		ifelse(type == "div", inter_wing_dist >= .C4A$CBF_th$div["inter_wing_dist"] & inter_wing_hue_dist >= .C4A$CBF_th$div["inter_wing_hue_dist"] & min_step >= .C4A$CBF_th$div["min_step"],
-		ifelse(type == "biv", inter_wing_dist >= .C4A$CBF_th$biv["inter_wing_dist"] & inter_wing_hue_dist >= .C4A$CBF_th$biv["inter_wing_hue_dist"] & min_step >= .C4A$CBF_th$biv["min_step"], FALSE))))
+		ifelse(type == "bivs", inter_wing_dist >= .C4A$CBF_th$bivs["inter_wing_dist"] & inter_wing_hue_dist >= .C4A$CBF_th$bivs["inter_wing_hue_dist"] & min_step >= .C4A$CBF_th$bivs["min_step"],
+		ifelse(type == "bivc", inter_wing_dist >= .C4A$CBF_th$bivc["inter_wing_dist"] & inter_wing_hue_dist >= .C4A$CBF_th$bivc["inter_wing_hue_dist"] & min_step >= .C4A$CBF_th$bivc["min_step"], FALSE)))))
 	})
 }

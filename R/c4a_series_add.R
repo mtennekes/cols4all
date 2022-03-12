@@ -14,7 +14,7 @@
 #' @param remove.blacks,take.gray.for.NA,remove.other.grays These arguments determine the processing of grayscale colors for categorical `"cat"` palettes: if `remove.blacks` and there are (near) blacks, these are removed first. Next, if `take.gray.for.NA`, `xNA` is `NA`, and a palette contains at least one grayscale color (which can also be white), this is used as color for missing values. In case there are more than one grayscale color, the lightest is taken. `remove.other.grays` determines what happens with the other grays.
 #' @param light.to.dark should sequential `"seq"` palettes be automatically ordered from light to dark?
 #' @param remove.names should individual color names be removed?
-#' @param biv.method method to a create bivariate palette. Options are `"byrow"` means that the colors are wrapped row-wise to a color matrix where the number of rows and columns is automatically determined, `"byrowX"` the same but with X (integer between 2 and 9) columns, `"bycol"` and `"bycolX` similar but wrapped column-wise. `"fromdiv"` means that the margins are taken from a diverging palette.
+#' @param biv.method method to a create bivariate palette. Options are `"byrow"` means that the colors are wrapped row-wise to a color matrix where the number of rows and columns is automatically determined, `"byrowX"` the same but with X (integer between 2 and 9) columns, `"bycol"` and `"bycolX` similar but wrapped column-wise. `"div2seqseq"` and `"div2divseq` means that colors are extracted from a divering palette. The former translates colors into a matrix with the neutral color in the diagonal, while the latter places the neutral color in the middle column.
 #' @param are.you.sure are you sure you want to remove series?
 #' @param ... passed on to `c4a_series_add`
 #' @example ./examples/c4a_series_add.R
@@ -44,7 +44,7 @@ c4a_series_add = function(x, xNA = NA, types, series, format.palette.name = TRUE
 
 	if (any(!is.na(xNA))) xNA[!is.na(xNA)] = validate_colors(xNA[!is.na(xNA)])
 
-	if (!all(types %in% c("div", "seq", "cat", "biv"))) stop("Unknown types found. Currently only \"cat\", \"seq\", \"div\", and \"biv\" are supported")
+	if (!all(types %in% c("div", "seq", "cat", "bivs", "bivc"))) stop("Unknown types found. Currently only \"cat\", \"seq\", \"div\", \"bivs\", and \"bivc\" are supported")
 
 
 	res = mapply(process_palette, pal = x, type = types, colNA = xNA, SIMPLIFY = FALSE, MoreArgs = adjust.settings)
@@ -144,7 +144,7 @@ check_z = function(z) {
 		if (!is.character(na) || all(is.na(na))) stop("x$z$na should be a character column", call. = FALSE)
 
 		if (anyDuplicated(fullname)) stop("x$z$fullname should consist of unique values", call. = FALSE)
-		if (!all(type %in% c("cat", "seq", "div", "biv"))) stop("x$z$type should consist of \"cat\", \"seq\", \"div\", and \"biv\" values only", call. = FALSE)
+		if (!all(type %in% c("cat", "seq", "div", "bivs", "bivc"))) stop("x$z$type should consist of \"cat\", \"seq\", \"div\", and \"biv\" values only", call. = FALSE)
 		if (!is.numeric(nmax)) stop("x$z$nmax should be a numeric column", call. = FALSE)
 
 		palette = I(lapply(palette, validate_colors))

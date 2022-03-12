@@ -535,11 +535,18 @@ local({
 
 	b = .C4A$z[match(pals, .C4A$z$fullname), ]
 	p = b$palette
-	names(p) = paste(b$name, "_x")
+	names(p) = paste(b$name, "_s")
 
 	p = lapply(p, function(pal)pal[3:9])
 
-	c4a_series_add(p, types = "biv", series = "hcl", biv.method = "fromdiv")
+	c4a_series_add(p, types = "bivs", series = "hcl", biv.method = "div2seqseq")
+
+	p2 = b$palette
+	names(p2) = paste(b$name, "_c")
+
+	p2 = lapply(p2, function(pal)pal[2:10])
+	c4a_series_add(p2, types = "bivc", series = "hcl", biv.method = "div2divseq")
+
 
 	pals2 = list(pinkgreen = pals::stevens.pinkgreen(n = 9),
 				 bluered = pals::stevens.bluered(n = 9),
@@ -547,15 +554,15 @@ local({
 				 greenblue = pals::stevens.greenblue(n = 9),
 				 purplegold = pals::stevens.purplegold(n = 9))
 
-	c4a_series_add(pals2, types = "biv", series = "stevens", biv.method = "bycol")
+
+
+	c4a_series_add(pals2, types = "bivs", series = "stevens", biv.method = "byrow")
 
 	pals3 = list(divseq = brewer.divseq(n = 9),
 				 qualseq = brewer.qualseq(n = 9),
-				 divdiv = brewer.divdiv(n = 9),
 				 seqseq1 = brewer.seqseq1(n = 9),
 				 seqseq2 = brewer.seqseq2(n = 9))
-	c4a_series_add(pals3, types = "biv", series = "brewer", biv.method = "bycol")
-
+	c4a_series_add(pals3, types = c("bivc", "bivc", "bivs", "bivs"), series = "brewer", biv.method = "byrow")
 })
 
 .z = get("z", .C4A)
