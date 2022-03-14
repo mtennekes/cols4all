@@ -531,21 +531,29 @@ local({
 
 local({
 	#c4a_palettes(type = "div")
-	pals = c("hcl.purple_brown", "hcl.purple_green", "hcl.blue_red3", "hcl.red_green", "hcl.green_brown")
+	pals = c("hcl.purple_brown", "hcl.purple_green")
 
 	b = .C4A$z[match(pals, .C4A$z$fullname), ]
 	p = b$palette
-	names(p) = paste(b$name, "_s")
+	names(p) = paste0(b$name, "_s")
 
 	p = lapply(p, function(pal)pal[3:9])
 
 	c4a_series_add(p, types = "bivs", series = "hcl", biv.method = "div2seqseq")
 
 	p2 = b$palette
-	names(p2) = paste(b$name, "_c")
+	names(p2) = paste0(b$name, "_c")
 
 	p2 = lapply(p2, function(pal)pal[2:10])
-	c4a_series_add(p2, types = "bivc", series = "hcl", biv.method = "div2divseq")
+	c4a_series_add(p2, types = "bivc", series = "hcl", biv.method = "div2catseq")
+
+	pals3 = c("hcl.blues3", "hcl.yellow_red")
+
+	p3 = lapply(pals3, function(p) c4a(p, n = 5, range = c(0.3, 0.8)))
+	names(p3) = c("blues3_u", "yellow_red_u")
+
+	c4a_series_add(p3, types = "bivu", series = "hcl", biv.method = "seq2uncseq")
+
 
 
 	pals2 = list(pinkgreen = pals::stevens.pinkgreen(n = 9),

@@ -7,9 +7,9 @@
 \usage{
 c4a(
   palette = NULL,
-  n = NULL,
-  m = NULL,
-  type = c("cat", "seq", "div", "bivs", "bivc"),
+  n = NA,
+  m = NA,
+  type = c("cat", "seq", "div", "bivs", "bivc", "bivu"),
   reverse = FALSE,
   order = NULL,
   range = NA,
@@ -25,9 +25,9 @@ c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 
 \item{n}{number of colors. If omitted then: for type \code{"cat"} the maximum number of colors is returned, for types \code{"seq"} and \code{"div"}, 9 colors.}
 
-\item{m}{number of rows in case type is \code{"bivs"} or \code{"bivc"}.}
+\item{m}{number of rows in case type is \code{"bivs"}, \code{"bivc"} or  \code{"bivu"}.}
 
-\item{type}{type of color palette, in case \code{palette} is not specified: one of \code{"cat"} (categorical/qualitative palette), \code{"seq"} (sequential palette), \code{"div"} (diverging palette), and \code{"bivs"}/\code{"bivc"} (bivariate, where the former is seq-seq and the latter cat-seq).}
+\item{type}{type of color palette, in case \code{palette} is not specified: one of \code{"cat"} (categorical/qualitative palette), \code{"seq"} (sequential palette), \code{"div"} (diverging palette), and \code{"bivs"}/\code{"bivc"}/\code{"bivu"} (bivariate: respectively seq-seq cat-seq, and uncertainty-seq).}
 
 \item{reverse}{should the palette be reversed?}
 

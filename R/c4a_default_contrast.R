@@ -6,7 +6,7 @@
 #' @param type type of color palette: one of `"seq"` (sequential palettes), `"div"` (diverging palettes), and `"cat"` (categorical/qualitative palettes).
 #' @example ./examples/c4a_default_range.R
 #' @export
-c4a_default_range = function(n, type = c("seq", "div", "bivs", "bivc", "cat")) {
+c4a_default_range = function(n, type = c("seq", "div", "bivs", "bivc", "bivu", "cat")) {
 	type = match.arg(type)
 	fun = paste0("default_range_", type)
 	do.call(fun, list(k = n))
@@ -40,5 +40,9 @@ default_range_bivs = function(k) {
 }
 
 default_range_bivc = function(k) {
+	c(0, 1)
+}
+
+default_range_bivu = function(k) {
 	c(0, 1)
 }

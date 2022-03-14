@@ -26,7 +26,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 		return(invisible(NULL))
 	}
 
-	types = c(Categorical = "cat", Sequential = "seq", Diverging = "div", 'Bivariate (seq-seq)' = "bivs", 'Bivariate (cat-seq)' = "bivc")
+	types = c(Categorical = "cat", Sequential = "seq", Diverging = "div", 'Bivariate (seq-seq)' = "bivs", 'Bivariate (cat-seq)' = "bivc",  'Bivariate (uncertainty)' = "bivu")
 	series_per_type = structure(lapply(types, function(tp) {
 		sort(unique(z$series[z$type == tp]))
 	}), names = unname(types))
@@ -61,19 +61,18 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				)),
 				shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE),
 				shiny::conditionalPanel(
-					condition = "input.type != 'biv'",
+					condition = "input.type.substring(0, 3) != 'biv'",
 					shiny::sliderInput("n", "Number of colors", min = 2, max = 36, value = n, ticks = FALSE)),
 				shiny::conditionalPanel(
-					condition = "input.type == 'biv'",
+					condition = "input.type.substring(0, 3) == 'biv'",
 					shiny::fluidRow(
 						shiny::column(6,
-							shiny::sliderInput("nbiv", "Number of columns", min = 3, max = 5, value = 3, ticks = FALSE)),
+							shiny::sliderInput("nbiv", "Number of columns", min = 3, max = 5, value = 5, ticks = FALSE)),
 						shiny::column(6,
-							shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 5, value = 3, ticks = FALSE)))),
-					shiny::div(style = "margin-top:-20px", checkboxInput("misn", "Square color matrix", value = TRUE))),
+							shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 5, value = 5, ticks = FALSE))))),
 				shiny::checkboxInput("na", shiny::strong("Color for missing values"), value = FALSE),
 				shiny::conditionalPanel(
-					condition = "input.type != 'cat'",
+					condition = "input.type == 'seq' || input.type == 'div'",
 					shiny::fluidRow(
 						shiny::column(4,
 							#shiny::br(),
@@ -91,9 +90,11 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 					shiny::column(6,
 						shiny::br(),
 						shiny::checkboxInput("sortRev", "Reverse", value = FALSE))),
-
-				shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = TRUE),
-				shiny::selectInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF"))
+				shiny::fluidRow(
+					shiny::column(6,
+						shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = TRUE)),
+					shiny::column(6,
+						shiny::selectInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF"))))
 			), class = "sticky"),
 
 			shiny::mainPanel(
@@ -158,15 +159,31 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 			}
 		})
 
-		shiny::observe({
-			n = input$nbiv
-			misn = input$misn
-
-			if (misn) {
+		shiny::observeEvent(input$type, {
+			type = input$type
+			if (type == "bivs") {
+				shinyjs::enable("nbiv")
 				shinyjs::disable("mbiv")
-				shiny::updateSliderInput(session, "mbiv", value = n)
-			} else {
+				shiny::updateSliderInput(session, "nbiv", value = 5)
+				shiny::updateSliderInput(session, "mbiv", value = 5)
+			} else if (type == "bivc") {
 				shinyjs::enable("mbiv")
+				shinyjs::disable("nbiv")
+				shiny::updateSliderInput(session, "nbiv", value = 3)
+				shiny::updateSliderInput(session, "mbiv", value = 5)
+			} else  {
+				shinyjs::enable("nbiv")
+				shinyjs::enable("mbiv")
+				shiny::updateSliderInput(session, "nbiv", value = 5)
+				shiny::updateSliderInput(session, "mbiv", value = 5)
+			}
+		})
+
+		shiny::observeEvent(input$nbiv, {
+			nbiv = input$nbiv
+			type = input$type
+			if (type == "bivs") {
+				shiny::updateSliderInput(session, "mbiv", value = nbiv)
 			}
 		})
 
@@ -206,13 +223,17 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 			shiny::req(get_values_d())
 			values = get_values_d()
 			sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
-			if (values$type %in% c("bivs", "bivc")) {
-				c4a_table(n = values$nbiv, m = values$mbiv, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format)
+			if (values$type %in% c("bivs", "bivc", "bivu")) {
+				tab = c4a_table(n = values$nbiv, m = values$mbiv, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format, verbose = FALSE)
 			} else {
-				c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format)
+				tab = c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format, verbose = FALSE)
+			}
+			if (is.null(tab)) {
+				kableExtra::kbl(data.frame("No palettes found. Please change the selection."), col.names = " ")
+			} else {
+				tab
 			}
 		}
 	}
 	shiny::shinyApp(ui = ui, server = server)
 }
-

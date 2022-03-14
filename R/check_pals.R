@@ -10,47 +10,31 @@ check_div_pal = function(p) {
 	is_even = ((n %% 2) != 1)
 	nh = floor(n/2)
 
+	# needed for inter_wing_dist
+	p2 = c(colorRampPalette(p[1:nh], space = "Lab")(9), colorRampPalette(p[(nh+1+(!is_even)):n], space = "Lab")(9))
+	n2 = 18
+	nh2 = n2 / 2
+
 	cvds = c("deu", "pro", "tri")
 
 	scores = t(sapply(cvds, function(cvd) {
-		m = colorblindcheck::palette_dist(p, cvd = cvd)
-		if (is_even) {
-			inter_wing_dist = min(m[1:nh, (nh+1):n])
-		} else {
-			inter_wing_dist = min(m[1:nh, (nh+2):n])
-		}
-		step_sizes = mapply(function(i,j) m[i,j], 1:(n-1), 2:n)
+		inter_wing_dist = local({
+			dm = colorblindcheck::palette_dist(p2, cvd = cvd)
+			min(dm[1:nh2, (nh2+1):n2])
+		})
 
-		min_step_size = min(step_sizes)
-
-		p2 = switch(cvd,
-					deu = colorspace::deutan(p),
-					pro = colorspace::protan(p),
-					tri = colorspace::tritan(p),
-					p)
-		m = get_hcl_matrix(p2)
-		m[,1][m[,2]<10] = NA
-
-		h1 = m[1:nh, 1]
-		h2 = m[(nh+1+!is_even):n, 1]
-
-		inter_wing_hue_dist = if (all(is.na(h1)) && all(is.na(h2))) {
-			0
-		} else if (all(is.na(h1)) || all(is.na(h2))) {
-			120 # actually depends on chroma of other hues
-		} else {
-			m2 = expand.grid(h1 = h1, h2 = h2)
-			inter_wing_hue_dist = min(abs(m2$h2 - m2$h1), na.rm = TRUE)
-		}
-
-		c(inter_wing_dist = round(inter_wing_dist), inter_wing_hue_dist = round(inter_wing_hue_dist), min_step = round(min_step_size))
+		min_step_size = local({
+			dm = colorblindcheck::palette_dist(p, cvd = cvd)
+			step_sizes = mapply(function(i,j) dm[i,j], 1:(n-1), 2:n)
+			min(step_sizes)
+		})
+		c(inter_wing_dist = round(inter_wing_dist), min_step = round(min_step_size))
 	}))
 	inter_wing_dist = min(scores[,1])
-	inter_wing_hue_dist = min(scores[,2])
-	min_step = min(scores[,3])
+	min_step = min(scores[,2])
 
 
-	c(inter_wing_dist = inter_wing_dist, inter_wing_hue_dist = inter_wing_hue_dist, min_step = min_step)
+	c(inter_wing_dist = inter_wing_dist, min_step = min_step)
 }
 
 
@@ -82,6 +66,9 @@ check_bivc_pal = function(p) {
 	pmin(x12, x13, x23)
 }
 
+check_bivu_pal = function(p) {
+	check_div_pal(c(rev(p[,1]), "#FFFFFF", p[,ncol(p)]))
+}
 
 
 # Check sequential palette

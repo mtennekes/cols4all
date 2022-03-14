@@ -30,7 +30,7 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmax, range = NA, n
 			rangeIDs <- map2divscaleID(breaks=breaks, range=range)
 			colorRampPalette(palette, space = "Lab")(101)[rangeIDs]
 		}
-	} else if (type %in% c("bivs", "bivc")) {
+	} else if (type %in% c("bivs", "bivc", "bivu")) {
 		if (all(dim(palette) == c(m, n))) {
 			palette
 		} else {

@@ -130,11 +130,14 @@ NULL
 
 	with(.C4A,{
 		defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green")
+
+		#color-blind-friendly thresholds
 		CBF_th = list(cat = c(min_dist = 10),
 					  seq = c(min_step = 5),
-					  div = c(inter_wing_dist = 10, inter_wing_hue_dist = 100, min_step = 5),
-					  bivs = c(inter_wing_dist = 5, inter_wing_hue_dist = 100, min_step = 3),
-					  bivc = c(inter_wing_dist = 5, inter_wing_hue_dist = 100, min_step = 3)) #color-blind-friendly thresholds
+					  div = c(inter_wing_dist = 10, min_step = 5),
+					  bivs = c(inter_wing_dist = 7, min_step = 3),
+					  bivc = c(inter_wing_dist = 7, min_step = 3),
+					  bivu = c(inter_wing_dist = 7, min_step = 3))
 
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
 		LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
@@ -145,13 +148,14 @@ NULL
 		HwidthSeqRainbow = 180 # a sequential palette is labeled as 'rainbow hue' if Hwidth is at least HwidthSeqRainbow
 		HwidthSeqSingle = 15 # a sequential palette is labeled as 'single hue' if Hwidth is at most HwidthSeqSingle
 
-		sc = c("min_dist", "min_step", "max_step", "inter_wing_dist", "inter_wing_hue_dist", "rank")
+		sc = c("min_dist", "min_step", "max_step", "inter_wing_dist", "rank")
 
 		indicators = list(cat = c("min_dist"),
 						  seq = c("min_step", "max_step"),
-						  div = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"),
-						  bivs = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"),
-						  bivc = c("inter_wing_dist", "inter_wing_hue_dist", "min_step"))
+						  div = c("inter_wing_dist", "min_step"),
+						  bivs = c("inter_wing_dist", "min_step"),
+						  bivc = c("inter_wing_dist", "min_step"),
+						  bivu = c("inter_wing_dist", "min_step"))
 		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange")
 
 		sortRev = c("Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
@@ -160,7 +164,6 @@ NULL
 					min_step = "Minimum step",
 					max_step = "Maximum step",
 					inter_wing_dist = "Inter-wing-distance",
-					inter_wing_hue_dist = "Inter Wing Hue Dist",
 					Crel = "Chroma (rel) max",
 					Cmax = "Chroma max",
 					Hwidth = "Hue width",
@@ -176,7 +179,7 @@ NULL
 					harmonic = "Harmonic palette",
 					nmax = "Max number")
 
-		nmax = c(cat = 36, seq = 15, div = 15, bivs = 5, bivc = 5)
+		nmax = c(cat = 36, seq = 15, div = 15, bivs = 5, bivc = 5, bivu = 5)
 	})
 	fill_ls()
 }

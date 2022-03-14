@@ -7,9 +7,9 @@ table_columns = function(type, show.scores) {
 		srt = c("rank", "Cmax")
 	}
 
-	if (type %in% c("seq", "div", "bivs", "bivc")) {
+	if (type %in% c("seq", "div", "bivs", "bivc", "bivu")) {
 		qn = c(qn, "hueType")
-		srt = c(srt, {if (type %in% c("div", "bivs", "bivc")) "HwidthLR" else "Hwidth"})
+		srt = c(srt, {if (type %in% c("div", "bivs", "bivc", "bivu")) "HwidthLR" else "Hwidth"})
 	} else {
 		qn = c(qn, "harmonic")
 		srt = c(srt, "LCrange")
@@ -52,14 +52,13 @@ table_columns = function(type, show.scores) {
 #' Minimum step \tab `"min_step"` \tab Minimum distance between two neighboring colors in a sequential (`"seq"`) or diverging (`"div"`) palette, for any color vision deficiency type. The larger, the better. \cr
 #' Maximum step \tab `"max_step"` \tab Maximum distance between two neighboring colors in a sequential (`"seq"`) palette, for any color vision deficiency type. For sequential palettes that score the same on `"min_step"`, the ones with lower `"max_step"` values are slightly preferable, because this means that the distances between neighboring colors is more homogeneous. \cr
 #' Inter-wing-distance \tab `"inter_wing_dist"` \tab Minimum distance between any color in the left wing to any color in the right wing of a diverging (`"div"`) palette, for any color vision deficiency type. The larger, the better. \cr
-#' Inter-wing hue distance \tab `"inter_wing_hue_dist"` \tab Distance between the two hue ranges in both wings of a (`"div"`) palette, for any color vision deficiency type. The larger the better. We consider 100 degrees as sufficient to discriminate two hues.
 #' }
 #'
 #' Color-blind friendliness scores are calculated as:
 #'
 #' * `"cat"` `min_step`
 #' * `"seq"` `min_step` - `max_step` / 1000
-#' * `"div"` min(`inter_wing_dist`, `min_step` * 2) + (`inter_wing_hue_dist` >= 100) * 1000
+#' * `"div"` min(`inter_wing_dist`, `min_step` * 2)
 #'
 #' Note: these formulas are in development, and may change in the near future. Suggestions are welcome (via github issues).
 #'
@@ -78,8 +77,8 @@ table_columns = function(type, show.scores) {
 #' Lum/Chr range \tab `"LCrange"` \tab Defined as max(2 * `Lrange`, `Crange`), and used to label a palette "harmonic". This formula is determined by some trial-and-error, so suggestions for improvement are welcome.
 #' }
 #'
-#' @param type type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, `"div"` for diverging, and `"bivs"`/`"bivc"` for bivariate (the former is seq-seq, the latter cat-seq). For `c4a_gui` it only determines which type is shown initially.
-#' @param n,m for univariate palettes, `n` is the number of displayed colors. For bivariate palettes `"biv"`, `n` and `m` are the number of columns and rows respectively. If omitted: for `"cat"` the full palette is displayed, for `"seq"` and `"div"`, 9 colors, and for `"bivs"`/`"bivc"` 4 columns and rows. For `c4a_gui` it only determines which number of colors initially.
+#' @param type type of palette: `"cat"` for categorical (aka qualitative), `"seq"` for sequential, `"div"` for diverging, and `"bivs"`/`"bivc"`/`"bivu"` for bivariate (seq-seq, cat-seq, and uncertainty-seq). For `c4a_gui` it only determines which type is shown initially.
+#' @param n,m for univariate palettes, `n` is the number of displayed colors. For bivariate palettes `"biv"`, `n` and `m` are the number of columns and rows respectively. If omitted: for `"cat"` the full palette is displayed, for `"seq"` and `"div"`, 9 colors, and for `"bivs"`/`"bivc"`/`"bivu"` 4 columns and rows. For `c4a_gui` it only determines which number of colors initially.
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @param sort column name to sort the data. For column names, see details. Use a `"-"` prefix to reverse the order.
 #' @param text.format The format of the text of the colors. One of `"hex"`, `"RGB"` or `"HCL"`.
@@ -89,13 +88,14 @@ table_columns = function(type, show.scores) {
 #' @param include.na should color for missing values be shown? `FALSE` by default
 #' @param show.scores should scores of the quality indicators be printed? See details for a description of those indicators.
 #' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
+#' @param verbose should messages and warnings be printed?
 #' @import colorspace abind
 #' @example ./examples/c4a_table.R
 #' @seealso References of the palettes: \code{\link{cols4all-package}}.
 #' @export
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc"), n = NULL, m = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, include.na = FALSE, show.scores = FALSE, columns = NA) {
+c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = NULL, m = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
 	id = NULL
 
 	#if (length(series) == 2) browser()
@@ -108,7 +108,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc"), n = NULL, m 
 	show.ranking = (!is.null(n))
 	cvd.sim = match.arg(cvd.sim)
 
-	if (type %in% c("bivs", "bivc")) {
+	if (type %in% c("bivs", "bivc", "bivu")) {
 		if (is.null(n)) n = 3
 		if (is.null(m)) m = n
 	} else {
@@ -122,7 +122,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc"), n = NULL, m 
 	z = .C4A$z
 
 	if (is.null(z)) {
-		message("No palette series loaded. Please reload cols4all, add series with c4a_series_add, or import data with c4a_sysdata_import")
+		if (verbose) message("No palette series loaded. Please reload cols4all, add series with c4a_series_add, or import data with c4a_sysdata_import")
 		return(invisible(NULL))
 	}
 
@@ -141,7 +141,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc"), n = NULL, m 
 	}
 
 	if (is.null(zn) || nrow(zn) == 0) {
-		message("No palettes of type \"", type, "\"", ifelse(is.null(n), "", paste0(" and length ", n)), " found")
+		if (verbose) message("No palettes of type \"", type, "\"", ifelse(is.null(n), "", paste0(" and length ", n)), " found")
 		return(invisible(NULL))
 	}
 
@@ -168,7 +168,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc"), n = NULL, m 
 
 	zn$nlines = ((zn$n * m -1) %/% columns) + 1
 
-	if (type %in% c("bivs", "bivc")) {
+	if (type %in% c("bivs", "bivc", "bivu")) {
 		zn$palette = lapply(zn$palette, function(p) as.vector(t(p[nrow(p):1L,])))
 	}
 
@@ -310,7 +310,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc"), n = NULL, m 
 		if (type == "seq") {
 			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
 							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#128396;", tooltip = tooltip_SH_seq, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
-		} else if (type %in% c("div", "bivs", "bivc")) {
+		} else if (type %in% c("div", "bivs", "bivc", "bivu")) {
 			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
 							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#x262F;", tooltip = tooltip_SH_div, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
 		}

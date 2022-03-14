@@ -50,13 +50,13 @@ series_add_get_scores = function(z) {
 		if (!is.null(zn)) {
 
 			q = do.call(rbind, lapply(zn$palette, check_div_pal))
-			qr = pmin(q[,1], q[,3] * 2) + (q[,2] >= 100) * 1000
+			qr = pmin(q[,1], q[,2] * 2)
 
 			r = -qr#rank(-qr, ties.method = "first")
 
 			mn = cbind(q,r)
 
-			a[match(zn$fullname, dimnames(a)[[1]]), c("inter_wing_dist", "inter_wing_hue_dist", "min_step", "rank"), n] = mn
+			a[match(zn$fullname, dimnames(a)[[1]]), c("inter_wing_dist", "min_step", "rank"), n] = mn
 		}
 	}
 
@@ -67,30 +67,48 @@ series_add_get_scores = function(z) {
 		if (!is.null(zn)) {
 
 			q = do.call(rbind, lapply(zn$palette, check_bivs_pal))
-			qr = pmin(q[,1], q[,3] * 2) + (q[,2] >= 100) * 1000
+			qr = pmin(q[,1], q[,2] * 2)
 
 			r = -qr#rank(-qr, ties.method = "first")
 
 			mn = cbind(q,r)
 
-			a[match(zn$fullname, dimnames(a)[[1]]), c("inter_wing_dist", "inter_wing_hue_dist", "min_step", "rank"), n] = mn
+			a[match(zn$fullname, dimnames(a)[[1]]), c("inter_wing_dist", "min_step", "rank"), n] = mn
 		}
 	}
 
 	# bivariate cat-seq
-	for (n in 3:nmax['bivc']) {
-		zn = get_z_n(z[z$type == "bivc",], n = 3, m = n)
+	n = 3
+	for (m in 3:nmax['bivc']) {
+		zn = get_z_n(z[z$type == "bivc",], n = n, m = m)
 
 		if (!is.null(zn)) {
 
 			q = do.call(rbind, lapply(zn$palette, check_bivc_pal))
-			qr = pmin(q[,1], q[,3] * 2) + (q[,2] >= 100) * 1000
+			qr = pmin(q[,1], q[,2] * 2)
 
 			r = -qr#rank(-qr, ties.method = "first")
 
 			mn = cbind(q,r)
 
-			a[match(zn$fullname, dimnames(a)[[1]]), c("inter_wing_dist", "inter_wing_hue_dist", "min_step", "rank"), n] = mn
+			a[match(zn$fullname, dimnames(a)[[1]]), c("inter_wing_dist", "min_step", "rank"), n] = mn
+		}
+	}
+
+	# bivariate unc-seq
+	for (n in 3:nmax['bivu']) {
+		zn = get_z_n(z[z$type == "bivu",], n = n)
+
+		if (!is.null(zn)) {
+
+			q = do.call(rbind, lapply(zn$palette, check_bivu_pal))
+			qr = pmin(q[,1], q[,2] * 2)
+
+			r = -qr#rank(-qr, ties.method = "first")
+
+			mn = cbind(q,r)
+
+			a[match(zn$fullname, dimnames(a)[[1]]), c("inter_wing_dist", "min_step", "rank"), n] = mn
 		}
 	}
 

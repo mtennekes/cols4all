@@ -49,7 +49,7 @@ c4a_series_remove(series = "all", are.you.sure = FALSE)
 
 \item{remove.names}{should individual color names be removed?}
 
-\item{biv.method}{method to a create bivariate palette. Options are \code{"byrow"} means that the colors are wrapped row-wise to a color matrix where the number of rows and columns is automatically determined, \code{"byrowX"} the same but with X (integer between 2 and 9) columns, \code{"bycol"} and \verb{"bycolX} similar but wrapped column-wise. \code{"div2seqseq"} and \verb{"div2divseq} means that colors are extracted from a divering palette. The former translates colors into a matrix with the neutral color in the diagonal, while the latter places the neutral color in the middle column.}
+\item{biv.method}{method to a create bivariate palette. Options are \code{"byrow"} means that the colors are wrapped row-wise to a color matrix where the number of rows and columns is automatically determined, \code{"byrowX"} the same but with X (integer between 2 and 9) columns, \code{"bycol"} and \verb{"bycolX} similar but wrapped column-wise. \code{"div2seqseq"} and \verb{"div2catseq} means that colors are extracted from a divering palette. The former translates colors into a matrix with the neutral color in the diagonal, while the latter places the neutral color in the middle column. \code{"seq2uncseq"}}
 
 \item{...}{passed on to \code{c4a_series_add}}
 

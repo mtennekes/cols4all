@@ -12,7 +12,7 @@ c4a_gui(
 )
 
 c4a_table(
-  type = c("cat", "seq", "div", "bivs", "bivc"),
+  type = c("cat", "seq", "div", "bivs", "bivc", "bivu"),
   n = NULL,
   m = NULL,
   cvd.sim = c("none", "deutan", "protan", "tritan"),
@@ -23,13 +23,14 @@ c4a_table(
   range = NA,
   include.na = FALSE,
   show.scores = FALSE,
-  columns = NA
+  columns = NA,
+  verbose = TRUE
 )
 }
 \arguments{
-\item{type}{type of palette: \code{"cat"} for categorical (aka qualitative), \code{"seq"} for sequential, \code{"div"} for diverging, and \code{"bivs"}/\code{"bivc"} for bivariate (the former is seq-seq, the latter cat-seq). For \code{c4a_gui} it only determines which type is shown initially.}
+\item{type}{type of palette: \code{"cat"} for categorical (aka qualitative), \code{"seq"} for sequential, \code{"div"} for diverging, and \code{"bivs"}/\code{"bivc"}/\code{"bivu"} for bivariate (seq-seq, cat-seq, and uncertainty-seq). For \code{c4a_gui} it only determines which type is shown initially.}
 
-\item{n, m}{for univariate palettes, \code{n} is the number of displayed colors. For bivariate palettes \code{"biv"}, \code{n} and \code{m} are the number of columns and rows respectively. If omitted: for \code{"cat"} the full palette is displayed, for \code{"seq"} and \code{"div"}, 9 colors, and for \code{"bivs"}/\code{"bivc"} 4 columns and rows. For \code{c4a_gui} it only determines which number of colors initially.}
+\item{n, m}{for univariate palettes, \code{n} is the number of displayed colors. For bivariate palettes \code{"biv"}, \code{n} and \code{m} are the number of columns and rows respectively. If omitted: for \code{"cat"} the full palette is displayed, for \code{"seq"} and \code{"div"}, 9 colors, and for \code{"bivs"}/\code{"bivc"}/\code{"bivu"} 4 columns and rows. For \code{c4a_gui} it only determines which number of colors initially.}
 
 \item{series}{Series of palettes to show. See \code{\link{c4a_series}} for options. By default, \code{"all"}, which means all series. For \code{c4a_gui} it only determines which series are shown initially.}
 
@@ -48,6 +49,8 @@ c4a_table(
 \item{show.scores}{should scores of the quality indicators be printed? See details for a description of those indicators.}
 
 \item{columns}{number of columns. By default equal to \code{n} or, if not specified, 12. Cannot be higher than the palette}
+
+\item{verbose}{should messages and warnings be printed?}
 }
 \description{
 Graphical user interface to analyse palettes. \code{c4a_table} shows a table that can be opened in the browser. \code{c4a_gui} is a graphical user interface (shiny app) around this table. The package \code{kableExtra} is required for \code{c4a_table} and for \code{c4a_gui} the pacakges \code{shiny} and \code{shinyjs}.
@@ -75,14 +78,13 @@ Minimum distance \tab \code{"min_dist"} \tab Minimum distance between any two co
 Minimum step \tab \code{"min_step"} \tab Minimum distance between two neighboring colors in a sequential (\code{"seq"}) or diverging (\code{"div"}) palette, for any color vision deficiency type. The larger, the better. \cr
 Maximum step \tab \code{"max_step"} \tab Maximum distance between two neighboring colors in a sequential (\code{"seq"}) palette, for any color vision deficiency type. For sequential palettes that score the same on \code{"min_step"}, the ones with lower \code{"max_step"} values are slightly preferable, because this means that the distances between neighboring colors is more homogeneous. \cr
 Inter-wing-distance \tab \code{"inter_wing_dist"} \tab Minimum distance between any color in the left wing to any color in the right wing of a diverging (\code{"div"}) palette, for any color vision deficiency type. The larger, the better. \cr
-Inter-wing hue distance \tab \code{"inter_wing_hue_dist"} \tab Distance between the two hue ranges in both wings of a (\code{"div"}) palette, for any color vision deficiency type. The larger the better. We consider 100 degrees as sufficient to discriminate two hues.
 }
 
 Color-blind friendliness scores are calculated as:
 \itemize{
 \item \code{"cat"} \code{min_step}
 \item \code{"seq"} \code{min_step} - \code{max_step} / 1000
-\item \code{"div"} min(\code{inter_wing_dist}, \code{min_step} * 2) + (\code{inter_wing_hue_dist} >= 100) * 1000
+\item \code{"div"} min(\code{inter_wing_dist}, \code{min_step} * 2)
 }
 
 Note: these formulas are in development, and may change in the near future. Suggestions are welcome (via github issues).

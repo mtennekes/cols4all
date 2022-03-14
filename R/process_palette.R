@@ -4,7 +4,7 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	index = attr(pal, "index")
 	orig_pal = pal
 
-	if (type %in% c("bivs", "bivc")) {
+	if (type %in% c("bivs", "bivc", "bivu")) {
 		pal = create_biv_palette(pal, biv.method)
 	}
 
@@ -61,27 +61,29 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	}
 
 	if (is.na(colNA)) {
+		if (type %in% c("bivs", "bivc", "bivu")) {
+			colNA = "#FFFFFF"
+		} else {
+			# first candidates: choose NA from grays, such that luminance is at most 0.3 lighter and not darker than the lightest resp. darkest color.
+			# prefer lightest gray
+			gray_range = c(min(hcl[,3]/100), min(1, (max(hcl[,3]/100) + 0.3)))
+			candidates = list(grDevices::gray.colors(10, start = gray_range[1], end = gray_range[2]),
+							  grDevices::hcl(h = seq(0, 340, by = 20), c = 30, l = 70),
+							  grDevices::hcl(h = seq(0, 340, by = 20), c = 50, l = 70))
 
-		# first candidates: choose NA from grays, such that luminance is at most 0.3 lighter and not darker than the lightest resp. darkest color.
-		# prefer lightest gray
-
-		gray_range = c(min(hcl[,3]/100), min(1, (max(hcl[,3]/100) + 0.3)))
-		candidates = list(grDevices::gray.colors(10, start = gray_range[1], end = gray_range[2]),
-						  grDevices::hcl(h = seq(0, 340, by = 20), c = 30, l = 70),
-						  grDevices::hcl(h = seq(0, 340, by = 20), c = 50, l = 70))
-
-		colNA = "#FFFFFF"
-		for (cand in candidates) {
-			pal2 = c(pal, cand)
-			m = sapply(c("pro", "deu", "tri"), function(cvd) {
-				m = colorblindcheck::palette_dist(pal2, cvd = cvd)
-				m2 = m[1L:length(pal), (length(pal) + 1L):length(pal2)]
-				apply(m2, MARGIN = 2, min)
-			})
-			scores = apply(m, MARGIN = 1, min)
-			if (max(scores) >= 10) {
-				colNA = cand[which.max(scores)[1]]
-				break
+			colNA = "#FFFFFF"
+			for (cand in candidates) {
+				pal2 = c(pal, cand)
+				m = sapply(c("pro", "deu", "tri"), function(cvd) {
+					m = colorblindcheck::palette_dist(pal2, cvd = cvd)
+					m2 = m[1L:length(pal), (length(pal) + 1L):length(pal2)]
+					apply(m2, MARGIN = 2, min)
+				})
+				scores = apply(m, MARGIN = 1, min)
+				if (max(scores) >= 10) {
+					colNA = cand[which.max(scores)[1]]
+					break
+				}
 			}
 		}
 	}
