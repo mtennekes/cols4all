@@ -15,7 +15,7 @@
 #' \code{\link{c4a_palettes}}\tab Get available palette names \cr
 #' \code{\link{c4a_series}}\tab Get available series \cr
 #' \code{\link{c4a_meta}}\tab Get meta information (such as type and maximum number of colors) \cr
-#' \code{\link{c4a_ls}}\tab Environment via which palette names can be browsed with auto-completion (using `$`) \cr
+#' \code{\link{.P}}\tab Environment via which palette names can be browsed with auto-completion (using `$`) \cr
 #' }
 #'
 #' @section Importing and exporting palettes:
@@ -150,6 +150,13 @@ NULL
 
 		sc = c("min_dist", "min_step", "max_step", "inter_wing_dist", "rank")
 
+		types = c("Categorical" = "cat",
+				  "Sequential" = "seq",
+				  "Diverging" = "div",
+				  "Bivariate (sequential to sequential)" = "bivs",
+				  "Bivariate (sequential to categorical)" = "bivc",
+				  "Bivariate (sequential to desaturated)" = "bivu")
+
 		indicators = list(cat = c("min_dist"),
 						  seq = c("min_step", "max_step"),
 						  div = c("inter_wing_dist", "min_step"),
@@ -181,20 +188,22 @@ NULL
 
 		nmax = c(cat = 36, seq = 15, div = 15, bivs = 5, bivc = 5, bivu = 5)
 	})
-	fill_ls()
+	fill_P()
 }
 
 .C4A <- new.env(FALSE, parent=globalenv())
 
 
 
-fill_ls = function() {
+fill_P = function() {
+	rm(list = ls(envir = .P), envir = .P)
 	z = .C4A$z
+	if (is.null(z)) return(invisible(NULL))
 	x = sort(unique(z$series))
 	y = structure(lapply(x, function(xi) {
 		zi = z[z$series == xi, ]
 		structure(as.list(zi$fullname), names = zi$name)
 	}), names = x)
-	list2env(y, envir = c4a_ls)
+	list2env(y, envir = .P)
 }
 

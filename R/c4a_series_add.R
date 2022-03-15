@@ -115,7 +115,7 @@ c4a_series_add = function(x, xNA = NA, types, series, format.palette.name = TRUE
 
 	.C4A$z = z
 	.C4A$s = s
-	fill_ls()
+	fill_P()
 	invisible(NULL)
 }
 
@@ -187,6 +187,6 @@ c4a_series_remove = function(series = "all", are.you.sure = FALSE) {
 	}
 	.C4A$z = z2
 	.C4A$s = s2
-	fill_ls()
+	fill_P()
 	invisible(NULL)
 }

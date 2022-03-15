@@ -40,7 +40,7 @@ c4a_table(
 
 \item{text.format}{The format of the text of the colors. One of \code{"hex"}, \code{"RGB"} or \code{"HCL"}.}
 
-\item{text.col}{The text color of the colors. By default \code{"same"}, which means that they are the same as the colors themselves (so invisible, but available for selection).}
+\item{text.col}{The text color of the colors. By default \code{"same"}, which means that they are the same as the colors themselves (so invisible, but available for selection). \code{"auto"} means automatic: black for light colors and white for dark colors.}
 
 \item{range}{vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on \code{n}. See \code{c4a_gui}, or the internal functions \code{cols4all::default_range_seq} and \code{cols4all::default_range_div} to see what the automatic values are.}
 

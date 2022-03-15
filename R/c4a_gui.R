@@ -26,7 +26,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 		return(invisible(NULL))
 	}
 
-	types = c(Categorical = "cat", Sequential = "seq", Diverging = "div", 'Bivariate (seq-seq)' = "bivs", 'Bivariate (cat-seq)' = "bivc",  'Bivariate (uncertainty)' = "bivu")
+
+	types = .C4A$types
 	series_per_type = structure(lapply(types, function(tp) {
 		sort(unique(z$series[z$type == tp]))
 	}), names = unname(types))
@@ -86,7 +87,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 				shiny::fluidRow(
 					shiny::column(6,
-						shiny::selectInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "rank")),
+						shiny::selectizeInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "rank")),
 					shiny::column(6,
 						shiny::br(),
 						shiny::checkboxInput("sortRev", "Reverse", value = FALSE))),
@@ -94,7 +95,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 					shiny::column(6,
 						shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = TRUE)),
 					shiny::column(6,
-						shiny::selectInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF"))))
+						shiny::selectizeInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto"))))
 			), class = "sticky"),
 
 			shiny::mainPanel(

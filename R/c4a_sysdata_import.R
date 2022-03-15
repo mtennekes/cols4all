@@ -19,7 +19,7 @@ c4a_sysdata_import = function(x) {
 
 	.C4A$z = z
 	.C4A$s = s
-	fill_ls()
+	fill_P()
 	invisible(NULL)
 }
 

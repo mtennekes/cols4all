@@ -5,7 +5,7 @@
 \alias{c4a_palettes}
 \alias{c4a_series}
 \alias{c4a_default_palette}
-\alias{c4a_ls}
+\alias{.P}
 \title{Get available palette names and series}
 \format{
 An object of class \code{environment} of length 13.
@@ -21,7 +21,7 @@ c4a_series(type = c("all", "cat", "seq", "div"))
 
 c4a_default_palette(type = c("cat", "seq", "div"))
 
-c4a_ls
+.P
 }
 \arguments{
 \item{type}{type of color palette: one of \code{"all"} (all palettes), \code{"cat"} (categorical/qualitative palettes), \code{"seq"} (sequential palettes) and \code{"div"} (diverging palettes).}
@@ -34,7 +34,7 @@ c4a_ls
 names of the loaded color palettes
 }
 \description{
-\code{c4a_palettes} lists all available cols4all color palettes. Palettes are organized by series. The available series are listed with \code{c4a_series}. In an IDE with auto-completion (such as RStudio) it is possible to browse through the palette names with \code{c4a_ls} (using \code{$} like in lists). Palettes are also organized per functional type, where we currently support: categorical \code{"cat"}, sequential \code{"seq"}, and diverging \code{"div"}" palette types. The function \code{c4a_default_palette} returns the default (recommended) palette per type.
+\code{c4a_palettes} lists all available cols4all color palettes. Palettes are organized by series. The available series are listed with \code{c4a_series}. Palettes are also organized per functional type, where we currently support: categorical \code{"cat"}, sequential \code{"seq"}, and diverging \code{"div"}" palette types. The function \code{c4a_default_palette} returns the default (recommended) palette per type. In an IDE with auto-completion (such as RStudio) it is possible to browse through the palette names with \code{.P} (using \code{$} like in lists).
 }
 \examples{
 c4a_palettes()

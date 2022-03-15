@@ -25,7 +25,7 @@ This page provides a brief overview of all package functions.
 \code{\link{c4a_palettes}}\tab Get available palette names \cr
 \code{\link{c4a_series}}\tab Get available series \cr
 \code{\link{c4a_meta}}\tab Get meta information (such as type and maximum number of colors) \cr
-\code{\link{c4a_ls}}\tab Environment via which palette names can be browsed with auto-completion (using \code{$}) \cr
+\code{\link{.P}}\tab Environment via which palette names can be browsed with auto-completion (using \code{$}) \cr
 }
 }
 
