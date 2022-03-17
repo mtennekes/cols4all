@@ -90,6 +90,9 @@ table_columns = function(type, show.scores) {
 #' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
 #' @param verbose should messages and warnings be printed?
 #' @import colorspace abind
+#' @importFrom grDevices hcl
+#' @importFrom stats lm predict
+#' @importFrom utils tail
 #' @example ./examples/c4a_table.R
 #' @seealso References of the palettes: \code{\link{cols4all-package}}.
 #' @export

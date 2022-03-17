@@ -106,7 +106,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 	server = function(input, output, session) {
 
 
-		rv <- reactiveValues(selected_series = first_series,
+		rv <- shiny::reactiveValues(selected_series = first_series,
 							 current_type = type)
 
 		shiny::observeEvent(get_cols(), {

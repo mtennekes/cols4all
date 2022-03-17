@@ -16,7 +16,10 @@ Date: 2022-03-04
 Encoding: UTF-8
 Depends:
     R (>= 3.5.0),
+Imports:
     methods,
+    grDevices,
+    stats,
     abind,
     colorspace
 Suggests:

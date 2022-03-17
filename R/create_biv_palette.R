@@ -50,9 +50,9 @@ create_biv_palette = function(palette, biv.method) {
 		la0b = local({
 			x = 1:n
 			y = la0
-			fit2 <- lm(y~poly(x,2,raw=TRUE))
+			fit2 <- stats::lm(y~poly(x,2,raw=TRUE))
 			xx <- seq(1,n*sqrt(2),length.out=n)
-			predict(fit2, data.frame(x=xx))
+			stats::predict(fit2, data.frame(x=xx))
 		})
 
 		l = matrix(la0[1], nrow = n, ncol = n)
@@ -71,7 +71,7 @@ create_biv_palette = function(palette, biv.method) {
 		# l[lower.tri(l)] = l1[lower.tri(l1)]
 		# l[upper.tri(l)] = l2[upper.tri(l2)]
 
-		t(matrix(do.call(hcl, list(h = h, c = cr, l = l)), ncol = n, byrow = TRUE))
+		t(matrix(do.call(grDevices::hcl, list(h = h, c = cr, l = l)), ncol = n, byrow = TRUE))
 	} else if (biv.method == "div2catseq") {
 		a = get_hcl_matrix(palette)
 
@@ -87,13 +87,13 @@ create_biv_palette = function(palette, biv.method) {
 		h = matrix(c(h1, h1, h1, h2, h2), ncol = n, byrow = FALSE)
 		cr = matrix(c(c1, c1/2, rep(0,m), c2/2, c2), ncol = n, byrow = FALSE)
 		l = matrix(c(l1, (l1+l0)/2, l0, (l2+l0)/2, l2), ncol = n, byrow = FALSE)
-		matrix(do.call(hcl, list(h = h, c = cr, l = l)), ncol = n, byrow = FALSE)
+		matrix(do.call(grDevices::hcl, list(h = h, c = cr, l = l)), ncol = n, byrow = FALSE)
 	} else if (biv.method == "seq2uncseq") {
 		a = get_hcl_matrix(palette)
 		b = a
 		b[,2] = 0
-		pa = hcl(h  = a[,1], c = a[,2], l = a[,3])
-		pb = hcl(h  = b[,1], c = b[,2], l = b[,3])
+		pa = grDevices::hcl(h  = a[,1], c = a[,2], l = a[,3])
+		pb = grDevices::hcl(h  = b[,1], c = b[,2], l = b[,3])
 		unname(do.call(rbind, mapply(function(ca, cb) {
 			colorRampPalette(c(ca, cb))(m)
 		}, pa, pb, SIMPLIFY = FALSE)))

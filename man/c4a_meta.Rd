@@ -4,12 +4,14 @@
 \alias{c4a_meta}
 \title{Get meta information from a cols4all palette}
 \usage{
-c4a_meta(palette, no.match = c("error", "null"))
+c4a_meta(palette, no.match = c("error", "null"), verbose = TRUE)
 }
 \arguments{
 \item{palette}{name of the palette}
 
 \item{no.match}{what happens is no match is found? Options: \code{"error"}: an error is thrown, \code{"null"}: \code{NULL} is returned}
+
+\item{verbose}{should messages be printed?}
 }
 \value{
 list with the following items: name, series, fullname, type, palette (colors), na (color), nmax, and reverse. The latter is \code{TRUE} when there is a \code{"-"} prefix before the palette name.

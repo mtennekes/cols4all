@@ -3,7 +3,7 @@ format_name = function(x) {
 	tolower(gsub("([a-z])([A-Z])", "\\1_\\L\\2", x2, perl = TRUE))
 }
 
-check_name_presence = function(name) {
+check_name_presence = function(name, verbose = TRUE) {
 	fullnames = .C4A$z$fullname
 	nnames = .C4A$z$name
 
@@ -18,7 +18,7 @@ check_name_presence = function(name) {
 	if (length(palid)) {
 		nms = fullnames[palid]
 		if (length(palid) > 1) {
-			message(paste0("Multiple palettes called \"", name, " found: \"", paste(nms, collapse = "\", \""), "\". The first one, \"", nms[1], "\", is returned."))
+			if (verbose) message(paste0("Multiple palettes called \"", name, " found: \"", paste(nms, collapse = "\", \""), "\". The first one, \"", nms[1], "\", is returned."))
 			nms = nms[1]
 		}
 		return(nms)
@@ -34,15 +34,16 @@ check_name_presence = function(name) {
 #'
 #' @param name palette name to be converted
 #' @param no.match what happens is no match is found? Options: `"error"`: an error is thrown, `"null"`: `NULL` is returned
+#' @param verbose should messages be printed?
 #' @example ./examples/c4a_name_convert.R
 #' @export
-c4a_name_convert = function(name, no.match = c("error", "null")) {
+c4a_name_convert = function(name, no.match = c("error", "null"), verbose = TRUE) {
 	no.match = match.arg(no.match)
-	name2 = check_name_presence(name)
+	name2 = check_name_presence(name, verbose)
 	if (!is.null(name2)) return(name2)
 
 	fname = format_name(name)
-	fname2 = check_name_presence(fname)
+	fname2 = check_name_presence(fname, verbose)
 
 	if (is.null(fname2)) {
 		if (no.match == "error") {

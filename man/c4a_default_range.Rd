@@ -15,6 +15,6 @@ c4a_default_range(n, type = c("seq", "div", "bivs", "bivc", "bivu", "cat"))
 Get the default range for gradient palettes, so sequential \code{"seq"} and diverging \code{"div"}. The range is a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential \code{"seq"} palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging \code{"seq"} palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). This function sets the default based on the number of colors \code{n}: for small values of \code{n} the default range is smaller than \code{c(0, 1)} for aesthetically more pleasing palettes. See \code{c4a_gui} how the range effects the palettes. See also examples below. The range can be set manually with the argument \code{range} of \code{\link{c4a}}.
 }
 \examples{
-sapply(1:15, c4a_default_contrast, type = "seq")
-sapply(1:15, c4a_default_contrast, type = "div")
+sapply(1:15, c4a_default_range, type = "seq")
+sapply(1:15, c4a_default_range, type = "div")
 }
