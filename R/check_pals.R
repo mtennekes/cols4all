@@ -134,7 +134,7 @@ check_cat_pal = function(p) {
 
 # get hcl coordinates
 get_hcl_matrix = function(p, rounded = FALSE) {
-	x = as(hex2RGB(p), "polarLUV")@coords[,c("H", "C", "L")]
+	x = as(hex2RGB(p), "polarLUV")@coords[,c("H", "C", "L"), drop = FALSE]
 	if (rounded) round(x) else x
 }
 

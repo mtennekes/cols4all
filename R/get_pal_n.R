@@ -1,3 +1,11 @@
+rampPal = function(palette, n) {
+	if (length(palette) == n) {
+		palette
+	} else {
+		colorRampPalette(palette, space = "Lab")(n)
+	}
+}
+
 get_pal_n = function(n, m = NA, name, type, series, palette, nmax, range = NA, n_too_large = "error",...) {
 	n_orig = n
 	if (is.na(m)) m = n
@@ -17,18 +25,18 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmax, range = NA, n
 		}
 	} else if (type == "seq") {
 		if (range[1] == 0 && range[2] == 1) {
-			colorRampPalette(palette, space = "Lab")(n)
+			rampPal(palette, n)
 		} else {
 			rangeIDs <- round(seq(range[1]*100, range[2]*100, length.out=n))+1
-			colorRampPalette(palette, space = "Lab")(101)[rangeIDs]
+			rampPal(palette, 101)[rangeIDs]
 		}
 	} else if (type == "div") {
 		if (range[1] == 0 && range[2] == 1) {
-			colorRampPalette(palette, space = "Lab")(n)
+			rampPal(palette, n)
 		} else {
 			breaks = seq(-10,10, length.out=n+1)
 			rangeIDs <- map2divscaleID(breaks=breaks, range=range)
-			colorRampPalette(palette, space = "Lab")(101)[rangeIDs]
+			rampPal(palette, 101)[rangeIDs]
 		}
 	} else if (type %in% c("bivs", "bivc", "bivu")) {
 		if (all(dim(palette) == c(m, n))) {
@@ -38,10 +46,10 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmax, range = NA, n
 			rangeIDsn <- round(seq(range[1]*100, range[2]*100, length.out=n))+1
 
 			p2 = t(apply(palette, MARGIN = 1, FUN = function(x) {
-				colorRampPalette(x, space = "Lab")(101)[rangeIDsn]
+				rampPal(x, 101)[rangeIDsn]
 			}))
 			apply(p2, MARGIN = 2, FUN = function(x) {
-				colorRampPalette(x, space = "Lab")(101)[rangeIDsm]
+				rampPal(x, 101)[rangeIDsm]
 			})
 		}
 	}
@@ -53,7 +61,7 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmax, range = NA, n
 			if (n_too_large == "repeat") {
 				x = rep(x, length.out = n_orig)
 			} else if (n_too_large == "interpolate") {
-				x = colorRampPalette(x, space = "Lab")(n_orig)
+				x = rampPal(x, n_orig)
 			}
 		}
 	}
