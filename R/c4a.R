@@ -10,7 +10,7 @@
 #' @param order order of colors. Only applicable for `"cat"` palettes
 #' @param range a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential `"seq"` palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging `"seq"` palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). The default values (that depend on the `n`n and `type`) are provided by \code{\link{c4a_default_range}}.
 #' @param format format of the colors. One of: `"hex"` character vector of hex color values, `"RGB"` 3 column matrix of RGB values, or `"HCL"` 3-column matrix of HCL values
-#' @param n_too_large what should be done in case `n` is larger than the maximum amount of colors? Options are `"error"` (an error is returned), `"repeat"`, the palette is repeated, `"interpolate"` colors are interpolated. For categorical `"cat"` palettes only.
+#' @param n_invalid what should be done in case `n` is larger than the maximum number of colors or smaller than the minimum number? Options are `"error"` (an error is returned), `"repeat"`, the palette is repeated, `"interpolate"` colors are interpolated. For categorical `"cat"` palettes only.
 #' @param verbose should messages be printed?
 #' @return A vector of colors
 #' @importFrom grDevices col2rgb colorRampPalette colors gray.colors rgb
@@ -20,13 +20,13 @@
 #' @rdname c4a
 #' @name c4a
 #' @export
-c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), reverse = FALSE, order = NULL, range = NA, format = c("hex", "RGB", "HCL"), n_too_large = c("error", "repeat", "interpolate"), verbose = TRUE) {
+c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), reverse = FALSE, order = NULL, range = NA, format = c("hex", "RGB", "HCL"), n_invalid = c("error", "repeat", "interpolate"), verbose = TRUE) {
 	calls = names(match.call(expand.dots = TRUE)[-1])
 
 	type = match.arg(type)
 	format = match.arg(format)
 
-	n_too_large = match.arg(n_too_large)
+	n_invalid = match.arg(n_invalid)
 
 	if (is.null(palette)) {
 		palette = c4a_default_palette(type)
@@ -40,14 +40,24 @@ c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bi
 
 	reverse = xor(reverse, x$reverse)
 
+	if (is.na(n)) n = x$ndef
 
-	if (!is.na(n) && n > x$nmax && n_too_large == "error") stop("Palette ", palette, " only supports ", x$nmax, " colors.")
+	if (n_invalid == "error") {
+		if (n > x$nmax) {
+			if (x$nmax == x$nmin) {
+				stop("Palette ", palette, " only supports ", x$nmax, " colors.")
+			} else {
+				stop("Palette ", palette, " only supports maximally ", x$nmax, " colors.")
+			}
+		} else if (n < x$nmin) {
+			stop("Palette ", palette, " should only be used with a minimum of ", x$nmin, " colors.")
+		}
+	}
 
 	x$range = range
-	x$n_too_large = n_too_large
-	if (is.na(n)) n = ifelse(x$type == "cat", x$nmax, ifelse(x$type %in% c("bivs", "bivc", "bivu"), 3, 11))
+	x$n_invalid = n_invalid
+	if (is.na(n)) n = x$ndef
 	if (type %in% c("bivs", "bivc", "bivu") && is.na(m)) m = n
-
 
 	pal = do.call(get_pal_n, c(list(n = n, m = m), x))
 

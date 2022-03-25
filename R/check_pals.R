@@ -11,7 +11,7 @@ check_div_pal = function(p) {
 	nh = floor(n/2)
 
 	# needed for inter_wing_dist
-	p2 = c(colorRampPalette(p[1:nh], space = "Lab")(9), colorRampPalette(p[(nh+1+(!is_even)):n], space = "Lab")(9))
+	p2 = c(rampPal(p[1:nh], 9), rampPal(p[(nh+1+(!is_even)):n], 9))
 	n2 = 18
 	nh2 = n2 / 2
 

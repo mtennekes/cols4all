@@ -416,7 +416,7 @@ local({
 	ids = seq(1,256, length.out=16)
 	d = scico:::palettes
 	pals = lapply(d, function(x) {
-		colorRampPalette(rgb(x$r, x$g, x$b, maxColorValue = 1), space = "Lab")(15)
+		rampPal(rgb(x$r, x$g, x$b, maxColorValue = 1), 15)
 	})
 	div = c("broc", "brocO", "cork", "corkO", "vik", "vikO", "lisbon", "tofino", "berlin", "roma", "romaO", "bam", "bamO", "vanimo")
 	mseq = c("oleron", "bukavu", "fes")

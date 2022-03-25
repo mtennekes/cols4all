@@ -7,15 +7,15 @@ cbsnl_cols = list(
 			   "#af0e80", "#56217a", "#da5914", "#9c1006"),
 	map_blue7 = c("#e1f4fd", "#c0e7ff", "#77cbe5", "#3d95d4", "#2256a0", "#143564",
 				  "#09183c"),
-	map_blue5 = c("#c0e7ff", "#77cbe5", "#3d95d4", "#2256a0", "#143564"),
 	map_green7 = c("#f1f6de", "#edf0c7", "#c9de85", "#85bc22", "#348a3a", "#0f5f34",
 				   "#114625"),
-	map_green5 = c("#edf0c7", "#c9de85", "#85bc22", "#348a3a", "#0f5f34"),
 	map_red7 = c("#fedfc7", "#ffc597", "#f89e6b", "#e74d15", "#c01f26", "#82001e",
 				 "#5b0708"),
-	map_red5 = c("#ffc597", "#f89e6b", "#e74d15", "#c01f26", "#82001e"),
 	map_purple7 = c("#fbe2ed", "#f8c1d9", "#e38cbf", "#be3e8d", "#8b176f", "#490045",
 					"#2d002c"),
+	map_blue5 = c("#c0e7ff", "#77cbe5", "#3d95d4", "#2256a0", "#143564"),
+	map_green5 = c("#edf0c7", "#c9de85", "#85bc22", "#348a3a", "#0f5f34"),
+	map_red5 = c("#ffc597", "#f89e6b", "#e74d15", "#c01f26", "#82001e"),
 	map_purple5 = c("#f8c1d9", "#e38cbf", "#be3e8d", "#8b176f", "#490045"),
 	map_purple_green = c("#490045", "#be3e8d", "#f8c1d9", "#e5e5e5", "#edf0c7", "#85bc22",
 						 "#0f5f34"),
@@ -24,8 +24,9 @@ cbsnl_cols = list(
 )
 
 cbsnl_types = c("cat", rep("seq", 8), "div", "div")
+n = c(NA, 7, 7, 7, 7, 5, 5, 5, 5, 7, 7)
 
-c4a_series_add(cbsnl_cols, xNA = "grey88", types = cbsnl_types, series = "cbsnl")
+c4a_series_add(cbsnl_cols, xNA = "grey88", nmin = n, nmax = n, types = cbsnl_types, series = "cbsnl")
 
 \dontrun{
 c4a_gui(series = "cbsnl", n = 8)

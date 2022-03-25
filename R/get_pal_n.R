@@ -1,21 +1,24 @@
-rampPal = function(palette, n) {
+rampPal = function(palette, n, space = c("rgb", "Lab")) {
+	space = match.arg(space)
 	if (length(palette) == n) {
 		palette
 	} else {
-		colorRampPalette(palette, space = "Lab")(n)
+		colorRampPalette(palette, space = space, interpolate = "linear")(n)
 	}
 }
 
-get_pal_n = function(n, m = NA, name, type, series, palette, nmax, range = NA, n_too_large = "error",...) {
+get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, range = NA, n_invalid = "error",...) {
 	n_orig = n
 	if (is.na(m)) m = n
-	if (n > nmax) {
-		if (n_too_large == "error") return(NULL)
-		n = nmax
+	if (n > nmax || n < nmin) {
+		if (n_invalid == "error") return(NULL)
+		n = ndef
 	}
 	index = attr(palette, "index")
 
-	if (is.na(range[1])) range = c4a_default_range(n, type)
+	if (is.na(range[1])) {
+		range = c4a_default_range(n, type)
+	}
 
 	x = if (type == "cat") {
 		if (is.null(index)) {
@@ -58,9 +61,9 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmax, range = NA, n
 	# for cat only?
 	if (type == "cat") {
 		if (n_orig != n) {
-			if (n_too_large == "repeat") {
+			if (n_invalid == "repeat") {
 				x = rep(x, length.out = n_orig)
-			} else if (n_too_large == "interpolate") {
+			} else if (n_invalid == "interpolate") {
 				x = rampPal(x, n_orig)
 			}
 		}
