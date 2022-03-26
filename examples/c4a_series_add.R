@@ -26,7 +26,9 @@ cbsnl_cols = list(
 cbsnl_types = c("cat", rep("seq", 8), "div", "div")
 n = c(NA, 7, 7, 7, 7, 5, 5, 5, 5, 7, 7)
 
-c4a_series_add(cbsnl_cols, xNA = "grey88", nmin = n, nmax = n, types = cbsnl_types, series = "cbsnl")
+c4a_series_add(cbsnl_cols, xNA = "grey88",
+			   nmin = n, nmax = n,
+			   types = cbsnl_types, series = "cbsnl")
 
 \dontrun{
 c4a_gui(series = "cbsnl", n = 8)
@@ -73,4 +75,5 @@ petroff = local({
 petroff2 = list(petroff9 = petroff$petroff10[-9])
 
 c4a_series_add_as_is(petroff, xNA = NA, types = "cat", series = "petroff")
-c4a_series_add_as_is(petroff2, xNA = petroff$petroff10[9], types = "cat", series = "petroff")
+c4a_series_add_as_is(petroff2, xNA = petroff$petroff10[9],
+					 types = "cat", series = "petroff")

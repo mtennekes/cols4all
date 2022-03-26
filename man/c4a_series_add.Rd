@@ -11,6 +11,9 @@ c4a_series_add(
   xNA = NA,
   types,
   series,
+  nmin = NA,
+  nmax = NA,
+  ndef = NA,
   format.palette.name = TRUE,
   remove.blacks = TRUE,
   take.gray.for.NA = TRUE,
@@ -41,6 +44,8 @@ c4a_series_remove(series = "all", are.you.sure = FALSE)
 
 \item{series}{for \code{c4a_series_add}, a character vector of the same length as x (or length 1), which determines the series. For \code{c4a_series_remove} a character vector of series names that should be removed (use \code{"all"} to remove all).}
 
+\item{nmin, nmax, ndef}{minimum / maximum / default number of colors for the palette. By default: for \code{"cat"} \code{nmin} is 1 and \code{nmax} and \code{ndef} the number of supplied colors. For the other types, \code{nmin} is 3, \code{nmax} is \code{Inf}. \code{ndef} is 7 for \code{"seq"}, 9 for \code{"div"} and 3 for the bivariate palettes (which means 3x3).}
+
 \item{format.palette.name}{should palette names be formatted to lowercase/underscore format?}
 
 \item{remove.blacks, take.gray.for.NA, remove.other.grays}{These arguments determine the processing of grayscale colors for categorical \code{"cat"} palettes: if \code{remove.blacks} and there are (near) blacks, these are removed first. Next, if \code{take.gray.for.NA}, \code{xNA} is \code{NA}, and a palette contains at least one grayscale color (which can also be white), this is used as color for missing values. In case there are more than one grayscale color, the lightest is taken. \code{remove.other.grays} determines what happens with the other grays.}
@@ -68,19 +73,33 @@ It may take some time to process, especially large categorical palettes, because
 # Palettes from Statistics Netherlands
 #######################################
 cbsnl_cols = list(
-	cool = c("#00a1cd", "#0058b8", "#afcb05", "#53a31d",
-		"#f39200", "#af0e80", "#ffcc00", "#e94c0a"),
-	warm = c("#e94c0a", "#ffcc00", "#af0e80", "#f39200",
-		"#53a31d", "#afcb05", "#0058b8", "#00a1cd"),
-	blues = c("#c0e7ff", "#77cbe5", "#3d95d4", "#2256a0", "#143564"),
-	reds =  c("#ffc597", "#f89e6b", "#e74d15", "#c01f26", "#82001e"),
-	greens = c("#edf0c7", "#c9de85", "#85bc22", "#348a3a", "#0f5f34"),
-	purples = c("#f8c1d9", "#e38cbf", "#be3e8d", "#8b176f", "#460042")
+	charts = c("#00a1cd", "#0058b8", "#afcb05", "#53a31d", "#d9328a", "#7d4791",
+			   "#f39200", "#c90c0f", "#0581a2", "#163a72", "#899d0c", "#488225",
+			   "#af0e80", "#56217a", "#da5914", "#9c1006"),
+	map_blue7 = c("#e1f4fd", "#c0e7ff", "#77cbe5", "#3d95d4", "#2256a0", "#143564",
+				  "#09183c"),
+	map_green7 = c("#f1f6de", "#edf0c7", "#c9de85", "#85bc22", "#348a3a", "#0f5f34",
+				   "#114625"),
+	map_red7 = c("#fedfc7", "#ffc597", "#f89e6b", "#e74d15", "#c01f26", "#82001e",
+				 "#5b0708"),
+	map_purple7 = c("#fbe2ed", "#f8c1d9", "#e38cbf", "#be3e8d", "#8b176f", "#490045",
+					"#2d002c"),
+	map_blue5 = c("#c0e7ff", "#77cbe5", "#3d95d4", "#2256a0", "#143564"),
+	map_green5 = c("#edf0c7", "#c9de85", "#85bc22", "#348a3a", "#0f5f34"),
+	map_red5 = c("#ffc597", "#f89e6b", "#e74d15", "#c01f26", "#82001e"),
+	map_purple5 = c("#f8c1d9", "#e38cbf", "#be3e8d", "#8b176f", "#490045"),
+	map_purple_green = c("#490045", "#be3e8d", "#f8c1d9", "#e5e5e5", "#edf0c7", "#85bc22",
+						 "#0f5f34"),
+	map_red_blue = c("#82001e", "#e74d15", "#ffc597", "#e5e5e5", "#c0e7ff", "#3d95d4",
+					 "#143564")
 )
 
-cbsnl_types = c("cat", "cat", "seq", "seq", "seq", "seq")
+cbsnl_types = c("cat", rep("seq", 8), "div", "div")
+n = c(NA, 7, 7, 7, 7, 5, 5, 5, 5, 7, 7)
 
-c4a_series_add(cbsnl_cols, xNA = "grey88", types = cbsnl_types, series = "cbsnl")
+c4a_series_add(cbsnl_cols, xNA = "grey88",
+			   nmin = n, nmax = n,
+			   types = cbsnl_types, series = "cbsnl")
 
 \dontrun{
 c4a_gui(series = "cbsnl", n = 8)
@@ -127,5 +146,6 @@ petroff = local({
 petroff2 = list(petroff9 = petroff$petroff10[-9])
 
 c4a_series_add_as_is(petroff, xNA = NA, types = "cat", series = "petroff")
-c4a_series_add_as_is(petroff2, xNA = petroff$petroff10[9], types = "cat", series = "petroff")
+c4a_series_add_as_is(petroff2, xNA = petroff$petroff10[9],
+					 types = "cat", series = "petroff")
 }

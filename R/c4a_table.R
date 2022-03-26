@@ -385,7 +385,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 
 	extra = c("<style>", "table {", "\tborder-collapse: collapse;", "\tfont-size: 12px;",
 			  "\tborder-collapse: collapse;", "}", "", "td {", "\tborder-radius: 0px;",
-			  "\tborder-top: 1px solid #ffffff00;", "\tborder-bottom: 1px solid #ffffff00;", "\tborder-left: 0px solid #ffffff00;", "\tborder-right: 3px solid #ffffff00;", "\tborder-collapse: collapse;",
+			  "\tborder-top: 1px solid #ffffff00;", "\tborder-bottom: 1px solid #ffffff00;", "\tborder-left: 0px solid #ffffff00;", "\tborder-right: 2px solid #ffffff00;", "\tborder-collapse: collapse;",
 			  "}", "", "th {", "\ttext-align: center;", "}", "",
 			  "a:link {color: black;}", "</style>"
 	) # extra = readLines("build/extra.txt"); dput(extra)

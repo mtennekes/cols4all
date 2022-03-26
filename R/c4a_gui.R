@@ -36,7 +36,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
 
-	ui = shiny::div(id = "color_change", shiny::fluidPage(
+	ui = shiny::div(id = "background", style = "height:100%;", shiny::fluidPage(
 		shinyjs::useShinyjs(),
 		shiny::tags$style(shiny::HTML("div.sticky {
 		  position: -webkit-sticky;
@@ -88,7 +88,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 			shiny::div(shiny::sidebarPanel(
 				width = 3,
 				shiny::radioButtons("type", "Palette Type", choices = types, selected = type),
-				shiny::div(id = "series", shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE)),
+				shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE),
 				shiny::conditionalPanel(
 					condition = "input.type.substring(0, 3) != 'biv'",
 					shiny::sliderInput("n", "Number of colors", min = 2, max = 36, value = n, ticks = FALSE)),
@@ -145,7 +145,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 			shiny::updateSelectInput(session, "sort", choices  = cols,selected = sortNew)
 		})
 
-		observeEvent(input$dark, {
+		shiny::observeEvent(input$dark, {
 			if (input$dark) {
 				set = "dark"
 				unset = "light"
@@ -153,13 +153,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				unset = "dark"
 				set = "light"
 			}
-			shinyjs::addClass("color_change", set)
-			shinyjs::removeClass("color_change", unset)
-			shinyjs::addClass("color_change2", set)
-			shinyjs::removeClass("color_change2", unset)
-			shinyjs::addClass("series", set)
-			shinyjs::removeClass("series", unset)
-
+			shinyjs::addClass("background", set)
+			shinyjs::removeClass("background", unset)
 		})
 
 		get_values = shiny::reactive({

@@ -139,7 +139,7 @@ c4a_series_add_as_is = function(..., format.palette.name = FALSE, remove.blacks 
 
 check_z = function(z) {
 	name <- series <- fullname <- type <- nmax <- NULL
-	if (!is.data.frame(z) || !setequal(c("name", "series", "fullname", "type", "palette", "na", "nmax"), names(z))) stop("z should be a dataframe of colums: name, series, fullname, type, palette, na, and nmax")
+	if (!is.data.frame(z) || !setequal(c("name", "series", "fullname", "type", "palette", "na", "nmin", "nmax", "ndef"), names(z))) stop("z should be a dataframe of colums: name, series, fullname, type, palette, na, nmin, nmax, and ndef")
 
 	within(z, {
 		if (!is.character(name)) stop("x$z$name should be a character column", call. = FALSE)
