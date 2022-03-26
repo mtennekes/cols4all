@@ -124,6 +124,10 @@
 #' @concept visualization
 NULL
 
+.onAttach <- function(libname, pkgname) {
+	packageStartupMessage("cols4all is still in development; since palettes may change, we recommend to hard-copy the color codes obtained via this package when reproducilibity is required")
+}
+
 .onLoad <- function(...) {
 	assign("z", .z, envir = .C4A)
 	assign("s", .s, envir = .C4A)

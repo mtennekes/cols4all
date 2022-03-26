@@ -36,7 +36,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
 
-	ui = shiny::fluidPage(
+	ui = shiny::div(id = "color_change", shiny::fluidPage(
 		shinyjs::useShinyjs(),
 		shiny::tags$style(shiny::HTML("div.sticky {
 		  position: -webkit-sticky;
@@ -49,7 +49,16 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 			background-repeat: no-repeat;
 			background-size: 86px 100px;
 			background-position: 97% 1%;
-        }
+           	background-color:transparent;
+		 }
+        div.light {
+           	background-color: #ffffff !important;
+        	color: #000000 !important;
+		}
+        div.dark {
+           	background-color: #000000 !important;
+        	color: #bbbbbb !important;
+		}
 		")),
 		# font-size: 13px;
 		# line-height: 1.333;
@@ -76,10 +85,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 
 		shiny::sidebarLayout(
-			shiny::tagAppendAttributes(shiny::sidebarPanel(
+			shiny::div(shiny::sidebarPanel(
 				width = 3,
 				shiny::radioButtons("type", "Palette Type", choices = types, selected = type),
-				shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE),
+				shiny::div(id = "series", shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE)),
 				shiny::conditionalPanel(
 					condition = "input.type.substring(0, 3) != 'biv'",
 					shiny::sliderInput("n", "Number of colors", min = 2, max = 36, value = n, ticks = FALSE)),
@@ -107,20 +116,22 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 					shiny::column(5,
 								  shiny::selectizeInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto")))),
 				shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
+				shiny::div(
 				shiny::fluidRow(
 					shiny::column(7,
 						shiny::selectizeInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "rank")),
 					shiny::column(5,
 						shiny::br(),
-						shiny::checkboxInput("sortRev", "Reverse", value = FALSE))),
+						shiny::checkboxInput("sortRev", "Reverse", value = FALSE))), style = "margin-bottom:-10px;"),
+				shiny::checkboxInput("dark", "Dark mode", value = FALSE),
 				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE)
-			), class = "sticky"),
+			), class = "sticky", id = "color_change2"),
 
 			shiny::mainPanel(
 				shiny::tableOutput("show")
 			)
 		)
-	)
+	))
 	server = function(input, output, session) {
 
 
@@ -132,6 +143,23 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 			sortNew = if (input$sort %in% cols) input$sort else "name"
 			shiny::freezeReactiveValue(input, "sort")
 			shiny::updateSelectInput(session, "sort", choices  = cols,selected = sortNew)
+		})
+
+		observeEvent(input$dark, {
+			if (input$dark) {
+				set = "dark"
+				unset = "light"
+			} else {
+				unset = "dark"
+				set = "light"
+			}
+			shinyjs::addClass("color_change", set)
+			shinyjs::removeClass("color_change", unset)
+			shinyjs::addClass("color_change2", set)
+			shinyjs::removeClass("color_change2", unset)
+			shinyjs::addClass("series", set)
+			shinyjs::removeClass("series", unset)
+
 		})
 
 		get_values = shiny::reactive({
