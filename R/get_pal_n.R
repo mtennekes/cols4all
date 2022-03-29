@@ -15,10 +15,8 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, r
 		n = ndef
 	}
 	index = attr(palette, "index")
-
-	if (is.na(range[1])) {
-		range = c4a_default_range(n, type)
-	}
+	range_matrix = attr(palette, "range_matrix")
+	space = attr(palette, "space")
 
 	x = if (type == "cat") {
 		if (is.null(index)) {
@@ -26,33 +24,56 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, r
 		} else {
 			palette[index[[n]]]
 		}
-	} else if (type == "seq") {
-		if (range[1] == 0 && range[2] == 1) {
-			rampPal(palette, n)
+	} else if (type %in% c("seq", "div")) {
+		if (is.na(range[1])) {
+			if (!is.null(index)) {
+				pal = palette[index[[min(n, length(index))]]]
+				rng = c(0, 1)
+			} else if (!is.null(range_matrix)) {
+				pal = palette
+				rng = range_matrix[min(n, nrow(range_matrix)), ]
+			} else {
+				pal = palette
+				rng = c(0, 1)
+			}
 		} else {
-			rangeIDs <- round(seq(range[1]*100, range[2]*100, length.out=n))+1
-			rampPal(palette, 101)[rangeIDs]
+			if (!is.null(index)) {
+				pal = palette[index[[length(index)]]]
+			} else {
+				pal = palette
+			}
+			rng = range
 		}
-	} else if (type == "div") {
-		if (range[1] == 0 && range[2] == 1) {
-			rampPal(palette, n)
+
+		if (type == "seq") {
+			if (rng[1] == 0 && rng[2] == 1) {
+				rampPal(pal, n, space = space)
+			} else {
+				rngIDs <- round(seq(rng[1]*100, rng[2]*100, length.out=n))+1
+				rampPal(pal, 101, space = space)[rngIDs]
+			}
 		} else {
-			breaks = seq(-10,10, length.out=n+1)
-			rangeIDs <- map2divscaleID(breaks=breaks, range=range)
-			rampPal(palette, 101)[rangeIDs]
+			if (rng[1] == 0 && rng[2] == 1) {
+				rampPal(pal, n, space = space)
+			} else {
+				breaks = seq(-10,10, length.out=n+1)
+				rngIDs <- map2divscaleID(breaks=breaks, range=rng)
+				rampPal(pal, 101, space = space)[rngIDs]
+			}
 		}
 	} else if (type %in% c("bivs", "bivc", "bivu")) {
-		if (all(dim(palette) == c(m, n))) {
+		if (is.na(range[1])) range = c(0, 1)
+		if (all(dim(palette) == c(m, n)) && range[1] == 0 && range[2] == 1) {
 			palette
 		} else {
 			rangeIDsm <- round(seq(range[1]*100, range[2]*100, length.out=m))+1
 			rangeIDsn <- round(seq(range[1]*100, range[2]*100, length.out=n))+1
 
 			p2 = t(apply(palette, MARGIN = 1, FUN = function(x) {
-				rampPal(x, 101)[rangeIDsn]
+				rampPal(x, 101, space = space)[rangeIDsn]
 			}))
 			apply(p2, MARGIN = 2, FUN = function(x) {
-				rampPal(x, 101)[rangeIDsm]
+				rampPal(x, 101, space = space)[rangeIDsm]
 			})
 		}
 	}

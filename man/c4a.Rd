@@ -33,7 +33,7 @@ c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 
 \item{order}{order of colors. Only applicable for \code{"cat"} palettes}
 
-\item{range}{a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential \code{"seq"} palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging \code{"seq"} palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). The default values (that depend on the \code{n}n and \code{type}) are provided by \code{\link{c4a_default_range}}.}
+\item{range}{a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential \code{"seq"} palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging \code{"seq"} palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start).}
 
 \item{format}{format of the colors. One of: \code{"hex"} character vector of hex color values, \code{"RGB"} 3 column matrix of RGB values, or \code{"HCL"} 3-column matrix of HCL values}
 

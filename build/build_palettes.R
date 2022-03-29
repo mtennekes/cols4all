@@ -12,12 +12,24 @@ library(ggthemes)
 library(reticulate) # to get seaborn
 library(Polychrome)
 
-## more:
+devtools::session_info(pkgs = "attached")
+# ! package         * version date (UTC) lib source
+# colorspace      * 2.0-3   2022-02-21 [1] CRAN (R 4.1.2)
+# ggthemes        * 4.2.4   2021-01-20 [1] CRAN (R 4.1.2)
+# pals            * 1.7     2021-04-17 [1] CRAN (R 4.1.0)
+# Polychrome      * 1.3.1   2021-07-16 [1] CRAN (R 4.1.2)
+# rcartocolor     * 2.0.0   2019-05-03 [1] CRAN (R 4.1.0)
+# RColorBrewer    * 1.1-2   2014-12-07 [1] CRAN (R 4.1.0)
+# reticulate      * 1.24    2022-01-26 [1] CRAN (R 4.1.2)
+# scico           * 1.3.0   2021-12-08 [1] CRAN (R 4.1.2)
+# shiny           * 1.7.1   2021-10-02 [1] CRAN (R 4.1.2)
+# viridisLite     * 0.4.0   2021-04-13 [1] CRAN (R 4.1.0)
 
-# library(paletteer)
-# https://github.com/EmilHvitfeldt/r-color-palettes
 
-c4a_series_remove(are.you.sure = TRUE)
+
+
+
+c4a_palettes_remove(are.you.sure = TRUE)
 
 ###################################
 ### package grDevices: cat
@@ -27,51 +39,23 @@ local({
 
 	p1 = pals[c("R3", "R4", "ggplot2", "Okabe-Ito")]
 	names(p1) = c("R3", "R4", "ggplot2", "okabe")
-	s1 = "misc"
 
-	# p2 = pals[c("Accent", "Dark 2", "Paired", "Pastel 1", "Pastel 2", "Set 1", "Set 2", "Set 3")]
-	# s2 = "brewer"
-
-	#p3 = pals[c("Alphabet", "Polychrome 36")]
-	#s3 = "misc"
-
-	c4a_series_add(p1, types = "cat", series = s1)
-	#c4a_series_add(p2, types = "cat", series = s2c4a_series_add)
-	#c4a_series_add(p3, types = "cat", series = s3, take.gray.for.NA = FALSE, remove.other.grays = FALSE, remove.blacks = FALSE)
-	invisible(NULL)
+	c4a_palettes_add(p1, types = "cat", series = "misc")
 })
 
 ###################################
 ### package grDevices: seq and div
 ###################################
 local({
+	seq = c("Grays", "Light Grays", "Blues 2", "Blues 3", "Purples 2",
+			"Purples 3", "Reds 2", "Reds 3", "Greens 2", "Greens 3", "Purple-Blue",
+			"Red-Purple", "Red-Blue", "Purple-Orange", "Purple-Yellow", "Blue-Yellow",
+			"Green-Yellow", "Red-Yellow", "Heat", "Heat 2", "Dark Mint")
 
-	# select palettes that are not approximations (those are added later on from the original sources)
-
-	brewer_seq = c("YlOrRd", "YlOrBr", "OrRd", "Oranges", "YlGn", "YlGnBu", "Reds", "RdPu", "PuRd", "Purples","PuBuGn", "PuBu", "Greens", "BuGn", "GnBu", "BuPu", "Blues")
-	brewer_div <- c("Spectral", "RdYlGn", "RdYlBu", "RdGy", "RdBu", "PiYG", "PRGn", "PuOr", "BrBG")
-
-	carto_seq = c("DarkMint", "Mint", "BluGrn", "Teal", "TealGrn", "Emrld", "BluYl", "ag_GrnYl", "Peach", "PinkYl", "Burg", "BurgYl", "RedOr", "OrYel", "Purp", "PurpOr", "Sunset", "Magenta", "SunsetDark", "ag_Sunset", "BrwnYl")
-	carto_div <- c("ArmyRose", "Earth", "Fall", "Geyser", "TealRose", "Temps", "Tropic")
-
-	viridis_seq = c("Viridis", "Plasma", "Inferno", "Rocket", "Mako")
-	viridis_div = "Cividis"
-
-	scico_seq = c("Oslo", "Lajolla", "Turku", "Hawaii", "Batlow")
-	scico_div = c("Broc", "Cork", "Vik", "Berlin", "Lisbon", "Tofino", "Roma")
-
-	wes_div = "Zissou 1"
-
-	seq_hcl_approx = c(brewer_seq, carto_seq, viridis_seq, scico_seq)
-	div_hcl_approx = c(brewer_div, carto_div, viridis_div, scico_div, wes_div)
-
-	hcl_lst = lapply(c("sequential", "diverging", "divergingx"), hcl.pals)
+	div = c("Blue-Red", "Blue-Red 2", "Blue-Red 3", "Red-Green", "Purple-Green", "Purple-Brown",
+			"Green-Brown", "Blue-Yellow 2", "Blue-Yellow 3", "Green-Orange", "Cyan-Magenta")
 
 	terrain = c("Terrain", "Terrain 2")
-
-	seq = setdiff(hcl_lst[[1]], c(seq_hcl_approx, terrain))
-	div = setdiff(c(hcl_lst[[2]],hcl_lst[[3]]), div_hcl_approx)
-
 
 	spals = lapply(seq, function(s) hcl.colors(11, s))
 	names(spals) = seq
@@ -86,8 +70,8 @@ local({
 
 	type = c(rep("seq", length(spals)), rep("div", length(dpals)))
 
-	c4a_series_add(c(spals, dpals), types = type, series = "hcl")
-	c4a_series_add_as_is(tpals, types = "seq", series = "hcl")
+	c4a_palettes_add(c(spals, dpals), types = type, series = "hcl", space = "Lab")
+	c4a_palettes_add_as_is(tpals, types = "seq", series = "hcl", space = "Lab")
 })
 
 
@@ -99,12 +83,27 @@ local({
 	inf = RColorBrewer::brewer.pal.info
 
 	pals = lapply(1:nrow(inf), function(i) {
-		RColorBrewer::brewer.pal(n = inf$maxcolors[i], name = rownames(inf)[i])
+		if (inf$category[i] != "qual") {
+			xs = lapply(3:inf$maxcolors[i], function(j) {
+				RColorBrewer::brewer.pal(n = j, name = rownames(inf)[i])
+			})
+			x = unique(unlist(rev(xs)))
+
+			index = lapply(xs, function(xi) {
+				match(xi, x)
+			})
+			names(index) = 3:inf$maxcolors[i]
+			attr(x, "index") = 	index
+		} else {
+			x = RColorBrewer::brewer.pal(n = inf$maxcolors[i], name = rownames(inf)[i])
+
+		}
+		x
 	})
 	names(pals) = rownames(inf)
 	types = ifelse(inf$category == "qual", "cat", inf$category)
 
-	c4a_series_add(pals, types = types, series = "brewer")
+	c4a_palettes_add(pals, types = types, series = "brewer")
 })
 
 
@@ -187,9 +186,9 @@ local({
 
 	p3_types = ifelse(names(p3) %in% c("bu_rd", "pu_gn", "sunset"), "div", "seq")
 
-	c4a_series_add(p1, types = "cat", series = "tol")
-	c4a_series_add(p2, types = "cat", series = "tol", take.gray.for.NA = FALSE, remove.other.grays = FALSE, remove.blacks = FALSE)
-	c4a_series_add(p3, types = p3_types, xNA = p3_na, series = "tol")
+	c4a_palettes_add(p1, types = "cat", series = "tol")
+	c4a_palettes_add(p2, types = "cat", series = "tol", take.gray.for.NA = FALSE, remove.other.grays = FALSE, remove.blacks = FALSE)
+	c4a_palettes_add(p3, types = p3_types, xNA = p3_na, series = "tol")
 })
 
 
@@ -210,7 +209,7 @@ local({
 	})
 	names(pals) = nms
 
-	c4a_series_add(pals, types = types, series = "viridis")
+	c4a_palettes_add(pals, types = types, series = "viridis")
 })
 
 
@@ -320,10 +319,10 @@ local({
 	names(pals5) = new_div
 
 
-	c4a_series_add(pals, types = "cat", series = series)
-	c4a_series_add(pals4_sel, types = pals4_type_sel, series = "kovesi", format.palette.name = FALSE)
-	c4a_series_add_as_is(pals_ter, types = "seq", series = "kovesi", format.palette.name = FALSE)
-	c4a_series_add(pals5, types = pals5_type, series = "kovesi", format.palette.name = FALSE)
+	c4a_palettes_add(pals, types = "cat", series = series)
+	c4a_palettes_add(pals4_sel, types = pals4_type_sel, series = "kovesi", format.palette.name = FALSE)
+	c4a_palettes_add_as_is(pals_ter, types = "seq", series = "kovesi", format.palette.name = FALSE)
+	c4a_palettes_add(pals5, types = pals5_type, series = "kovesi", format.palette.name = FALSE)
 
 })
 
@@ -341,7 +340,7 @@ local({
 
 	type = ifelse(names(pals) == "Zissou1", "div", "cat")
 
-	c4a_series_add(pals, types = type, series = "wes")
+	c4a_palettes_add(pals, types = type, series = "wes")
 
 })
 
@@ -379,9 +378,9 @@ local({
 	names(pals3) = tolower(cartoAgg$Name)
 	names(pals3)[2] = "ag_grn_yl"
 
-	c4a_series_add(pals, types = "cat", series = "carto")
-	c4a_series_add(pals2rev, types = type, series = "carto")
-	c4a_series_add(pals3, types = "seq", series = "carto", format.palette.name = FALSE)
+	c4a_palettes_add(pals, types = "cat", series = "carto")
+	c4a_palettes_add(pals2rev, types = type, series = "carto")
+	c4a_palettes_add(pals3, types = "seq", series = "carto", format.palette.name = FALSE)
 
 })
 
@@ -398,14 +397,14 @@ local({
 		pals = lapply(1:36, function(i) {
 			qualitative_hcl(palette = h, n = i)
 		})
-		pal = unique(unlist(pals))
+		pal = unique(unlist(rev(pals)))
 		indices = structure(lapply(1:36, function(i) {
 			match(pals[[i]], pal)
 		}), names = as.character(1:36))
 		structure(pal, index = indices)
 	}), names = hclnames)
 
-	c4a_series_add(pals, types = "cat", series = "hcl")
+	c4a_palettes_add(pals, types = "cat", series = "hcl")
 })
 
 ###################################
@@ -427,8 +426,8 @@ local({
 
 	names(pals_seq)[match(c("batlowK", "batlowW"), names(pals_seq))] = c("k_batlow", "w_batlow") # reverse names (because palettes will be reversed)
 
-	c4a_series_add(pals_div, types = "div", series = "scico")
-	c4a_series_add(pals_seq, types = "seq", series = "scico")
+	c4a_palettes_add(pals_div, types = "div", series = "scico")
+	c4a_palettes_add(pals_seq, types = "seq", series = "scico")
 })
 
 
@@ -449,14 +448,16 @@ local({
 		pal$value
 	})
 
+	# 7th color is off (magenta instead of gray) do to typo:-) #colorRampPalette(tab_seq[["Gray Warm"]][c(6,8)], space = "rgb")(3)
+	tab_seq[["Gray Warm"]][7] = "#b0a7a4"
 	palettes3 = ggthemes_data[["tableau"]][["color-palettes"]][["ordered-diverging"]]
 	tab_div = lapply(palettes3, function(pal) {
 		pal$value
 	})
 
-	c4a_series_add(tab_cat, types = "cat", series = "tableau")
-	c4a_series_add(tab_seq, types = "seq", series = "tableau")
-	c4a_series_add(tab_div, types = "div", series = "tableau")
+	c4a_palettes_add(tab_cat, types = "cat", series = "tableau")
+	c4a_palettes_add(tab_seq, types = "seq", series = "tableau")
+	c4a_palettes_add(tab_div, types = "div", series = "tableau")
 })
 
 
@@ -487,9 +488,9 @@ local({
 	})
 	names(sb_div) = sb_div_names
 
-	c4a_series_add(sb_cat, types = "cat", series = "seaborn")
-	c4a_series_add(sb_seq, types = "seq", series = "seaborn")
-	c4a_series_add(sb_div, types = "div", series = "seaborn")
+	c4a_palettes_add(sb_cat, types = "cat", series = "seaborn")
+	c4a_palettes_add(sb_seq, types = "seq", series = "seaborn")
+	c4a_palettes_add(sb_div, types = "div", series = "seaborn")
 })
 
 local({
@@ -502,7 +503,7 @@ local({
 			 light24 = Polychrome::light.colors(n = 24),
 			 dark24 = Polychrome::dark.colors(n = 24),
 			 sky24 = Polychrome::sky.colors(n = 24))
-	c4a_series_add(p, types = "cat", series = "poly", remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE)
+	c4a_palettes_add(p, types = "cat", series = "poly", remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE)
 })
 
 
@@ -521,6 +522,9 @@ local({
 # })
 # paletteer::palettes_c_names
 
+## See also:
+
+# https://github.com/EmilHvitfeldt/r-color-palettes
 
 
 
@@ -539,20 +543,20 @@ local({
 
 	p = lapply(p, function(pal)pal[3:9])
 
-	c4a_series_add(p, types = "bivs", series = "hcl", biv.method = "div2seqseq")
+	c4a_palettes_add(p, types = "bivs", series = "hcl", biv.method = "div2seqseq", space = "Lab")
 
 	p2 = b$palette
 	names(p2) = paste0(b$name, "_c")
 
 	p2 = lapply(p2, function(pal)pal[2:10])
-	c4a_series_add(p2, types = "bivc", series = "hcl", biv.method = "div2catseq")
+	c4a_palettes_add(p2, types = "bivc", series = "hcl", biv.method = "div2catseq", space = "Lab")
 
 	pals3 = c("hcl.blues3", "hcl.yellow_red")
 
 	p3 = lapply(pals3, function(p) c4a(p, n = 5, range = c(0.3, 0.8)))
 	names(p3) = c("blues3_u", "yellow_red_u")
 
-	c4a_series_add(p3, types = "bivu", series = "hcl", biv.method = "seq2uncseq")
+	c4a_palettes_add(p3, types = "bivu", series = "hcl", biv.method = "seq2uncseq", space = "Lab")
 
 
 
@@ -564,13 +568,13 @@ local({
 
 
 
-	c4a_series_add(pals2, types = "bivs", series = "stevens", biv.method = "byrow")
+	c4a_palettes_add(pals2, types = "bivs", series = "stevens", biv.method = "byrow")
 
 	pals3 = list(divseq = brewer.divseq(n = 9),
 				 qualseq = brewer.qualseq(n = 9),
 				 seqseq1 = brewer.seqseq1(n = 9),
 				 seqseq2 = brewer.seqseq2(n = 9))
-	c4a_series_add(pals3, types = c("bivc", "bivc", "bivs", "bivs"), series = "brewer", biv.method = "byrow")
+	c4a_palettes_add(pals3, types = c("bivc", "bivc", "bivs", "bivs"), series = "brewer", biv.method = "byrow")
 })
 
 .z = get("z", .C4A)

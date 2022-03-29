@@ -1,61 +1,83 @@
 #' Add and remove palette series
 #'
-#' Add and remove palette series. `c4a_series_add` can be used to add own palette series and  `c4a_series_remove` to remove palette series. `c4a_series_add_as_is` is the same as `c4a_series_add`, but by default without any processing. These functions require the R package `colorblindcheck`.
+#' Add and remove palette series. `c4a_palettes_add` can be used to add own palette series and  `c4a_palettes_remove` to remove palette series. `c4a_palettes_add_as_is` is the same as `c4a_palettes_add`, but by default without any processing. These functions require the R package `colorblindcheck`.
 #'
-#' Indexing: for a categorical `"cat"` palette, an optional `"index"` attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See `cols4all::.z$palette$rainbow` and  for an example.
+#' Indexing: for a categorical `"cat"` palette, an optional `"index"` attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See `c4a_meta("rainbow")` and  for an example.
 #'
-#' It may take some time to process, especially large categorical palettes, because of calculations of the color blind checks
+#' Range: sequential and diverging palettes are usually defined for 9+ colors. The optional `"range_matrix"` attribute determines that range is used for less colors. It is a n x 2 matrix where row i defines the applied range of a palette of length i. For sequential palettes a range `c(0,1)` means that the palette is generated (via a color ramp) between the two outermost colors. For diverging palettes, a range `c(x, y)` means that both sides of the palette are generated (via a color ramp) from `x`, which is the distance to the center color, to `y` which represents both outermost colors.
+#'
+#' The range is automatically set for sequential and diverging palettes that have no `"index"` or `"range_matrix"` attribute via the parameter `range_matrix_args`, which is a list per palette. The arguments for a sequential palette are: `nmin` the minimum number of colors for which the range is reduced, `nmax`, the number of colors for which the range is set to `c(0,1)`, `slope_min` and `slope_max` determine the slopes of range reduction from a palette of length `nmax` to `nmin`, and `space` sets the color space for which the color ramp is applied (`"rgb"` or `"Lab"`). The arguments for a diverging palette are the same, but only one `slope` is used (namely for the outermost colors).
+#'
+#' It may take some time to process, especially large categorical palettes, because of calculations of the color blind checks.
 #'
 #' @param x named list of color palettes. See details for indexing.
 #' @param xNA colors for missing values. Vector of the same length as x (or length 1). For `NA` values, the color for missing values is automatically determined (preferable a light grayscale color, but if it is indistinguishable by color blind people, a light color with a low chroma value is selected)
 #' @param types character vector of the same length as x (or length 1), which determines the type of palette `"cat"`, `"seq"`, or `"div"`.
-#' @param series for `c4a_series_add`, a character vector of the same length as x (or length 1), which determines the series. For `c4a_series_remove` a character vector of series names that should be removed (use `"all"` to remove all).
+#' @param series for `c4a_palettes_add`, a character vector of the same length as x (or length 1), which determines the series. For `c4a_palettes_remove` a character vector of series names that should be removed (use `"all"` to remove all).
 #' @param nmin,nmax,ndef minimum / maximum / default number of colors for the palette. By default: for `"cat"` `nmin` is 1 and `nmax` and `ndef` the number of supplied colors. For the other types, `nmin` is 3, `nmax` is `Inf`. `ndef` is 7 for `"seq"`, 9 for `"div"` and 3 for the bivariate palettes (which means 3x3).
 #' @param format.palette.name should palette names be formatted to lowercase/underscore format?
 #' @param remove.blacks,take.gray.for.NA,remove.other.grays These arguments determine the processing of grayscale colors for categorical `"cat"` palettes: if `remove.blacks` and there are (near) blacks, these are removed first. Next, if `take.gray.for.NA`, `xNA` is `NA`, and a palette contains at least one grayscale color (which can also be white), this is used as color for missing values. In case there are more than one grayscale color, the lightest is taken. `remove.other.grays` determines what happens with the other grays.
 #' @param light.to.dark should sequential `"seq"` palettes be automatically ordered from light to dark?
 #' @param remove.names should individual color names be removed?
 #' @param biv.method method to a create bivariate palette. Options are `"byrow"` means that the colors are wrapped row-wise to a color matrix where the number of rows and columns is automatically determined, `"byrowX"` the same but with X (integer between 2 and 9) columns, `"bycol"` and `"bycolX` similar but wrapped column-wise. `"div2seqseq"` and `"div2catseq` means that colors are extracted from a divering palette. The former translates colors into a matrix with the neutral color in the diagonal, while the latter places the neutral color in the middle column. `"seq2uncseq"`
+#' @param space color space in which interpolated colors are determined. Options: `"rgb"` (RGB) and `"Lab"` (CIE Lab).
+#' @param range_matrix_args list of lists, one for each palette. Each such list specifies the range of sequential and diverging palettes, in case they are not indexed. See details.
 #' @param are.you.sure are you sure you want to remove series?
-#' @param ... passed on to `c4a_series_add`
-#' @example ./examples/c4a_series_add.R
-#' @rdname c4a_series_add
-#' @name c4a_series_add
+#' @param fullnames full palette names (so in the format `series.palette_name`)
+#' @param ... passed on to `c4a_palettes_add`
+#' @example ./examples/c4a_palettes_add.R
+#' @rdname c4a_palettes_add
+#' @name c4a_palettes_add
 #' @export
-c4a_series_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, ndef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow") {
+c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, ndef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL)) {
 
 	if (!requireNamespace("colorblindcheck")) stop("Please install colorblindcheck")
 
-
-	adjust.settings = list(take.gray.for.NA = take.gray.for.NA, remove.other.grays = remove.other.grays, remove.blacks = remove.blacks, light.to.dark = light.to.dark, remove.names = remove.names, biv.method = biv.method)
-
-	k = length(x)
-	types = rep(types, length.out = k)
-	series = rep(series, length.out = k)
-
-	xNA = rep(xNA, length.out = k)
-
+	# check color list
 	if (!is.list(x)) stop("x is not a list")
-
 	nms = names(x)
-
 	if (anyDuplicated(nms)) stop("Duplicated names found")
-
 	x = lapply(x, validate_colors)
 
+	# number of palettes
+	k = length(x)
+
+	# make everything length k (number of palettes)
+	args = setdiff(ls(), c("x", "k"))
+	length(range_matrix_args)
+
+	if (!is.list(range_matrix_args[[1]])) range_matrix_args = list(range_matrix_args)
+	for (arg in args) assign(arg, rep(get(arg), length.out = k), envir = environment())
+
+	# validate na colors
 	if (any(!is.na(xNA))) xNA[!is.na(xNA)] = validate_colors(xNA[!is.na(xNA)])
 
+	# check types
 	if (!all(types %in% c("div", "seq", "cat", "bivs", "bivc", "bivu"))) stop("Unknown types found. Currently only \"cat\", \"seq\", \"div\", \"bivs\", \"bivc\", and \"bivu\" are supported")
 
 
-	res = mapply(process_palette, pal = x, type = types, colNA = xNA, SIMPLIFY = FALSE, MoreArgs = adjust.settings)
+
+	lst = list(pal = x,
+			   type = types,
+			   colNA = xNA,
+			   take.gray.for.NA = take.gray.for.NA,
+			   remove.other.grays = remove.other.grays,
+			   remove.blacks = remove.blacks,
+			   light.to.dark = light.to.dark,
+			   remove.names = remove.names,
+			   biv.method = biv.method,
+			   space = space,
+			   range_matrix_args = range_matrix_args)
+
+
+	res = do.call(mapply, c(list(FUN = process_palette, SIMPLIFY = FALSE), lst))
 	x = lapply(res, "[[", "pal")
 	xNA = sapply(res, "[[", "colNA", USE.NAMES = FALSE)
 	reversed = sapply(res, "[[", "reversed")
 
 
 
-	if (format.palette.name) {
+	if (format.palette.name[1]) {
 		nms = format_name(nms)
 		if (any(reversed)) {
 			nms2 = nms[reversed]
@@ -125,13 +147,13 @@ c4a_series_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, ndef
 	invisible(NULL)
 }
 
-#' @rdname c4a_series_add
-#' @name c4a_series_add_as_is
+#' @rdname c4a_palettes_add
+#' @name c4a_palettes_add_as_is
 #' @export
-c4a_series_add_as_is = function(..., format.palette.name = FALSE, remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE, light.to.dark = FALSE, remove.names = FALSE) {
+c4a_palettes_add_as_is = function(..., format.palette.name = FALSE, remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE, light.to.dark = FALSE, remove.names = FALSE) {
 
 	args = c(list(...), list(format.palette.name = format.palette.name, take.gray.for.NA = take.gray.for.NA, remove.other.grays = remove.other.grays, remove.blacks = remove.blacks, light.to.dark = light.to.dark, remove.names = remove.names))
-	do.call(c4a_series_add, args)
+	do.call(c4a_palettes_add, args)
 }
 
 
@@ -169,28 +191,44 @@ check_s = function(s, n) {
 }
 
 
-#' @rdname c4a_series_add
-#' @name c4a_series_remove
+#' @rdname c4a_palettes_add
+#' @name c4a_palettes_remove
 #' @export
-c4a_series_remove = function(series = "all", are.you.sure = FALSE) {
-	if (!are.you.sure) stop("Please set are.you.sure to TRUE if you are", call. = FALSE)
+c4a_palettes_remove = function(fullnames = NULL, series = NULL, are.you.sure = NA) {
+
+	def_f = !missing(fullnames)
+	def_s = !missing(series)
+
+	if (def_f || def_s) {
+		if (identical(are.you.sure, FALSE)) stop("Please set are.you.sure to TRUE if you are", call. = FALSE)
+	} else {
+		if (!identical(are.you.sure, TRUE)) stop("Without specifying fullnames or series, all palettes will be removed. Please set are.you.sure to TRUE if you are", call. = FALSE)
+	}
 
 	z = .C4A$z
 	s = .C4A$s
 
-	sel = if (series[1] == "all") TRUE else (z$series %in% series)
+	if (def_f) {
+		sel = z$fullname %in% fullnames
+		mes = paste0("cols4all palettes \"", paste(intersect(fullnames, z$fullname), collapse = "\", \""), "\" removed")
+	} else if (def_s) {
+		sel = z$series %in% series
+		mes = paste0("cols4all series \"", paste(intersect(series, z$series), collapse = "\", \""), "\" removed")
+	} else {
+		sel = TRUE
+		mes = "all cols4all series removed"
+	}
 
 	if (all(sel)) {
-		message("all cols4all series removed")
-
 		z2 = NULL
 		s2 = NULL
 	} else {
-		message("cols4all series \"", paste(series, collapse = "\", \""), "\" removed")
-
 		z2 = z[!sel, ]
 		s2 = s[!sel, ,]
 	}
+
+	message(mes)
+
 	.C4A$z = z2
 	.C4A$s = s2
 	fill_P()

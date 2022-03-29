@@ -21,9 +21,11 @@ validate_colors <- function(x) {
 		index = attr(x, "index")
 		if (!is.list(index)) stop("index attribute is not a list")
 		if (length(index) > length(x)) stop("index too large")
+		if (is.null(names(index))) names(index) = 1:length(index)
 		for (i in 1:length(index)) {
 			ind = index[[i]]
-			if (!is.numeric(ind) || any(is.na(ind)) || any(ind > length(x)) || length(ind) != i) stop("Incorrect index numbers", call. = FALSE)
+			len = as.character(names(index)[i])
+			if (!is.null(ind) && (!is.numeric(ind) || any(is.na(ind)) || any(ind > length(x)) || length(ind) != len)) stop("Incorrect index numbers", call. = FALSE)
 		}
 	}
 	x

@@ -29,9 +29,10 @@ the presence of intense colors (which should be avoided), the overall
 aesthetic harmony, and how many different hues are used. Finally, for
 each color palette a color for missing values is assigned, which is
 especially important for spatial data visualization. Currently we
-support three types: *categorical* (qualitative) palettes, *sequential*
-palettes, and *diverging* palettes. In the near future, more palette
-types will be added, such as *cyclic*, *bivariate*, and *hierarchical*.
+support several types: *categorical* (qualitative) palettes,
+*sequential* palettes, *diverging* palettes, and *bivariate* palettes
+(divided into three types). In the near future, more palette types may
+be added, such as *cyclic* and *hierarchical*.
 
 ## Installation
 
@@ -45,8 +46,7 @@ devtools::install_github("mtennekes/cols4all")
 
     #> [1] "/home/mtes/git/cols4all"
     #> ℹ Loading cols4all
-    #> Loading required package: abind
-    #> Loading required package: colorspace
+    #> cols4all is still in development; since palettes may change, we recommend to hard-copy the color codes obtained via this package when reproducilibity is required
 
 ## Getting started
 
@@ -73,7 +73,7 @@ Selecting a palette is easy:
 ``` r
 # Select the palette "kelly" with 7 colors
 c4a("kelly", 7)
-#> [1] "#F3C300" "#875692" "#F38400" "#A1CAF1" "#BE0032" "#C2B280" "#848482"
+#> [1] "#F2F3F4" "#222222" "#F3C300" "#875692" "#F38400" "#A1CAF1" "#BE0032"
 
 # find names of hcl palettes that are diverging
 c4a_palettes(type = "div", series = "hcl")
@@ -83,8 +83,23 @@ c4a_palettes(type = "div", series = "hcl")
 
 # select purple green palette from the hcl series:
 c4a("hcl.purple_green", 11)
-#>  [1] "#481F50" "#81488C" "#B473C1" "#D2A9DA" "#E7D3EC" "#F1F1F1" "#C7E0C9"
-#>  [8] "#91C392" "#4D9D4E" "#256C26" "#013902"
+#>  [1] "#492050" "#82498C" "#B574C2" "#D2A9DB" "#E8D4ED" "#F1F1F1" "#C8E1C9"
+#>  [8] "#91C392" "#4E9D4F" "#256C26" "#023903"
+#> attr(,"range_matrix")
+#>       [,1] [,2]
+#>  [1,]    0 0.00
+#>  [2,]    0 0.60
+#>  [3,]    0 0.60
+#>  [4,]    0 0.65
+#>  [5,]    0 0.70
+#>  [6,]    0 0.75
+#>  [7,]    0 0.80
+#>  [8,]    0 0.85
+#>  [9,]    0 0.90
+#> [10,]    0 0.95
+#> [11,]    0 1.00
+#> attr(,"space")
+#> [1] "Lab"
 
 # get the associated color for missing values
 c4a_na("hcl.purple_green")
@@ -109,8 +124,8 @@ Palette names and properties:
 
 Importing and exporting palettes:
 
--   `c4a_series_add` Add color palettes
--   `c4a_series_remove` Remove color palettes
+-   `c4a_palettes_add` Add color palettes
+-   `c4a_palettes_remove` Remove color palettes
 -   `c4a_sysdata_import` Import system data
 -   `c4a_sysdata_export` Export system data
 

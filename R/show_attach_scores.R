@@ -1,4 +1,4 @@
-show_attach_scores = function(z, range) {
+show_attach_scores = function(z) {
 	type = z$type[1]
 	if (!all(z$type == type)) stop("mixed palette types not allowed")
 
@@ -15,11 +15,11 @@ show_attach_scores = function(z, range) {
 	}))
 
 	# approximation of min step for decreased range
-	if (!is.null(range)) {
-		rng = range[2] - range[1]
-		s3[, "min_step"] = round(s3[, "min_step"] * rng)
-		s3[, "max_step"] = round(s3[, "max_step"] * rng)
-	}
+	# if (!is.null(range)) {
+	# 	rng = range[2] - range[1]
+	# 	s3[, "min_step"] = round(s3[, "min_step"] * rng)
+	# 	s3[, "max_step"] = round(s3[, "max_step"] * rng)
+	# }
 
 	z2 = cbind(z, as.data.frame(s3))
 

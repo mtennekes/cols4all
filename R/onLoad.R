@@ -20,8 +20,8 @@
 #'
 #' @section Importing and exporting palettes:
 #' \tabular{ll}{
-#' \code{\link{c4a_series_add}}\tab Add color palettes \cr
-#' \code{\link{c4a_series_remove}}\tab Remove color palettes \cr
+#' \code{\link{c4a_palettes_add}}\tab Add color palettes \cr
+#' \code{\link{c4a_palettes_remove}}\tab Remove color palettes \cr
 #' \code{\link{c4a_sysdata_import}}\tab Import system data \cr
 #' \code{\link{c4a_sysdata_export}}\tab Export system data \cr
 #' }

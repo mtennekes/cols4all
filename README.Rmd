@@ -20,7 +20,7 @@ Categorical             |  Sequential | Diverging
 :-------------------------:|:-------------------------:|:-------------------------:
 [![](https://user-images.githubusercontent.com/2444081/156847689-7e1a4608-9b03-45f5-9ccf-56e6d8844d47.png)](https://user-images.githubusercontent.com/2444081/156847689-7e1a4608-9b03-45f5-9ccf-56e6d8844d47.png) | [![](https://user-images.githubusercontent.com/2444081/156847703-b429c521-89d5-4e14-85c1-0f100ca93b45.png)](https://user-images.githubusercontent.com/2444081/156847703-b429c521-89d5-4e14-85c1-0f100ca93b45.png) | [![](https://user-images.githubusercontent.com/2444081/156847712-33a3cd22-a50b-44e2-9666-b67fcb0d2853.png)]((https://user-images.githubusercontent.com/2444081/156847712-33a3cd22-a50b-44e2-9666-b67fcb0d2853.png))
 
-Color palettes are well organized and made consistent with each other. Moreover, they are scored on several aspects: color-blind-friendliness, the presence of intense colors (which should be avoided), the overall aesthetic harmony, and how many different hues are used. Finally, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support three types: *categorical* (qualitative) palettes, *sequential* palettes, and *diverging* palettes. In the near future, more palette types will be added, such as *cyclic*, *bivariate*, and *hierarchical*. 
+Color palettes are well organized and made consistent with each other. Moreover, they are scored on several aspects: color-blind-friendliness, the presence of intense colors (which should be avoided), the overall aesthetic harmony, and how many different hues are used. Finally, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, and *bivariate* palettes (divided into three types). In the near future, more palette types may be added, such as *cyclic* and *hierarchical*. 
 
 ## Installation
 
@@ -86,8 +86,8 @@ Palette names and properties:
 
 Importing and exporting palettes:
 
-* `c4a_series_add` Add color palettes
-* `c4a_series_remove` Remove color palettes
+* `c4a_palettes_add` Add color palettes
+* `c4a_palettes_remove` Remove color palettes
 * `c4a_sysdata_import` Import system data
 * `c4a_sysdata_export` Export system data
 

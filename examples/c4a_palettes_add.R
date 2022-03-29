@@ -1,37 +1,35 @@
 #######################################
 # Palettes from Statistics Netherlands
 #######################################
+
 cbsnl_cols = list(
 	charts = c("#00a1cd", "#0058b8", "#afcb05", "#53a31d", "#d9328a", "#7d4791",
 			   "#f39200", "#c90c0f", "#0581a2", "#163a72", "#899d0c", "#488225",
 			   "#af0e80", "#56217a", "#da5914", "#9c1006"),
-	map_blue7 = c("#e1f4fd", "#c0e7ff", "#77cbe5", "#3d95d4", "#2256a0", "#143564",
-				  "#09183c"),
-	map_green7 = c("#f1f6de", "#edf0c7", "#c9de85", "#85bc22", "#348a3a", "#0f5f34",
-				   "#114625"),
-	map_red7 = c("#fedfc7", "#ffc597", "#f89e6b", "#e74d15", "#c01f26", "#82001e",
-				 "#5b0708"),
-	map_purple7 = c("#fbe2ed", "#f8c1d9", "#e38cbf", "#be3e8d", "#8b176f", "#490045",
-					"#2d002c"),
-	map_blue5 = c("#c0e7ff", "#77cbe5", "#3d95d4", "#2256a0", "#143564"),
-	map_green5 = c("#edf0c7", "#c9de85", "#85bc22", "#348a3a", "#0f5f34"),
-	map_red5 = c("#ffc597", "#f89e6b", "#e74d15", "#c01f26", "#82001e"),
-	map_purple5 = c("#f8c1d9", "#e38cbf", "#be3e8d", "#8b176f", "#490045"),
+	map_blue = structure(c("#e1f4fd", "#c0e7ff", "#77cbe5", "#3d95d4", "#2256a0", "#143564",
+				  "#09183c"), index = list('5' = 2:6, '6' = 2:7, '7' = 1:7)),
+	map_green = structure(c("#f1f6de", "#edf0c7", "#c9de85", "#85bc22", "#348a3a", "#0f5f34",
+				   "#114625"), index = list('5' = 2:6, '6' = 2:7, '7' = 1:7)),
+	map_red = structure(c("#fedfc7", "#ffc597", "#f89e6b", "#e74d15", "#c01f26", "#82001e",
+				 "#5b0708"), index = list('5' = 2:6, '6' = 2:7, '7' = 1:7)),
+	map_purple = structure(c("#fbe2ed", "#f8c1d9", "#e38cbf", "#be3e8d", "#8b176f", "#490045",
+					"#2d002c"), index = list('5' = 2:6, '6' = 2:7, '7' = 1:7)),
 	map_purple_green = c("#490045", "#be3e8d", "#f8c1d9", "#e5e5e5", "#edf0c7", "#85bc22",
 						 "#0f5f34"),
 	map_red_blue = c("#82001e", "#e74d15", "#ffc597", "#e5e5e5", "#c0e7ff", "#3d95d4",
 					 "#143564")
 )
 
-cbsnl_types = c("cat", rep("seq", 8), "div", "div")
-n = c(NA, 7, 7, 7, 7, 5, 5, 5, 5, 7, 7)
+cbsnl_types = c("cat", rep("seq", 4), "div", "div")
+nmin = c(NA, 5, 5, 5, 5, 7, 7)
+nmax = c(NA, 7, 7, 7, 7, 7, 7)
 
-c4a_series_add(cbsnl_cols, xNA = "grey88",
-			   nmin = n, nmax = n,
+c4a_palettes_add(cbsnl_cols, xNA = "grey88",
+			   nmin = nmin, nmax = nmax, ndef = nmin,
 			   types = cbsnl_types, series = "cbsnl")
 
 \dontrun{
-c4a_gui(series = "cbsnl", n = 8)
+c4a_gui(series = "cbsnl")
 }
 
 # Palettes proposed by
@@ -74,6 +72,6 @@ petroff = local({
 })
 petroff2 = list(petroff9 = petroff$petroff10[-9])
 
-c4a_series_add_as_is(petroff, xNA = NA, types = "cat", series = "petroff")
-c4a_series_add_as_is(petroff2, xNA = petroff$petroff10[9],
+c4a_palettes_add_as_is(petroff, xNA = NA, types = "cat", series = "petroff")
+c4a_palettes_add_as_is(petroff2, xNA = petroff$petroff10[9],
 					 types = "cat", series = "petroff")

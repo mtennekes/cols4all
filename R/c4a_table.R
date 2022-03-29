@@ -125,18 +125,9 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 	z = .C4A$z
 
 	if (is.null(z)) {
-		if (verbose) message("No palette series loaded. Please reload cols4all, add series with c4a_series_add, or import data with c4a_sysdata_import")
+		if (verbose) message("No palette series loaded. Please reload cols4all, add series with c4a_palettes_add, or import data with c4a_sysdata_import")
 		return(invisible(NULL))
 	}
-
-	if (is.na(range[1])) {
-		if (!is.null(n)) {
-			range = c4a_default_range(n, type)
-		} else {
-			range = c(0, 1)
-		}
-	}
-
 
 	zn = get_z_n(z[z$type == type, ], n = n, m = m, range = range)
 	if (!is.null(zn)) {
@@ -148,7 +139,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 		return(invisible(NULL))
 	}
 
-	zn = show_attach_scores(zn, range = range)
+	zn = show_attach_scores(zn)
 	# better but slower alternative: calculate all scores read time:
 	#zn = get_scores_zn(zn)
 

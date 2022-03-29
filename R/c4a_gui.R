@@ -22,7 +22,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 		series = intersect(series, allseries)
 	}
 	if (!length(series)) {
-		message("No palette series loaded. Please reload cols4all, add series with c4a_series_add, or import data with c4a_sysdata_import")
+		message("No palette series loaded. Please reload cols4all, add series with c4a_palettes_add, or import data with c4a_sysdata_import")
 		return(invisible(NULL))
 	}
 
@@ -105,11 +105,13 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 					shiny::fluidRow(
 						shiny::column(4,
 							#shiny::br(),
-							shiny::radioButtons("auto_range", label = "Range", choices = c("Maximum", "Automatic", "Manual"), selected = "Maximum")),
+							shiny::radioButtons("auto_range", label = "Range", choices = c("Automatic", "Manual"), selected = "Automatic")),
+						shiny::conditionalPanel(
+							condition = "input.auto_range == 'Manual'",
 							shiny::column(8,
-								shinyjs::disabled(shiny::div(style = "font-size:0;margin-bottom:-20px", shiny::sliderInput("range", "",
-												   min = 0, max = 1, value = c(0,1), step = .05))),
-								shiny::uiOutput("range_info")))),
+								shiny::div(style = "font-size:0;margin-bottom:-20px", shiny::sliderInput("range", "",
+												   min = 0, max = 1, value = c(0,1), step = .05)),
+								shiny::uiOutput("range_info"))))),
 				shiny::fluidRow(
 					shiny::column(7,
 								  shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = TRUE)),
@@ -123,9 +125,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 					shiny::column(5,
 						shiny::br(),
 						shiny::checkboxInput("sortRev", "Reverse", value = FALSE))), style = "margin-bottom:-10px;"),
-				shiny::checkboxInput("dark", "Dark mode", value = FALSE),
-				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE)
-			), class = "sticky", id = "color_change2"),
+				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE),
+				shiny::checkboxInput("dark", "Dark mode", value = FALSE)
+			), class = "sticky"),
 
 			shiny::mainPanel(
 				shiny::tableOutput("show")
@@ -169,7 +171,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				 show.scores = input$advanced,
 				 columns = if (input$n > 16) 12 else input$n,
 				 na = input$na,
-				 range = input$range,
+				 range = if (input$auto_range == "Automatic") NA else input$range,
 				 textcol = input$textcol,
 				 format = input$format)
 		})
@@ -238,27 +240,27 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 			}
 		})
 
-		shiny::observe({
-			n = input$n
-			ac = input$auto_range
-			type = input$type
-
-			if (type == "cat") return(NULL)
-			if (ac != "Manual") {
-				shiny::freezeReactiveValue(input, "range")
-				shinyjs::disable("range")
-				if (ac == "Maximum") {
-					rng = c(0, 1)
-				} else {
-					fun = paste0("default_range_", type)
-					rng = do.call(fun, list(k = n))
-				}
-				shinyjs::disable("range")
-				shiny::updateSliderInput(session, "range", value = c(rng[1], rng[2]))
-			} else {
-				shinyjs::enable("range")
-			}
-		})
+		# shiny::observe({
+		# 	n = input$n
+		# 	ac = input$auto_range
+		# 	type = input$type
+		#
+		# 	if (type == "cat") return(NULL)
+		# 	if (ac != "Manual") {
+		# 		shiny::freezeReactiveValue(input, "range")
+		# 		shinyjs::disable("range")
+		# 		if (ac == "Maximum") {
+		# 			rng = c(0, 1)
+		# 		} else {
+		# 			fun = paste0("default_range_", type)
+		# 			rng = do.call(fun, list(k = n))
+		# 		}
+		# 		shinyjs::disable("range")
+		# 		shiny::updateSliderInput(session, "range", value = c(rng[1], rng[2]))
+		# 	} else {
+		# 		shinyjs::enable("range")
+		# 	}
+		# })
 
 		output$range_info = shiny::renderUI({
 			#if (input$type == "div") shiny::div(style="text-align:left;", shiny::tagList("middle", shiny::span(stype = "float:right;", "each side"))) else ""

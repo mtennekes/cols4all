@@ -1,7 +1,8 @@
-process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remove.other.grays = FALSE, remove.blacks = TRUE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow") {
+process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remove.other.grays = FALSE, remove.blacks = TRUE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list()) {
 
 	# maybe need to reindex
 	index = attr(pal, "index")
+	range_matrix = attr(pal, "range_matrix")
 	orig_pal = pal
 
 	if (type %in% c("bivs", "bivc", "bivu")) {
@@ -110,7 +111,24 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 			index2[[w]]
 		})
 		attr(pal, "index") = index3
+	} else if (is.null(range_matrix) && type %in% c("seq", "div")) {
+
+		rma = formals(get(paste0("range_", type)))
+		rma$n = NULL
+
+
+		if (!is.null(range_matrix_args) && length(range_matrix_args)) {
+			rma[names(range_matrix_args)] = range_matrix_args
+		}
+
+		range_matrix = do.call(paste0("range_", type), c(list(n = length(pal)), rma))
+		attr(pal, "range_matrix") = range_matrix
+	} else if (is.null(range_matrix)) {
+		attr(pal, "range_matrix") = range_matrix
 	}
+
+	attr(pal, "space") = space
+
 	pal[] = toupper(pal[])
 	colNA = toupper(colNA)
 

@@ -16,7 +16,7 @@ c4a_sysdata_export()
 \code{c4a_sysdata_export} returns the system data
 }
 \description{
-Import and export system data. \code{c4a_sysdata_import} will import system data and overwrite the current system data. System data includes palette data and pre-calculated color-blind-friendliness scores. \code{c4a_sysdata_export} will export the current system data. These functions are for advanced use; the functions \code{\link{c4a_series_add}} and \code{\link{c4a_series_remove}} are user-friendly interfaces to change the loaded palettes.
+Import and export system data. \code{c4a_sysdata_import} will import system data and overwrite the current system data. System data includes palette data and pre-calculated color-blind-friendliness scores. \code{c4a_sysdata_export} will export the current system data. These functions are for advanced use; the functions \code{\link{c4a_palettes_add}} and \code{\link{c4a_palettes_remove}} are user-friendly interfaces to change the loaded palettes.
 }
 \examples{
 x = c4a_sysdata_export()
