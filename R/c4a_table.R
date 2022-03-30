@@ -302,20 +302,25 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 	tooltip_RH = "Spectral (&#34;rainbow&#34;) palette: easy to distinguish colors, but less suitable for quantitative analysis"
 	tooltip_SH_seq = "Single hue palette: good for quantitative analysis, but harder to distinguish colors"
 	tooltip_SH_div = "Each side has its own distinct hue: recommended!"
+	tooltip_SH_bivs = "Each dimension has its own distinct hue: recommended!"
 	tooltip_Harm = "Harmonic, well-balanced colors"
 
-	if ("cbfriendly" %in% qn) e2[[.labels["cbfriendly"]]] = ifelse(!is.na(e2[[.labels["cbfriendly"]]]) & e2[[.labels["cbfriendly"]]] == 1L, kableExtra::cell_spec("&#9786;", tooltip = tooltip_cbfriendly, escape = FALSE), "")
+	if ("cbfriendly" %in% qn) e2[[.labels["cbfriendly"]]] = ifelse(!is.na(e2[[.labels["cbfriendly"]]]) & e2[[.labels["cbfriendly"]]] == 1L, kableExtra::cell_spec("&#9786;", extra_css
+="font-size: 80%;", tooltip = tooltip_cbfriendly, escape = FALSE), "")
 	if ("highC" %in% qn) e2[[.labels["highC"]]] = ifelse(!is.na(e2[[.labels["highC"]]]) & e2[[.labels["highC"]]] == 1L, kableExtra::cell_spec("&#x1f576;", tooltip = tooltip_highC, escape = FALSE), "")
 
 
 	if ("hueType" %in% qn){
 		lab = .labels["hueType"]
-		if (type == "seq") {
+		if (type %in% c("seq", "bivu")) {
 			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
 							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#128396;", tooltip = tooltip_SH_seq, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
-		} else if (type %in% c("div", "bivs", "bivc", "bivu")) {
+		} else if (type %in% c("div", "bivc")) {
 			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
 							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#x262F;", tooltip = tooltip_SH_div, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
+		} else if (type == c("bivs")) {
+			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
+							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#x262F;", tooltip = tooltip_SH_bivs, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
 		}
 	}
 
@@ -356,7 +361,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "padding-left: 3px; padding-right: 3px; vertical-align: bottom") #max-width: 5em;
 
 	for (q in ql_other) {
-		k = kableExtra::column_spec(k, which(q == e2nms), width = "3em", extra_css = "padding-right: 20px; text-align: right")
+		k = kableExtra::column_spec(k, which(q == e2nms), width = "3em", extra_css = "text-align: center; vertical-align: center")
 	}
 
 	for (q in ql_icons) {

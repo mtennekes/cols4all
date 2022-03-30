@@ -36,30 +36,44 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
 
-	ui = shiny::div(id = "background", style = "height:100%;", shiny::fluidPage(
+	ui = shiny::fluidPage(
 		shinyjs::useShinyjs(),
-		shiny::tags$style(shiny::HTML("div.sticky {
+		shiny::tags$script(shiny::HTML("
+	      Shiny.addCustomMessageHandler('background-color', function(x) {
+	        document.body.style.backgroundColor = x.bg;
+	        document.body.style.color = x.text;
+	      });
+	    ")),
+		# function setProp(cls, prop, value) {
+		# 	var elements = document.getElementsByClassName(cls);
+		# 	for(var i = 0; i < elements.length; i++) {
+		# 		elements[i].style[prop] = value;
+		# 	}
+		# }
+		# setProp('item', 'backgroundColor', x.activebg);
+		# setProp('item', 'color', x.textlight);
+		# setProp('selectize-input', 'backgroundColor', x.bg);
+		# setProp('selectize-input', 'color', x.text);
+		# setProp('option.active', 'backgroundColor', x.bg);
+		# setProp('option.active', 'color', x.text);
+		# setProp('selectize-dropdown-content', 'backgroundColor', x.bg);
+		# setProp('form-control', 'color', x.text);
+
+		shiny::tags$style(shiny::HTML('div.sticky {
 		  position: -webkit-sticky;
 		  position: sticky;
 		  top: 0;
 		  z-index: 1;
 		}
+
 		 .well {
-			background-image: url('imgResources/cols4all_logo.png');
+			background-image: url("imgResources/cols4all_logo.png");
 			background-repeat: no-repeat;
 			background-size: 86px 100px;
 			background-position: 97% 1%;
            	background-color:transparent;
 		 }
-        div.light {
-           	background-color: #ffffff !important;
-        	color: #000000 !important;
-		}
-        div.dark {
-           	background-color: #000000 !important;
-        	color: #bbbbbb !important;
-		}
-		")),
+		')),
 		# font-size: 13px;
 		# line-height: 1.333;
 # 		shiny::tags$style(shiny::HTML("div.sticky {
@@ -133,7 +147,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				shiny::tableOutput("show")
 			)
 		)
-	))
+	)
 	server = function(input, output, session) {
 
 
@@ -148,15 +162,14 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 		})
 
 		shiny::observeEvent(input$dark, {
+
+			#input$series # otherwise newly added items will always be white
 			if (input$dark) {
-				set = "dark"
-				unset = "light"
+				x = list(bg = "#000000", text = "#bbbbbb", activebg = "#202020", textlight = "#bbbbbb")
 			} else {
-				unset = "dark"
-				set = "light"
+				x = list(bg = "#ffffff", text = "#000000", activebg = "#efefef", textlight = "#333333")
 			}
-			shinyjs::addClass("background", set)
-			shinyjs::removeClass("background", unset)
+			session$sendCustomMessage("background-color", x)
 		})
 
 		get_values = shiny::reactive({
@@ -284,6 +297,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				tab = c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format, verbose = FALSE)
 			}
 			if (is.null(tab)) {
+				#c4a_overview(values$type)
 				kableExtra::kbl(data.frame("No palettes found. Please change the selection."), col.names = " ")
 			} else {
 				tab

@@ -176,10 +176,15 @@ get_hue_width = function(hs) {
 
 
 # HCL characteristics
-analyse_hcl = function(p) {
+analyse_hcl = function(p, type) {
 
-	if (is.matrix(p)) {
+
+	if (type == "bivs") {
 		p = c(as.vector(p[lower.tri(p)]), p[1,1], as.vector(p[upper.tri(p)]))
+	} else if (type == "bivc") {
+		p = c(rev(p[, 1]), p[1, 2], p[, 3])
+	} else if (type == "bivu") {
+		p = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
 	}
 
 

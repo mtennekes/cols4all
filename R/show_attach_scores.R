@@ -24,7 +24,7 @@ show_attach_scores = function(z) {
 	z2 = cbind(z, as.data.frame(s3))
 
 	z2$cbfriendly = get_friendlyness(z2)
-	a = t(sapply(z2$palette, analyse_hcl))
+	a = t(mapply(analyse_hcl, z2$palette, z2$type))
 	z2 = cbind(z2, a)
 
 	z2$highC = z2$Cmax >= .C4A$Cintense
