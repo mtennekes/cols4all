@@ -2,7 +2,7 @@
 #'
 #' Add and remove palette series. `c4a_palettes_add` can be used to add own palette series and  `c4a_palettes_remove` to remove palette series. `c4a_palettes_add_as_is` is the same as `c4a_palettes_add`, but by default without any processing. These functions require the R package `colorblindcheck`.
 #'
-#' Indexing: for a categorical `"cat"` palette, an optional `"index"` attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See `c4a_meta("rainbow")` and  for an example.
+#' Indexing: for a categorical `"cat"` palette, an optional `"index"` attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See `c4a_info("rainbow")` and  for an example.
 #'
 #' Range: sequential and diverging palettes are usually defined for 9+ colors. The optional `"range_matrix"` attribute determines that range is used for less colors. It is a n x 2 matrix where row i defines the applied range of a palette of length i. For sequential palettes a range `c(0,1)` means that the palette is generated (via a color ramp) between the two outermost colors. For diverging palettes, a range `c(x, y)` means that both sides of the palette are generated (via a color ramp) from `x`, which is the distance to the center color, to `y` which represents both outermost colors.
 #'
@@ -22,6 +22,7 @@
 #' @param biv.method method to a create bivariate palette. Options are `"byrow"` means that the colors are wrapped row-wise to a color matrix where the number of rows and columns is automatically determined, `"byrowX"` the same but with X (integer between 2 and 9) columns, `"bycol"` and `"bycolX` similar but wrapped column-wise. `"div2seqseq"` and `"div2catseq` means that colors are extracted from a divering palette. The former translates colors into a matrix with the neutral color in the diagonal, while the latter places the neutral color in the middle column. `"seq2uncseq"`
 #' @param space color space in which interpolated colors are determined. Options: `"rgb"` (RGB) and `"Lab"` (CIE Lab).
 #' @param range_matrix_args list of lists, one for each palette. Each such list specifies the range of sequential and diverging palettes, in case they are not indexed. See details.
+#' @param bib bibtex reference in the form of a `utils::bibentry` object.
 #' @param are.you.sure are you sure you want to remove series?
 #' @param fullnames full palette names (so in the format `series.palette_name`)
 #' @param ... passed on to `c4a_palettes_add`
@@ -29,7 +30,7 @@
 #' @rdname c4a_palettes_add
 #' @name c4a_palettes_add
 #' @export
-c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, ndef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL)) {
+c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, ndef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL), bib = NA) {
 
 	if (!requireNamespace("colorblindcheck")) stop("Please install colorblindcheck")
 

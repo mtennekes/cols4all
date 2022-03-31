@@ -23,8 +23,9 @@ This page provides a brief overview of all package functions.
 
 \tabular{ll}{
 \code{\link{c4a_palettes}}\tab Get available palette names \cr
-\code{\link{c4a_series}}\tab Get available series \cr
-\code{\link{c4a_meta}}\tab Get meta information (such as type and maximum number of colors) \cr
+\code{\link{c4a_series}}\tab Get available series names\cr
+\code{\link{c4a_info}}\tab Get palette information (such as type and maximum number of colors) \cr
+\code{\link{c4a_citation}}\tab Show how to cites palettes (with bibtex code) \cr
 \code{\link{.P}}\tab Environment via which palette names can be browsed with auto-completion (using \code{$}) \cr
 }
 }
@@ -37,98 +38,6 @@ This page provides a brief overview of all package functions.
 \code{\link{c4a_sysdata_import}}\tab Import system data \cr
 \code{\link{c4a_sysdata_export}}\tab Export system data \cr
 }
-}
-
-\section{References}{
-
-
-\strong{misc}
-\itemize{
-\item \code{r3} and \code{r4} base R colors, from the \code{grDevices} package
-\item \code{ggplot2} from the \code{ggplot2} package (also included in \code{grDevices})
-\item \code{okabe} by Okabe-Ito (2002, revised 2008), Color Universal Design (CUD) - How to make figures and presentations that are friendly to Colorblind people -, \url{https://jfly.uni-koeln.de/color/} (also included in \code{grDevices})
-\item \code{alphabet} from the \code{Polychroma} package (also included in \code{grDevices})
-\item \code{alphabet2} by P.Green-Armytage (2010): A Colour Alphabet and the Limits of Colour Coding. Colour: Design & Creativity (5) (2010): 10, 1-23. www.aic-color.org/journal/v5/jaic_v5_06.pdf
-\item \code{polychrome36} from the \code{Polychrome} package (also included in \code{grDevices})
-\item \code{kelly} by K. Kelly (1965): Twenty-two colors of maximum contrast. Color Eng., 3(6), 1965. http://www.iscc.org/pdf/PC54_1724_001.pdf (obtained from the \code{pals} package)
-\item \code{watlington} by John Watlington. \url{http://alumni.media.mit.edu/~wad/color/palette.html} (obtained from the \code{pals} package)
-\item \code{cols25} by K. Wright \url{https://stackoverflow.com/a/9568659/1393348} (obtained from the \code{pals} package)
-\item \code{glasbey} by Chris Glasbey, Gerie van der Heijden, Vivian F. K. Toh, Alision Gray (2007). Colour Displays for Categorical Images. Color Research and Application, 32, 304-309. (from the \code{pals} package)
-}
-
-\strong{hcl}
-
-From the \code{colorspace} package, citation:
-
-Zeileis A, Fisher JC, Hornik K, Ihaka R, McWhite CD, Murrell P, Stauffer R, Wilke CO (2020). colorspace: A Toolbox for Manipulating and Assessing Colors and Palettes. Journal of Statistical Software, 96 (1), 1-49.
-
-\strong{brewer}
-
-From the \code{RColorBrewer} package, by Cynthia Brewer:
-
-Harrower, Mark, and Cynthia A. Brewer. "ColorBrewer.org: an online tool for selecting colour schemes for maps." The Cartographic Journal 40.1 (2003): 27-37.
-
-\strong{tol}
-
-Color schemes by Paul Tol. \url{https://personal.sron.nl/~pault/}
-
-\strong{viridis}
-
-Color schemes used in the Python library matplotlib:
-
-Smith, Nathaniel, and Stéfan Van der Walt. 2015. “A Better Default Colormap for Matplotlib.” In SciPy 2015 – Scientific Computing with Python. Austin.
-
-In R obtained via the package \code{viridisLite}
-
-\strong{kovesi}
-
-Color schemes by Peter Kovesi:
-
-Peter Kovesi (2016). CET Perceptually Uniform Colour Maps. \url{https://colorcet.com/}
-Peter Kovesi (2015). Good Colour Maps: How to Design Them. Arxiv. \url{https://arxiv.org/abs/1509.03700}
-
-Obtained via the R package \code{pals} (by Kevin Wright)
-
-\strong{wes}
-
-Palettes from Wes Anderson movies
-
-Obtained via the package \code{wesanderson}
-
-\strong{carto}
-
-Palettes by CARTO.
-
-CARTO. 2022. CARTOColors – Data-Driven Color Schemes.” https://carto.com/carto-colors/.
-
-Obtained via the package \code{rcartocolors}
-
-\strong{scico}
-
-Palettes developed by Fabio Crameri
-
-\url{http://www.fabiocrameri.ch/colourmaps.php}
-
-Crameri, Fabio. (2018, May 8). Scientific colour maps (Version 3.0.1). Zenodo.
-Crameri, Fabio. (2018). Geodynamic diagnostics, scientific visualisation and StagLab 3.0. Geosci. Model Dev. Discuss.
-
-Obtained via the R package \code{scico}
-
-\strong{tableau}
-
-Palettes by Tableau Software
-
-Obtained via the R package \code{ggthemes}
-
-\strong{seaborn}
-
-Palettes contained in the Python library \code{seaborn} by Michael Waskom. \url{https://seaborn.pydata.org/tutorial/color_palettes.html}
-
-\strong{stevens}
-
-Bivariate palettes by Joshua Stevens
-
-\url{https://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map}. Obtained via the R package \code{pals}.
 }
 
 \seealso{

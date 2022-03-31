@@ -2,9 +2,10 @@
 
 export(.P)
 export(c4a)
+export(c4a_citation)
 export(c4a_default_palette)
 export(c4a_gui)
-export(c4a_meta)
+export(c4a_info)
 export(c4a_na)
 export(c4a_name_convert)
 export(c4a_palettes)

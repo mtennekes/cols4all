@@ -36,7 +36,7 @@ c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bi
 		mes = NULL
 	}
 
-	x = c4a_meta(palette, verbose = verbose)
+	x = c4a_info(palette, verbose = verbose)
 
 	reverse = xor(reverse, x$reverse)
 
@@ -78,16 +78,16 @@ c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bi
 	}
 }
 
-#' Get meta information from a cols4all palette
+#' Get information from a cols4all palette
 #'
-#' Get meta information from a cols4all palette
+#' Get information from a cols4all palette
 #'
 #' @param palette name of the palette
 #' @param no.match what happens is no match is found? Options: `"error"`: an error is thrown, `"null"`: `NULL` is returned
 #' @param verbose should messages be printed?
 #' @return list with the following items: name, series, fullname, type, palette (colors), na (color), nmax, and reverse. The latter is `TRUE` when there is a `"-"` prefix before the palette name.
 #' @export
-c4a_meta = function(palette, no.match = c("error", "null"), verbose = TRUE) {
+c4a_info = function(palette, no.match = c("error", "null"), verbose = TRUE) {
 	isrev = (substr(palette, 1, 1) == "-")
 	if (isrev) palette = substr(palette, 2, nchar(palette))
 
@@ -121,7 +121,7 @@ c4a_na = function(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 	}
 
 
-	x = c4a_meta(palette, verbose = verbose)
+	x = c4a_info(palette, verbose = verbose)
 
 	if (!is.null(mes) && verbose) message(mes)
 

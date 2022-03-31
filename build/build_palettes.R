@@ -581,5 +581,10 @@ local({
 .s = get("s", .C4A)
 
 
-save(.z, .s, file="R/sysdata.rda", compress="xz")
+
+.zbib = bibtex::read.bib("build/references.bib")
+
+
+save(.z, .s, .zbib, file="R/sysdata.rda", compress="xz")
+
 

@@ -80,9 +80,10 @@ Main functions:
 Palette names and properties:
 
 * `c4a_palettes` Get available palette names
-* `c4a_series` Get available series
-* `c4a_meta` Get meta information (such as type and maximum number of colors )
-* `c4a_ls` Environment via which palette names can be browsed with auto-completion (using `$`)
+* `c4a_series` Get available series names
+* `c4a_info` Get palette information (such as type and maximum number of colors)
+* `c4a_citation` Show how to cite palettes (with bibtex code).
+* `.P` Environment via which palette names can be browsed with auto-completion (using `$`)
 
 Importing and exporting palettes:
 

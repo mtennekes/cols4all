@@ -22,7 +22,8 @@ c4a_palettes_add(
   remove.names = TRUE,
   biv.method = "byrow",
   space = "rgb",
-  range_matrix_args = list(NULL)
+  range_matrix_args = list(NULL),
+  bib = NA
 )
 
 c4a_palettes_add_as_is(
@@ -62,6 +63,8 @@ c4a_palettes_remove(fullnames = NULL, series = NULL, are.you.sure = NA)
 
 \item{range_matrix_args}{list of lists, one for each palette. Each such list specifies the range of sequential and diverging palettes, in case they are not indexed. See details.}
 
+\item{bib}{bibtex reference in the form of a \code{utils::bibentry} object.}
+
 \item{...}{passed on to \code{c4a_palettes_add}}
 
 \item{fullnames}{full palette names (so in the format \code{series.palette_name})}
@@ -72,7 +75,7 @@ c4a_palettes_remove(fullnames = NULL, series = NULL, are.you.sure = NA)
 Add and remove palette series. \code{c4a_palettes_add} can be used to add own palette series and  \code{c4a_palettes_remove} to remove palette series. \code{c4a_palettes_add_as_is} is the same as \code{c4a_palettes_add}, but by default without any processing. These functions require the R package \code{colorblindcheck}.
 }
 \details{
-Indexing: for a categorical \code{"cat"} palette, an optional \code{"index"} attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See \code{c4a_meta("rainbow")} and  for an example.
+Indexing: for a categorical \code{"cat"} palette, an optional \code{"index"} attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See \code{c4a_info("rainbow")} and  for an example.
 
 Range: sequential and diverging palettes are usually defined for 9+ colors. The optional \code{"range_matrix"} attribute determines that range is used for less colors. It is a n x 2 matrix where row i defines the applied range of a palette of length i. For sequential palettes a range \code{c(0,1)} means that the palette is generated (via a color ramp) between the two outermost colors. For diverging palettes, a range \code{c(x, y)} means that both sides of the palette are generated (via a color ramp) from \code{x}, which is the distance to the center color, to \code{y} which represents both outermost colors.
 
