@@ -1,18 +1,49 @@
-def_n = function(type) switch(type, cat = 7, seq = 7, div = 9, 3)
+def_n = function(npref = NA, type, series, tab_nmin, tab_nmax) {
+
+	nmin = suppressWarnings(min(tab_nmin[series, type], na.rm = TRUE))
+	nmax = suppressWarnings(max(tab_nmax[series, type], na.rm = TRUE))
+
+	if (is.na(npref)) npref = switch(type, cat = 7, seq = 7, div = 9, 3)
+	if (is.infinite(nmax)) nmax = 15
+	if (nmin < 2) nmin = 2
+
+	n = if (is.infinite(nmin)) {
+		npref # should not happen or else throw a message elsewhere
+	} else if (nmin < npref && nmax > npref) {
+		npref
+	} else if (is.infinite(nmax)) {
+		nmin
+	} else {
+		nmax
+	}
+	list(n = n, nmin = nmin, nmax = nmax)
+}
 
 
 
 #' @rdname c4a_gui
 #' @name c4a_gui
 #' @export
-c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "tol", "viridis")) {
+c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "tol", "viridis", "c4a")) {
 	if (!requireNamespace("shiny")) stop("Please install shiny")
 	if (!requireNamespace("shinyjs")) stop("Please install shinyjs")
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
 
-	if (is.na(n)) n = def_n(type)
 
 	z = .C4A$z
+
+	tps = c("cat", "seq", "div", "bivs", "bivc", "bivu")
+
+	tab_nmin = tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = min)
+	tab_nmax = tapply(z$nmax, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = max)
+	tab_k = as.data.frame(tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = length))
+	tab_k$series = rownames(tab_k)
+	tab_k = tab_k[, c("series", tps)]
+
+
+
+
+
 
 	allseries = sort(unique(z$series))
 	if (series[1] == "all") {
@@ -22,10 +53,11 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 		series = intersect(series, allseries)
 	}
 	if (!length(series)) {
-		message("No palette series loaded. Please reload cols4all, add series with c4a_palettes_add, or import data with c4a_sysdata_import")
+		message("No palette series to show. Either restart c4a_gui with different parameters, add series with c4a_palettes_add, or import data with c4a_sysdata_import")
 		return(invisible(NULL))
 	}
 
+	ns = def_n(npref = n, type, series, tab_nmin, tab_nmax)
 
 	types = .C4A$types
 	series_per_type = structure(lapply(types, function(tp) {
@@ -102,10 +134,14 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 			shiny::div(shiny::sidebarPanel(
 				width = 3,
 				shiny::radioButtons("type", "Palette Type", choices = types, selected = type),
-				shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE),
+				shiny::fluidRow(
+					shiny::column(8,
+								  shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE)),
+					shiny::column(4,
+								  shiny::div(style = "margin-top: 25px", shiny::actionButton("overview", label = "Overview")))),
 				shiny::conditionalPanel(
 					condition = "input.type.substring(0, 3) != 'biv'",
-					shiny::sliderInput("n", "Number of colors", min = 2, max = 36, value = n, ticks = FALSE)),
+					shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
 				shiny::conditionalPanel(
 					condition = "input.type.substring(0, 3) == 'biv'",
 					shiny::fluidRow(
@@ -151,8 +187,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 	server = function(input, output, session) {
 
 
-		rv <- shiny::reactiveValues(selected_series = first_series,
-							 current_type = type)
+		rv = shiny::reactiveValues(selected_series = series,
+								   current_type = type)
 
 		shiny::observeEvent(get_cols(), {
 			cols = get_cols()
@@ -170,6 +206,42 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				x = list(bg = "#ffffff", text = "#000000", activebg = "#efefef", textlight = "#333333")
 			}
 			session$sendCustomMessage("background-color", x)
+		})
+
+
+		shiny::observeEvent(input$type, {
+			type = input$type
+			series = input$series
+
+			choices = series_per_type[[type]]
+			not_selected = setdiff(series_per_type[[rv$current_type]], series)
+			rv$selected_series = union(setdiff(rv$selected_series, not_selected), series)
+			rv$current_type = type
+
+			selected = intersect(choices, rv$selected_series)
+
+			shiny::freezeReactiveValue(input, "series")
+			shiny::updateSelectizeInput(session, "series", choices = choices, selected = selected)
+		})
+
+		shiny::observeEvent(input$series, {
+			type = input$type
+
+			if (!(type %in% c("cat", "seq", "div"))) return(NULL)
+			series = input$series
+
+			ns =  def_n(npref = NA, type, series, tab_nmin, tab_nmax)
+
+			shiny::freezeReactiveValue(input, "n")
+			shiny::updateSliderInput(session, "n", min = ns$nmin, max = ns$nmax, value = ns$n)
+		})
+
+		shiny::observeEvent(input$overview, {
+			type = input$type
+			title = paste0("Overview of palettes per series of type ", type)
+			shiny::showModal(shiny::modalDialog(title = "Number of palettes per series (rows) and type (columns)",
+												shiny::renderTable(tab_k, na = "", striped = TRUE, hover = TRUE, bordered = TRUE),
+												shiny::div(style="font-size: 75%;", shiny::renderTable(.C4A$type_info))))
 		})
 
 		get_values = shiny::reactive({
@@ -196,29 +268,6 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 		})
 
 
-		shiny::observeEvent(input$type, {
-			type = input$type
-			n = def_n(type)
-
-			choices = series_per_type[[type]]
-			not_selected = setdiff(series_per_type[[rv$current_type]], input$series)
-			rv$selected_series = union(setdiff(rv$selected_series, not_selected), input$series)
-			rv$current_type = type
-
-			selected = intersect(choices, rv$selected_series)
-
-			shiny::updateSelectizeInput(session, "series", choices = choices, selected = selected)
-			if (type == "cat") {
-				shiny::freezeReactiveValue(input, "n")
-				shiny::updateSliderInput(session, "n", min = 2, max = 36, value = n)
-			} else if (type == "seq") {
-				shiny::freezeReactiveValue(input, "n")
-				shiny::updateSliderInput(session, "n", min = 3, max = 11,  value = n)
-			} else if (type == "div") {
-				shiny::freezeReactiveValue(input, "n")
-				shiny::updateSliderInput(session, "n", min = 3, max = 13,  value = n)
-			}
-		})
 
 		shiny::observeEvent(input$type, {
 			type = input$type
@@ -297,12 +346,12 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				tab = c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format, verbose = FALSE)
 			}
 			if (is.null(tab)) {
-				#c4a_overview(values$type)
 				kableExtra::kbl(data.frame("No palettes found. Please change the selection."), col.names = " ")
 			} else {
 				tab
 			}
 		}
+
 	}
 	shiny::shinyApp(ui = ui, server = server)
 }

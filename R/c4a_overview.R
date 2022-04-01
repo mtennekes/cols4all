@@ -12,5 +12,6 @@ c4a_overview = function(type) {
 	df = data.frame(Series = levels(zt$series), np = np, nmin = nmin, nmax = nmax)
 	rownames(df) = NULL
 
-	kableExtra::kbl(df, col.names = c("Series", "Number of palettes", "Min. number of colors", "Max. number of colors"))
+	kableExtra::kbl(df, col.names = c("Series", "Number of palettes", "Min. number of colors", "Max. number of colors")) |>
+		kableExtra::kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 }

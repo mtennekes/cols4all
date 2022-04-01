@@ -252,9 +252,21 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 				   paste(palList[[did]], collapse = "&quot;, &quot;"), "&quot;)`)")
 		}
 	}, USE.NAMES = FALSE)
+	txt3 = rep("&#128441;", nrow(e2))
+	txt3[e2$ind !=1 ] = ""
+	fn = paste(e2$series, e2$name, sep = ".")
+	links3 = sapply(1:nrow(e2), function(rw) {
+		if (txt3[rw] == "") {
+			""
+		} else{
+			bib = format(c4a_citation(fn[rw], verbose = FALSE), style = "Bibtex")
+			paste0("javascript:navigator.clipboard.writeText(`", bib,"`)")
+		}
+	}, USE.NAMES = FALSE)
 
 	e2[['Copy1']] = kableExtra::cell_spec(txt1, link=links1, tooltip='Copy colors: [&quot;#111111&quot;, &quot;#222222&quot;]', escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
-	e2[['Copy2']] = kableExtra::cell_spec(txt2, link=links2, tooltip='Copy colors: c(&quot;#111111&quot;, &quot;#222222&quot;)', escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
+	e2[['Copy2']] = kableExtra::cell_spec(txt2, link=links2, tooltip='Copy colors to R: c(&quot;#111111&quot;, &quot;#222222&quot;)', escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
+	e2[['Copy3']] = kableExtra::cell_spec(txt3, link=links3, tooltip='Copy BibTex reference', escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
 
 
 	sim = switch(cvd.sim,
@@ -297,6 +309,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 	rownames(e2) = NULL
 
 	tooltip_cbfriendly = if (is.null(n)) "Colorblind-friendly!" else paste0("Colorblind-friendly! (at least, for n = ", n, ")")
+	tooltip_cbunfriendly = "Be careful!"
 	tooltip_highC = "Watch out for those intense colors!"
 
 	tooltip_RH = "Spectral (&#34;rainbow&#34;) palette: easy to distinguish colors, but less suitable for quantitative analysis"
@@ -306,7 +319,8 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 	tooltip_Harm = "Harmonic, well-balanced colors"
 
 	if ("cbfriendly" %in% qn) e2[[.labels["cbfriendly"]]] = ifelse(!is.na(e2[[.labels["cbfriendly"]]]) & e2[[.labels["cbfriendly"]]] == 1L, kableExtra::cell_spec("&#9786;", extra_css
-="font-size: 80%;", tooltip = tooltip_cbfriendly, escape = FALSE), "")
+="font-size: 80%;", tooltip = tooltip_cbfriendly, escape = FALSE), ifelse(!is.na(e2[[.labels["cbfriendly"]]]) & e2[[.labels["cbfriendly"]]] == -1L, kableExtra::cell_spec("&#128064;", extra_css
+																								  ="font-size: 60%;", tooltip = tooltip_cbunfriendly, escape = FALSE), ""))
 	if ("highC" %in% qn) e2[[.labels["highC"]]] = ifelse(!is.na(e2[[.labels["highC"]]]) & e2[[.labels["highC"]]] == 1L, kableExtra::cell_spec("&#x1f576;", tooltip = tooltip_highC, escape = FALSE), "")
 
 
@@ -343,8 +357,8 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 		e2[[q]][is.na(e2[[q]])] = ""
 	}
 
-	e2cols = c("series", "label", ql, colNames, "Copy1", "Copy2")
-	e2nms = c("Series", "Name", ql, colNames, " ", " ")
+	e2cols = c("series", "label", ql, colNames, "Copy1", "Copy2", "Copy3")
+	e2nms = c("Series", "Name", ql, colNames, " ", " ", " ")
 
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2nms, escape = F)
 

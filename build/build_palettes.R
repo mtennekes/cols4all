@@ -497,12 +497,12 @@ local({
 	p = list(kelly = Polychrome::kelly.colors(n = 22),
 			 glasbey = Polychrome::glasbey.colors(n = 32),
 			 alphabet2 = Polychrome::green.armytage.colors(n = 26),
-			 wright25 = pals::cols25(),
 			 palette36 = Polychrome::palette36.colors(n = 36),
 			 alphabet = Polychrome::alphabet.colors(n = 26),
 			 light24 = Polychrome::light.colors(n = 24),
 			 dark24 = Polychrome::dark.colors(n = 24),
-			 sky24 = Polychrome::sky.colors(n = 24))
+			 sky24 = Polychrome::sky.colors(n = 24),
+			 wright25 = pals::cols25())
 	c4a_palettes_add(p, types = "cat", series = "poly", remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE)
 })
 
@@ -539,26 +539,24 @@ local({
 
 	b = .C4A$z[match(pals, .C4A$z$fullname), ]
 	p = b$palette
-	names(p) = paste0(b$name, "_s")
+	names(p) = c("pu_br_divs", "pu_gn_divs")
 
 	p = lapply(p, function(pal)pal[3:9])
 
-	c4a_palettes_add(p, types = "bivs", series = "hcl", biv.method = "div2seqseq", space = "Lab")
+	c4a_palettes_add(p, types = "bivs", series = "c4a", biv.method = "div2seqseq", space = "Lab")
 
 	p2 = b$palette
-	names(p2) = paste0(b$name, "_c")
+	names(p2) = c("pu_br_divc", "pu_gn_divc")
 
 	p2 = lapply(p2, function(pal)pal[2:10])
-	c4a_palettes_add(p2, types = "bivc", series = "hcl", biv.method = "div2catseq", space = "Lab")
+	c4a_palettes_add(p2, types = "bivc", series = "c4a", biv.method = "div2catseq", space = "Lab")
 
 	pals3 = c("hcl.blues3", "hcl.yellow_red")
 
 	p3 = lapply(pals3, function(p) c4a(p, n = 5, range = c(0.3, 0.8)))
-	names(p3) = c("blues3_u", "yellow_red_u")
+	names(p3) = c("blues_divu", "yl_rd_divu")
 
-	c4a_palettes_add(p3, types = "bivu", series = "hcl", biv.method = "seq2uncseq", space = "Lab")
-
-
+	c4a_palettes_add(p3, types = "bivu", series = "c4a", biv.method = "seq2uncseq", space = "Lab")
 
 	pals2 = list(pinkgreen = pals::stevens.pinkgreen(n = 9),
 				 bluered = pals::stevens.bluered(n = 9),
@@ -580,10 +578,7 @@ local({
 .z = get("z", .C4A)
 .s = get("s", .C4A)
 
-
-
 .zbib = bibtex::read.bib("build/references.bib")
-
 
 save(.z, .s, .zbib, file="R/sysdata.rda", compress="xz")
 

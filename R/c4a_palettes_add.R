@@ -47,7 +47,12 @@ c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, nd
 	args = setdiff(ls(), c("x", "k"))
 	length(range_matrix_args)
 
+	# manual preprocessing
 	if (!is.list(range_matrix_args[[1]])) range_matrix_args = list(range_matrix_args)
+
+	nbib = if (is.na(bib) || inherits(bib, "bibentry")) 1 else k
+	if (nbib == 1) bib = list(bib)
+
 	for (arg in args) assign(arg, rep(get(arg), length.out = k), envir = environment())
 
 	# validate na colors
@@ -89,10 +94,10 @@ c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, nd
 			}, USE.NAMES = FALSE)
 			isdiff = (ss2 != nms2)
 			if (any(isdiff)) {
-				message("Some palettes have been reversed. Therefore they may have automatically be renamed. Please check and if needed change the argument settings of tm_series_add.\nOld names: ", paste(nms2[isdiff], collapse = ", "), "\nNew names: ", paste(ss2[isdiff], collapse = ", "))
+				message("Some palettes have been reversed (because of the cols4all convention that seq palettes are arranged from light to dark). Therefore they may have automatically be renamed. Please check and if needed change the argument settings of tm_series_add.\nOld names: ", paste(nms2[isdiff], collapse = ", "), "\nNew names: ", paste(ss2[isdiff], collapse = ", "))
 			}
 			if (any(!isdiff)) {
-				message("Some palettes have been reversed, but the names have not been changed. Please check and if needed change names manually.\nThe palettes are: ", paste(nms2[!isdiff], collapse = ", "), ".")
+				message("Some palettes have been reversed (because of the cols4all convention that seq palettes are arranged from light to dark), but the names have not been changed. Please check and if needed change names manually.\nThe palettes are: ", paste(nms2[!isdiff], collapse = ", "), ".")
 			}
 			nms[reversed] = ss2
 		}
@@ -132,6 +137,27 @@ c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, nd
 
 	.z = .C4A$z
 	.s = .C4A$s
+	.zbib = .C4A$zbib
+
+	# add citations
+	if (nbib == 1) {
+		if (!is.na(bib[[1]])) {
+			zb = bib[1]
+			if (any(z$series != z$series[1])) stop("One bib item defined, while multiple series: bib items are organized by series and optionally palettes")
+			zb[[1]]$name = z$series[1]
+			names(zb) = z$series[1]
+			if (z$series[1] %in% names(.zbib)) stop("Citation for series ", z$series[1], " already defined")
+		} else {
+			zb = NULL
+		}
+	} else {
+		zb = mapply(function(b, nm) {
+			names(b) = nm
+			b
+		}, bib, z$fullname, SIMPLIFY = FALSE)
+		names(zb) = z$fullname
+	}
+
 
 	if (!is.null(.z)) {
 		if (any(fnms %in% .z$fullname)) stop("Fulnames already exist: ", paste(intersect(fnms, .z$fullname), collapse = ", "))
@@ -140,9 +166,10 @@ c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, nd
 		s = abind::abind(.s, s, along=1)
 	}
 
-	#cfa = structure(list(z = z, s = s), class = "c4a")
+	zbib = do.call(c, c(list(.zbib), zb))
 
 	.C4A$z = z
+	.C4A$zbib = zbib
 	.C4A$s = s
 	fill_P()
 	invisible(NULL)

@@ -59,6 +59,14 @@ NULL
 					  bivc = c(inter_wing_dist = 7, min_step = 3),
 					  bivu = c(inter_wing_dist = 7, min_step = 3))
 
+		# unfriendly (rolling eyes)
+		CBU_th = list(cat = c(min_dist = 2),
+					  seq = c(min_step = 1),
+					  div = c(inter_wing_dist = 4, min_step = 1),
+					  bivs = c(inter_wing_dist = 3, min_step = 1),
+					  bivc = c(inter_wing_dist = 3, min_step = 1),
+					  bivu = c(inter_wing_dist = 3, min_step = 1))
+
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
 		LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
 		LCrangeHarmonic = 80/3 # Maximum LCrange values for which the palette is labeled "harmonic"
@@ -73,9 +81,15 @@ NULL
 		types = c("Categorical" = "cat",
 				  "Sequential" = "seq",
 				  "Diverging" = "div",
-				  "Bivariate (sequential to sequential)" = "bivs",
-				  "Bivariate (sequential to categorical)" = "bivc",
-				  "Bivariate (sequential to desaturated)" = "bivu")
+				  "Bivariate (sequential x sequential)" = "bivs",
+				  "Bivariate (sequential x categorical)" = "bivc",
+				  "Bivariate (sequential x desaturated)" = "bivu")
+
+		type_info = data.frame(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"),
+							   description = c("categorical",
+							   				"sequential",
+							   				"diverging",
+							   				"bivariate (sequential x sequential)", "bivariate (sequential x categorical)", "bivariate (sequential x desaturated)"))
 
 		indicators = list(cat = c("min_dist"),
 						  seq = c("min_step", "max_step"),
@@ -101,6 +115,7 @@ NULL
 					LCrange = "Lum/Chr range",
 					rank = "Ranking",
 					cbfriendly = "Colorblind-friendly",
+					cbfuf = "Colorblind-friendly",
 					highC = "Intense colors",
 					hueType = "Hues",
 					harmonic = "Harmonic palette",
