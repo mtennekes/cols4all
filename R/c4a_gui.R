@@ -98,6 +98,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 		  z-index: 1;
 		}
 
+		.modal-title {
+			color: #000000;
+		}
+
 		 .well {
 			background-image: url("imgResources/cols4all_logo.png");
 			background-repeat: no-repeat;
@@ -241,7 +245,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 			title = paste0("Overview of palettes per series of type ", type)
 			shiny::showModal(shiny::modalDialog(title = "Number of palettes per series (rows) and type (columns)",
 												shiny::renderTable(tab_k, na = "", striped = TRUE, hover = TRUE, bordered = TRUE),
-												shiny::div(style="font-size: 75%;", shiny::renderTable(.C4A$type_info))))
+												shiny::div(style="font-size: 75%;", shiny::renderTable(.C4A$type_info)),
+												footer = modalButton("Close"),
+												style = "color: #000000;"))
 		})
 
 		get_values = shiny::reactive({

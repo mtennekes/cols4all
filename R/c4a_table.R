@@ -252,7 +252,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 				   paste(palList[[did]], collapse = "&quot;, &quot;"), "&quot;)`)")
 		}
 	}, USE.NAMES = FALSE)
-	txt3 = rep("&#128441;", nrow(e2))
+	txt3 = rep("&#128366;", nrow(e2))
 	txt3[e2$ind !=1 ] = ""
 	fn = paste(e2$series, e2$name, sep = ".")
 	links3 = sapply(1:nrow(e2), function(rw) {
