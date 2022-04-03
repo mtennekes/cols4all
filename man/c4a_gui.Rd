@@ -8,7 +8,7 @@
 c4a_gui(
   type = "cat",
   n = NA,
-  series = c("misc", "brewer", "hcl", "tol", "viridis")
+  series = c("misc", "brewer", "hcl", "tol", "viridis", "c4a")
 )
 
 c4a_table(

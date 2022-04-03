@@ -1,3 +1,13 @@
+aregreys = function(x) {
+	all(get_hcl_matrix(x)[,2] < 1)
+}
+
+# ensure the diagonal are pure greys
+convert2grey = function(x) {
+	greys = rowSums(attr(hex2RGB(x), "coords")) / 3
+	rgb(greys, greys, greys)
+}
+
 create_biv_palette = function(palette, biv.method) {
 	if (!(biv.method %in% c("div2seqseq", "div2catseq", "seq2uncseq", "byrow", "bycol"))) {
 		n = as.integer(substr(biv.method, nchar(biv.method), nchar(biv.method)))
@@ -26,13 +36,14 @@ create_biv_palette = function(palette, biv.method) {
 	if (biv.method == "div2seqseq") {
 		a = get_hcl_matrix(palette)
 
-
+		# hue matrix
 		h1 = matrix(a[n:1, 1], nrow = n, ncol = n, byrow = FALSE)
 		h2 = matrix(a[n:np, 1], nrow = n, ncol = n, byrow = TRUE)
 		h = matrix(a[n, 1], nrow = n, ncol = n)
 		h[lower.tri(h)] = h1[lower.tri(h)]
 		h[upper.tri(h)] = h2[upper.tri(h)]
 
+		# chroma matrix
 		cr1 = a[n:1, 2]
 		cr2 = a[n:np, 2]
 
@@ -42,7 +53,7 @@ create_biv_palette = function(palette, biv.method) {
 			cr[1:i, i] = seq(cr2[i], 0, length.out = i)
 		}
 
-
+		# limunance matrix
 		la1 = a[n:1, 3]
 		la2 = a[n:np, 3]
 		la0 = (la1 + la2) / 2
@@ -54,9 +65,7 @@ create_biv_palette = function(palette, biv.method) {
 			xx <- seq(1,n*sqrt(2),length.out=n)
 			stats::predict(fit2, data.frame(x=xx))
 		})
-
 		l = matrix(la0[1], nrow = n, ncol = n)
-
 		for (i in 2:n) {
 			l[i, 1:i] = seq(la1[i], la0b[i], length.out = i)
 			l[1:i, i] = seq(la2[i], la0b[i], length.out = i)
@@ -71,7 +80,9 @@ create_biv_palette = function(palette, biv.method) {
 		# l[lower.tri(l)] = l1[lower.tri(l1)]
 		# l[upper.tri(l)] = l2[upper.tri(l2)]
 
-		t(matrix(do.call(grDevices::hcl, list(h = h, c = cr, l = l)), ncol = n, byrow = TRUE))
+		mat = t(matrix(do.call(grDevices::hcl, list(h = h, c = cr, l = l)), ncol = n, byrow = TRUE))
+		diag(mat) = convert2grey(diag(mat))
+		mat
 	} else if (biv.method == "div2catseq") {
 		a = get_hcl_matrix(palette)
 
@@ -87,13 +98,21 @@ create_biv_palette = function(palette, biv.method) {
 		h = matrix(c(h1, h1, h1, h2, h2), ncol = n, byrow = FALSE)
 		cr = matrix(c(c1, c1/2, rep(0,m), c2/2, c2), ncol = n, byrow = FALSE)
 		l = matrix(c(l1, (l1+l0)/2, l0, (l2+l0)/2, l2), ncol = n, byrow = FALSE)
-		matrix(do.call(grDevices::hcl, list(h = h, c = cr, l = l)), ncol = n, byrow = FALSE)
+		mat = matrix(do.call(grDevices::hcl, list(h = h, c = cr, l = l)), ncol = n, byrow = FALSE)
+
+		# convert middle col to pure greys if they are
+		mid_col = mat[, (n+1)/2]
+		if (aregreys(mid_col)) {
+			mat[, (n+1)/2] = convert2grey(mid_col)
+		}
+		mat
 	} else if (biv.method == "seq2uncseq") {
 		a = get_hcl_matrix(palette)
 		b = a
 		b[,2] = 0
 		pa = grDevices::hcl(h  = a[,1], c = a[,2], l = a[,3])
 		pb = grDevices::hcl(h  = b[,1], c = b[,2], l = b[,3])
+		pb = convert2grey(pb)
 		unname(do.call(rbind, mapply(function(ca, cb) {
 			colorRampPalette(c(ca, cb))(m)
 		}, pa, pb, SIMPLIFY = FALSE)))

@@ -246,7 +246,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 			shiny::showModal(shiny::modalDialog(title = "Number of palettes per series (rows) and type (columns)",
 												shiny::renderTable(tab_k, na = "", striped = TRUE, hover = TRUE, bordered = TRUE),
 												shiny::div(style="font-size: 75%;", shiny::renderTable(.C4A$type_info)),
-												footer = modalButton("Close"),
+												footer = shiny::modalButton("Close"),
 												style = "color: #000000;"))
 		})
 

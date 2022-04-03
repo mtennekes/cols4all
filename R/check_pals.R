@@ -47,6 +47,8 @@ check_bivs_pal = function(p) {
 	p2 = p[,1]
 	pd = diag(p)
 
+	#if (nrow(p) == 5) browser()
+
 	x12 = check_div_pal(c(rev(p1[-1]), p2))
 	x1d = check_div_pal(c(rev(p1[-1]), pd))
 	x2d = check_div_pal(c(rev(p2[-1]), pd))

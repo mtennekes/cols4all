@@ -230,44 +230,25 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 	e2 = cbind(e, me)
 
 	# copy links
-	txt1 = rep("&#128471;", nrow(e2))
-	txt1[e2$ind !=1 ] = ""
-	links1 = sapply(1:nrow(e2), function(rw) {
-		if (txt1[rw] == "") {
-			""
-		} else{
-			did = e2$did[rw]
-			paste0("javascript:navigator.clipboard.writeText(`[&quot;",
-				   paste(palList[[did]], collapse = "&quot;, &quot;"), "&quot;]`)")
-		}
-	}, USE.NAMES = FALSE)
-	txt2 = rep("R", nrow(e2))
-	txt2[e2$ind !=1 ] = ""
-	links2 = sapply(1:nrow(e2), function(rw) {
-		if (txt2[rw] == "") {
-			""
-		} else{
-			did = e2$did[rw]
-			paste0("javascript:navigator.clipboard.writeText(`c(&quot;",
-				   paste(palList[[did]], collapse = "&quot;, &quot;"), "&quot;)`)")
-		}
-	}, USE.NAMES = FALSE)
-	txt3 = rep("&#128366;", nrow(e2))
-	txt3[e2$ind !=1 ] = ""
-	fn = paste(e2$series, e2$name, sep = ".")
-	links3 = sapply(1:nrow(e2), function(rw) {
-		if (txt3[rw] == "") {
-			""
-		} else{
-			bib = format(c4a_citation(fn[rw], verbose = FALSE), style = "Bibtex")
-			paste0("javascript:navigator.clipboard.writeText(`", bib,"`)")
-		}
-	}, USE.NAMES = FALSE)
 
-	e2[['Copy1']] = kableExtra::cell_spec(txt1, link=links1, tooltip='Copy colors: [&quot;#111111&quot;, &quot;#222222&quot;]', escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
-	e2[['Copy2']] = kableExtra::cell_spec(txt2, link=links2, tooltip='Copy colors to R: c(&quot;#111111&quot;, &quot;#222222&quot;)', escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
-	e2[['Copy3']] = kableExtra::cell_spec(txt3, link=links3, tooltip='Copy BibTex reference', escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
+	add_link = function(icon, ref, fun, tooltip) {
+		txt1 = rep(icon, nrow(e2))
+		txt1[e2$ind !=1 ] = ""
+		links1 = sapply(1:nrow(e2), function(rw) {
+			if (txt1[rw] == "") {
+				""
+			} else{
+				did = e2$did[rw]
+				paste0("javascript:navigator.clipboard.writeText(`", do.call(fun, list(x = ref[[did]])), "`)")
+			}
+		}, USE.NAMES = FALSE)
+		kableExtra::cell_spec(txt1, link=links1, tooltip=tooltip, escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
+	}
 
+	e2[['Copy1']] = add_link("&#128471;", palList, function(x) paste0("[&quot;", paste0(x, collapse = "&quot;, &quot;"), "&quot;]"), tooltip='Copy colors: [&quot;#111111&quot;, &quot;#222222&quot;]')
+	e2[['Copy2']] = add_link("R", palList, function(x) paste0("c(&quot;", paste0(x, collapse = "&quot;, &quot;"), "&quot;)"), tooltip='Copy colors to R: c(&quot;#111111&quot;, &quot;#222222&quot;)')
+	e2[['Copy3']] = add_link("&#128366;", zn$cit, function(x) x, tooltip='Copy reference')
+	e2[['Copy4']] = add_link("B", zn$bib, function(x) x, tooltip='Copy BibTex reference')
 
 	sim = switch(cvd.sim,
 				 none = function(x) x,
@@ -357,8 +338,8 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 		e2[[q]][is.na(e2[[q]])] = ""
 	}
 
-	e2cols = c("series", "label", ql, colNames, "Copy1", "Copy2", "Copy3")
-	e2nms = c("Series", "Name", ql, colNames, " ", " ", " ")
+	e2cols = c("series", "label", ql, colNames, "Copy1", "Copy2", "Copy3", "Copy4")
+	e2nms = c("Series", "Name", ql, colNames, "", "", "", "")
 
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2nms, escape = F)
 
@@ -371,7 +352,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), n = 
 
 	k = kableExtra::column_spec(k, 1, width = "5em", extra_css = "padding-left: 10px; padding-right: 10px; text-align: right")
 	k = kableExtra::column_spec(k, 2, width = "5em", extra_css = "padding-left: 0px; padding-right: 10px; text-align: right")
-	k = kableExtra::column_spec(k, which(e2cols == "Copy"), width = "2em", extra_css = "padding-left: 10px; padding-right: 0px; text-align: right")
+	k = kableExtra::column_spec(k, which(substr(e2cols, 1, 4) == "Copy"), width = "1em", extra_css = "padding-left: 5px; padding-right: 0px; text-align: right")
 	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "padding-left: 3px; padding-right: 3px; vertical-align: bottom") #max-width: 5em;
 
 	for (q in ql_other) {

@@ -110,9 +110,16 @@ cbsnl_types = c("cat", rep("seq", 4), "div", "div")
 nmin = c(NA, 5, 5, 5, 5, 7, 7)
 nmax = c(NA, 7, 7, 7, 7, 7, 7)
 
+cbsnl_bib = utils::bibentry(bibtype = "Misc",
+					  author = person("Statistics Netherlands"),
+					  title = "CBS - Statistics Netherlands",
+					  url = "https://www.cbs.nl/en-gb",
+					  year = 2022)
+
+
 c4a_palettes_add(cbsnl_cols, xNA = "grey88",
 			   nmin = nmin, nmax = nmax, ndef = nmin,
-			   types = cbsnl_types, series = "cbsnl")
+			   types = cbsnl_types, series = "cbsnl", bib = cbsnl_bib)
 
 \dontrun{
 c4a_gui(series = "cbsnl")

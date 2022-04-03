@@ -46,7 +46,7 @@ NULL
 	assign("s", .s, envir = .C4A)
 	assign("zbib", .zbib, envir = .C4A)
 
-
+	attach_bib()
 
 	with(.C4A,{
 		defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green")

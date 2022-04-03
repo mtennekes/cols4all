@@ -1,6 +1,7 @@
 rampPal = function(palette, n, space = c("rgb", "Lab")) {
 	space = match.arg(space)
 	if (length(palette) == n) {
+		attributes(palette) = NULL
 		palette
 	} else {
 		colorRampPalette(palette, space = space, interpolate = "linear")(n)
@@ -72,9 +73,20 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, r
 			p2 = t(apply(palette, MARGIN = 1, FUN = function(x) {
 				rampPal(x, 101, space = space)[rangeIDsn]
 			}))
-			apply(p2, MARGIN = 2, FUN = function(x) {
+			res = apply(p2, MARGIN = 2, FUN = function(x) {
 				rampPal(x, 101, space = space)[rangeIDsm]
 			})
+
+			if (type == "bivs" && n == m) {
+				if (aregreys(diag(palette))) {
+					diag(res) = convert2grey(diag(res))
+				}
+			} else if (type == "bivc") {
+				if (aregreys(palette[, (ncol(palette) + 1)/2])) {
+					res[, (ncol(res)+1)/2] = convert2grey(res[, (ncol(res)+1)/2])
+				}
+			}
+			res
 		}
 	}
 

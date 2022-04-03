@@ -9,16 +9,18 @@
 #' @name c4a_sysdata_import
 #' @export
 c4a_sysdata_import = function(x) {
-	if (!is.list(x) || !setequal(c("z", "s"), names(x))) stop("x should be a list of two: z and s", call. = FALSE)
+	if (!is.list(x) || !setequal(c("z", "s", "zbib"), names(x))) stop("x should be a list of three: z, s, zbib", call. = FALSE)
 
 	z = check_z(x$z)
 	s = check_s(x$s, nrow(z))
-
+	zbib = x$zbib # to do: check
 
 	message("cols4all system data imported successfully")
 
 	.C4A$z = z
 	.C4A$s = s
+	.C4A$zbib = zbib
+	attach_bib()
 	fill_P()
 	invisible(NULL)
 }
@@ -27,6 +29,10 @@ c4a_sysdata_import = function(x) {
 #' @name c4a_sysdata_export
 #' @export
 c4a_sysdata_export = function() {
-	list(z = .C4A$z,
-		 s = .C4A$s)
+	z = .C4A$z
+	z$cit = NULL
+	z$bib = NULL
+	list(z = z,
+		 s = .C4A$s,
+		 zbib = .C4A$zbib)
 }

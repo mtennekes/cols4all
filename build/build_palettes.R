@@ -528,35 +528,78 @@ local({
 
 
 
-
 ########################################################################################
 ######################################## BIVARIATE #####################################
 ########################################################################################
-
+c4a_palettes_remove(series = "c4a")
 local({
-	#c4a_palettes(type = "div")
-	pals = c("hcl.purple_brown", "hcl.purple_green")
+	bu2 = c4a("hcl.blues3", n = 5, range = c(0.3, 0.8))
+	yl_rd = c4a("hcl.yellow_red", n = 5, range = c(0.3, 0.8))
+	pg = hcl.colors(11, "Purple-Green")
+	bu = hcl.colors(9, "Blues 3")[7:3]
+	gn = hcl.colors(9, "Greens 3")[7:3]
+	pu = hcl.colors(9, "Purples 3")[7:3]
 
-	b = .C4A$z[match(pals, .C4A$z$fullname), ]
-	p = b$palette
-	names(p) = c("pu_br_divs", "pu_gn_divs")
+	# extract average c and l values for both wings
+	mat = get_hcl_matrix(pg)
+	cs = (mat[1:6, 2] + mat[11:6, 2]) / 2
+	cs[6] = 0
+	cs[5] = 25
+	ls = (mat[1:6, 3] + mat[11:6, 3]) / 2
 
-	p = lapply(p, function(pal)pal[3:9])
+	ls2 = ls
+	ls2[6] = 92
 
-	c4a_palettes_add(p, types = "bivs", series = "c4a", biv.method = "div2seqseq", space = "Lab")
 
-	p2 = b$palette
-	names(p2) = c("pu_br_divc", "pu_gn_divc")
+	# candidate hues
+	hs = seq(0, 359, by = 0.2)
 
-	p2 = lapply(p2, function(pal)pal[2:10])
-	c4a_palettes_add(p2, types = "bivc", series = "c4a", biv.method = "div2catseq", space = "Lab")
+	# find hues for which colors have most chroma (the higher the better to distinguisch with grey)
+	res = lapply(1:5, function(i) {
+		sapply(hs, function(h) hcl(h=h,c=cs[i], l =ls[i]))
+	})
+	get_chroma = function(x) attr(as(colorspace::hex2RGB(x), "polarLAB"), "coords")[, "C"]
+	max_chroma_cvd = function(x) {
+		cr1 = deutan(x) |> get_chroma()
+		cr2 = protan(x) |> get_chroma()
+		cr3 = tritan(x) |> get_chroma()
+		y = pmin(cr1, cr2, cr3)
+		y = y / max(y)
+	}
+	res2 = lapply(res, max_chroma_cvd)
+	res3 = rowSums(do.call(cbind, res2))
+	plot(res3, pch=16)
 
-	pals3 = c("hcl.blues3", "hcl.yellow_red")
+	hue_br = hs[1:500][which.max(res3[1:500])]
+	hue_gn = hs[500:800][which.max(res3[500:800])]
+	hue_bu = hs[1000:1300][which.max(res3[1000:1300])]
+	hue_pu = hs[1300:1800][which.max(res3[1300:1800])]
 
-	p3 = lapply(pals3, function(p) c4a(p, n = 5, range = c(0.3, 0.8)))
-	names(p3) = c("blues_divu", "yl_rd_divu")
+	bu_br_div = c(hcl(hue_bu, c = cs, l = ls2),
+				  rev(hcl(hue_br, c = cs, l = ls2))[-1])
 
-	c4a_palettes_add(p3, types = "bivu", series = "c4a", biv.method = "seq2uncseq", space = "Lab")
+	pu_gn_div = c(hcl(hue_pu, c = cs, l = ls2),
+				  rev(hcl(hue_gn, c = cs, l = ls2))[-1])
+
+	bu_br_biv = c(hcl(hue_bu, c = cs, l = ls),
+				  rev(hcl(hue_br, c = cs, l = ls))[-1])
+
+	pu_gn_biv = c(hcl(hue_pu, c = cs, l = ls),
+				  rev(hcl(hue_gn, c = cs, l = ls))[-1])
+	# pu_gn_div |> specplot()
+	# pg |> specplot()
+	#pu_gn_div = pg # very similar but still a bit better
+
+	pals_div = list(bu_br_div = bu_br_div, pu_gn_div = pu_gn_div)
+	pals_bivs = list(bu_br_bivs = bu_br_biv[3:9], pu_gn_bivs = pu_gn_biv[3:9])
+	pals_bivc = list(bu_br_bivc = bu_br_biv[2:10], pu_gn_bivc = pu_gn_biv[2:10])
+	pals_bivu = list(bu_bivu = bu2, yl_rd_bivu = yl_rd, br_bivu = bu_br_biv[8:10], pu_bivu = pu_gn_biv[4:2], gn_bivu = pu_gn_biv[8:10])
+
+
+	c4a_palettes_add(pals_div, types = "div", series = "c4a", space = "rgb")
+	c4a_palettes_add(pals_bivs, types = "bivs", series = "c4a", biv.method = "div2seqseq", space = "rgb")
+	c4a_palettes_add(pals_bivc, types = "bivc", series = "c4a", biv.method = "div2catseq", space = "rgb")
+	c4a_palettes_add(pals_bivu, types = "bivu", series = "c4a", biv.method = "seq2uncseq", space = "rgb")
 
 	pals2 = list(pinkgreen = pals::stevens.pinkgreen(n = 9),
 				 bluered = pals::stevens.bluered(n = 9),
@@ -574,6 +617,15 @@ local({
 				 seqseq2 = brewer.seqseq2(n = 9))
 	c4a_palettes_add(pals3, types = c("bivc", "bivc", "bivs", "bivs"), series = "brewer", biv.method = "byrow")
 })
+
+
+
+
+
+
+
+
+
 
 .z = get("z", .C4A)
 .s = get("s", .C4A)

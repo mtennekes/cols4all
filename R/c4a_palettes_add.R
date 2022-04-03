@@ -160,6 +160,8 @@ c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, nd
 
 
 	if (!is.null(.z)) {
+		.z$bib = NULL
+		.z$cit = NULL
 		if (any(fnms %in% .z$fullname)) stop("Fulnames already exist: ", paste(intersect(fnms, .z$fullname), collapse = ", "))
 
 		z = rbind(.z, z)
@@ -171,6 +173,7 @@ c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, nd
 	.C4A$z = z
 	.C4A$zbib = zbib
 	.C4A$s = s
+	attach_bib()
 	fill_P()
 	invisible(NULL)
 }

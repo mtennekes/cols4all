@@ -4,10 +4,15 @@
 \alias{c4a_citation}
 \title{Show how to cite palettes}
 \usage{
-c4a_citation(name)
+c4a_citation(name, verbose = TRUE)
 }
 \arguments{
 \item{name}{name of a palette or series}
+
+\item{verbose}{should text be printed (if FALSE only a \code{utils::bibentry} object is returned)}
+}
+\value{
+\code{utils::bibentry} object
 }
 \description{
 Show how to cite palettes

@@ -21,7 +21,11 @@ palettes series can be added as well.
 
 |                                                                                                    Categorical                                                                                                    |                                                                                                    Sequential                                                                                                     |                                                                                                      Diverging                                                                                                      |
 |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| [![](https://user-images.githubusercontent.com/2444081/156847689-7e1a4608-9b03-45f5-9ccf-56e6d8844d47.png)](https://user-images.githubusercontent.com/2444081/156847689-7e1a4608-9b03-45f5-9ccf-56e6d8844d47.png) | [![](https://user-images.githubusercontent.com/2444081/156847703-b429c521-89d5-4e14-85c1-0f100ca93b45.png)](https://user-images.githubusercontent.com/2444081/156847703-b429c521-89d5-4e14-85c1-0f100ca93b45.png) | [![](https://user-images.githubusercontent.com/2444081/156847712-33a3cd22-a50b-44e2-9666-b67fcb0d2853.png)]((https://user-images.githubusercontent.com/2444081/156847712-33a3cd22-a50b-44e2-9666-b67fcb0d2853.png)) |
+| [![](https://user-images.githubusercontent.com/2444081/161420545-68c007d1-640e-47f1-84e3-1e22c7b74e20.png)](https://user-images.githubusercontent.com/2444081/161420545-68c007d1-640e-47f1-84e3-1e22c7b74e20.png) | [![](https://user-images.githubusercontent.com/2444081/161420541-1c2dfefc-0451-47ed-badd-d5ecc339ead0.png)](https://user-images.githubusercontent.com/2444081/161420541-1c2dfefc-0451-47ed-badd-d5ecc339ead0.png) | [![](https://user-images.githubusercontent.com/2444081/161420543-62bc6947-df35-43e2-8277-35b2dbc223ca.png)]((https://user-images.githubusercontent.com/2444081/161420543-62bc6947-df35-43e2-8277-35b2dbc223ca.png)) |
+
+|                                                                                                Bivariate (seq x seq)                                                                                                |                                                                                                Bivariate (seq x cat)                                                                                                |                                                                                            Bivariate (seq x desaturated)                                                                                            |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| [![](https://user-images.githubusercontent.com/2444081/161420551-84475286-5394-4379-abfc-d765567c2db6.png)]((https://user-images.githubusercontent.com/2444081/161420551-84475286-5394-4379-abfc-d765567c2db6.png)) | [![](https://user-images.githubusercontent.com/2444081/161420550-dc0ac110-ddea-4f02-8d47-cbb6221cca4f.png)]((https://user-images.githubusercontent.com/2444081/161420550-dc0ac110-ddea-4f02-8d47-cbb6221cca4f.png)) | [![](https://user-images.githubusercontent.com/2444081/161420549-8130172f-9047-48c3-b8f5-1a3e7ae7c3b3.png)]((https://user-images.githubusercontent.com/2444081/161420549-8130172f-9047-48c3-b8f5-1a3e7ae7c3b3.png)) |
 
 Color palettes are well organized and made consistent with each other.
 Moreover, they are scored on several aspects: color-blind-friendliness,
@@ -31,8 +35,7 @@ each color palette a color for missing values is assigned, which is
 especially important for spatial data visualization. Currently we
 support several types: *categorical* (qualitative) palettes,
 *sequential* palettes, *diverging* palettes, and *bivariate* palettes
-(divided into three types). In the near future, more palette types may
-be added, such as *cyclic* and *hierarchical*.
+(divided into three subtypes).
 
 ## Installation
 
@@ -41,12 +44,8 @@ installed using:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("mtennekes/cols4all")
+remotes::install_github("mtennekes/cols4all")
 ```
-
-    #> [1] "/home/mtes/git/cols4all"
-    #> ℹ Loading cols4all
-    #> cols4all is still in development; since palettes may change, we recommend to hard-copy the color codes obtained via this package when reproducilibity is required
 
 ## Getting started
 
@@ -55,18 +54,8 @@ which is started with:
 
 ``` r
 library(cols4all)
-# For the GUI, shiny, shinyjs, and kableExtra are required
-# install.packages(c("shiny", "shinyjs", "kableExtra"))
 c4a_gui()
 ```
-
-Besides browsing through palettes, it is also easy to copy color codes
-to the clipboard, either by selecting the hidden text in the color
-tables or by clicking on the icons at the right-hand-side:
-
-<img
-src="https://user-images.githubusercontent.com/2444081/156849917-59af1dc1-ee5e-40be-bf87-5c7384351ae0.png"
-style="width:50.0%" />
 
 Selecting a palette is easy:
 
@@ -85,21 +74,6 @@ c4a_palettes(type = "div", series = "hcl")
 c4a("hcl.purple_green", 11)
 #>  [1] "#492050" "#82498C" "#B574C2" "#D2A9DB" "#E8D4ED" "#F1F1F1" "#C8E1C9"
 #>  [8] "#91C392" "#4E9D4F" "#256C26" "#023903"
-#> attr(,"range_matrix")
-#>       [,1] [,2]
-#>  [1,]    0 0.00
-#>  [2,]    0 0.60
-#>  [3,]    0 0.60
-#>  [4,]    0 0.65
-#>  [5,]    0 0.70
-#>  [6,]    0 0.75
-#>  [7,]    0 0.80
-#>  [8,]    0 0.85
-#>  [9,]    0 0.90
-#> [10,]    0 0.95
-#> [11,]    0 1.00
-#> attr(,"space")
-#> [1] "Lab"
 
 # get the associated color for missing values
 c4a_na("hcl.purple_green")
@@ -116,10 +90,11 @@ Main functions:
 Palette names and properties:
 
 -   `c4a_palettes` Get available palette names
--   `c4a_series` Get available series
--   `c4a_meta` Get meta information (such as type and maximum number of
-    colors )
--   `c4a_ls` Environment via which palette names can be browsed with
+-   `c4a_series` Get available series names
+-   `c4a_info` Get palette information (such as type and maximum number
+    of colors)
+-   `c4a_citation` Show how to cite palettes (with bibtex code).
+-   `.P` Environment via which palette names can be browsed with
     auto-completion (using `$`)
 
 Importing and exporting palettes:

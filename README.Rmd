@@ -18,9 +18,13 @@ The **cols4all** is a new R package for selecting color palettes. "Color for all
 
 Categorical             |  Sequential | Diverging
 :-------------------------:|:-------------------------:|:-------------------------:
-[![](https://user-images.githubusercontent.com/2444081/156847689-7e1a4608-9b03-45f5-9ccf-56e6d8844d47.png)](https://user-images.githubusercontent.com/2444081/156847689-7e1a4608-9b03-45f5-9ccf-56e6d8844d47.png) | [![](https://user-images.githubusercontent.com/2444081/156847703-b429c521-89d5-4e14-85c1-0f100ca93b45.png)](https://user-images.githubusercontent.com/2444081/156847703-b429c521-89d5-4e14-85c1-0f100ca93b45.png) | [![](https://user-images.githubusercontent.com/2444081/156847712-33a3cd22-a50b-44e2-9666-b67fcb0d2853.png)]((https://user-images.githubusercontent.com/2444081/156847712-33a3cd22-a50b-44e2-9666-b67fcb0d2853.png))
+[![](https://user-images.githubusercontent.com/2444081/161420545-68c007d1-640e-47f1-84e3-1e22c7b74e20.png)](https://user-images.githubusercontent.com/2444081/161420545-68c007d1-640e-47f1-84e3-1e22c7b74e20.png) | [![](https://user-images.githubusercontent.com/2444081/161420541-1c2dfefc-0451-47ed-badd-d5ecc339ead0.png)](https://user-images.githubusercontent.com/2444081/161420541-1c2dfefc-0451-47ed-badd-d5ecc339ead0.png) | [![](https://user-images.githubusercontent.com/2444081/161420543-62bc6947-df35-43e2-8277-35b2dbc223ca.png)]((https://user-images.githubusercontent.com/2444081/161420543-62bc6947-df35-43e2-8277-35b2dbc223ca.png)) | 
 
-Color palettes are well organized and made consistent with each other. Moreover, they are scored on several aspects: color-blind-friendliness, the presence of intense colors (which should be avoided), the overall aesthetic harmony, and how many different hues are used. Finally, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, and *bivariate* palettes (divided into three types). In the near future, more palette types may be added, such as *cyclic* and *hierarchical*. 
+Bivariate (seq x seq)		|  Bivariate (seq x cat)	|		Bivariate (seq x desaturated)
+:-------------------------:|:-------------------------:|:-------------------------:
+[![](https://user-images.githubusercontent.com/2444081/161420551-84475286-5394-4379-abfc-d765567c2db6.png)]((https://user-images.githubusercontent.com/2444081/161420551-84475286-5394-4379-abfc-d765567c2db6.png)) | [![](https://user-images.githubusercontent.com/2444081/161420550-dc0ac110-ddea-4f02-8d47-cbb6221cca4f.png)]((https://user-images.githubusercontent.com/2444081/161420550-dc0ac110-ddea-4f02-8d47-cbb6221cca4f.png)) | [![](https://user-images.githubusercontent.com/2444081/161420549-8130172f-9047-48c3-b8f5-1a3e7ae7c3b3.png)]((https://user-images.githubusercontent.com/2444081/161420549-8130172f-9047-48c3-b8f5-1a3e7ae7c3b3.png))
+
+Color palettes are well organized and made consistent with each other. Moreover, they are scored on several aspects: color-blind-friendliness, the presence of intense colors (which should be avoided), the overall aesthetic harmony, and how many different hues are used. Finally, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, and *bivariate* palettes (divided into three subtypes).
 
 ## Installation
 
@@ -28,11 +32,10 @@ Color palettes are well organized and made consistent with each other. Moreover,
 
 ```{r, eval=FALSE}
 # install.packages("devtools")
-devtools::install_github("mtennekes/cols4all")
+remotes::install_github("mtennekes/cols4all")
 ```
 
-```{r, echo=FALSE}
-getwd()
+```{r, echo=FALSE, message=FALSE}
 devtools::load_all(".")
 ```
 
@@ -43,15 +46,8 @@ Navigation through the color palettes is easy via the GUI shown above, which is 
 
 ```{r, eval=FALSE}
 library(cols4all)
-# For the GUI, shiny, shinyjs, and kableExtra are required
-# install.packages(c("shiny", "shinyjs", "kableExtra"))
 c4a_gui()
 ```
-
-Besides browsing through palettes, it is also easy to copy color codes to the clipboard, either by selecting the hidden text in the color tables or by clicking on the icons at the right-hand-side: 
-
-![](https://user-images.githubusercontent.com/2444081/156849917-59af1dc1-ee5e-40be-bf87-5c7384351ae0.png){width=50%}
-
 
 
 Selecting a palette is easy:
@@ -111,13 +107,13 @@ There are a few other pacakges with a large collection of color palettes, in par
 
 * There is native support for **ggplot2** and **tmap** (as of the upcoming version 4).
 
-* It will be possible to submit an own series of color palettes.
+* It is be possible to submit own color palettes.
 
 ## Feedback welcome!
 
 * Is everything working as expected?
 
-* Do you miss certain palettes or series?
+* Do you miss certain palettes?
 
 * Do you have ideas for improvement how to measure palette properties?
 
