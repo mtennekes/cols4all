@@ -76,22 +76,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 	        document.body.style.color = x.text;
 	      });
 	    ")),
-		# function setProp(cls, prop, value) {
-		# 	var elements = document.getElementsByClassName(cls);
-		# 	for(var i = 0; i < elements.length; i++) {
-		# 		elements[i].style[prop] = value;
-		# 	}
-		# }
-		# setProp('item', 'backgroundColor', x.activebg);
-		# setProp('item', 'color', x.textlight);
-		# setProp('selectize-input', 'backgroundColor', x.bg);
-		# setProp('selectize-input', 'color', x.text);
-		# setProp('option.active', 'backgroundColor', x.bg);
-		# setProp('option.active', 'color', x.text);
-		# setProp('selectize-dropdown-content', 'backgroundColor', x.bg);
-		# setProp('form-control', 'color', x.text);
 
-		shiny::tags$style(shiny::HTML('div.sticky {
+		shiny::tags$style(shiny::HTML('div.sticky2 {
 		  position: -webkit-sticky;
 		  position: sticky;
 		  top: 0;
@@ -102,47 +88,67 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 			color: #000000;
 		}
 
+		body {
+		    padding-top: 1em;
+		    line-height: 1em;
+		    font-size: 12px !important;
+		}
+
+
+		div.checkbox { padding: 0px; margin: 0px; }
+		div.form-group.shiny-input-container { margin: 0 0 5px 0; }
+
 		 .well {
 			background-image: url("imgResources/cols4all_logo.png");
 			background-repeat: no-repeat;
-			background-size: 86px 100px;
+			background-size: 69px 80px;
 			background-position: 97% 1%;
            	background-color:transparent;
+			min-width:16vw;
 		 }
-		')),
-		# font-size: 13px;
-		# line-height: 1.333;
-# 		shiny::tags$style(shiny::HTML("div.sticky {
-# 		  position: -webkit-sticky;
-# 		  position: sticky;
-# 		  font-size: 13px;
-# 		  line-height: 1.333;
-# 		  top: 0;
-# 		  z-index: 1;
-# 		}
-# 		.radio {color: #6699EE; background-color: coral; vertical-align:bottom; display:block-inline;}
-# 		h4 {font-weight: bold;margin-top: 20px; color: }
-# 		.control-label {font-size: 1.1em;}
-# 		.selectize-control {line-height: 16px;}
-# 		.selectize-input { font-size: 13px; line-height: 13px; min-height: 20px;}
-# .selectize-dropdown { font-size: 13px; line-height: 13px; }
-# 		")),
 
-		# Application title
-		#shiny::titlePanel("col4all: colors for all!"),
+		 .radio {
+			margin-bottom: 5px;
+		 }
+
+		 input[type="checkbox"], input[type="radio"] {
+			margin: 0px;
+		 }
+
+          div.col-sm-7 {
+        	padding-left: 15 !important;
+        	padding-right: 0 !important;
+          }
+
+          div.col-sm-5 {
+        	padding-left: 10 !important;
+        	padding-right: 0 !important;
+          }
+
+          .action-button {
+          	font-size: 12px !important;
+          }
+
+          .selectize-control {
+        	padding-left: 0 !important;
+        	padding-right: 0 !important;
+        	font-size: 12px !important;
+          }
+
+		')),
 
 		shiny::titlePanel(title = "Colors for all!"),
 
 
-		shiny::sidebarLayout(
-			shiny::div(shiny::sidebarPanel(
-				width = 3,
+		#shiny::sidebarLayout(
+		#	shiny::div(shiny::sidebarPanel(
+		shiny::column(
+			width = 2,
+			shiny::wellPanel(
 				shiny::radioButtons("type", "Palette Type", choices = types, selected = type),
-				shiny::fluidRow(
-					shiny::column(8,
-								  shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE)),
-					shiny::column(4,
-								  shiny::div(style = "margin-top: 25px", shiny::actionButton("overview", label = "Overview")))),
+				shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE),
+				shiny::actionButton("overview", label = "Overview"),
+
 				shiny::conditionalPanel(
 					condition = "input.type.substring(0, 3) != 'biv'",
 					shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
@@ -166,26 +172,20 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 								shiny::div(style = "font-size:0;margin-bottom:-20px", shiny::sliderInput("range", "",
 												   min = 0, max = 1, value = c(0,1), step = .05)),
 								shiny::uiOutput("range_info"))))),
-				shiny::fluidRow(
-					shiny::column(7,
-								  shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = TRUE)),
-					shiny::column(5,
-								  shiny::selectizeInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto")))),
+				shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = FALSE),
+				shiny::selectizeInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto")),
 				shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
-				shiny::div(
-				shiny::fluidRow(
-					shiny::column(7,
-						shiny::selectizeInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "rank")),
-					shiny::column(5,
-						shiny::br(),
-						shiny::checkboxInput("sortRev", "Reverse", value = FALSE))), style = "margin-bottom:-10px;"),
+				shiny::selectizeInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "rank"),
+				shiny::checkboxInput("sortRev", "Reverse", value = FALSE),
 				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE),
-				shiny::checkboxInput("dark", "Dark mode", value = FALSE)
-			), class = "sticky"),
+				shiny::checkboxInput("dark", "Dark mode", value = FALSE))),
+			#), class = "sticky"),
 
-			shiny::mainPanel(
-				shiny::tableOutput("show")
-			)
+			#shiny::mainPanel(
+			shiny::column(
+				width = 10,
+				shiny::div(style = 'overflow-y:scroll; height:90vh; min-width:40vw; margin-left: 20px',
+						   shiny::tableOutput("show"))
 		)
 	)
 	server = function(input, output, session) {
