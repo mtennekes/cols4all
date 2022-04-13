@@ -1,0 +1,50 @@
+body.dark {
+    background-color: #000000;
+    color: #bbbbbb;
+}
+
+.dark .well {
+    background-color: #090909;
+    color: #bbbbbb;
+    border-color: #444444;
+}
+
+.dark .selectize-input.full {
+    /* background: #282828; */
+    background: black;
+    color: #bbbbbb;
+}
+
+
+.dark .selectize-input,
+.dark .selectize-control.single .selectize-input.input-active {
+    /* background: #282828; */
+    background: black;
+}
+
+.dark .selectize-dropdown {
+    color: #808080;
+}
+.dark .selectize-dropdown .active {
+    background-color: black;
+    color: #88b5dd;
+}
+
+.dark .selectize-dropdown,
+.dark .selectize-dropdown.form-control {
+    background: black;
+}
+
+.dark .btn-default {
+    background-color: #181818;
+    color: #F0F0F0;
+}
+.dark .btn-default:hover {
+    background: #282828;
+    color: #88b5dd;
+}
+
+.dark .item {
+    background: black !important;
+    color: #bbbbbb !important;
+}

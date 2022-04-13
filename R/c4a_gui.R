@@ -68,80 +68,16 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
 
+
+
+
 	ui = shiny::fluidPage(
 		shinyjs::useShinyjs(),
-		shiny::tags$script(shiny::HTML("
-	      Shiny.addCustomMessageHandler('background-color', function(x) {
-	        document.body.style.backgroundColor = x.bg;
-	        document.body.style.color = x.text;
-	      });
-	    ")),
-
-		shiny::tags$style(shiny::HTML('div.sticky2 {
-		  position: -webkit-sticky;
-		  position: sticky;
-		  top: 0;
-		  z-index: 1;
-		}
-
-		.modal-title {
-			color: #000000;
-		}
-
-		body {
-		    padding-top: 1em;
-		    line-height: 1em;
-		    font-size: 12px !important;
-		}
-
-
-		div.checkbox { padding: 0px; margin: 0px; }
-		div.form-group.shiny-input-container { margin: 0 0 5px 0; }
-
-		 .well {
-			background-image: url("imgResources/cols4all_logo.png");
-			background-repeat: no-repeat;
-			background-size: 69px 80px;
-			background-position: 97% 1%;
-           	background-color:transparent;
-			min-width:16vw;
-		 }
-
-		 .radio {
-			margin-bottom: 5px;
-		 }
-
-		 input[type="checkbox"], input[type="radio"] {
-			margin: 0px;
-		 }
-
-          div.col-sm-7 {
-        	padding-left: 15 !important;
-        	padding-right: 0 !important;
-          }
-
-          div.col-sm-5 {
-        	padding-left: 10 !important;
-        	padding-right: 0 !important;
-          }
-
-          .action-button {
-          	font-size: 12px !important;
-          }
-
-          .selectize-control {
-        	padding-left: 0 !important;
-        	padding-right: 0 !important;
-        	font-size: 12px !important;
-          }
-
-		')),
+		shiny::tags$head(shiny::includeCSS(system.file("www/light.css", package = "cols4all"))),
+		shiny::tags$head(shiny::includeCSS(system.file("www/dark.css", package = "cols4all"))),
 
 		shiny::titlePanel(title = "Colors for all!"),
 
-
-		#shiny::sidebarLayout(
-		#	shiny::div(shiny::sidebarPanel(
 		shiny::column(
 			width = 2,
 			shiny::wellPanel(
@@ -169,7 +105,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 						shiny::conditionalPanel(
 							condition = "input.auto_range == 'Manual'",
 							shiny::column(8,
-								shiny::div(style = "font-size:0;margin-bottom:-20px", shiny::sliderInput("range", "",
+								shiny::div(style = "font-size:0;margin-bottom:-10px", shiny::sliderInput("range", "",
 												   min = 0, max = 1, value = c(0,1), step = .05)),
 								shiny::uiOutput("range_info"))))),
 				shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = FALSE),
@@ -203,13 +139,19 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 		shiny::observeEvent(input$dark, {
 
-			#input$series # otherwise newly added items will always be white
-			if (input$dark) {
-				x = list(bg = "#000000", text = "#bbbbbb", activebg = "#202020", textlight = "#bbbbbb")
+			if ( ! input$dark ) {
+				shinyjs::removeClass(selector = "body", class = "dark")
 			} else {
-				x = list(bg = "#ffffff", text = "#000000", activebg = "#efefef", textlight = "#333333")
+				shinyjs::addClass(selector = "body", class = "dark")
 			}
-			session$sendCustomMessage("background-color", x)
+
+			# #input$series # otherwise newly added items will always be white
+			# if (input$dark) {
+			# 	x = list(bg = "#000000", text = "#bbbbbb", activebg = "#202020", textlight = "#bbbbbb")
+			# } else {
+			# 	x = list(bg = "#ffffff", text = "#000000", activebg = "#efefef", textlight = "#333333")
+			# }
+			# session$sendCustomMessage("background-color", x)
 		})
 
 
