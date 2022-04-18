@@ -83,7 +83,18 @@ NULL
 				  "Diverging" = "div",
 				  "Bivariate (sequential x sequential)" = "bivs",
 				  "Bivariate (sequential x categorical)" = "bivc",
+				  "Bivariate (sequential x diverging)" = "bivd",
 				  "Bivariate (sequential x desaturated)" = "bivu")
+
+		types1 = c("Categorical" = "cat",
+				   "Sequential" = "seq",
+				   "Diverging" = "div",
+				   "Bivariate" = "biv")
+
+		types2 = list(biv = c("Sequential x sequential" = "bivs",
+				   "Sequential x categorical" = "bivc",
+				   "Sequential x diverging" = "bivd",
+				   "Sequential x desaturated" = "bivu"))
 
 		type_info = data.frame(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"),
 							   description = c("categorical",

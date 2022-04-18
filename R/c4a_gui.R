@@ -32,7 +32,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 	z = .C4A$z
 
-	tps = c("cat", "seq", "div", "bivs", "bivc", "bivu")
+	tps = unname(.C4A$types)
 
 	tab_nmin = tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = min)
 	tab_nmax = tapply(z$nmax, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = max)
@@ -60,6 +60,20 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 	ns = def_n(npref = n, type, series, tab_nmin, tab_nmax)
 
 	types = .C4A$types
+
+	types1 = .C4A$types1
+	types2 = .C4A$types2
+
+	if (nchar(type) == 3) {
+		type1 = type
+		type2 = if (type %in% names(types2)) unnmame(types2[[type]][1]) else ""
+	} else {
+		type2 = type
+		type1 = substr(type, 1, 3)
+	}
+	type12 = paste0(type1, type2)
+
+
 	series_per_type = structure(lapply(types, function(tp) {
 		sort(unique(z$series[z$type == tp]))
 	}), names = unname(types))
@@ -81,15 +95,19 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 		shiny::column(
 			width = 2,
 			shiny::wellPanel(
-				shiny::radioButtons("type", "Palette Type", choices = types, selected = type),
+				shiny::radioButtons("type1", "Palette Type", choices = types1, selected = type1),
+				shiny::conditionalPanel(
+					condition = "input.type1 == 'biv'",
+					shiny::selectizeInput("type2", "Subtype", choices = types2[["biv"]], selected = type2)),
+
 				shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE),
 				shiny::actionButton("overview", label = "Overview"),
 
 				shiny::conditionalPanel(
-					condition = "input.type.substring(0, 3) != 'biv'",
+					condition = "input.type1 != 'biv'",
 					shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
 				shiny::conditionalPanel(
-					condition = "input.type.substring(0, 3) == 'biv'",
+					condition = "input.type1 == 'biv'",
 					shiny::fluidRow(
 						shiny::column(6,
 							shiny::sliderInput("nbiv", "Number of columns", min = 3, max = 5, value = 5, ticks = FALSE)),
@@ -97,7 +115,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 							shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 5, value = 5, ticks = FALSE))))),
 				shiny::checkboxInput("na", "Color for missing values", value = FALSE),
 				shiny::conditionalPanel(
-					condition = "input.type == 'seq' || input.type == 'div'",
+					condition = "input.type1 == 'seq' || input.type1 == 'div'",
 					shiny::fluidRow(
 						shiny::column(4,
 							#shiny::br(),
@@ -130,10 +148,20 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 		rv = shiny::reactiveValues(selected_series = series,
 								   current_type = type)
 
+		get_type12 = shiny::reactive({
+			type1 = input$type1
+			if (type1 %in% names(types2)) {
+				input$type2
+			} else {
+				type1
+			}
+		})
+
 		shiny::observeEvent(get_cols(), {
 			cols = get_cols()
-			sortNew = if (input$sort %in% cols) input$sort else "name"
+			sort = shiny::isolate(input$sort)
 			shiny::freezeReactiveValue(input, "sort")
+			sortNew = if (sort %in% cols) sort else "name"
 			shiny::updateSelectInput(session, "sort", choices  = cols,selected = sortNew)
 		})
 
@@ -145,18 +173,11 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				shinyjs::addClass(selector = "body", class = "dark")
 			}
 
-			# #input$series # otherwise newly added items will always be white
-			# if (input$dark) {
-			# 	x = list(bg = "#000000", text = "#bbbbbb", activebg = "#202020", textlight = "#bbbbbb")
-			# } else {
-			# 	x = list(bg = "#ffffff", text = "#000000", activebg = "#efefef", textlight = "#333333")
-			# }
-			# session$sendCustomMessage("background-color", x)
 		})
 
 
-		shiny::observeEvent(input$type, {
-			type = input$type
+		shiny::observeEvent(get_type12(), {
+			type = get_type12()
 			series = input$series
 
 			choices = series_per_type[[type]]
@@ -168,63 +189,24 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 			shiny::freezeReactiveValue(input, "series")
 			shiny::updateSelectizeInput(session, "series", choices = choices, selected = selected)
-		})
-
-		shiny::observeEvent(input$series, {
-			type = input$type
-
-			if (!(type %in% c("cat", "seq", "div"))) return(NULL)
-			series = input$series
-
-			ns =  def_n(npref = NA, type, series, tab_nmin, tab_nmax)
-
-			shiny::freezeReactiveValue(input, "n")
-			shiny::updateSliderInput(session, "n", min = ns$nmin, max = ns$nmax, value = ns$n)
-		})
-
-		shiny::observeEvent(input$overview, {
-			type = input$type
-			title = paste0("Overview of palettes per series of type ", type)
-			shiny::showModal(shiny::modalDialog(title = "Number of palettes per series (rows) and type (columns)",
-												shiny::renderTable(tab_k, na = "", striped = TRUE, hover = TRUE, bordered = TRUE),
-												shiny::div(style="font-size: 75%;", shiny::renderTable(.C4A$type_info)),
-												footer = shiny::modalButton("Close"),
-												style = "color: #000000;"))
-		})
-
-		get_values = shiny::reactive({
-			list(n = input$n,
-				 nbiv = input$nbiv,
-				 mbiv = input$mbiv,
-				 type = input$type,
-				 cvd = input$cvd,
-				 sort = input$sort,
-				 sortRev = input$sortRev,
-				 series = input$series,
-				 show.scores = input$advanced,
-				 columns = if (input$n > 16) 12 else input$n,
-				 na = input$na,
-				 range = if (input$auto_range == "Automatic") NA else input$range,
-				 textcol = input$textcol,
-				 format = input$format)
-		})
-		get_values_d = shiny::debounce(get_values, 300)
-
-		get_cols = shiny::reactive({
-			res = table_columns(input$type, input$advanced)
-			structure(c("name", res$qn), names = c("Name", res$ql))
-		})
 
 
-
-		shiny::observeEvent(input$type, {
-			type = input$type
+			#type = rv$type12
 			if (type == "bivs") {
 				shinyjs::enable("nbiv")
 				shinyjs::disable("mbiv")
+				shiny::freezeReactiveValue(input, "nbiv")
+				shiny::freezeReactiveValue(input, "mbiv")
 				shiny::updateSliderInput(session, "nbiv", value = 5)
 				shiny::updateSliderInput(session, "mbiv", value = 5)
 			} else if (type == "bivc") {
+				shinyjs::enable("mbiv")
+				shinyjs::enable("nbiv")
+				shiny::freezeReactiveValue(input, "nbiv")
+				shiny::freezeReactiveValue(input, "mbiv")
+				shiny::updateSliderInput(session, "nbiv", value = 3)
+				shiny::updateSliderInput(session, "mbiv", value = 5)
+			} else if (type == "bivd") {
 				shinyjs::enable("mbiv")
 				shinyjs::disable("nbiv")
 				shiny::freezeReactiveValue(input, "nbiv")
@@ -239,11 +221,73 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				shiny::updateSliderInput(session, "nbiv", value = 5)
 				shiny::updateSliderInput(session, "mbiv", value = 5)
 			}
+
+
 		})
+
+		shiny::observeEvent(input$series, {
+			type = get_type12()#rv$type12
+
+			if (!(type %in% c("cat", "seq", "div"))) return(NULL)
+			series = input$series
+
+			ns =  def_n(npref = NA, type, series, tab_nmin, tab_nmax)
+
+			shiny::freezeReactiveValue(input, "n")
+			shiny::updateSliderInput(session, "n", min = ns$nmin, max = ns$nmax, value = ns$n)
+		})
+
+		shiny::observeEvent(input$overview, {
+			type = get_type12()#rv$type12
+			title = paste0("Overview of palettes per series of type ", type)
+			shiny::showModal(shiny::modalDialog(title = "Number of palettes per series (rows) and type (columns)",
+												shiny::renderTable(tab_k, na = "", striped = TRUE, hover = TRUE, bordered = TRUE),
+												shiny::div(style="font-size: 75%;", shiny::renderTable(.C4A$type_info)),
+												footer = shiny::modalButton("Close"),
+												style = "color: #000000;"))
+		})
+
+		get_cols = shiny::reactive({
+			type = get_type12()
+			res = table_columns(type, input$advanced)
+			structure(c("name", res$qn), names = c("Name", res$ql))
+		})
+
+
+		get_values = shiny::reactive({
+			# shiny::req(input$n,
+			# input$nbiv,
+			# input$mbiv,
+			# input$cvd,
+			# input$sort,
+			# input$series,
+			# input$n,
+			# input$textcol,
+			# input$format)
+
+			if (input$sort == "") return(NULL)
+			type = get_type12()
+			list(n = input$n,
+				 nbiv = input$nbiv,
+				 mbiv = input$mbiv,
+				 type = type,
+				 cvd = input$cvd,
+				 sort = input$sort,
+				 sortRev = input$sortRev,
+				 series = input$series,
+				 show.scores = input$advanced,
+				 columns = if (input$n > 16) 12 else input$n,
+				 na = input$na,
+				 range = if (input$auto_range == "Automatic") NA else input$range,
+				 textcol = input$textcol,
+				 format = input$format)
+		})
+		#get_values_d = shiny::debounce(get_values, 300)
+
 
 		shiny::observeEvent(input$nbiv, {
 			nbiv = input$nbiv
-			type = input$type
+			type = get_type12()#rv$type12
 			if (type == "bivs") {
 				shiny::freezeReactiveValue(input, "mbiv")
 				shiny::updateSliderInput(session, "mbiv", value = nbiv)
@@ -274,7 +318,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 		output$range_info = shiny::renderUI({
 			#if (input$type == "div") shiny::div(style="text-align:left;", shiny::tagList("middle", shiny::span(stype = "float:right;", "each side"))) else ""
-			if (input$type == "div") {
+			type = get_type12()#rv$type12
+
+
+			if (type == "div") {
 				shiny::HTML("<div style='font-size:70%; color:#111111; text-align:left;'>Middle<span style='float:right;'>Both sides</span></div>")
 			} else {
 				shiny::HTML("<div style='font-size:70%; color:#111111; text-align:left;'>Left<span style='float:right;'>Right</span></div>")
@@ -283,9 +330,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 
 		output$show = function() {
-			shiny::req(get_values_d())
-			values = get_values_d()
+			values = get_values()#_d()
 			sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
+
 			if (is.null(values$series)) {
 				tab = NULL
 			} else if (values$type %in% c("bivs", "bivc", "bivu")) {
