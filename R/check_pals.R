@@ -57,6 +57,16 @@ check_bivs_pal = function(p) {
 }
 
 check_bivc_pal = function(p) {
+	nr = ncol(p)
+
+	res = lapply(1L:nr, function(i) {
+		check_cat_pal(p[i, ])
+	})
+
+	do.call(pmin, res)
+}
+
+check_bivd_pal = function(p) {
 	if (ncol(p) != 3) {
 		stop("ncol != 3", call. = FALSE)
 	}
@@ -68,7 +78,7 @@ check_bivc_pal = function(p) {
 	pmin(x12, x13, x23)
 }
 
-check_bivu_pal = function(p) {
+check_bivg_pal = function(p) {
 	check_div_pal(c(rev(p[,1]), "#FFFFFF", p[,ncol(p)]))
 }
 
@@ -183,10 +193,12 @@ analyse_hcl = function(p, type) {
 
 	if (type == "bivs") {
 		p = c(as.vector(p[lower.tri(p)]), p[1,1], as.vector(p[upper.tri(p)]))
-	} else if (type == "bivc") {
-		p = c(rev(p[, 1]), p[1, 2], p[, 3])
-	} else if (type == "bivu") {
+	} else if (type == "bivd") {
 		p = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
+	} else if (type == "bivg") {
+		p = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
+	} else if (type == "bivc") {
+		p = as.vector(p)
 	}
 
 

@@ -59,7 +59,8 @@ c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, nd
 	if (any(!is.na(xNA))) xNA[!is.na(xNA)] = validate_colors(xNA[!is.na(xNA)])
 
 	# check types
-	if (!all(types %in% c("div", "seq", "cat", "bivs", "bivc", "bivu"))) stop("Unknown types found. Currently only \"cat\", \"seq\", \"div\", \"bivs\", \"bivc\", and \"bivu\" are supported")
+	types_supported = unname(.C4A$types)
+	if (!all(types %in% types_supported)) stop("Unknown types found. Currently only", paste(types_supported, collapse = ","), "are supported")
 
 
 
@@ -203,7 +204,7 @@ check_z = function(z) {
 		if (!is.character(na) || all(is.na(na))) stop("x$z$na should be a character column", call. = FALSE)
 
 		if (anyDuplicated(fullname)) stop("x$z$fullname should consist of unique values", call. = FALSE)
-		if (!all(type %in% c("cat", "seq", "div", "bivs", "bivc", "bivu"))) stop("x$z$type should consist of \"cat\", \"seq\", \"div\", \"bivs\", \"bivc\" and \"bivu\" values only", call. = FALSE)
+		if (!all(type %in% unname(.C4A$types))) stop("x$z$type should consist of", paste(unname(.C4A$types), collapse = ","), "values only", call. = FALSE)
 		if (!is.numeric(nmax)) stop("x$z$nmax should be a numeric column", call. = FALSE)
 
 		palette = I(lapply(palette, validate_colors))

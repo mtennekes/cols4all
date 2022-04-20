@@ -57,7 +57,8 @@ NULL
 					  div = c(inter_wing_dist = 10, min_step = 5),
 					  bivs = c(inter_wing_dist = 7, min_step = 3),
 					  bivc = c(inter_wing_dist = 7, min_step = 3),
-					  bivu = c(inter_wing_dist = 7, min_step = 3))
+					  bivd = c(inter_wing_dist = 7, min_step = 3),
+					  bivg = c(inter_wing_dist = 7, min_step = 3))
 
 		# unfriendly (rolling eyes)
 		CBU_th = list(cat = c(min_dist = 2),
@@ -65,7 +66,8 @@ NULL
 					  div = c(inter_wing_dist = 4, min_step = 1),
 					  bivs = c(inter_wing_dist = 3, min_step = 1),
 					  bivc = c(inter_wing_dist = 3, min_step = 1),
-					  bivu = c(inter_wing_dist = 3, min_step = 1))
+					  bivd = c(inter_wing_dist = 3, min_step = 1),
+					  bivg = c(inter_wing_dist = 3, min_step = 1))
 
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
 		LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
@@ -84,7 +86,7 @@ NULL
 				  "Bivariate (sequential x sequential)" = "bivs",
 				  "Bivariate (sequential x categorical)" = "bivc",
 				  "Bivariate (sequential x diverging)" = "bivd",
-				  "Bivariate (sequential x desaturated)" = "bivu")
+				  "Bivariate (sequential x desaturated)" = "bivg")
 
 		types1 = c("Categorical" = "cat",
 				   "Sequential" = "seq",
@@ -94,20 +96,21 @@ NULL
 		types2 = list(biv = c("Sequential x sequential" = "bivs",
 				   "Sequential x categorical" = "bivc",
 				   "Sequential x diverging" = "bivd",
-				   "Sequential x desaturated" = "bivu"))
+				   "Sequential x desaturated" = "bivg"))
 
-		type_info = data.frame(type = c("cat", "seq", "div", "bivs", "bivc", "bivu"),
+		type_info = data.frame(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"),
 							   description = c("categorical",
 							   				"sequential",
 							   				"diverging",
-							   				"bivariate (sequential x sequential)", "bivariate (sequential x categorical)", "bivariate (sequential x desaturated)"))
+							   				"bivariate (sequential x sequential)", "bivariate (sequential x categorical)", "bivariate (sequential x diverging)", "bivariate (sequential x desaturated)"))
 
 		indicators = list(cat = c("min_dist"),
 						  seq = c("min_step", "max_step"),
 						  div = c("inter_wing_dist", "min_step"),
 						  bivs = c("inter_wing_dist", "min_step"),
 						  bivc = c("inter_wing_dist", "min_step"),
-						  bivu = c("inter_wing_dist", "min_step"))
+						  bivd = c("inter_wing_dist", "min_step"),
+						  bivg = c("inter_wing_dist", "min_step"))
 		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange")
 
 		sortRev = c("Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
@@ -132,7 +135,7 @@ NULL
 					harmonic = "Harmonic palette",
 					nmax = "Max number")
 
-		nmax = c(cat = 36, seq = 15, div = 15, bivs = 5, bivc = 5, bivu = 5)
+		nmax = c(cat = 36, seq = 15, div = 15, bivs = 5, bivc = 5, bivd = 5, bivg = 5)
 	})
 	fill_P()
 }

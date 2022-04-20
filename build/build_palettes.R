@@ -594,13 +594,13 @@ local({
 	pals_div = list(bu_br_div = bu_br_div, pu_gn_div = pu_gn_div)
 	pals_bivs = list(bu_br_bivs = bu_br_biv[3:9], pu_gn_bivs = pu_gn_biv[3:9])
 	pals_bivd = list(bu_br_bivd = bu_br_biv[2:10], pu_gn_bivd = pu_gn_biv[2:10])
-	pals_bivu = list(bu_bivu = bu2, yl_rd_bivu = yl_rd, br_bivu = bu_br_biv[8:10], pu_bivu = pu_gn_biv[4:2], gn_bivu = pu_gn_biv[8:10])
+	pals_bivg = list(bu_bivg = bu2, yl_rd_bivg = yl_rd, br_bivg = bu_br_biv[8:10], pu_bivg = pu_gn_biv[4:2], gn_bivg = pu_gn_biv[8:10])
 
 
 	c4a_palettes_add(pals_div, types = "div", series = "c4a", space = "rgb")
 	c4a_palettes_add(pals_bivs, types = "bivs", series = "c4a", biv.method = "div2seqseq", space = "rgb")
 	c4a_palettes_add(pals_bivd, types = "bivd", series = "c4a", biv.method = "div2catseq", space = "rgb")
-	c4a_palettes_add(pals_bivu, types = "bivu", series = "c4a", biv.method = "seq2uncseq", space = "rgb")
+	c4a_palettes_add(pals_bivg, types = "bivg", series = "c4a", biv.method = "seq2uncseq", space = "rgb")
 
 	pals2 = list(pinkgreen = pals::stevens.pinkgreen(n = 9),
 				 bluered = pals::stevens.bluered(n = 9),
@@ -619,9 +619,9 @@ local({
 	c4a_palettes_add(pals3, types = c("bivd", "bivc", "bivs", "bivs"), series = "brewer", biv.method = "byrow")
 
 
-	pals4 = list(stepped = pals::stepped(),
-				 stepped2 = pals::stepped2(),
-				 stepped3 = pals::stepped3())
+	pals4 = list(stepped = do.call(c, lapply(1:6, function(i) pals::stepped()[(i*4):(i*4-3)])),
+				 stepped2 = do.call(c, lapply(1:5, function(i) pals::stepped2()[(i*4):(i*4-3)])),
+				 stepped3 = do.call(c, lapply(1:5, function(i) pals::stepped3()[(i*4):(i*4-3)])))
 	c4a_palettes_add(pals4[1], types = "bivc", series = "misc", biv.method = "bycol6")
 	c4a_palettes_add(pals4[2:3], types = "bivc", series = "misc", biv.method = "bycol5")
 })

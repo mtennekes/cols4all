@@ -29,7 +29,7 @@ create_biv_palette = function(palette, biv.method) {
 		} else {
 			n = round(sqrt(length(palette)))
 			m = round(length(palette) / n)
-			if ((n * m) != length(palette)) stop("Please specify number of columns X with \"", biv.method, "X\"", call. = FALSE)
+			if ((n * m) != length(palette)) stop("Please set the biv.method to \"", biv.method, "X\", where X is the number of columns", call. = FALSE)
 		}
 	}
 

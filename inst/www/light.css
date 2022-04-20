@@ -71,3 +71,12 @@ div.col-sm-5 {
 div.checkbox { padding: 0px; margin: 0px; }
 div.form-group.shiny-input-container { margin: 0 0 5px 0; }
 
+.multicol {
+
+	-webkit-column-count: 3; /* Chrome, Safari, Opera */
+		-moz-column-count: 3;    /* Firefox */
+		column-count: 3;
+	-moz-column-fill: auto;
+	-column-fill: auto;
+}
+

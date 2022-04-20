@@ -4,8 +4,8 @@
 #'
 #' @param palette name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided by `c4a_default_palette`. The palette name can be prefixed with a `"-"` symbol, which will reverse the palette (this can also be done with the `reverse` argument).
 #' @param n number of colors. If omitted then: for type `"cat"` the maximum number of colors is returned, for types `"seq"` and `"div"`, 9 colors.
-#' @param m number of rows in case type is `"bivs"`, `"bivc"` or  `"bivu"`.
-#' @param type type of color palette, in case `palette` is not specified: one of `"cat"` (categorical/qualitative palette), `"seq"` (sequential palette), `"div"` (diverging palette), and `"bivs"`/`"bivc"`/`"bivu"` (bivariate: respectively seq-seq cat-seq, and uncertainty-seq).
+#' @param m number of rows in case type is `"bivs"`, `"bivc"`, `"bivd"` or  `"bivg"` (which stand for respectively sequential, categorical, diverging and desaturated (`g` for 'grayscale')).
+#' @param type type of color palette, in case `palette` is not specified: one of `"cat"` (categorical/qualitative palette), `"seq"` (sequential palette), `"div"` (diverging palette), and `"bivs"`/`"bivc"`/`"bivd"`/`"bivg"` (bivariate: respectively seq-seq seq-cat, seq-div, and seq-desaturated).
 #' @param reverse should the palette be reversed?
 #' @param order order of colors. Only applicable for `"cat"` palettes
 #' @param range a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential `"seq"` palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging `"seq"` palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start).
@@ -20,7 +20,7 @@
 #' @rdname c4a
 #' @name c4a
 #' @export
-c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bivs", "bivc", "bivu"), reverse = FALSE, order = NULL, range = NA, format = c("hex", "RGB", "HCL"), n_invalid = c("error", "repeat", "interpolate"), verbose = TRUE) {
+c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), reverse = FALSE, order = NULL, range = NA, format = c("hex", "RGB", "HCL"), n_invalid = c("error", "repeat", "interpolate"), verbose = TRUE) {
 	calls = names(match.call(expand.dots = TRUE)[-1])
 
 	type = match.arg(type)
@@ -57,7 +57,7 @@ c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bi
 	x$range = range
 	x$n_invalid = n_invalid
 	if (is.na(n)) n = x$ndef
-	if (type %in% c("bivs", "bivc", "bivu") && is.na(m)) m = n
+	if (substr(type, 1, 3) == "biv" && is.na(m)) m = n
 
 	pal = do.call(get_pal_n, c(list(n = n, m = m), x))
 

@@ -7,11 +7,6 @@ series_add_get_scores = function(z) {
 
 	a = array(as.integer(NA), dim = c(nrow(z), length(.C4A$sc), nmaxmax), dimnames = list(z$fullname, .C4A$sc, NULL))
 
-	# s = list(min_dist = as.list(rep(as.integer(NA), nmax)),
-	# 		 min_step = as.list(rep(as.integer(NA), nmax)),
-	# 		 max_step = as.list(rep(as.integer(NA), nmax)),
-	# 		 inter_wing_dist = as.list(rep(as.integer(NA), nmax)),
-	# 		 rank = as.list(rep(as.integer(NA), nmax)))
 
 	# categorical
 	for (n in 2:nmax['cat']) {
@@ -83,8 +78,23 @@ series_add_get_scores = function(z) {
 		zn = get_z_n(z[z$type == "bivc",], n = n, m = m)
 
 		if (!is.null(zn)) {
-
 			q = do.call(rbind, lapply(zn$palette, check_bivc_pal))
+			r = -q#rank(-q, ties.method = "first")
+
+			mn = cbind(q,r)
+
+			a[match(zn$fullname, dimnames(a)[[1]]), c("min_dist", "rank"), n] = mn
+		}
+	}
+
+	# bivariate div-seq
+	n = 3
+	for (m in 3:nmax['bivd']) {
+		zn = get_z_n(z[z$type == "bivd",], n = n, m = m)
+
+		if (!is.null(zn)) {
+
+			q = do.call(rbind, lapply(zn$palette, check_bivd_pal))
 			qr = pmin(q[,1], q[,2] * 2)
 
 			r = -qr#rank(-qr, ties.method = "first")
@@ -95,13 +105,14 @@ series_add_get_scores = function(z) {
 		}
 	}
 
+
 	# bivariate unc-seq
-	for (n in 3:nmax['bivu']) {
-		zn = get_z_n(z[z$type == "bivu",], n = n)
+	for (n in 3:nmax['bivg']) {
+		zn = get_z_n(z[z$type == "bivg",], n = n)
 
 		if (!is.null(zn)) {
 
-			q = do.call(rbind, lapply(zn$palette, check_bivu_pal))
+			q = do.call(rbind, lapply(zn$palette, check_bivg_pal))
 			qr = pmin(q[,1], q[,2] * 2)
 
 			r = -qr#rank(-qr, ties.method = "first")

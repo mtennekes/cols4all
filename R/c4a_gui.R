@@ -41,10 +41,6 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 	tab_k = tab_k[, c("series", tps)]
 
 
-
-
-
-
 	allseries = sort(unique(z$series))
 	if (series[1] == "all") {
 		series = allseries
@@ -74,10 +70,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 	type12 = paste0(type1, type2)
 
 
-	series_per_type = structure(lapply(types, function(tp) {
-		sort(unique(z$series[z$type == tp]))
-	}), names = unname(types))
-	first_series = sort(intersect(series, series_per_type[[type]]))
+	# series_per_type = structure(lapply(types, function(tp) {
+	# 	sort(unique(z$series[z$type == tp]))
+	# }), names = unname(types))
+	# first_series = sort(intersect(series, series_per_type[[type]]))
 
 
 	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
@@ -99,8 +95,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				shiny::conditionalPanel(
 					condition = "input.type1 == 'biv'",
 					shiny::selectizeInput("type2", "Subtype", choices = types2[["biv"]], selected = type2)),
-
-				shiny::selectizeInput("series", "Palette Series", choices = series_per_type[[type]], selected = first_series, multiple = TRUE),
+				shiny::div(style = "margin-bottom: 5px;", shiny::strong("Palette series")),
+				shiny::div(class = 'multicol',
+						   shiny::checkboxGroupInput("series", label = "", choices = allseries, selected = series, inline = FALSE)),
 				shiny::actionButton("overview", label = "Overview"),
 
 				shiny::conditionalPanel(
@@ -130,7 +127,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				shiny::selectizeInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto")),
 				shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
 				shiny::selectizeInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "rank"),
-				shiny::checkboxInput("sortRev", "Reverse", value = FALSE),
+				shiny::checkboxInput("sortRev", "Reverse sorting", value = FALSE),
 				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE),
 				shiny::checkboxInput("dark", "Dark mode", value = FALSE))),
 			#), class = "sticky"),
@@ -145,8 +142,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 	server = function(input, output, session) {
 
 
-		rv = shiny::reactiveValues(selected_series = series,
-								   current_type = type)
+		# rv = shiny::reactiveValues(selected_series = series,
+		# 						   current_type = type)
 
 		get_type12 = shiny::reactive({
 			type1 = input$type1
@@ -178,17 +175,17 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 		shiny::observeEvent(get_type12(), {
 			type = get_type12()
-			series = input$series
+			#series = input$series
 
-			choices = series_per_type[[type]]
-			not_selected = setdiff(series_per_type[[rv$current_type]], series)
-			rv$selected_series = union(setdiff(rv$selected_series, not_selected), series)
-			rv$current_type = type
+			# choices = series_per_type[[type]]
+			# not_selected = setdiff(series_per_type[[rv$current_type]], series)
+			# rv$selected_series = union(setdiff(rv$selected_series, not_selected), series)
+			# rv$current_type = type
 
-			selected = intersect(choices, rv$selected_series)
+			#selected = intersect(choices, rv$selected_series)
 
-			shiny::freezeReactiveValue(input, "series")
-			shiny::updateSelectizeInput(session, "series", choices = choices, selected = selected)
+			#shiny::freezeReactiveValue(input, "series")
+			#shiny::updateSelectizeInput(session, "series", choices = choices, selected = selected)
 
 
 			#type = rv$type12
@@ -335,7 +332,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 
 			if (is.null(values$series)) {
 				tab = NULL
-			} else if (values$type %in% c("bivs", "bivc", "bivu")) {
+			} else if (substr(values$type, 1, 3) == "biv") {
 				tab = c4a_table(n = values$nbiv, m = values$mbiv, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format, verbose = FALSE)
 			} else {
 				tab = c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format, verbose = FALSE)

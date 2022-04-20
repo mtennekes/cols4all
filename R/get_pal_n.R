@@ -62,7 +62,7 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, r
 				rampPal(pal, 101, space = space)[rngIDs]
 			}
 		}
-	} else if (type %in% c("bivs", "bivc", "bivu")) {
+	} else if (substr(type, 1, 3) == "biv") {
 		if (is.na(range[1])) range = c(0, 1)
 		if (all(dim(palette) == c(m, n)) && range[1] == 0 && range[2] == 1) {
 			palette
@@ -81,7 +81,7 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, r
 				if (aregreys(diag(palette))) {
 					diag(res) = convert2grey(diag(res))
 				}
-			} else if (type == "bivc") {
+			} else if (type == "bivd") {
 				if (aregreys(palette[, (ncol(palette) + 1)/2])) {
 					res[, (ncol(res)+1)/2] = convert2grey(res[, (ncol(res)+1)/2])
 				}

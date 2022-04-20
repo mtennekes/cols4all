@@ -5,7 +5,7 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	range_matrix = attr(pal, "range_matrix")
 	orig_pal = pal
 
-	if (type %in% c("bivs", "bivc", "bivu")) {
+	if (substr(type, 1, 3) == "biv") {
 		pal = create_biv_palette(pal, biv.method)
 	}
 
@@ -62,7 +62,7 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	}
 
 	if (is.na(colNA)) {
-		if (type %in% c("bivs", "bivc", "bivu")) {
+		if (substr(type, 1, 3) == "biv") {
 			colNA = "#FFFFFF"
 		} else {
 			# first candidates: choose NA from grays, such that luminance is at most 0.3 lighter and not darker than the lightest resp. darkest color.
