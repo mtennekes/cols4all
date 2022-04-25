@@ -649,6 +649,9 @@ local({
 .z = get("z", .C4A)
 .s = get("s", .C4A)
 
+.z$cit = NULL
+.z$bib = NULL
+
 .zbib = bibtex::read.bib("build/references.bib")
 
 save(.z, .s, .zbib, file="R/sysdata.rda", compress="xz")

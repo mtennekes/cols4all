@@ -16,14 +16,7 @@ body {
 }
 
 
-div.checkbox {
-	padding: 0px;
-	margin: 0px;
-}
 
-div.form-group.shiny-input-container {
-	margin: 0 0 5px 0;
-}
 
 .well {
 	background-image: url("imgResources/cols4all_logo.png");
@@ -69,7 +62,7 @@ div.col-sm-5 {
 }
 
 div.checkbox { padding: 0px; margin: 0px; }
-div.form-group.shiny-input-container { margin: 0 0 5px 0; }
+div.form-group.shiny-input-container { margin: 0 0 0 0; }
 
 .multicol {
 
@@ -79,4 +72,6 @@ div.form-group.shiny-input-container { margin: 0 0 5px 0; }
 	-moz-column-fill: auto;
 	-column-fill: auto;
 }
+
+
 

@@ -14,7 +14,7 @@ c4a(
   order = NULL,
   range = NA,
   format = c("hex", "RGB", "HCL"),
-  n_invalid = c("error", "repeat", "interpolate"),
+  nm_invalid = c("error", "repeat", "interpolate"),
   verbose = TRUE
 )
 
@@ -37,7 +37,7 @@ c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 
 \item{format}{format of the colors. One of: \code{"hex"} character vector of hex color values, \code{"RGB"} 3 column matrix of RGB values, or \code{"HCL"} 3-column matrix of HCL values}
 
-\item{n_invalid}{what should be done in case \code{n} is larger than the maximum number of colors or smaller than the minimum number? Options are \code{"error"} (an error is returned), \code{"repeat"}, the palette is repeated, \code{"interpolate"} colors are interpolated. For categorical \code{"cat"} palettes only.}
+\item{nm_invalid}{what should be done in case \code{n} or \code{m} is larger than the maximum number of colors or smaller than the minimum number? Options are \code{"error"} (an error is returned), \code{"repeat"}, the palette is repeated, \code{"interpolate"} colors are interpolated. For categorical \code{"cat"} palettes only.}
 
 \item{verbose}{should messages be printed?}
 }

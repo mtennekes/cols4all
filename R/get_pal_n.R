@@ -8,12 +8,17 @@ rampPal = function(palette, n, space = c("rgb", "Lab")) {
 	}
 }
 
-get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, range = NA, n_invalid = "error",...) {
-	n_orig = n
+get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, mmin, mmax, mdef, range = NA, nm_invalid = "error",...) {
 	if (is.na(m)) m = n
+	n_orig = n
+	m_orig = m
 	if (n > nmax || n < nmin) {
-		if (n_invalid == "error") return(NULL)
+		if (nm_invalid == "error") return(NULL)
 		n = ndef
+	}
+	if (!is.na(m) &&  (m > mmax || m < mmin)) {
+		if (nm_invalid == "error") return(NULL)
+		m = mdef
 	}
 	index = attr(palette, "index")
 	range_matrix = attr(palette, "range_matrix")
@@ -70,13 +75,24 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, r
 			rangeIDsm <- round(seq(range[1]*100, range[2]*100, length.out=m))+1
 			rangeIDsn <- round(seq(range[1]*100, range[2]*100, length.out=n))+1
 
-			p2 = t(apply(palette, MARGIN = 1, FUN = function(x) {
-				rampPal(x, 101, space = space)[rangeIDsn]
-			}))
-			res = apply(p2, MARGIN = 2, FUN = function(x) {
-				rampPal(x, 101, space = space)[rangeIDsm]
-			})
+			if (type != "bivc") {
+				# stretch both columns and rows
+				p2 = t(apply(palette, MARGIN = 1, FUN = function(x) {
+					rampPal(x, 101, space = space)[rangeIDsn]
+				}))
+				res = apply(p2, MARGIN = 2, FUN = function(x) {
+					rampPal(x, 101, space = space)[rangeIDsm]
+				})
+			} else {
+				# stretch rows only (columns to index, like cat)
+				p2 = palette[, 1L:n]
+				res = apply(p2, MARGIN = 2, FUN = function(x) {
+					rampPal(x, 101, space = space)[rangeIDsm]
+				})
+			}
 
+
+			# make sure grays are really gray (not always the case due to rounding and color space artefacts)
 			if (type == "bivs" && n == m) {
 				if (aregreys(diag(palette))) {
 					diag(res) = convert2grey(diag(res))
@@ -91,12 +107,33 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, r
 	}
 
 
-	# for cat only?
-	if (type == "cat") {
+	# invalid n/m without error: repeat or interpolate
+	if (substr(type, 1, 3) == "biv") {
+		# columns
 		if (n_orig != n) {
-			if (n_invalid == "repeat") {
+			if (nm_invalid == "repeat") {
+				x = x[, rep(1:ncol(x), length.out = n_orig)]
+			} else if (nm_invalid == "interpolate") {
+				x = t(apply(x, MARGIN = 2, FUN = function(x) {
+					rampPal(x, n_orig)
+				}))
+			}
+		}
+		# rows
+		if (m_orig != m) {
+			if (nm_invalid == "repeat") {
+				x = x[rep(1:nrow(x), length.out = m_orig), ]
+			} else if (nm_invalid == "interpolate") {
+				x = apply(x, MARGIN = 1, FUN = function(x) {
+					rampPal(x, m_orig)
+				})
+			}
+		}
+	} else {
+		if (n_orig != n) {
+			if (nm_invalid == "repeat") {
 				x = rep(x, length.out = n_orig)
-			} else if (n_invalid == "interpolate") {
+			} else if (nm_invalid == "interpolate") {
 				x = rampPal(x, n_orig)
 			}
 		}

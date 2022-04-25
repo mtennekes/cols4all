@@ -56,7 +56,7 @@ NULL
 					  seq = c(min_step = 5),
 					  div = c(inter_wing_dist = 10, min_step = 5),
 					  bivs = c(inter_wing_dist = 7, min_step = 3),
-					  bivc = c(inter_wing_dist = 7, min_step = 3),
+					  bivc = c(min_dist = 10),
 					  bivd = c(inter_wing_dist = 7, min_step = 3),
 					  bivg = c(inter_wing_dist = 7, min_step = 3))
 
@@ -65,7 +65,7 @@ NULL
 					  seq = c(min_step = 1),
 					  div = c(inter_wing_dist = 4, min_step = 1),
 					  bivs = c(inter_wing_dist = 3, min_step = 1),
-					  bivc = c(inter_wing_dist = 3, min_step = 1),
+					  bivc = c(min_dist = 2),
 					  bivd = c(inter_wing_dist = 3, min_step = 1),
 					  bivg = c(inter_wing_dist = 3, min_step = 1))
 
@@ -104,11 +104,14 @@ NULL
 							   				"diverging",
 							   				"bivariate (sequential x sequential)", "bivariate (sequential x categorical)", "bivariate (sequential x diverging)", "bivariate (sequential x desaturated)"))
 
+		ndef = c(cat = Inf, seq = 7, div = 9, bivc = Inf, bivs = 3, bivd = 3, bivg  = 3) # Inf meaning maximum available colors
+		mdef = c(cat = 1, seq = 1, div = 1, bivc = 3, bivs = NA, bivd = 3, bivg  = 3) # NA meaning same as ndef
+
 		indicators = list(cat = c("min_dist"),
 						  seq = c("min_step", "max_step"),
 						  div = c("inter_wing_dist", "min_step"),
 						  bivs = c("inter_wing_dist", "min_step"),
-						  bivc = c("inter_wing_dist", "min_step"),
+						  bivc = c("min_dist"),
 						  bivd = c("inter_wing_dist", "min_step"),
 						  bivg = c("inter_wing_dist", "min_step"))
 		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange")

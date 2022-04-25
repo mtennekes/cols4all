@@ -14,6 +14,9 @@ c4a_palettes_add(
   nmin = NA,
   nmax = NA,
   ndef = NA,
+  mmin = NA,
+  mmax = NA,
+  mdef = NA,
   format.palette.name = TRUE,
   remove.blacks = TRUE,
   take.gray.for.NA = TRUE,
@@ -47,7 +50,9 @@ c4a_palettes_remove(fullnames = NULL, series = NULL, are.you.sure = NA)
 
 \item{series}{for \code{c4a_palettes_add}, a character vector of the same length as x (or length 1), which determines the series. For \code{c4a_palettes_remove} a character vector of series names that should be removed (use \code{"all"} to remove all).}
 
-\item{nmin, nmax, ndef}{minimum / maximum / default number of colors for the palette. By default: for \code{"cat"} \code{nmin} is 1 and \code{nmax} and \code{ndef} the number of supplied colors. For the other types, \code{nmin} is 3, \code{nmax} is \code{Inf}. \code{ndef} is 7 for \code{"seq"}, 9 for \code{"div"} and 3 for the bivariate palettes (which means 3x3).}
+\item{nmin, nmax, ndef}{minimum / maximum / default number of colors for the palette. By default: \code{nmin = 1}, for \code{"cat"} \code{nmax} and \code{ndef} the number of supplied colors. For the other types, \code{nmax} is \code{Inf}. \code{ndef} is 7 for \code{"seq"}, 9. For diverging palettes, these numbers refer to the number of columns. (See \code{mmin}, \code{mmax}, \code{mdef} for the rows)}
+
+\item{mmin, mmax, mdef}{minimum / maximum / default number of rows for bivariate palettes.}
 
 \item{format.palette.name}{should palette names be formatted to lowercase/underscore format?}
 

@@ -10,7 +10,7 @@ series_add_get_scores = function(z) {
 
 	# categorical
 	for (n in 2:nmax['cat']) {
-		zn = get_z_n(z[z$type == "cat",], n =n)
+		zn = get_z_n(z[z$type == "cat",], n =n, m = 1)
 
 		if (!is.null(zn)) {
 			q = do.call(rbind, lapply(zn$palette, check_cat_pal))
@@ -24,7 +24,7 @@ series_add_get_scores = function(z) {
 
 	# sequential
 	for (n in 2:nmax['seq']) {
-		zn = get_z_n(z[z$type == "seq",], n =n)
+		zn = get_z_n(z[z$type == "seq",], n =n, m = 1)
 
 		if (!is.null(zn)) {
 			q = do.call(rbind, lapply(zn$palette, check_seq_pal))
@@ -40,7 +40,7 @@ series_add_get_scores = function(z) {
 
 	# diverging
 	for (n in 2:nmax['div']) {
-		zn = get_z_n(z[z$type == "div",], n =n)
+		zn = get_z_n(z[z$type == "div",], n =n, m = 1)
 
 		if (!is.null(zn)) {
 

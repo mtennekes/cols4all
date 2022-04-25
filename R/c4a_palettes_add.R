@@ -14,7 +14,8 @@
 #' @param xNA colors for missing values. Vector of the same length as x (or length 1). For `NA` values, the color for missing values is automatically determined (preferable a light grayscale color, but if it is indistinguishable by color blind people, a light color with a low chroma value is selected)
 #' @param types character vector of the same length as x (or length 1), which determines the type of palette `"cat"`, `"seq"`, or `"div"`.
 #' @param series for `c4a_palettes_add`, a character vector of the same length as x (or length 1), which determines the series. For `c4a_palettes_remove` a character vector of series names that should be removed (use `"all"` to remove all).
-#' @param nmin,nmax,ndef minimum / maximum / default number of colors for the palette. By default: for `"cat"` `nmin` is 1 and `nmax` and `ndef` the number of supplied colors. For the other types, `nmin` is 3, `nmax` is `Inf`. `ndef` is 7 for `"seq"`, 9 for `"div"` and 3 for the bivariate palettes (which means 3x3).
+#' @param nmin,nmax,ndef minimum / maximum / default number of colors for the palette. By default: `nmin = 1`, for `"cat"` `nmax` and `ndef` the number of supplied colors. For the other types, `nmax` is `Inf`. `ndef` is 7 for `"seq"`, 9. For diverging palettes, these numbers refer to the number of columns. (See `mmin`, `mmax`, `mdef` for the rows)
+#' @param mmin,mmax,mdef minimum / maximum / default number of rows for bivariate palettes.
 #' @param format.palette.name should palette names be formatted to lowercase/underscore format?
 #' @param remove.blacks,take.gray.for.NA,remove.other.grays These arguments determine the processing of grayscale colors for categorical `"cat"` palettes: if `remove.blacks` and there are (near) blacks, these are removed first. Next, if `take.gray.for.NA`, `xNA` is `NA`, and a palette contains at least one grayscale color (which can also be white), this is used as color for missing values. In case there are more than one grayscale color, the lightest is taken. `remove.other.grays` determines what happens with the other grays.
 #' @param light.to.dark should sequential `"seq"` palettes be automatically ordered from light to dark?
@@ -30,7 +31,7 @@
 #' @rdname c4a_palettes_add
 #' @name c4a_palettes_add
 #' @export
-c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, ndef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL), bib = NA) {
+c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, ndef = NA, mmin = NA, mmax = NA, mdef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL), bib = NA) {
 
 	if (!requireNamespace("colorblindcheck")) stop("Please install colorblindcheck")
 
@@ -116,22 +117,42 @@ c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, nd
 
 	names(x) = nms
 
-	z = data.frame(name = nms, series = series, fullname = fnms, type = types, palette = I(x), na = xNA, nmin = nmin, nmax = nmax, ndef = ndef)
+	z = data.frame(name = nms, series = series, fullname = fnms, type = types, palette = I(x), na = xNA, nmin = nmin, nmax = nmax, ndef = ndef, mmin = mmin, mmax = mmax, mdef = mdef)
 	rownames(z) = NULL
 
 	z$nmax = mapply(function(pal, type, nmax) {
+		index = attr(pal, "index")
 		if (!is.na(nmax)) {
 			nmax
 		} else if (type == "cat") {
-			index = attr(pal, "index")
 			if (is.null(index)) length(pal) else length(index[[length(index)]])
+		} else if (type == "bivc") {
+			ncol(pal)
 		} else {
 			Inf
 		}
 	}, z$palette, z$type, z$nmax, SIMPLIFY = TRUE, USE.NAMES = FALSE)
+	z$nmin[is.na(z$nmin)] = 1L
+	z$ndef = mapply(function(nmax, type) {
+		if (!is.infinite(nmax)) nmax else unname(.C4A$ndef[type])
+	}, z$nmax, z$type, USE.NAMES = FALSE)
 
-	z$nmin = ifelse(!is.na(z$nmin), z$nmin, ifelse(z$type == "cat", 1, 3))
-	z$ndef = ifelse(!is.infinite(z$nmax), z$nmax, ifelse(z$type == "seq", 7, ifelse(z$type == "div", 9, 3)))
+	z$mmax = mapply(function(pal, mmax) {
+		if (!is.na(mmax)) {
+			mmax
+		} else if (is.matrix(pal)) {
+			Inf
+		} else {
+			1
+		}
+	}, z$palette, z$mmax, SIMPLIFY = TRUE, USE.NAMES = FALSE)
+	z$mmin[is.na(z$mmin)] = 1L
+	z$mdef = mapply(function(mmax, type) {
+		if (!is.infinite(mmax)) mmax else unname(.C4A$mdef[type])
+	}, z$mmax, z$type, USE.NAMES = FALSE)
+
+
+	#z$ndef = ifelse(!is.infinite(z$nmax), z$nmax, ifelse(z$type == "seq", 7, ifelse(z$type == "div", 9, 3)))
 
 	s = series_add_get_scores(z)
 
@@ -193,7 +214,7 @@ c4a_palettes_add_as_is = function(..., format.palette.name = FALSE, remove.black
 
 check_z = function(z) {
 	name <- series <- fullname <- type <- nmax <- NULL
-	if (!is.data.frame(z) || !setequal(c("name", "series", "fullname", "type", "palette", "na", "nmin", "nmax", "ndef"), names(z))) stop("z should be a dataframe of colums: name, series, fullname, type, palette, na, nmin, nmax, and ndef")
+	if (!is.data.frame(z) || !setequal(c("name", "series", "fullname", "type", "palette", "na", "nmin", "nmax", "ndef", "mmin", "mmax", "mdef"), names(z))) stop("z should be a dataframe of colums: name, series, fullname, type, palette, na, nmin, nmax, ndef, mmin, mmax, and mdef")
 
 	within(z, {
 		if (!is.character(name)) stop("x$z$name should be a character column", call. = FALSE)
