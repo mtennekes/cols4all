@@ -7,7 +7,7 @@ library(pals)
 library(rcartocolor)
 library(RColorBrewer)
 library(viridisLite)
-library(scico)
+library(khroma) # library(scico)
 library(ggthemes)
 library(reticulate) # to get seaborn
 library(Polychrome)
@@ -415,22 +415,56 @@ local({
 local({
 	ids = seq(1,256, length.out=16)
 	d = scico:::palettes
-	pals = lapply(d, function(x) {
-		rampPal(rgb(x$r, x$g, x$b, maxColorValue = 1), 15)
-	})
+
 	div = c("broc", "brocO", "cork", "corkO", "vik", "vikO", "lisbon", "tofino", "berlin", "roma", "romaO", "bam", "bamO", "vanimo")
 	mseq = c("oleron", "bukavu", "fes")
 
+
+	pals = mapply(function(x, nm) {
+		if (nm %in% mseq) {
+			c(rampPal(rgb(x$r[128:1], x$g[128:1], x$b[128:1], maxColorValue = 1), 7),
+			rampPal(rgb(x$r[256:129], x$g[256:129], x$b[256:129], maxColorValue = 1), 7))
+		} else {
+			rampPal(rgb(x$r, x$g, x$b, maxColorValue = 1), 15)
+		}
+	}, d, names(d))
+
 	pals_div = pals[div]
 	pals_seq = pals[setdiff(names(pals), c(div, mseq))]
-
+	pals_biv = pals[mseq]
+	pals_biv = lapply(pals_biv, function(p) {
+		matrix(p[c(1:7,8:14)], ncol = 2)
+	})
+	pals_biv[["fes"]] = pals_biv[["fes"]][,2:1]
 
 	names(pals_seq)[match(c("batlowK", "batlowW"), names(pals_seq))] = c("k_batlow", "w_batlow") # reverse names (because palettes will be reversed)
 
 	c4a_palettes_add(pals_div, types = "div", series = "scico")
 	c4a_palettes_add(pals_seq, types = "seq", series = "scico")
+	c4a_palettes_add(pals_biv, types = c("bivc", "bivc", "bivg"), series = "scico", biv.method = "bycol2")
 })
 
+###################################
+### package crameri
+###################################
+# local({
+# 	inf = khroma::info()[1:35, ]
+#
+# 	scms = khroma:::.schemes
+#
+# 	names = names(scms)
+# 	types = unname(sapply(scms, "[[", "type"))
+# 	pals = unname(lapply(scms, "[[", "colours"))
+# 	nas = sapply(scms, "[[", missing)
+# 	schemes = unname(lapply(scms, "[[", "scheme"))
+#
+# 	df = data.table::rbindlist(scms)
+#
+#
+# 	cols = mapply(function(name, mx) {
+# 		khroma:::.schemes[[name]] r(name, mx)
+# 	}, inf$palette, inf$max, SIMPLIFY = FALSE, USE.NAMES = FALSE)
+# })
 
 ###################################
 ### package ggthemes (tableau)
@@ -532,7 +566,7 @@ local({
 ########################################################################################
 ######################################## BIVARIATE #####################################
 ########################################################################################
-c4a_palettes_remove(series = "c4a")
+#c4a_palettes_remove(series = "c4a")
 local({
 	bu2 = c4a("hcl.blues3", n = 5, range = c(0.3, 0.8))
 	yl_rd = c4a("hcl.yellow_red", n = 5, range = c(0.3, 0.8))
@@ -640,8 +674,8 @@ local({
 	c4a_palettes_add(pals_cbf, types = types_cbf, series = "met")
 })
 
-
-
+info()
+khroma::color()
 
 
 

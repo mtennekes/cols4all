@@ -24,6 +24,7 @@ show_attach_scores = function(z) {
 	z2 = cbind(z, as.data.frame(s3))
 
 	z2$cbfriendly = get_friendlyness(z2)
+	z2$cbfriendly[is.na(z2$cbfriendly)] = 0
 	z2$iscbf = (z2$cbfriendly == 1)
 	a = t(mapply(analyse_hcl, z2$palette, z2$type))
 	z2 = cbind(z2, a)

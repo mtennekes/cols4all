@@ -24,7 +24,7 @@ def_n = function(npref = NA, type, series, tab_nmin, tab_nmax) {
 #' @rdname c4a_gui
 #' @name c4a_gui
 #' @export
-c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "tol", "viridis", "c4a")) {
+c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "hcl", "tol", "viridis", "c4a")) {
 	if (!requireNamespace("shiny")) stop("Please install shiny")
 	if (!requireNamespace("shinyjs")) stop("Please install shinyjs")
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
@@ -107,9 +107,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 					condition = "input.type1 == 'biv'",
 					shiny::fluidRow(
 						shiny::column(6,
-							shiny::sliderInput("nbiv", "Number of columns", min = 3, max = 6, value = 3, ticks = FALSE)),
+							shiny::sliderInput("nbiv", "Number of columns", min = 3, max = 7, value = 3, ticks = FALSE)),
 						shiny::column(6,
-							shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 6, value = 3, ticks = FALSE))))),
+							shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 7, value = 3, ticks = FALSE))))),
 				shiny::checkboxInput("na", "Color for missing values", value = FALSE),
 				shiny::conditionalPanel(
 					condition = "input.type1 == 'seq' || input.type1 == 'div'",
@@ -194,11 +194,13 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "hcl", "to
 				} else {
 					shinyjs::enable("mbiv")
 				}
+				nmin = if (type == "bivd") 3 else 2
+				nstep = if (type == "bivd") 2 else 1
 
 				shiny::freezeReactiveValue(input, "nbiv")
 				shiny::freezeReactiveValue(input, "mbiv")
-				shiny::updateSliderInput(session, "nbiv", value = ndef)
-				shiny::updateSliderInput(session, "mbiv", value = mdef)
+				shiny::updateSliderInput(session, "nbiv", value = ndef, min = nmin, step = nstep)
+				shiny::updateSliderInput(session, "mbiv", value = mdef, min = nmin, step = nstep)
 			}
 			# print("/+++++++++")
 		})

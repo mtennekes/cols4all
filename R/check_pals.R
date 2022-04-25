@@ -57,7 +57,7 @@ check_bivs_pal = function(p) {
 }
 
 check_bivc_pal = function(p) {
-	nr = ncol(p)
+	nr = nrow(p)
 
 	res = lapply(1L:nr, function(i) {
 		check_cat_pal(p[i, ])
@@ -67,13 +67,18 @@ check_bivc_pal = function(p) {
 }
 
 check_bivd_pal = function(p) {
-	if (ncol(p) != 3) {
-		stop("ncol != 3", call. = FALSE)
+	if (ncol(p) %% 2 == 0) {
+		stop("ncol should be odd", call. = FALSE)
 	}
 
-	x13 = check_div_pal(c(rev(p[,1]), "#FFFFFF", p[,3]))
-	x12 = check_div_pal(c(rev(p[,1]), "#FFFFFF", p[,2]))
-	x23 = check_div_pal(c(rev(p[,2]), "#FFFFFF", p[,3]))
+	c1 = 1
+	c3 = ncol(p)
+	c2 = (c1+c3)/2
+
+
+	x13 = check_div_pal(c(rev(p[,c1]), "#FFFFFF", p[,c3]))
+	x12 = check_div_pal(c(rev(p[,c1]), "#FFFFFF", p[,c2]))
+	x23 = check_div_pal(c(rev(p[,c2]), "#FFFFFF", p[,c3]))
 
 	pmin(x12, x13, x23)
 }

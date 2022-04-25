@@ -56,7 +56,7 @@ series_add_get_scores = function(z) {
 	}
 
 	# bivariate seq-seq
-	for (n in 3:nmax['bivs']) {
+	for (n in 2:nmax['bivs']) {
 		zn = get_z_n(z[z$type == "bivs",], n = n, m = n)
 
 		if (!is.null(zn)) {
@@ -73,9 +73,8 @@ series_add_get_scores = function(z) {
 	}
 
 	# bivariate cat-seq
-	n = 3
-	for (m in 3:nmax['bivc']) {
-		zn = get_z_n(z[z$type == "bivc",], n = n, m = m)
+	for (n in 2:nmax['bivc']) {
+		zn = get_z_n(z[z$type == "bivc",], n = n, m = 5)
 
 		if (!is.null(zn)) {
 			q = do.call(rbind, lapply(zn$palette, check_bivc_pal))
@@ -88,9 +87,8 @@ series_add_get_scores = function(z) {
 	}
 
 	# bivariate div-seq
-	n = 3
-	for (m in 3:nmax['bivd']) {
-		zn = get_z_n(z[z$type == "bivd",], n = n, m = m)
+	for (n in seq(3, nmax['bivd'], by = 2)) {
+		zn = get_z_n(z[z$type == "bivd",], n = n, m = 5)
 
 		if (!is.null(zn)) {
 
@@ -107,8 +105,8 @@ series_add_get_scores = function(z) {
 
 
 	# bivariate unc-seq
-	for (n in 3:nmax['bivg']) {
-		zn = get_z_n(z[z$type == "bivg",], n = n)
+	for (n in 2:nmax['bivg']) {
+		zn = get_z_n(z[z$type == "bivg",], n = n, m = 5)
 
 		if (!is.null(zn)) {
 
