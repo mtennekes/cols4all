@@ -140,12 +140,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		)
 	)
 	server = function(input, output, session) {
-
-
-		# manual debounce
-		rv = shiny::reactiveValues(t = 0)
-		maxIter = 5
-		timer = shiny::reactiveTimer(100)
+		series_d = shiny::debounce(shiny::reactive(input$series), 300)
 
 		get_type12 = shiny::reactive({
 			type1 = input$type1
@@ -155,6 +150,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				type1
 			}
 		})
+
 
 		shiny::observeEvent(get_cols(), {
 			cols = get_cols()
@@ -179,7 +175,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			type = get_type12()
 
 			if (type %in% c("cat", "seq", "div")) {
-				series = input$series
+				series = series_d()
 				ns =  def_n(npref = input$n, type, series, tab_nmin, tab_nmax)
 				# print("+++++++++++++")
 				# print(ns)
@@ -205,19 +201,12 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			# print("/+++++++++")
 		})
 
-		shiny::observeEvent(timer(), {
-			shiny::req(rv$t < maxIter)
-			rv$t = rv$t + 1
-		})
 
-		shiny::observeEvent(input$series, {
-			shiny::req(rv$t == maxIter)
-			rv$t = 0
-
+		shiny::observeEvent(series_d(), {
 			type = get_type12()
 
 			if (!(type %in% c("cat", "seq", "div"))) return(NULL)
-			series = input$series
+			series = series_d()
 			ns =  def_n(npref = input$n, type, series, tab_nmin, tab_nmax)
 			# print("-------------")
 			# print(ns)
@@ -243,8 +232,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 
+
 		get_values = shiny::reactive({
 			if (input$sort == "") return(NULL)
+
 			type = get_type12()
 			list(n = input$n,
 				 nbiv = input$nbiv,
@@ -253,7 +244,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				 cvd = input$cvd,
 				 sort = input$sort,
 				 sortRev = input$sortRev,
-				 series = input$series,
+				 series = series_d(),
 				 show.scores = input$advanced,
 				 columns = if (input$n > 16) 12 else input$n,
 				 na = input$na,
