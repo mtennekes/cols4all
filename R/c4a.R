@@ -70,6 +70,8 @@ c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bi
 	if (is.na(n)) n = x$ndef
 	if (is.na(m)) m = n
 	#if (substr(type, 1, 3) == "biv" && is.na(m)) m = n
+	x$nm_invalid = nm_invalid
+
 
 	pal = do.call(get_pal_n, c(list(n = n, m = m), x))
 
