@@ -65,15 +65,22 @@ NULL
 					  bivg = c(inter_wing_dist = 3, min_step = 1))
 
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
-		LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
-		LCrangeHarmonic = 80/3 # Maximum LCrange values for which the palette is labeled "harmonic"
+		# LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
+		# LCrangeHarmonic = 80/3 # Maximum LCrange values for which the palette is labeled "harmonic"
+
+		CrangeHarmonic = 40 # replacement for LCrangeHarmonic (and LrangeWeight)
+
 		Cintense = 100 # chroma of colors that are considered intense
 		HwidthDivRainbow = 90 # a diverging palette is labeled as 'rainbow hue' if HwidthL or HwidthR are at least HwidthDivRainbow
 		HwidthDivSingle = 20 # a diverging palette is labeled as 'single hue' if HwidthL and HwidthR are at most HwidthDivSingle
 		HwidthSeqRainbow = 180 # a sequential palette is labeled as 'rainbow hue' if Hwidth is at least HwidthSeqRainbow
 		HwidthSeqSingle = 15 # a sequential palette is labeled as 'single hue' if Hwidth is at most HwidthSeqSingle
 
-		sc = c("min_dist", "min_step", "max_step", "inter_wing_dist", "rank")
+		sc = c("min_dist",
+			   "min_step",
+			   "max_step",
+			   "inter_wing_dist",
+			   "rank")
 
 		types = c("Categorical" = "cat",
 				  "Sequential" = "seq",
@@ -109,7 +116,7 @@ NULL
 						  bivc = c("min_dist"),
 						  bivd = c("inter_wing_dist", "min_step"),
 						  bivg = c("inter_wing_dist", "min_step"))
-		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange")
+		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin")
 
 		sortRev = c("Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
 
@@ -125,6 +132,7 @@ NULL
 					Lrange = "Luminance range",
 					Crange = "Chroma range",
 					LCrange = "Lum/Chr range",
+					CRmin = "contrast-ratio min",
 					rank = "Ranking",
 					cbfriendly = "Colorblind-friendly",
 					cbfuf = "Colorblind-friendly",

@@ -12,7 +12,7 @@ table_columns = function(type, show.scores) {
 		srt = c(srt, {if (type %in% c("div", "bivs", "bivd", "bivg")) "HwidthLR" else "Hwidth"})
 	} else {
 		qn = c(qn, "harmonic")
-		srt = c(srt, "LCrange")
+		srt = c(srt, "Crange")
 	}
 
 	qn = c(qn, "rank")

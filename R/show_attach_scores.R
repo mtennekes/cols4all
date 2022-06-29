@@ -26,8 +26,8 @@ show_attach_scores = function(z) {
 	z2$cbfriendly = get_friendlyness(z2)
 	z2$cbfriendly[is.na(z2$cbfriendly)] = 0
 	z2$iscbf = (z2$cbfriendly == 1)
-	a = t(mapply(analyse_hcl, z2$palette, z2$type))
-	z2 = cbind(z2, a)
+	#a = t(mapply(analyse_hcl, z2$palette, z2$type))
+	#z2 = cbind(z2, a)
 
 	z2$highC = z2$Cmax >= .C4A$Cintense
 
@@ -42,9 +42,9 @@ show_attach_scores = function(z) {
 		z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 - ((!z2$highC[z2$iscbf]) * 1e6)
 		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] - ((!z2$highC[!z2$iscbf]) * 1e-3)
 	} else if (type %in% c("cat", "bivc")) {
-		z2$harmonic = (z2$LCrange < .C4A$LCrangeHarmonic)
-		z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 + ((z2$LCrange[z2$iscbf]) * 1e6) + (z2$highC[z2$iscbf] * 1e3)
-		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] + ((z2$LCrange[!z2$iscbf]) * 1e-3) + (z2$highC[!z2$iscbf] * 1e-6)
+		z2$harmonic = (z2$Crange < .C4A$CrangeHarmonic)
+		z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 + ((z2$Crange[z2$iscbf]) * 1e6) + (z2$highC[z2$iscbf] * 1e3)
+		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] + ((z2$Crange[!z2$iscbf]) * 1e-3) + (z2$highC[!z2$iscbf] * 1e-6)
 	} else if (type %in% c("bivs", "bivd", "bivg")) {
 		z2$hueType = ifelse(z2$HwidthL >= .C4A$HwidthDivRainbow | z2$HwidthR >= .C4A$HwidthDivRainbow, "RH",
 							ifelse(z2$HwidthL < .C4A$HwidthDivSingle & z2$HwidthR < .C4A$HwidthDivSingle, "SH", "MH"))

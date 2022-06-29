@@ -34,7 +34,10 @@ check_div_pal = function(p) {
 	min_step = min(scores[,2])
 
 
-	c(inter_wing_dist = inter_wing_dist, min_step = min_step)
+	sc = c(inter_wing_dist = inter_wing_dist, min_step = min_step)
+	prop = hcl_prop(p)
+
+	c(sc, prop)
 }
 
 
@@ -53,7 +56,13 @@ check_bivs_pal = function(p) {
 	x1d = check_div_pal(c(rev(p1[-1]), pd))
 	x2d = check_div_pal(c(rev(p2[-1]), pd))
 
-	pmin(x12, x1d, x2d)
+	sc = pmin(x12, x1d, x2d)[1:2]
+
+	p2 = c(as.vector(p[lower.tri(p)]), p[1,1], as.vector(p[upper.tri(p)]))
+
+	prop = hcl_prop(p2)
+
+	c(sc, prop)
 }
 
 check_bivc_pal = function(p) {
@@ -63,7 +72,13 @@ check_bivc_pal = function(p) {
 		check_cat_pal(p[i, ])
 	})
 
-	do.call(pmin, res)
+	sc = do.call(pmin, res)[1:2]
+
+	p2 = as.vector(p)
+
+	prop = hcl_prop(p2)
+
+	c(sc, prop)
 }
 
 check_bivd_pal = function(p) {
@@ -80,11 +95,22 @@ check_bivd_pal = function(p) {
 	x12 = check_div_pal(c(rev(p[,c1]), "#FFFFFF", p[,c2]))
 	x23 = check_div_pal(c(rev(p[,c2]), "#FFFFFF", p[,c3]))
 
-	pmin(x12, x13, x23)
+	sc = pmin(x12, x13, x23)[1:2]
+
+	p2 = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
+	prop = hcl_prop(p2)
+
+	c(sc, prop)
 }
 
 check_bivg_pal = function(p) {
-	check_div_pal(c(rev(p[,1]), "#FFFFFF", p[,ncol(p)]))
+	sc = check_div_pal(c(rev(p[,1]), "#FFFFFF", p[,ncol(p)]))[1:2]
+
+	p2 = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
+	prop = hcl_prop(p2)
+
+	c(sc, prop)
+
 }
 
 
@@ -111,7 +137,11 @@ check_seq_pal = function(p) {
 
 		c(min_step = round(min_step_size), max_step = round(max_step_size))
 	}))
-	c(min_step = min(scores[,1]), max_step = min(scores[,2]))
+
+	sc = c(min_step = min(scores[,1]), max_step = min(scores[,2]))
+	prop = hcl_prop(p)
+
+	c(sc, prop)
 }
 
 # Check cyclic palette
@@ -144,7 +174,10 @@ check_cat_pal = function(p) {
 	scores = sapply(cvds, function(cvd) {
 		colorblindcheck::palette_dist(p, cvd = cvd)
 	})
-	c(min_dist = round(min(scores, na.rm = TRUE)))
+
+	prop = hcl_prop(p)
+
+	c(min_dist = round(min(scores, na.rm = TRUE)), prop)
 }
 
 
@@ -207,6 +240,11 @@ analyse_hcl = function(p, type) {
 	}
 
 
+	hcl_prop(p)
+}
+
+
+hcl_prop = function(p) {
 	m = get_hcl_matrix(p)
 
 	# hue width: how far are hues apart from each other?
@@ -230,9 +268,25 @@ analyse_hcl = function(p, type) {
 	Cmax = round(max(m[,2]))
 	Lrange = round(max(m[,3]) - min(m[,3]))
 	Crange = round(max(m[,2]) - min(m[,2]))
-	LCrange = round(max(Lrange * .C4A$LrangeWeight, Crange * (1-.C4A$LrangeWeight)))
+	#LCrange = round(max(Lrange * .C4A$LrangeWeight, Crange * (1-.C4A$LrangeWeight)))
+
+	CRmin = get_CRmin(p)
 
 
-	c(Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, LCrange = LCrange)
+	c(Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, CRmin = CRmin) #LCrange = LCrange,
 }
+
+get_CRmin = function(p) {
+	n = length(p)
+	CRs = sapply(1:(n-1), function(i) {
+		CRs = sapply(p[(i+1):n], function(pj) colorspace::contrast_ratio(p[i], pj))
+		id = which.min(CRs)[1]
+		structure(CRs[id], names = paste(i, id + i, sep = "_"))
+	})
+	id = which.min(CRs)[1]
+	unname(CRs[id])
+	#structure(CRs[id], ids = strsplit(names(CRs[id]), split = "_", fixed = TRUE))
+
+}
+
 
