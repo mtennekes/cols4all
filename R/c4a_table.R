@@ -245,9 +245,9 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 		kableExtra::cell_spec(txt1, link=links1, tooltip=tooltip, escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
 	}
 
-	e2[['Copy1']] = add_link("&#128471;", palList, function(x) paste0("[&quot;", paste0(x, collapse = "&quot;, &quot;"), "&quot;]"), tooltip='Copy colors: [&quot;#111111&quot;, &quot;#222222&quot;]')
+	e2[['Copy1']] = add_link("©", palList, function(x) paste0("[&quot;", paste0(x, collapse = "&quot;, &quot;"), "&quot;]"), tooltip='Copy colors: [&quot;#111111&quot;, &quot;#222222&quot;]')
 	e2[['Copy2']] = add_link("R", palList, function(x) paste0("c(&quot;", paste0(x, collapse = "&quot;, &quot;"), "&quot;)"), tooltip='Copy colors to R: c(&quot;#111111&quot;, &quot;#222222&quot;)')
-	e2[['Copy3']] = add_link("&#128366;", zn$cit, function(x) x, tooltip='Copy reference')
+	e2[['Copy3']] = add_link("📖", zn$cit, function(x) x, tooltip='Copy reference')
 	e2[['Copy4']] = add_link("B", zn$bib, function(x) x, tooltip='Copy BibTex reference')
 
 	sim = switch(cvd.sim,
@@ -322,7 +322,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	if ("harmonic" %in% qn) {
 		hlab = .labels["harmonic"]
 		e2[[hlab]] = ifelse(!is.na(e2[[hlab]]) & e2[[hlab]],
-							kableExtra::cell_spec("&#127900;", tooltip = tooltip_Harm, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"), "")
+							kableExtra::cell_spec("🎵", tooltip = tooltip_Harm, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"), "")
 
 	}
 

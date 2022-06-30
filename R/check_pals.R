@@ -271,9 +271,17 @@ hcl_prop = function(p) {
 	#LCrange = round(max(Lrange * .C4A$LrangeWeight, Crange * (1-.C4A$LrangeWeight)))
 
 	CRmin = get_CRmin(p)
+	CRbg = get_CRbg(p)
 
+	c(Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, CRmin = CRmin, CRbg = CRbg) #LCrange = LCrange,
+}
 
-	c(Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, CRmin = CRmin) #LCrange = LCrange,
+get_CRbg = function(p, bg = "#ffffff") {
+	n = length(p)
+	CRs = sapply(p, function(pi) colorspace::contrast_ratio(pi, bg))
+	id = which.min(CRs)[1]
+	unname(CRs[id])
+	#structure(CRs[id], names = id)
 }
 
 get_CRmin = function(p) {
