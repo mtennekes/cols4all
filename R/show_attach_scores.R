@@ -43,6 +43,7 @@ show_attach_scores = function(z) {
 		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] - ((!z2$highC[!z2$iscbf]) * 1e-3)
 	} else if (type %in% c("cat", "bivc")) {
 		z2$harmonic = (z2$Crange < .C4A$CrangeHarmonic)
+		z2$contrast = ifelse(z2$CRmin < 120, "lCR", ifelse(z2$CRwt < 120, "lCRwt", ifelse(z2$CRbk < 120, "lCRbk", "")))
 		z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 + ((z2$Crange[z2$iscbf]) * 1e6) + (z2$highC[z2$iscbf] * 1e3)
 		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] + ((z2$Crange[!z2$iscbf]) * 1e-3) + (z2$highC[!z2$iscbf] * 1e-6)
 	} else if (type %in% c("bivs", "bivd", "bivg")) {

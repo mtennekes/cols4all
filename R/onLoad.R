@@ -116,7 +116,7 @@ NULL
 						  bivc = c("min_dist"),
 						  bivd = c("inter_wing_dist", "min_step"),
 						  bivg = c("inter_wing_dist", "min_step"))
-		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRbg")
+		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
 
 		sortRev = c("Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
 
@@ -132,14 +132,16 @@ NULL
 					Lrange = "Luminance range",
 					Crange = "Chroma range",
 					LCrange = "Lum/Chr range",
-					CRmin = "contrast-ratio min",
-					CRbg = "contrast-ratio white bg",
+					CRmin = "Contrast-Ratio min",
+					CRwt = "Contrast-Ratio white bg",
+					CRbk = "Contrast-Ratio black bg",
 					rank = "Ranking",
 					cbfriendly = "Colorblind-friendly",
 					cbfuf = "Colorblind-friendly",
 					highC = "Intense colors",
 					hueType = "Hues",
 					harmonic = "Harmonic palette",
+					contrast = "Contrast Range",
 					nmax = "Max number")
 
 		nmax = c(cat = 36, seq = 15, div = 15, bivs = 7, bivc = 7, bivd = 7, bivg = 7)

@@ -20,7 +20,8 @@ series_add_get_scores = function(z) {
 
 			if (!is.null(zn)) {
 				q = do.call(rbind, lapply(zn$palette, check_fun))
-				r = 1 #-q#rank(-q, ties.method = "first")
+				if (!is.integer(q[1,1])) browser()
+				r = 1L #-q#rank(-q, ties.method = "first")
 
 #browser()
 				mn = cbind(q,rank=r)

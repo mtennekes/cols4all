@@ -11,8 +11,8 @@ table_columns = function(type, show.scores) {
 		qn = c(qn, "hueType")
 		srt = c(srt, {if (type %in% c("div", "bivs", "bivd", "bivg")) "HwidthLR" else "Hwidth"})
 	} else {
-		qn = c(qn, "harmonic")
-		srt = c(srt, "Crange")
+		qn = c(qn, "harmonic", "contrast")
+		srt = c(srt, "Crange", "CRmin")
 	}
 
 	qn = c(qn, "rank")
@@ -299,6 +299,11 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	tooltip_SH_bivs = "Each dimension has its own distinct hue: recommended!"
 	tooltip_Harm = "Harmonic, well-balanced colors"
 
+	tooltip_CR = "Low contrast range between colors; use borders to separate them"
+	tooltip_CRwt = "Low contrast range with white background"
+	tooltip_CRbk = "Low contrast range with black background"
+
+
 	if ("cbfriendly" %in% qn) e2[[.labels["cbfriendly"]]] = ifelse(!is.na(e2[[.labels["cbfriendly"]]]) & e2[[.labels["cbfriendly"]]] == 1L, kableExtra::cell_spec("&#9786;", extra_css
 ="font-size: 80%;", tooltip = tooltip_cbfriendly, escape = FALSE), ifelse(!is.na(e2[[.labels["cbfriendly"]]]) & e2[[.labels["cbfriendly"]]] == -1L, kableExtra::cell_spec("&#128064;", extra_css
 																								  ="font-size: 60%;", tooltip = tooltip_cbunfriendly, escape = FALSE), ""))
@@ -326,7 +331,16 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 	}
 
+	if ("contrast" %in% qn) {
+		clab = .labels["contrast"]
+		e2[[clab]] = ifelse(!is.na(e2[[clab]]) & e2[[clab]] == "lCRwt",
+							kableExtra::cell_spec("🔲", tooltip = tooltip_CRwt, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
+  					 ifelse(!is.na(e2[[clab]]) & e2[[clab]] == "lCRbk",
+					 	    kableExtra::cell_spec("🔳", tooltip = tooltip_CRbk, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
+					 ifelse(!is.na(e2[[clab]]) & e2[[clab]] == "lCR",
+					    	kableExtra::cell_spec("𖦹", tooltip = tooltip_CR, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"), "")))
 
+	}
 
 
 

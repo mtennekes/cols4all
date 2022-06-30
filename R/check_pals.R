@@ -34,7 +34,7 @@ check_div_pal = function(p) {
 	min_step = min(scores[,2])
 
 
-	sc = c(inter_wing_dist = inter_wing_dist, min_step = min_step)
+	sc = as(c(inter_wing_dist = inter_wing_dist, min_step = min_step), "integer")
 	prop = hcl_prop(p)
 
 	c(sc, prop)
@@ -138,7 +138,7 @@ check_seq_pal = function(p) {
 		c(min_step = round(min_step_size), max_step = round(max_step_size))
 	}))
 
-	sc = c(min_step = min(scores[,1]), max_step = min(scores[,2]))
+	sc = as(c(min_step = min(scores[,1]), max_step = min(scores[,2])), "integer")
 	prop = hcl_prop(p)
 
 	c(sc, prop)
@@ -148,21 +148,21 @@ check_seq_pal = function(p) {
 #
 # Check cyclic palette. Same as \code{check_seq_pal}, but also the difference between the first and last color is considered as step
 #
-check_cyc_pal = function(p) {
-	n = length(p)
-	cvds = c("deu", "pro", "tri")
-
-	scores = t(sapply(cvds, function(cvd) {
-		m = colorblindcheck::palette_dist(c(p, p[1]), cvd = cvd)
-		step_sizes = mapply(function(i,j) m[i,j], 1:n, 2:(n+1))
-		min_step_size = min(step_sizes)
-		max_step_size = max(step_sizes)
-		#mean_step_size = mean(step_sizes)
-		#step_indicator = max(abs(step_sizes - mean_step_size)) / mean_step_size
-		c(min_step = round(min_step_size), max_step = round(max_step_size))
-	}))
-	c(min_step = min(scores[,1]), max_step = min(scores[,2]))
-}
+# check_cyc_pal = function(p) {
+# 	n = length(p)
+# 	cvds = c("deu", "pro", "tri")
+#
+# 	scores = t(sapply(cvds, function(cvd) {
+# 		m = colorblindcheck::palette_dist(c(p, p[1]), cvd = cvd)
+# 		step_sizes = mapply(function(i,j) m[i,j], 1:n, 2:(n+1))
+# 		min_step_size = min(step_sizes)
+# 		max_step_size = max(step_sizes)
+# 		#mean_step_size = mean(step_sizes)
+# 		#step_indicator = max(abs(step_sizes - mean_step_size)) / mean_step_size
+# 		c(min_step = round(min_step_size), max_step = round(max_step_size))
+# 	}))
+# 	as.integer(c(min_step = min(scores[,1]), max_step = min(scores[,2])))
+# }
 
 # Check categorical palette
 #
@@ -175,9 +175,10 @@ check_cat_pal = function(p) {
 		colorblindcheck::palette_dist(p, cvd = cvd)
 	})
 
+	sc = c(min_dist = as.integer(round(min(scores, na.rm = TRUE))))
 	prop = hcl_prop(p)
 
-	c(min_dist = round(min(scores, na.rm = TRUE)), prop)
+	c(sc, prop)
 }
 
 
@@ -270,11 +271,17 @@ hcl_prop = function(p) {
 	Crange = round(max(m[,2]) - min(m[,2]))
 	#LCrange = round(max(Lrange * .C4A$LrangeWeight, Crange * (1-.C4A$LrangeWeight)))
 
-	CRmin = get_CRmin(p)
-	CRbg = get_CRbg(p)
+	CRmin = round(get_CRmin(p) * 100)
+	CRwt = round(get_CRbg(p, bg = "#ffffff") * 100)
+	CRbk = round(get_CRbg(p, bg = "#000000") * 100)
 
-	c(Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, CRmin = CRmin, CRbg = CRbg) #LCrange = LCrange,
+	as(c(Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, CRmin = CRmin, CRwt = CRwt, CRbk = CRbk), "integer") #LCrange = LCrange,
 }
+#
+# encode = function(x, digits = 0, id1 = 0L, id2 = 0L) {
+# 	as.integer(round(x, digits = digits) * 10^digits + id1 * 10000 + id2 * 1000000)
+# }
+
 
 get_CRbg = function(p, bg = "#ffffff") {
 	n = length(p)
