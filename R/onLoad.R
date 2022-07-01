@@ -132,16 +132,18 @@ NULL
 					Lrange = "Luminance range",
 					Crange = "Chroma range",
 					LCrange = "Lum/Chr range",
-					CRmin = "Contrast-Ratio min",
-					CRwt = "Contrast-Ratio white bg",
-					CRbk = "Contrast-Ratio black bg",
+					CRmin = "Contrast-Ratio minimum",
+					CRwt = "Contrast-Ratio white",
+					CRbk = "Contrast-Ratio black",
 					rank = "Ranking",
 					cbfriendly = "Colorblind-friendly",
 					cbfuf = "Colorblind-friendly",
 					highC = "Intense colors",
 					hueType = "Hues",
 					harmonic = "Harmonic palette",
-					contrast = "Contrast Range",
+					contrast = "Contrast Internal",
+					contrastWT = "Contrast White",
+					contrastBK = "Contrast Black",
 					nmax = "Max number")
 
 		nmax = c(cat = 36, seq = 15, div = 15, bivs = 7, bivc = 7, bivd = 7, bivg = 7)

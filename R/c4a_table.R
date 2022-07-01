@@ -8,11 +8,11 @@ table_columns = function(type, show.scores) {
 	}
 
 	if (type %in% c("seq", "div", "bivs", "bivd", "bivg")) {
-		qn = c(qn, "hueType")
-		srt = c(srt, {if (type %in% c("div", "bivs", "bivd", "bivg")) "HwidthLR" else "Hwidth"})
+		qn = c(qn, "hueType", "contrastWT", "contrastBK")
+		srt = c(srt, {if (type %in% c("div", "bivs", "bivd", "bivg")) "HwidthLR" else "Hwidth"}, "CRwt", "CRbk")
 	} else {
-		qn = c(qn, "harmonic", "contrast")
-		srt = c(srt, "Crange", "CRmin")
+		qn = c(qn, "harmonic", "contrast", "contrastWT", "contrastBK")
+		srt = c(srt, "Crange", "CRmin", "CRwt", "CRbk")
 	}
 
 	qn = c(qn, "rank")
@@ -291,7 +291,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 	tooltip_cbfriendly = if (is.null(n)) "Colorblind-friendly!" else paste0("Colorblind-friendly! (at least, for n = ", n, ")")
 	tooltip_cbunfriendly = "Be careful!"
-	tooltip_highC = "Watch out for those intense colors!"
+	tooltip_highC = "Watch out for those intense colors! Better not use those for coloring large areas"
 
 	tooltip_RH = "Spectral (&#34;rainbow&#34;) palette: easy to distinguish colors, but less suitable for quantitative analysis"
 	tooltip_SH_seq = "Single hue palette: good for quantitative analysis, but harder to distinguish colors"
@@ -299,7 +299,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	tooltip_SH_bivs = "Each dimension has its own distinct hue: recommended!"
 	tooltip_Harm = "Harmonic, well-balanced colors"
 
-	tooltip_CR = "Low contrast range between colors; use borders to separate them"
+	tooltip_CR = "Low contrast between some colors; use borders to separate them"
 	tooltip_CRwt = "Low contrast range with white background"
 	tooltip_CRbk = "Low contrast range with black background"
 
@@ -333,12 +333,20 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 	if ("contrast" %in% qn) {
 		clab = .labels["contrast"]
-		e2[[clab]] = ifelse(!is.na(e2[[clab]]) & e2[[clab]] == "lCRwt",
-							kableExtra::cell_spec("🔲", tooltip = tooltip_CRwt, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
-  					 ifelse(!is.na(e2[[clab]]) & e2[[clab]] == "lCRbk",
-					 	    kableExtra::cell_spec("🔳", tooltip = tooltip_CRbk, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
-					 ifelse(!is.na(e2[[clab]]) & e2[[clab]] == "lCR",
-					    	kableExtra::cell_spec("𖦹", tooltip = tooltip_CR, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"), "")))
+		e2[[clab]] = ifelse(!is.na(e2[[clab]]) & e2[[clab]],
+							kableExtra::cell_spec("𖦹", tooltip = tooltip_CR, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"), "")
+	}
+
+	if ("contrastWT" %in% qn) {
+		clabW = .labels["contrastWT"]
+		e2[[clabW]] = ifelse(!is.na(e2[[clabW]]) & e2[[clabW]],
+							 kableExtra::cell_spec("🔲", tooltip = tooltip_CRwt, escape = FALSE, extra_css = "font-size: 100%; vertical-align: -0.1em; line-height: 0px;"), "")
+	}
+
+	if ("contrastBK" %in% qn) {
+		clabB = .labels["contrastBK"]
+		e2[[clabB]] = ifelse(!is.na(e2[[clabB]]) & e2[[clabB]],
+							kableExtra::cell_spec("🔳", tooltip = tooltip_CRbk, escape = FALSE, extra_css = "font-size: 100%; vertical-align: -0.1em; line-height: 0px;"), "")
 
 	}
 
