@@ -141,9 +141,9 @@ NULL
 					highC = "Intense colors",
 					hueType = "Hues",
 					harmonic = "Harmonic palette",
-					contrast = "Contrast Internal",
-					contrastWT = "Contrast White",
-					contrastBK = "Contrast Black",
+					contrast = "Low Contrast",
+					contrastWT = "Almost White",
+					contrastBK = "Almost Black",
 					nmax = "Max number")
 
 		nmax = c(cat = 36, seq = 15, div = 15, bivs = 7, bivc = 7, bivd = 7, bivg = 7)

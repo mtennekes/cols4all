@@ -290,18 +290,18 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	rownames(e2) = NULL
 
 	tooltip_cbfriendly = if (is.null(n)) "Colorblind-friendly!" else paste0("Colorblind-friendly! (at least, for n = ", n, ")")
-	tooltip_cbunfriendly = "Be careful!"
+	tooltip_cbunfriendly = "Be careful! Some colors are hard to distinguish by color blind people"
 	tooltip_highC = "Watch out for those intense colors! Better not use those for coloring large areas"
 
 	tooltip_RH = "Spectral (&#34;rainbow&#34;) palette: easy to distinguish colors, but less suitable for quantitative analysis"
 	tooltip_SH_seq = "Single hue palette: good for quantitative analysis, but harder to distinguish colors"
 	tooltip_SH_div = "Each side has its own distinct hue: recommended!"
 	tooltip_SH_bivs = "Each dimension has its own distinct hue: recommended!"
-	tooltip_Harm = "Harmonic, well-balanced colors"
+	tooltip_Harm = "Harmonic, well-balanced colors (colors are equally saturated)"
 
 	tooltip_CR = "Low contrast between some colors; use borders to separate them"
-	tooltip_CRwt = "Low contrast range with white background"
-	tooltip_CRbk = "Low contrast range with black background"
+	tooltip_CRwt = "Low contrast with white background"
+	tooltip_CRbk = "Low contrast with black background"
 
 
 	if ("cbfriendly" %in% qn) e2[[.labels["cbfriendly"]]] = ifelse(!is.na(e2[[.labels["cbfriendly"]]]) & e2[[.labels["cbfriendly"]]] == 1L, kableExtra::cell_spec("&#9786;", extra_css
