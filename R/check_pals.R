@@ -291,7 +291,7 @@ get_CRbg = function(p, bg = "#ffffff") {
 	#structure(CRs[id], names = id)
 }
 
-get_CRmin = function(p) {
+get_CRmin = function(p, show.which = FALSE) {
 	n = length(p)
 	CRs = sapply(1:(n-1), function(i) {
 		CRs = sapply(p[(i+1):n], function(pj) colorspace::contrast_ratio(p[i], pj))
@@ -299,6 +299,11 @@ get_CRmin = function(p) {
 		structure(CRs[id], names = paste(i, id + i, sep = "_"))
 	})
 	id = which.min(CRs)[1]
+	if (show.which) {
+		message("id:", names(CRs)[id])
+		ids = as.integer(strsplit(names(CRs)[id], split = "_", fixed = TRUE)[[1]])
+		plus_rev(p[ids[1]], p[ids[2]])
+	}
 	unname(CRs[id])
 	#structure(CRs[id], ids = strsplit(names(CRs[id]), split = "_", fixed = TRUE))
 

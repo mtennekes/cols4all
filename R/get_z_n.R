@@ -1,4 +1,4 @@
-get_z_n = function(z, n = NA, m = NA, range = c(0, 1)) {
+get_z_n = function(z, n = NA, m = NA, range = NA) {
 	# if (!is.null(n)) {
 	if (is.na(n) && is.na(m)) {
 		sel = TRUE

@@ -53,6 +53,14 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		return(invisible(NULL))
 	}
 
+	types_available = names(which(apply(tab_nmin, MARGIN = 2, function(x)any(!is.na(x)))))
+
+	stopifnot(length(types_available) > 0L)
+	if (!(type %in% types_available)) {
+		type = types_available[1]
+	}
+
+
 	ns = def_n(npref = n, type, series, tab_nmin, tab_nmax)
 
 	types = .C4A$types
@@ -89,7 +97,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		shiny::titlePanel(title = "Colors for all!"),
 
 		shiny::column(
-			width = 2,
+			width = 4,
 			shiny::wellPanel(
 				shiny::radioButtons("type1", "Palette Type", choices = types1, selected = type1),
 				shiny::conditionalPanel(
@@ -134,7 +142,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			#shiny::mainPanel(
 			shiny::column(
-				width = 10,
+				width = 8,
 				shiny::div(style = 'overflow-y:scroll; height:90vh; min-width:40vw; margin-left: 20px',
 						   shiny::tableOutput("show"))
 		)
@@ -144,7 +152,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		get_type12 = shiny::reactive({
 			type1 = input$type1
-			if (type1 %in% names(types2)) {
+			type12 = if (type1 %in% names(types2)) {
 				input$type2
 			} else {
 				type1
@@ -174,6 +182,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		shiny::observeEvent(get_type12(), {
 			type = get_type12()
 
+			if (!(type %in% types_available)) return(NULL)
 			if (type %in% c("cat", "seq", "div")) {
 				series = series_d()
 				ns =  def_n(npref = input$n, type, series, tab_nmin, tab_nmax)
