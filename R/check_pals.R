@@ -291,6 +291,48 @@ get_CRbg = function(p, bg = "#ffffff") {
 	#structure(CRs[id], names = id)
 }
 
+get_CRmatrix = function(p) {
+	n = length(p)
+
+	m = do.call(rbind, lapply(1:n, function(i) {
+		sapply(p, function(pj) colorspace::contrast_ratio(p[i], pj))
+	}))
+
+	m[lower.tri(m)] = NA
+
+	library(grid)
+	grid.newpage()
+	pushViewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
+	pushViewport(viewport(width = 0.9, height = 0.9))
+	pushViewport(viewport(layout = grid.layout(nrow = n + 1, ncol = n + 1)))
+
+	cellplot = function(rw, cl, e) {
+		pushViewport(viewport(layout.pos.row = rw, layout.pos.col = cl))
+		e
+		upViewport()
+	}
+
+	for (i in 1:n) {
+		cellplot(i+1, 1, {
+			grid.rect(width = 0.9, height = 0.9, gp=gpar(fill = p[i]))
+		})
+		cellplot(1, i+1, {
+			grid.rect(width = 0.9, height = 0.9, gp=gpar(fill = p[i]))
+		})
+		for (j in 1:n) {
+			v = m[i,j]
+			if (is.na(v)) next
+			vs = sprintf("%6.2f", v)
+			flag = (v < 1.1)
+			cellplot(i+1,j+1, {
+				grid.text(vs, x = 0.9, just = "right", gp=gpar(fontface=ifelse(flag, "bold", "plain")))
+			})
+
+		}
+	}
+
+}
+
 get_CRmin = function(p, show.which = FALSE) {
 	n = length(p)
 	CRs = sapply(1:(n-1), function(i) {

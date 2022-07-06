@@ -97,7 +97,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		shiny::titlePanel(title = "Colors for all!"),
 
 		shiny::column(
-			width = 4,
+			width = 3,
 			shiny::wellPanel(
 				shiny::radioButtons("type1", "Palette Type", choices = types1, selected = type1),
 				shiny::conditionalPanel(
@@ -142,7 +142,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			#shiny::mainPanel(
 			shiny::column(
-				width = 8,
+				width = 9,
 				shiny::div(style = 'overflow-y:scroll; height:90vh; min-width:40vw; margin-left: 20px',
 						   shiny::tableOutput("show"))
 		)
