@@ -300,10 +300,15 @@ get_CRmatrix = function(p) {
 
 	m[lower.tri(m)] = NA
 
+	diag(m) = NA
+
 	library(grid)
 	grid.newpage()
+	#grid.rect(gp=gpar(fill="grey80"))
 	pushViewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
+	#grid.rect(gp=gpar(fill="grey70"))
 	pushViewport(viewport(width = 0.9, height = 0.9))
+	#grid.rect(gp=gpar(fill="grey60"))
 	pushViewport(viewport(layout = grid.layout(nrow = n + 1, ncol = n + 1)))
 
 	cellplot = function(rw, cl, e) {
@@ -311,6 +316,11 @@ get_CRmatrix = function(p) {
 		e
 		upViewport()
 	}
+
+	cellplot(2:(n+1), 2:(n+1), {
+		grid.lines(x = c(0,1), y = c(1, 0), gp = gpar(lwd = 2))
+	})
+
 
 	for (i in 1:n) {
 		cellplot(i+1, 1, {
@@ -322,8 +332,25 @@ get_CRmatrix = function(p) {
 		for (j in 1:n) {
 			v = m[i,j]
 			if (is.na(v)) next
+
+#
+# 			s = CRsize(v)
+#
+# 			scale = 0.2 * s
+# 			if (s != 0) cellplot(i+1,j+1, {
+# 				grid.polygon(x = sin(c(0, 2/3, 4/3, 0) * pi) * scale + 0.5,
+# 							 y = cos(c(0, 2/3, 4/3, 0) * pi) * scale + 0.5,
+# 							 id = rep(1,4),
+# 							 gp=gpar(lwd = 2, fill = "#cccccc"))
+# 				grid.text("!", gp=gpar(cex = 0.7 * s, fontface = "bold"))
+# 			}) else {
+# 				cellplot(i+1,j+1, {
+# 					grid.points(x = 0.5, y = 0.5, pch = 21, size = unit(1, "lines"))
+# 				})
+# 			}
+
 			vs = sprintf("%6.2f", v)
-			flag = (v < 1.1)
+			flag = (v < 1.4)
 			cellplot(i+1,j+1, {
 				grid.text(vs, x = 0.9, just = "right", gp=gpar(fontface=ifelse(flag, "bold", "plain")))
 			})
@@ -332,6 +359,11 @@ get_CRmatrix = function(p) {
 	}
 
 }
+
+CRsize = function(cr) {
+	ifelse(cr <= 4/3, 2, ifelse(cr < 5/3, 1, 0))
+}
+
 
 get_CRmin = function(p, show.which = FALSE) {
 	n = length(p)
