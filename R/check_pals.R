@@ -352,7 +352,7 @@ get_CRmatrix = function(p) {
 			vs = sprintf("%6.2f", v)
 			flag = (v < 1.4)
 			cellplot(i+1,j+1, {
-				grid.text(vs, x = 0.9, just = "right", gp=gpar(fontface=ifelse(flag, "bold", "plain")))
+				grid.text(vs, x = 0.9, just = "right", gp=gpar(cex = 0.8, fontface=ifelse(flag, "bold", "plain")))
 			})
 
 		}
