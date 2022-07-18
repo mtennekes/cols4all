@@ -14,7 +14,6 @@ ind = as.integer(substr(nc$NAME, 1, 1) %in% LETTERS[1:13]) + 1
 
 shp = sf::st_as_grob(nc$geometry, gp = gpar(fill = cols[ind], col = NA))
 
-attr(shp, "bbx") = bbx
 
 vars = load("R/sysdata.rda")
 save(.z, .s, .zbib, shp, bbx, file = "R/sysdata.rda", compress = "xz")

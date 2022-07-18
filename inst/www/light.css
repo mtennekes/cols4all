@@ -25,6 +25,7 @@ body {
 	background-position: 97% 1%;
    	background-color:transparent;
 	min-width:20em;
+	max-width:20em;
 }
 
 .radio {

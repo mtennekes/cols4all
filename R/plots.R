@@ -1,13 +1,16 @@
-plot_bitmap = function(x, add=FALSE) {
-	res = dim(x)[2:1] # get the resolution, [x, y]
-	if (!add) # initialize an empty plot area if add==FALSE
-		par(plt = c(0, 1, 0, 1))
-		plot(50,50,xlim=c(1,res[1]),ylim=c(1,res[2]),asp=1, xaxs='i',yaxs='i',xaxt='n',yaxt='n',xlab='',ylab='',bty='n')
-	rasterImage(x,1,1,res[1],res[2])
-}
+# plot_bitmap = function(x, add=FALSE) {
+# 	res = dim(x)[2:1] # get the resolution, [x, y]
+# 	if (!add) # initialize an empty plot area if add==FALSE
+# 		#par(plt = c(0, 1, 0, 1))
+# 		plot(50,50,xlim=c(1,res[1]),ylim=c(1,res[2]),asp=1, xaxs='i',yaxs='i',xaxt='n',yaxt='n',xlab='',ylab='',bty='n')
+# 	rasterImage(x,1,1,res[1],res[2])
+# }
 
 
 c4a_example_Plus_Reversed = function(col1 = "blue", col2 = "red") {
+	library(terra)
+	library(sf)
+	library(stars)
 	x = png::readPNG("inst/img/Richard-Anuszkiewicz-_Plus-Reversed.png")
 
 	id1 = (x[,,1] == x[1,1,1])
@@ -18,7 +21,8 @@ c4a_example_Plus_Reversed = function(col1 = "blue", col2 = "red") {
 
 	x[id1] = rep(m[,1], each = sum(id1))
 	x[!id1] = rep(m[,2], each = sum(!id1))
-	plot_bitmap(x)
+
+	grid::grid.raster(x)
 }
 
 c4a_example_bars = function(col1 = "blue", col2 = "red", borders = NA, lwd = 1) {
@@ -60,7 +64,7 @@ c4a_example_map = function(col1 = "blue", col2 = "red", borders = NA, lwd = 1) {
 		bbx[3] = cx + w/2
 	}
 
-	grid.newpage()
+	grid::grid.newpage()
 
 	# if (dasp > 1) {
 	# 	pushViewport(viewport(width = unit(1, "snpc"), height = unit(1/dasp, "snpc")))
@@ -68,9 +72,9 @@ c4a_example_map = function(col1 = "blue", col2 = "red", borders = NA, lwd = 1) {
 	# 	pushViewport(viewport(width = unit(dasp, "snpc"), height = unit(1, "snpc")))
 	# }
 
-	pushViewport(viewport(xscale = bbx[c(1, 3)], yscale = bbx[c(2, 4)]))
+	grid::pushViewport(grid::viewport(xscale = bbx[c(1, 3)], yscale = bbx[c(2, 4)]))
 
 
-	grid.draw(shp)
+	grid::grid.draw(shp)
 }
 

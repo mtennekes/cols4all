@@ -94,58 +94,60 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		shiny::tags$head(shiny::includeCSS(system.file("www/light.css", package = "cols4all"))),
 		shiny::tags$head(shiny::includeCSS(system.file("www/dark.css", package = "cols4all"))),
 
-		shiny::titlePanel(title = "Colors for all!"),
-
-		shiny::column(
-			width = 3,
-			shiny::wellPanel(
-				shiny::radioButtons("type1", "Palette Type", choices = types1, selected = type1),
-				shiny::conditionalPanel(
-					condition = "input.type1 == 'biv'",
-					shiny::selectizeInput("type2", "Subtype", choices = types2[["biv"]], selected = type2)),
-				shiny::div(style = "margin-bottom: 5px;", shiny::strong("Palette series")),
-				shiny::div(class = 'multicol',
-						   shiny::checkboxGroupInput("series", label = "", choices = allseries, selected = series, inline = FALSE)),
-				shiny::actionButton("overview", label = "Overview"),
-
-				shiny::conditionalPanel(
-					condition = "input.type1 != 'biv'",
-					shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
-				shiny::conditionalPanel(
-					condition = "input.type1 == 'biv'",
-					shiny::fluidRow(
-						shiny::column(6,
-							shiny::sliderInput("nbiv", "Number of columns", min = 3, max = 7, value = 3, ticks = FALSE)),
-						shiny::column(6,
-							shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 7, value = 3, ticks = FALSE))))),
-				shiny::checkboxInput("na", "Color for missing values", value = FALSE),
-				shiny::conditionalPanel(
-					condition = "input.type1 == 'seq' || input.type1 == 'div'",
-					shiny::fluidRow(
-						shiny::column(4,
-							#shiny::br(),
-							shiny::radioButtons("auto_range", label = "Range", choices = c("Automatic", "Manual"), selected = "Automatic")),
-						shiny::conditionalPanel(
-							condition = "input.auto_range == 'Manual'",
-							shiny::column(8,
-								shiny::div(style = "font-size:0;margin-bottom:-10px", shiny::sliderInput("range", "",
-												   min = 0, max = 1, value = c(0,1), step = .05)),
-								shiny::uiOutput("range_info"))))),
-				shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = FALSE),
-				shiny::selectizeInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto")),
+		shiny::fluidRow(
+			shiny::column(width = 3,
+						  shiny::img(src = "imgResources/cols4all_logo.png", height="200", align = "center", 'vertical-align' = "center")),
+			shiny::column(width = 3,
+						  shiny::radioButtons("type1", "Palette Type", choices = types1, selected = type1),
+						  shiny::conditionalPanel(
+						  	condition = "input.type1 == 'biv'",
+						  	shiny::selectizeInput("type2", "Subtype", choices = types2[["biv"]], selected = type2)),
+						  shiny::div(style = "margin-bottom: 5px;", shiny::strong("Palette series")),
+						  shiny::div(class = 'multicol',
+						  		   shiny::checkboxGroupInput("series", label = "", choices = allseries, selected = series, inline = FALSE)),
+						  shiny::actionButton("overview", label = "Overview")
+			),
+			shiny::column(width = 3,
+						  shiny::conditionalPanel(
+						  	condition = "input.type1 != 'biv'",
+						  	shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
+						  shiny::conditionalPanel(
+						  	condition = "input.type1 == 'biv'",
+						  	shiny::fluidRow(
+						  		shiny::column(6,
+						  					  shiny::sliderInput("nbiv", "Number of columns", min = 3, max = 7, value = 3, ticks = FALSE)),
+						  		shiny::column(6,
+						  					  shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 7, value = 3, ticks = FALSE))))),
+						  shiny::checkboxInput("na", "Color for missing values", value = FALSE),
+						  shiny::conditionalPanel(
+						  	condition = "input.type1 == 'seq' || input.type1 == 'div'",
+						  	shiny::fluidRow(
+						  		shiny::column(4,
+						  					  #shiny::br(),
+						  					  shiny::radioButtons("auto_range", label = "Range", choices = c("Automatic", "Manual"), selected = "Automatic")),
+						  		shiny::conditionalPanel(
+						  			condition = "input.auto_range == 'Manual'",
+						  			shiny::column(8,
+						  						  shiny::div(style = "font-size:0;margin-bottom:-10px", shiny::sliderInput("range", "",
+						  						  																		 min = 0, max = 1, value = c(0,1), step = .05)),
+						  						  shiny::uiOutput("range_info"))))),
+						  shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = FALSE),
+						  shiny::selectizeInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto"))
+			),
+			shiny::column(
+				width = 3,
 				shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
 				shiny::selectizeInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "name"),
 				shiny::checkboxInput("sortRev", "Reverse sorting", value = FALSE),
 				shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE),
-				shiny::checkboxInput("dark", "Dark mode", value = FALSE))),
-			#), class = "sticky"),
+				shiny::checkboxInput("dark", "Dark mode", value = FALSE)
+			),
 
-			#shiny::mainPanel(
-			shiny::column(
-				width = 9,
-				shiny::div(style = 'overflow-y:scroll; height:90vh; min-width:40vw; margin-left: 20px',
-						   shiny::tableOutput("show"))
-		)
+		),
+
+		shiny::fluidRow(
+		   shiny::tableOutput("show"))
+
 	)
 	server = function(input, output, session) {
 		series_d = shiny::debounce(shiny::reactive(input$series), 300)
@@ -235,6 +237,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		get_cols = shiny::reactive({
+			print(names(session$userData))
 			type = get_type12()
 			res = table_columns(type, input$advanced)
 			structure(c("name", res$qn), names = c("Name", res$ql))
