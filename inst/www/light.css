@@ -1,8 +1,5 @@
-div.sticky2 {
-	position: -webkit-sticky;
-	position: sticky;
-	top: 0;
-	z-index: 1;
+.tab-content  {
+    margin-top: 12px;
 }
 
 .modal-title {
@@ -17,36 +14,15 @@ body {
 
 
 
-
-.well {
-	background-image: url("imgResources/cols4all_logo.png");
-	background-repeat: no-repeat;
-	background-size: 69px 80px;
-	background-position: 97% 1%;
-   	background-color:transparent;
-	min-width:20em;
-	max-width:20em;
-}
-
 .radio {
 	margin-bottom: 5px;
 }
-
 
 
 input[type="checkbox"], input[type="radio"] {
 	margin: 0px;
 }
 
-div.col-sm-7 {
-	padding-left: 15 !important;
-	padding-right: 0 !important;
-}
-
-div.col-sm-5 {
-	padding-left: 10 !important;
-	padding-right: 0 !important;
-}
 
 .action-button {
 	font-size: 12px !important;
@@ -73,6 +49,3 @@ div.form-group.shiny-input-container { margin: 0 0 0 0; }
 	-moz-column-fill: auto;
 	-column-fill: auto;
 }
-
-
-

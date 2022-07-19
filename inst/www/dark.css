@@ -48,3 +48,12 @@ body.dark {
     background: black !important;
     color: #bbbbbb !important;
 }
+
+.dark .nav-tabs > li.active > a, .dark .nav-tabs > li.active > a:focus, .dark .nav-tabs > li.active > a:hover {
+	background: black !important;
+    color: #bbbbbb !important;
+}
+
+.dark .nav-tabs>li>a {
+    color: #bbbbbb !important;
+}
