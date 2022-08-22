@@ -132,7 +132,22 @@ c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, nd
 			Inf
 		}
 	}, z$palette, z$type, z$nmax, SIMPLIFY = TRUE, USE.NAMES = FALSE)
-	z$nmin[is.na(z$nmin)] = 1L
+
+	z$nmin = mapply(function(pal, nmin) {
+		index = attr(pal, "index")
+		if (!is.na(nmin)) {
+			nmin
+		} else if (is.null(index)){
+			1
+		} else {
+			which(vapply(index, length, FUN.VALUE = integer(1)) != 0L)[1]
+		}
+	}, z$palette, z$nmin, SIMPLIFY = TRUE, USE.NAMES = FALSE)
+
+
+
+
+
 	z$ndef = mapply(function(nmax, type) {
 		if (!is.infinite(nmax)) nmax else unname(.C4A$ndef[type])
 	}, z$nmax, z$type, USE.NAMES = FALSE)

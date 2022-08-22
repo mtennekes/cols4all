@@ -1,5 +1,6 @@
 series_add_get_scores = function(z) {
 	nmax = .C4A$nmax
+	nmin = .C4A$nmin
 	k = nrow(z)
 
 
@@ -13,14 +14,14 @@ series_add_get_scores = function(z) {
 
 	for (tp in types) {
 		check_fun = paste0("check_", tp, "_pal")
-		for (n in 2:nmax[tp]) {
+		for (n in nmin[[tp]]:nmax[tp]) {
 			m = if (tp == "bivs") n else if (tp %in% c("bivc", "bivd", "bivg")) 5 else 1
 
 			zn = get_z_n(z[z$type == tp,], n =n, m = m)
 
 			if (!is.null(zn)) {
 				q = do.call(rbind, lapply(zn$palette, check_fun))
-				if (!is.integer(q[1,1])) browser()
+				#if (!is.integer(q[1,1])) browser()
 				r = 1L #-q#rank(-q, ties.method = "first")
 
 #browser()

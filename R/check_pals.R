@@ -82,9 +82,9 @@ check_bivc_pal = function(p) {
 }
 
 check_bivd_pal = function(p) {
-	if (ncol(p) %% 2 == 0) {
-		stop("ncol should be odd", call. = FALSE)
-	}
+	# if (ncol(p) %% 2 == 0) {
+	# 	stop("ncol should be odd", call. = FALSE)
+	# }
 
 	c1 = 1
 	c3 = ncol(p)

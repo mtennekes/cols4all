@@ -37,6 +37,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 	z = .C4A$z
 
+	z = z[order(z$fullname), ]
+
 	tps = unname(.C4A$types)
 
 	tab_nmin = tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = min)
@@ -86,7 +88,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 	## Contrast tab
 	#############################
 
-	palette = "okabe"
+	palette = z$fullname[1]
 
 	x = c4a_info(palette)
 
@@ -111,7 +113,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		shiny::tabsetPanel(
 			id="inTabset",
-			tabPanel("Catelogue",
+			shiny::tabPanel("Catelogue",
 					 shiny::fluidRow(
 					 	shiny::column(width = 3,
 					 				  shiny::img(src = "imgResources/cols4all_logo.png", height="200", align = "center", 'vertical-align' = "center")),
@@ -149,9 +151,12 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					 				  						  shiny::div(style = "font-size:0;margin-bottom:-10px", shiny::sliderInput("range", "",
 					 				  						  																		 min = 0, max = 1, value = c(0,1), step = .05)),
 					 				  						  shiny::uiOutput("range_info"))))),
-					 				  shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = FALSE),
-					 				  shiny::selectizeInput("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto"))
-					 	),
+					 				  shiny::fluidRow(
+					 				  	shiny::column(6,
+					 				  		shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = FALSE)
+					 				  	),
+					 				  	shiny::column(6,
+					 				  		shiny::radioButtons("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto"), inline = FALSE)	))),
 					 	shiny::column(
 					 		width = 3,
 					 		shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
@@ -169,42 +174,49 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					 		shiny::tableOutput("show"))
 					 )
 			),
-			tabPanel("Contrast",
-					 shiny::wellPanel(
-					 	shiny::fluidRow(
-				 			shiny::column(width = 3,
-				 						  shiny::selectizeInput("contrastPal", "Palette", choices = z$fullname)
-				 			),
-				 			shiny::column(width = 2,
-				 						  shiny::radioButtons("col1", "Color 1",
-				 						  		choiceNames = getNames(pal_init),
-				 						  		choiceValues = pal_init, selected = pal_init[1])),
-				 			shiny::column(width = 2,
-				 						  shiny::radioButtons("col2", "Color 2",
-				 						  		choiceNames = getNames(pal_init),
-				 						  		choiceValues = pal_init, selected = pal_init[2]))
-				 		),
-					 	shiny::fluidRow(
-					 		shiny::plotOutput("table", height = "250px", width = "250px"),
-					 		shiny::markdown("[Contrast Ratio](http://colorspace.r-forge.r-project.org/reference/contrast_ratio.html). Values close to one (bold) indicate low contrast; use borders to separate them.")
-					 	),
-					 	shiny::fluidRow(
-	 					  	shiny::radioButtons("chart", "Example chart", c("Barchart", "Choropleth"), "Choropleth", inline = TRUE)
-					 	),
-					 	shiny::fluidRow(
-	 					  	shiny::column(4, shiny::selectInput("borders", "Borders", choices = c("no", "black", "white"), selected = "no")),
-					 		shiny::column(8,
-					 					  				  shiny::conditionalPanel(
-					 					  				  	condition = "input.borders != 'no'",
-					 					  				  	shiny::sliderInput("lwd", "Line Width", min = 0.5, max = 3, step = 0.5, value = 1)),
-					 					  	)
-					 	),
-					 	shiny::fluidRow(
-							shiny::plotOutput("ex", height = "250px", width = "500px"),
-	 						shiny::plotOutput("ex_plus", height = "500px", width = "391px"),
-	 						shiny::markdown("_Plus Reversed_ by Richard Anuszkiewicz (1960)")
-						)
-					 )
+			shiny::tabPanel("Color Blind Friendliness",
+					shiny::selectizeInput("cbfPal", "Palette", choices = z$fullname),
+					shiny::plotOutput("cbfPlot", "Color Blind Friendliness simulation", width = "900px", height = "300px")),
+
+			shiny::tabPanel("Contrast",
+				 	shiny::fluidRow(
+			 			shiny::column(width = 3,
+			 						  shiny::selectizeInput("contrastPal", "Palette", choices = z$fullname),
+			 						  shiny::fluidRow(
+			 						  	shiny::column(width = 6,
+			 						  				  shiny::radioButtons("col1", "Color 1",
+			 						  				  					choiceNames = getNames(pal_init),
+			 						  				  					choiceValues = pal_init, selected = pal_init[1])),
+			 						  	shiny::column(width = 6,
+			 						  				  shiny::radioButtons("col2", "Color 2",
+			 						  				  					choiceNames = getNames(pal_init),
+			 						  				  					choiceValues = pal_init, selected = pal_init[2]))
+			 						  )
+			 			),
+			 			shiny::column(width = 9,
+			 						  shiny::plotOutput("table", height = "300px", width = "300px"),
+			 						  shiny::markdown("[Contrast Ratio](http://colorspace.r-forge.r-project.org/reference/contrast_ratio.html). Values close to one (bold) indicate low contrast; use borders to separate them."))),
+				 	shiny::fluidRow(
+				 		shiny::column(width = 12,
+				 					  shiny::markdown("**Optical Art** "),
+				 					  shiny::plotOutput("ex_plus", height = "703", width = "900"),
+				 					  shiny::markdown("_Plus Reversed_ by Richard Anuszkiewicz (1960)")
+				 		)
+					),
+
+				 	shiny::fluidRow(
+				 		shiny::column(width = 3,
+				 				  shiny::radioButtons("chart", "Example chart", c("Barchart", "Choropleth"), "Choropleth", inline = FALSE),
+				 				  shiny::selectInput("borders", "Borders", choices = c("no", "black", "white"), selected = "no"),
+				 				  shiny::conditionalPanel(
+				 				  	condition = "input.borders != 'no'",
+				 				  	shiny::sliderInput("lwd", "Line Width", min = 0.5, max = 3, step = 0.5, value = 1))),
+				 		shiny::column(
+				 			width = 9,
+				 			shiny::plotOutput("ex", height = "300px", width = "600px")
+				 		)
+
+				 	)
 			)
 
 		)
@@ -408,18 +420,53 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		}
 
 		#############################
+		## CBF tab
+		#############################
+
+		output$cbfPlot = shiny::renderPlot({
+			pal = input$contrastPal
+			x = c4a_info(pal)
+			n_init = x$ndef
+
+			pal_new = c(c4a(x$fullname, n = n_init), "#ffffff", "#000000")
+
+			colorblindcheck::palette_plot(pal_new)
+		})
+
+
+		#############################
 		## Contrast tab
 		#############################
 
-		output$ex_plus = shiny::renderPlot({
-			c4a_example_Plus_Reversed(input$col1, input$col2)
+		shiny::observeEvent(input$contrastPal, {
+			pal = input$contrastPal
+			x = c4a_info(pal)
+			n_init = x$ndef
+
+			pal_new = c(c4a(x$fullname, n = n_init), "#ffffff", "#000000")
+
+
+			shiny::updateRadioButtons(session, inputId = "col1", choiceNames = getNames(pal_new), choiceValues = pal_new, selected = pal_new[1])
+			shiny::updateRadioButtons(session, inputId = "col2", choiceNames = getNames(pal_new), choiceValues = pal_new, selected = pal_new[2])
+
 		})
+
+		get_cols2 = shiny::reactive({
+			c(input$col1, input$col2)
+		})
+
+		output$ex_plus = shiny::renderPlot({
+			cols = get_cols2()
+			c4a_example_Plus_Reversed(cols[1], cols[2], orientation = "landscape")
+		})
+
 		output$ex = shiny::renderPlot({
+			cols = get_cols2()
 			border = if (input$borders == "no") NA else input$borders
 			if (input$chart == "Barchart") {
-				c4a_example_bars(input$col1, input$col2, border, lwd = input$lwd)
+				c4a_example_bars(cols[1], cols[2], border, lwd = input$lwd)
 			} else {
-				c4a_example_map(input$col1, input$col2, border, lwd = input$lwd)
+				c4a_example_map(cols[1], cols[2], border, lwd = input$lwd)
 			}
 		})
 

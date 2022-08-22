@@ -674,9 +674,6 @@ local({
 	c4a_palettes_add(pals_cbf, types = types_cbf, series = "met")
 })
 
-info()
-khroma::color()
-
 
 
 

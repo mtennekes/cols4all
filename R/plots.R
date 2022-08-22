@@ -7,22 +7,28 @@
 # }
 
 
-c4a_example_Plus_Reversed = function(col1 = "blue", col2 = "red") {
-	library(terra)
-	library(sf)
-	library(stars)
+c4a_example_Plus_Reversed = function(col1 = "blue", col2 = "red", orientation = c("portrait", "landscape")) {
+	orientation = match.arg(orientation)
+	#library(terra)
+	#library(sf)
+	#library(stars)
 	x = png::readPNG("inst/img/Richard-Anuszkiewicz-_Plus-Reversed.png")
+
+	if (orientation == "landscape") {
+		x = aperm(x, perm = c(2, 1, 3))
+	}
 
 	id1 = (x[,,1] == x[1,1,1])
 
 	m = col2rgb(c(col1, col2)) / 255
 
-
-
 	x[id1] = rep(m[,1], each = sum(id1))
 	x[!id1] = rep(m[,2], each = sum(!id1))
 
-	grid::grid.raster(x)
+	r = grDevices::as.raster(x)
+
+
+	grid::grid.raster(r)
 }
 
 c4a_example_bars = function(col1 = "blue", col2 = "red", borders = NA, lwd = 1) {
