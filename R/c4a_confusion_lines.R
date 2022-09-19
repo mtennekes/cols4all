@@ -24,7 +24,7 @@ cellplot = function (x, y, e) {
 }
 
 
-plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lines = TRUE, colors = NULL) {
+plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lines = TRUE, colors = NULL, white = TRUE) {
 	cvd = match.arg(cvd)
 
 	toM = function(x, nr) {
@@ -72,7 +72,15 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 		co = hex2xyY(colors)
 		x = rescale(co[,1], from = rgb_data$xrange, to = c(0, 1))
 		y = rescale(co[,2], from = rgb_data$yrange, to = c(0, 1))
-		grid.points(x, y)
+		grid.points(x, y, size = unit(.5, "lines"))
+	}
+
+	if (white) {
+		w = hex2xyY("#FFFFFF")
+		x0 = rescale(w[,1], from = rgb_data$xrange, to = c(0, 1))
+		y0 = rescale(w[,2], from = rgb_data$yrange, to = c(0, 1))
+		grid.points(x0, y0, size = unit(.5, "lines"), pch = 3)
+
 	}
 
 
