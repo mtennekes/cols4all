@@ -298,7 +298,7 @@ get_CRmatrix = function(p) {
 		sapply(p, function(pj) colorspace::contrast_ratio(p[i], pj))
 	}))
 
-	m[lower.tri(m)] = NA
+	#m[lower.tri(m)] = NA
 
 	diag(m) = NA
 
@@ -333,27 +333,34 @@ get_CRmatrix = function(p) {
 			v = m[i,j]
 			if (is.na(v)) next
 
-#
-# 			s = CRsize(v)
-#
-# 			scale = 0.2 * s
-# 			if (s != 0) cellplot(i+1,j+1, {
-# 				grid.polygon(x = sin(c(0, 2/3, 4/3, 0) * pi) * scale + 0.5,
-# 							 y = cos(c(0, 2/3, 4/3, 0) * pi) * scale + 0.5,
-# 							 id = rep(1,4),
-# 							 gp=gpar(lwd = 2, fill = "#cccccc"))
-# 				grid.text("!", gp=gpar(cex = 0.7 * s, fontface = "bold"))
-# 			}) else {
-# 				cellplot(i+1,j+1, {
-# 					grid.points(x = 0.5, y = 0.5, pch = 21, size = unit(1, "lines"))
-# 				})
-# 			}
 
-			vs = sprintf("%6.2f", v)
-			flag = (v < 1.4)
+			#s = ((21 - v) / 20) ^ (15)
+			s = CRsize(v)
+
 			cellplot(i+1,j+1, {
-				grid::grid.text(vs, x = 0.9, just = "right", gp=grid::gpar(cex = 0.8, fontface=ifelse(flag, "bold", "plain")))
+				grid::grid.points(x = 0.5, y = 0.5, pch = c(15, 17, 16, 16)[s], size = grid::unit(c(1, 0.6, 0.3, 0)[s], units = "lines"))
 			})
+
+			# s = CRsize(v)
+			#
+			# scale = 0.2 * s
+			# if (s != 0) cellplot(i+1,j+1, {
+			# 	grid::grid.polygon(x = sin(c(0, 2/3, 4/3, 0) * pi) * scale + 0.5,
+			# 				 y = cos(c(0, 2/3, 4/3, 0) * pi) * scale + 0.5,
+			# 				 id = rep(1,4),
+			# 				 gp=grid::gpar(lwd = 2, fill = "#cccccc"))
+			# 	grid::grid.text("!", gp=grid::gpar(cex = 0.7 * s, fontface = "bold"))
+			# }) else {
+			# 	cellplot(i+1,j+1, {
+			# 		grid::grid.points(x = 0.5, y = 0.5, pch = 21, size = grid::unit(1, "lines"))
+			# 	})
+			# }
+
+			# vs = sprintf("%6.2f", v)
+			# flag = (v < 1.4)
+			# cellplot(i+1,j+1, {
+			# 	grid::grid.text(vs, x = 0.9, just = "right", gp=grid::gpar(cex = 0.8, fontface=ifelse(flag, "bold", "plain")))
+			# })
 
 		}
 	}
@@ -361,7 +368,8 @@ get_CRmatrix = function(p) {
 }
 
 CRsize = function(cr) {
-	ifelse(cr <= 4/3, 2, ifelse(cr < 5/3, 1, 0))
+	#ifelse(cr <= 4/3, 2, ifelse(cr < 5/3, 1, 0))
+	ifelse(cr <= 1.2, 1, ifelse(cr < 1.5, 2, ifelse(cr < 2, 3, 4)))
 }
 
 

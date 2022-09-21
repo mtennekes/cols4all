@@ -179,7 +179,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					#shiny::plotOutput("cbfPlot", "Color Blind Friendliness simulation", width = "800px", height = "200px"),
 					shiny::plotOutput("cbfRGB", "Confusion lines", width = "800px", height = "800px")),
 
-			shiny::tabPanel("Contrast",
+			shiny::tabPanel("Contrast (borders needed?)",
 				 	shiny::fluidRow(
 			 			shiny::column(width = 3,
 			 						  shiny::selectizeInput("contrastPal", "Palette", choices = z$fullname),
@@ -196,7 +196,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			 			),
 			 			shiny::column(width = 9,
 			 						  shiny::plotOutput("table", height = "300px", width = "300px"),
-			 						  shiny::markdown("[Contrast Ratio](http://colorspace.r-forge.r-project.org/reference/contrast_ratio.html). Values close to one (bold) indicate low contrast; use borders to separate them."))),
+			 						  shiny::markdown("[Contrast Ratio](http://colorspace.r-forge.r-project.org/reference/contrast_ratio.html). Squares, triangles and dots indicate resp. extremely low (< 1.2), very low (< 1.5), and low (< 2) contrast; use borders to separate them."))),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 12,
 				 					  shiny::markdown("**Optical Art** "),
@@ -480,7 +480,12 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		output$table = shiny::renderPlot({
-			get_CRmatrix(pal_init)
+			pal = input$contrastPal
+			x = c4a_info(pal)
+			n_init = x$ndef
+
+			pal_new = c(c4a(x$fullname, n = n_init), "#ffffff", "#000000")
+			get_CRmatrix(pal_new)
 		})
 
 
