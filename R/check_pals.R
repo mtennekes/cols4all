@@ -302,32 +302,32 @@ get_CRmatrix = function(p) {
 
 	diag(m) = NA
 
-	library(grid)
-	grid.newpage()
+
+	grid::grid.newpage()
 	#grid.rect(gp=gpar(fill="grey80"))
-	pushViewport(viewport(width = unit(1, "snpc"), height = unit(1, "snpc")))
+	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc")))
 	#grid.rect(gp=gpar(fill="grey70"))
-	pushViewport(viewport(width = 0.9, height = 0.9))
+	grid::pushViewport(grid::viewport(width = 0.9, height = 0.9))
 	#grid.rect(gp=gpar(fill="grey60"))
-	pushViewport(viewport(layout = grid.layout(nrow = n + 1, ncol = n + 1)))
+	grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = n + 1, ncol = n + 1)))
 
 	cellplot = function(rw, cl, e) {
-		pushViewport(viewport(layout.pos.row = rw, layout.pos.col = cl))
+		grid::pushViewport(grid::viewport(layout.pos.row = rw, layout.pos.col = cl))
 		e
-		upViewport()
+		grid::upViewport()
 	}
 
 	cellplot(2:(n+1), 2:(n+1), {
-		grid.lines(x = c(0,1), y = c(1, 0), gp = gpar(lwd = 2))
+		grid::grid.lines(x = c(0,1), y = c(1, 0), gp = grid::gpar(lwd = 2))
 	})
 
 
 	for (i in 1:n) {
 		cellplot(i+1, 1, {
-			grid.rect(width = 0.9, height = 0.9, gp=gpar(fill = p[i]))
+			grid::grid.rect(width = 0.9, height = 0.9, gp=grid::gpar(fill = p[i]))
 		})
 		cellplot(1, i+1, {
-			grid.rect(width = 0.9, height = 0.9, gp=gpar(fill = p[i]))
+			grid::grid.rect(width = 0.9, height = 0.9, gp=grid::gpar(fill = p[i]))
 		})
 		for (j in 1:n) {
 			v = m[i,j]
@@ -352,7 +352,7 @@ get_CRmatrix = function(p) {
 			vs = sprintf("%6.2f", v)
 			flag = (v < 1.4)
 			cellplot(i+1,j+1, {
-				grid.text(vs, x = 0.9, just = "right", gp=gpar(cex = 0.8, fontface=ifelse(flag, "bold", "plain")))
+				grid::grid.text(vs, x = 0.9, just = "right", gp=grid::gpar(cex = 0.8, fontface=ifelse(flag, "bold", "plain")))
 			})
 
 		}

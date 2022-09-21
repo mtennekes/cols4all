@@ -176,7 +176,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			),
 			shiny::tabPanel("Color Blind Friendliness",
 					shiny::selectizeInput("cbfPal", "Palette", choices = z$fullname),
-					shiny::plotOutput("cbfPlot", "Color Blind Friendliness simulation", width = "800px", height = "200px"),
+					#shiny::plotOutput("cbfPlot", "Color Blind Friendliness simulation", width = "800px", height = "200px"),
 					shiny::plotOutput("cbfRGB", "Confusion lines", width = "800px", height = "800px")),
 
 			shiny::tabPanel("Contrast",
@@ -424,15 +424,15 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		## CBF tab
 		#############################
 
-		output$cbfPlot = shiny::renderPlot({
-			pal = input$cbfPal
-			x = c4a_info(pal)
-			n_init = x$ndef
-
-			pal_new = c4a(x$fullname, n = n_init)
-
-			colorblindcheck::palette_plot(pal_new)
-		})
+		# output$cbfPlot = shiny::renderPlot({
+		# 	pal = input$cbfPal
+		# 	x = c4a_info(pal)
+		# 	n_init = x$ndef
+		#
+		# 	pal_new = c4a(x$fullname, n = n_init)
+		#
+		# 	colorblindcheck::palette_plot(pal_new)
+		# })
 
 		output$cbfRGB = shiny::renderPlot({
 			pal = input$cbfPal
