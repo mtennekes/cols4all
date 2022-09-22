@@ -186,7 +186,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 		row_h = ifelse(ind==indx, 2, 1.4)
 	})
 	e = cbind(e, zn[match(paste(e$series, e$label, sep = "."), zn$fullname),qn,drop=FALSE])
-	colnames(e)[match(qn, colnames(e))] = ql
+	#colnames(e)[match(qn, colnames(e))] = ql
 
 	# total number of columns
 	tot = max(c(zn$n*m, columns))
@@ -288,101 +288,55 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 
 	rownames(e2) = NULL
-
-	tooltip_cbfriendly = if (is.null(n)) "Colorblind-friendly!" else paste0("Colorblind-friendly! (at least, for n = ", n, ")")
-	tooltip_cbunfriendly = "Be careful! Some colors are hard to distinguish by color blind people"
-	tooltip_highC = "Watch out for those intense colors! Better not use those for coloring large areas"
-
-	tooltip_RH = "Spectral (&#34;rainbow&#34;) palette: easy to distinguish colors, but less suitable for quantitative analysis"
-	tooltip_SH_seq = "Single hue palette: good for quantitative analysis, but harder to distinguish colors"
-	tooltip_SH_div = "Each side has its own distinct hue: recommended!"
-	tooltip_SH_bivs = "Each dimension has its own distinct hue: recommended!"
-	tooltip_Harm = "Harmonic, well-balanced colors (colors are equally saturated)"
-
-	tooltip_CR = "Low contrast between some colors; use borders to separate them"
-	tooltip_CRwt = "Low contrast with white background"
-	tooltip_CRbk = "Low contrast with black background"
-
-
-	if ("cbfriendly" %in% qn) e2[[.labels["cbfriendly"]]] = ifelse(!is.na(e2[[.labels["cbfriendly"]]]) & e2[[.labels["cbfriendly"]]] == 1L, kableExtra::cell_spec("&#9786;", extra_css
-="font-size: 80%;", tooltip = tooltip_cbfriendly, escape = FALSE), ifelse(!is.na(e2[[.labels["cbfriendly"]]]) & e2[[.labels["cbfriendly"]]] == -1L, kableExtra::cell_spec("&#128064;", extra_css
-																								  ="font-size: 60%;", tooltip = tooltip_cbunfriendly, escape = FALSE), ""))
-	if ("highC" %in% qn) e2[[.labels["highC"]]] = ifelse(!is.na(e2[[.labels["highC"]]]) & e2[[.labels["highC"]]] == 1L, kableExtra::cell_spec("&#x1f576;", tooltip = tooltip_highC, escape = FALSE), "")
-
-
-	if ("hueType" %in% qn){
-		lab = .labels["hueType"]
-		if (type %in% c("seq", "bivg")) {
-			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
-							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#128396;", tooltip = tooltip_SH_seq, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
-		} else if (type %in% c("div", "bivd")) {
-			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
-							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#x262F;", tooltip = tooltip_SH_div, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
-		} else if (type == c("bivs")) {
-			e2[[lab]] = ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "RH", kableExtra::cell_spec("&#127752;", tooltip = tooltip_RH, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"),
-							   ifelse(!is.na(e2[[lab]]) & e2[[lab]] == "SH", kableExtra::cell_spec("&#x262F;", tooltip = tooltip_SH_bivs, escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"), ""))
-		}
-	}
-
-	if ("harmonic" %in% qn) {
-		hlab = .labels["harmonic"]
-		e2[[hlab]] = ifelse(!is.na(e2[[hlab]]) & e2[[hlab]],
-							kableExtra::cell_spec("🎵", tooltip = tooltip_Harm, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"), "")
-
-	}
-
-	if ("contrast" %in% qn) {
-		clab = .labels["contrast"]
-		e2[[clab]] = ifelse(!is.na(e2[[clab]]) & e2[[clab]],
-							kableExtra::cell_spec("𖦹", tooltip = tooltip_CR, escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;"), "")
-	}
-
-	if ("contrastWT" %in% qn) {
-		clabW = .labels["contrastWT"]
-		e2[[clabW]] = ifelse(!is.na(e2[[clabW]]) & e2[[clabW]],
-							 kableExtra::cell_spec("🔲", tooltip = tooltip_CRwt, escape = FALSE, extra_css = "font-size: 100%; vertical-align: -0.1em; line-height: 0px;"), "")
-	}
-
-	if ("contrastBK" %in% qn) {
-		clabB = .labels["contrastBK"]
-		e2[[clabB]] = ifelse(!is.na(e2[[clabB]]) & e2[[clabB]],
-							kableExtra::cell_spec("🔳", tooltip = tooltip_CRbk, escape = FALSE, extra_css = "font-size: 100%; vertical-align: -0.1em; line-height: 0px;"), "")
-
+	for (var in c("cbfriendly", "highC", "hueType", "harmonic", "contrast", "contrastWT", "contrastBK")) {
+		tcv = .C4A$tc[[var]]
+		if (any(names(tcv) %in% c("seq", "cat", "div"))) tcv = tcv[[type]]
+		if (var %in% qn) e2[[var]] = tcv[as.character(e2[[var]])]
 	}
 
 
 
-	ql_icons = intersect(ql, c(.labels[c("cbfriendly", "highC")]))
-	ql_other = setdiff(ql, c(.labels[c("cbfriendly", "highC")]))
 
-	for (q in ql_other) {
+
+	qn_icons = intersect(qn, c("cbfriendly", "highC"))
+	qn_other = setdiff(qn, c("cbfriendly", "highC"))
+
+	for (q in qn_other) {
 		e2[[q]] = as.character(e2[[q]])
 		e2[[q]][is.na(e2[[q]])] = ""
 	}
 
-	e2cols = c("series", "label", ql, colNames, "Copy1", "Copy2", "Copy3", "Copy4")
+	e2cols = c("series", "label", qn, colNames, "Copy1", "Copy2", "Copy3", "Copy4")
 	e2nms = c("Series", "Name", ql, colNames, "", "", "", "")
+
+	dupl = e2cols[e2nms %in% e2nms[duplicated(e2nms)]]
+
+	e2nms[duplicated(e2nms)] = ""
 
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2nms, escape = F)
 
-	for (cN in setdiff(colNames, " ")) {
+	for (cN in colNames) {
 		k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "6em", width_max = "6em")
 	}
-	for (i in which(e2nms == " ")) {
+	for (i in which(substr(e2cols, 1, 4) == "Copy")) {
 		k = kableExtra::column_spec(k, i, width = "1em", extra_css = "padding-left: 10px; padding-right: 0px; text-align: right") #width_min = "1em", width_max = "1em")
 	}
 
 	k = kableExtra::column_spec(k, 1, width = "5em", extra_css = "padding-left: 10px; padding-right: 10px; text-align: right")
 	k = kableExtra::column_spec(k, 2, width = "5em", extra_css = "padding-left: 0px; padding-right: 10px; text-align: right")
 	k = kableExtra::column_spec(k, which(substr(e2cols, 1, 4) == "Copy"), width = "1em", extra_css = "padding-left: 5px; padding-right: 0px; text-align: right")
-	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "padding-left: 3px; padding-right: 3px; vertical-align: bottom") #max-width: 5em;
+	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "padding-left: 3px; padding-right: 3px; vertical-align: bottom; max-width: 0em;") #max-width: 5em;
 
-	for (q in ql_other) {
-		k = kableExtra::column_spec(k, which(q == e2nms), width = "3em", extra_css = "text-align: center; vertical-align: center")
+	for (q in qn_other) {
+		if (q %in% dupl) {
+			k = kableExtra::column_spec(k, which(q == e2cols), width = "2em", extra_css = "text-align: center; vertical-align: center; overflow: hidden; text-overflow: ellipsis; max-width: 2em; min-width: 2em;")
+		} else {
+			k = kableExtra::column_spec(k, which(q == e2cols), width = "4em", extra_css = "text-align: center; vertical-align: center; overflow: hidden; text-overflow: ellipsis; max-width: 4em; min-width: 4em;")
+		}
 	}
 
-	for (q in ql_icons) {
-		k = kableExtra::column_spec(k, which(q == e2nms), extra_css = "font-size: 250%; line-height: 40%; vertical-align: center; text-align: center; white-space: nowrap;", width = "2em")
+	for (q in qn_icons) {
+		k = kableExtra::column_spec(k, which(q == e2cols), extra_css = "font-size: 250%; line-height: 40%; vertical-align: center; text-align: center; white-space: nowrap; max-width: 2em; min-width: 2em;", width = "2em")
 	}
 
 	kc = k[1]
