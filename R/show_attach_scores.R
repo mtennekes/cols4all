@@ -29,20 +29,30 @@ show_attach_scores = function(z) {
 	#a = t(mapply(analyse_hcl, z2$palette, z2$type))
 	#z2 = cbind(z2, a)
 
+	z2$chroma = "M"
+
+	z2$chroma[z2$Cmax >= .C4A$Cintense] = "H"
+	z2$chroma[z2$Cmax < .C4A$Cpastel] = "L"
+
+
 	z2$highC = z2$Cmax >= .C4A$Cintense
 
 	if (type == "div") {
 		z2$hueType = ifelse(z2$HwidthL >= .C4A$HwidthDivRainbow | z2$HwidthR >= .C4A$HwidthDivRainbow, "RH",
 					 ifelse(z2$HwidthL < .C4A$HwidthDivSingle & z2$HwidthR < .C4A$HwidthDivSingle, "SH", "MH"))
 		z2$HwidthLR = pmax(z2$HwidthL, z2$HwidthR)
+		z2$chroma[z2$Cmin < .C4A$Cpastel] = "L"
 		z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 - ((!z2$highC[z2$iscbf]) * 1e6) - ((z2$hueType[z2$iscbf] == "SH") * 1e3)
 		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] - ((!z2$highC[!z2$iscbf]) * 1e-3) - ((z2$hueType[!z2$iscbf] == "SH") * 1e-6)
 	} else if (type == "seq") {
 		z2$hueType = ifelse(z2$Hwidth < .C4A$HwidthSeqSingle, "SH", ifelse(z2$Hwidth < .C4A$HwidthSeqRainbow, "MH", "RH"))
+		z2$chroma[z2$Cmin < .C4A$Cpastel] = "L"
 		z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 - ((!z2$highC[z2$iscbf]) * 1e6)
 		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] - ((!z2$highC[!z2$iscbf]) * 1e-3)
 	} else if (type %in% c("cat", "bivc")) {
 		z2$harmonic = (z2$Crange < .C4A$CrangeHarmonic)
+		#z2$chroma[z2$Crange < .C4A$CrangeHarmonic] = "L"
+
 		z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 + ((z2$Crange[z2$iscbf]) * 1e6) + (z2$highC[z2$iscbf] * 1e3)
 		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] + ((z2$Crange[!z2$iscbf]) * 1e-3) + (z2$highC[!z2$iscbf] * 1e-6)
 	} else if (type %in% c("bivs", "bivd", "bivg")) {

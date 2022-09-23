@@ -71,6 +71,7 @@ NULL
 		CrangeHarmonic = 40 # replacement for LCrangeHarmonic (and LrangeWeight)
 
 		Cintense = 100 # chroma of colors that are considered intense
+		Cpastel = 70 # chroma of 'pastel' colors
 		HwidthDivRainbow = 90 # a diverging palette is labeled as 'rainbow hue' if HwidthL or HwidthR are at least HwidthDivRainbow
 		HwidthDivSingle = 20 # a diverging palette is labeled as 'single hue' if HwidthL and HwidthR are at most HwidthDivSingle
 		HwidthSeqRainbow = 180 # a sequential palette is labeled as 'rainbow hue' if Hwidth is at least HwidthSeqRainbow
@@ -139,6 +140,7 @@ NULL
 					cbfriendly = "Colorblind-friendly",
 					cbfuf = "Colorblind-friendly",
 					highC = "Intense colors",
+					chroma = "Chroma",
 					hueType = "Hues",
 					harmonic = "Harmonic palette",
 					contrast = "Contrast",
@@ -153,6 +155,9 @@ NULL
 			 highC = list('NA' = "",
 			 			 'FALSE' = "",
 			 			 "TRUE" = kableExtra::cell_spec("&#x1f576;", tooltip = "Watch out for those intense colors! Better not use those for coloring large areas", escape = FALSE)),
+			 chroma = list('H' = kableExtra::cell_spec("&#x1f576;", tooltip = "High chroma: ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations", escape = FALSE),
+			 			  'M' = "",
+			 			  'L' = kableExtra::cell_spec("&#127912;", tooltip = "Low chroma: ideal for space filling visualizations, such as choropleths", escape = FALSE)),
 			 hueType = list(seq = list('NA' = "",
 			 						  'MH' = "",
 			 						  'RH' = kableExtra::cell_spec("&#127752;",

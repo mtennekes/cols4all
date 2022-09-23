@@ -1,10 +1,10 @@
 table_columns = function(type, show.scores) {
 	if (type == "cat") {
-		qn = c("nmax", "cbfriendly", "highC")
-		srt = c("nmax", "rank", "Cmax")
+		qn = c("nmax", "cbfriendly", "highC", "chroma")
+		srt = c("nmax", "rank", "Cmax", "Cmax")
 	} else {
-		qn = c("cbfriendly", "highC")
-		srt = c("rank", "Cmax")
+		qn = c("cbfriendly", "highC", "chroma")
+		srt = c("rank", "Cmax", "Cmax")
 	}
 
 	if (type %in% c("seq", "div", "bivs", "bivd", "bivg")) {
@@ -288,7 +288,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 
 	rownames(e2) = NULL
-	for (var in c("cbfriendly", "highC", "hueType", "harmonic", "contrast", "contrastWT", "contrastBK")) {
+	for (var in c("cbfriendly", "highC", "chroma",  "hueType", "harmonic", "contrast", "contrastWT", "contrastBK")) {
 		tcv = .C4A$tc[[var]]
 		if (any(names(tcv) %in% c("seq", "cat", "div"))) tcv = tcv[[type]]
 		if (var %in% qn) e2[[var]] = tcv[as.character(e2[[var]])]
