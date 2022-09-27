@@ -35,37 +35,48 @@ show_attach_scores = function(z) {
 	z2$chroma[z2$Cmax < .C4A$Cpastel] = "L"
 
 
-	z2$highC = z2$Cmax >= .C4A$Cintense
+	#z2$highC = z2$Cmax >= .C4A$Cintense
+
+	if (type %in% c("cat", "bivc")) {
+		z2$harmony = ifelse(z2$Crange < .C4A$CrangeHarm & z2$Lrange < .C4A$LrangeHarm, "H",
+							ifelse(z2$Crange > .C4A$CrangeDisH | z2$Lrange > .C4A$LrangeDisH, "L", "M"))
+	} else {
+		z2$harmony = ifelse(z2$Crange < .C4A$CrangeHarm, "H",
+					 ifelse(z2$Crange > .C4A$CrangeDisH, "L", "M"))
+	}
+
 
 	if (type == "div") {
 		z2$hueType = ifelse(z2$HwidthL >= .C4A$HwidthDivRainbow | z2$HwidthR >= .C4A$HwidthDivRainbow, "RH",
 					 ifelse(z2$HwidthL < .C4A$HwidthDivSingle & z2$HwidthR < .C4A$HwidthDivSingle, "SH", "MH"))
 		z2$HwidthLR = pmax(z2$HwidthL, z2$HwidthR)
-		z2$chroma[z2$Cmin < .C4A$Cpastel] = "L"
-		z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 - ((!z2$highC[z2$iscbf]) * 1e6) - ((z2$hueType[z2$iscbf] == "SH") * 1e3)
-		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] - ((!z2$highC[!z2$iscbf]) * 1e-3) - ((z2$hueType[!z2$iscbf] == "SH") * 1e-6)
+		#z2$chroma[z2$Cmin < .C4A$Cpastel] = "L"
+		#z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 - ((!z2$highC[z2$iscbf]) * 1e6) - ((z2$hueType[z2$iscbf] == "SH") * 1e3)
+		#z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] - ((!z2$highC[!z2$iscbf]) * 1e-3) - ((z2$hueType[!z2$iscbf] == "SH") * 1e-6)
 	} else if (type == "seq") {
 		z2$hueType = ifelse(z2$Hwidth < .C4A$HwidthSeqSingle, "SH", ifelse(z2$Hwidth < .C4A$HwidthSeqRainbow, "MH", "RH"))
-		z2$chroma[z2$Cmin < .C4A$Cpastel] = "L"
-		z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 - ((!z2$highC[z2$iscbf]) * 1e6)
-		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] - ((!z2$highC[!z2$iscbf]) * 1e-3)
+		#z2$chroma[z2$Cmin < .C4A$Cpastel] = "L"
+		#z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 - ((!z2$highC[z2$iscbf]) * 1e6)
+		#z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] - ((!z2$highC[!z2$iscbf]) * 1e-3)
 	} else if (type %in% c("cat", "bivc")) {
-		z2$harmonic = (z2$Crange < .C4A$CrangeHarmonic)
+		# z2$harmony = ifelse(z2$Crange < .C4A$CrangeHarm & z2$Lrange < .C4A$LrangeHarm, "H",
+		# 			 ifelse(z2$Crange > .C4A$CrangeDisH | z2$Lrange > .C4A$LrangeDisH, "L", "M"))
+		#
 		#z2$chroma[z2$Crange < .C4A$CrangeHarmonic] = "L"
 
-		z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 + ((z2$Crange[z2$iscbf]) * 1e6) + (z2$highC[z2$iscbf] * 1e3)
-		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] + ((z2$Crange[!z2$iscbf]) * 1e-3) + (z2$highC[!z2$iscbf] * 1e-6)
+		#z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 + ((z2$Crange[z2$iscbf]) * 1e6) + (z2$highC[z2$iscbf] * 1e3)
+		#z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] + ((z2$Crange[!z2$iscbf]) * 1e-3) + (z2$highC[!z2$iscbf] * 1e-6)
 	} else if (type %in% c("bivs", "bivd", "bivg")) {
 		z2$hueType = ifelse(z2$HwidthL >= .C4A$HwidthDivRainbow | z2$HwidthR >= .C4A$HwidthDivRainbow, "RH",
 					 ifelse(z2$HwidthL < .C4A$HwidthDivSingle & z2$HwidthR < .C4A$HwidthDivSingle, "SH", "MH"))
 		z2$HwidthLR = pmax(z2$HwidthL, z2$HwidthR)
-		z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 - ((!z2$highC[z2$iscbf]) * 1e6) - ((z2$hueType[z2$iscbf] == "SH") * 1e3)
-		z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] - ((!z2$highC[!z2$iscbf]) * 1e-3) - ((z2$hueType[!z2$iscbf] == "SH") * 1e-6)
+		#z2$rank[z2$iscbf] = z2$rank[z2$iscbf] - 1e9 - ((!z2$highC[z2$iscbf]) * 1e6) - ((z2$hueType[z2$iscbf] == "SH") * 1e3)
+		#z2$rank[!z2$iscbf] = z2$rank[!z2$iscbf] - ((!z2$highC[!z2$iscbf]) * 1e-3) - ((z2$hueType[!z2$iscbf] == "SH") * 1e-6)
 	}
 	z2$contrast = z2$CRmin < 120
 	z2$contrastWT = z2$CRwt < 120
 	z2$contrastBK = z2$CRbk < 120
-	z2$rank = floor(rank(z2$rank, ties.method = "min"))
+	#z2$rank = floor(rank(z2$rank, ties.method = "min"))
 	z2
 }
 

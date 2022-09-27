@@ -68,6 +68,12 @@ NULL
 		# LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
 		# LCrangeHarmonic = 80/3 # Maximum LCrange values for which the palette is labeled "harmonic"
 
+		CrangeHarm = 40
+		CrangeDisH = 60
+		LrangeHarm = 30
+		LrangeDisH = 60
+
+
 		CrangeHarmonic = 40 # replacement for LCrangeHarmonic (and LrangeWeight)
 
 		Cintense = 100 # chroma of colors that are considered intense
@@ -80,8 +86,7 @@ NULL
 		sc = c("min_dist",
 			   "min_step",
 			   "max_step",
-			   "inter_wing_dist",
-			   "rank")
+			   "inter_wing_dist")
 
 		types = c("Categorical" = "cat",
 				  "Sequential" = "seq",
@@ -119,7 +124,7 @@ NULL
 						  bivg = c("inter_wing_dist", "min_step"))
 		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
 
-		sortRev = c("Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
+		sortRev = c("cbfriendly", "Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
 
 		labels = c(min_dist = "Minimum distance",
 					min_step = "Minimum step",
@@ -136,13 +141,10 @@ NULL
 					CRmin = "Contrast-Ratio minimum",
 					CRwt = "Contrast-Ratio white",
 					CRbk = "Contrast-Ratio black",
-					rank = "Ranking",
 					cbfriendly = "Colorblind-friendly",
-					cbfuf = "Colorblind-friendly",
-					highC = "Intense colors",
 					chroma = "Chroma",
+					harmony = "Harmony",
 					hueType = "Hues",
-					harmonic = "Harmonic palette",
 					contrast = "Contrast",
 					contrastWT = "Contrast",
 					contrastBK = "Contrast",
@@ -152,12 +154,10 @@ NULL
 									'0' = "",
 							   '1' = kableExtra::cell_spec("&#9786;", extra_css="font-size: 80%;", tooltip = "Colorblind-friendly!", escape = FALSE),
 							   '-1' = kableExtra::cell_spec("&#128064;", extra_css ="font-size: 60%;", tooltip = "Be careful! Some colors are hard to distinguish by color blind people", escape = FALSE)),
-			 highC = list('NA' = "",
-			 			 'FALSE' = "",
-			 			 "TRUE" = kableExtra::cell_spec("&#x1f576;", tooltip = "Watch out for those intense colors! Better not use those for coloring large areas", escape = FALSE)),
-			 chroma = list('H' = kableExtra::cell_spec("&#x1f576;", tooltip = "High chroma: ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations", escape = FALSE),
+			 chroma = list('NA' = "",
+			 			   'H' = kableExtra::cell_spec("&#x1f576;", tooltip = "High chroma: ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations", escape = FALSE),
 			 			  'M' = "",
-			 			  'L' = kableExtra::cell_spec("&#127912;", tooltip = "Low chroma: ideal for space filling visualizations, such as choropleths", escape = FALSE)),
+			 			  'L' = kableExtra::cell_spec("&#10045;", tooltip = "Low chroma: ideal for space filling visualizations, such as choropleths", escape = FALSE, extra_css = "color: #000000; font-size: 70%;")), #&#9729; &#10020;
 			 hueType = list(seq = list('NA' = "",
 			 						  'MH' = "",
 			 						  'RH' = kableExtra::cell_spec("&#127752;",
@@ -199,11 +199,14 @@ NULL
 			 			   										 tooltip = "Each dimension has its own distinct hue: recommended!",
 			 			   										 escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"))
 			 ),
-			 harmonic = list('NA' = "",
-			 				'FALSE' =  "",
-			 				'TRUE' = kableExtra::cell_spec("🎵",
-			 											   tooltip = "Harmonic, well-balanced colors (colors are equally saturated)", escape = FALSE,
-			 											   extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;")),
+			 harmony = list('NA' = "",
+			 			    'M' = "",
+			 				'L' =  kableExtra::cell_spec("&#92601;",
+			 												 tooltip = "Colors are not well-balanced (lightness / chroma)", escape = FALSE,
+			 												 extra_css = "font-size: 100%; vertical-align: -0.1em; line-height: 0px;"),
+			 				'H' = kableExtra::cell_spec("🎵",
+			 											   tooltip = "Harmonic, well-balanced colors (colors are equally saturated and light)", escape = FALSE,
+			 											   extra_css = "font-size: 60%; vertical-align: -0.1em; line-height: 0px;")),
 			 contrast = list('NA' = "",
 			 				'FALSE' =  "",
 			 				'TRUE' = kableExtra::cell_spec("&#127937;",

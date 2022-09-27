@@ -1,22 +1,14 @@
 table_columns = function(type, show.scores) {
-	if (type == "cat") {
-		qn = c("nmax", "cbfriendly", "highC", "chroma")
-		srt = c("nmax", "rank", "Cmax", "Cmax")
-	} else {
-		qn = c("cbfriendly", "highC", "chroma")
-		srt = c("rank", "Cmax", "Cmax")
-	}
+	qn = c("nmax", "cbfriendly", "chroma", "harmony")
+	srt = c("nmax", "cbfriendly", "Cmax", "Crange")
 
 	if (type %in% c("seq", "div", "bivs", "bivd", "bivg")) {
 		qn = c(qn, "hueType", "contrastWT", "contrastBK")
 		srt = c(srt, {if (type %in% c("div", "bivs", "bivd", "bivg")) "HwidthLR" else "Hwidth"}, "CRwt", "CRbk")
 	} else {
-		qn = c(qn, "harmonic", "contrast", "contrastWT", "contrastBK")
-		srt = c(srt, "Crange", "CRmin", "CRwt", "CRbk")
+		qn = c(qn, "contrast", "contrastWT", "contrastBK")
+		srt = c(srt, "CRmin", "CRwt", "CRbk")
 	}
-
-	qn = c(qn, "rank")
-	srt = c(srt, "rank")
 
 	if (show.scores) {
 		qn = c(qn, .C4A$indicators[[type]], .C4A$hcl)
@@ -288,18 +280,21 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 
 	rownames(e2) = NULL
-	for (var in c("cbfriendly", "highC", "chroma",  "hueType", "harmonic", "contrast", "contrastWT", "contrastBK")) {
+	for (var in c("cbfriendly", "chroma",  "hueType", "harmony", "contrast", "contrastWT", "contrastBK")) {
 		tcv = .C4A$tc[[var]]
 		if (any(names(tcv) %in% c("seq", "cat", "div"))) tcv = tcv[[type]]
-		if (var %in% qn) e2[[var]] = tcv[as.character(e2[[var]])]
+		if (var %in% qn) {
+			chr = as.character(e2[[var]])
+			chr[is.na(chr)] = "NA"
+			e2[[var]] = tcv[chr]
+		}
 	}
 
 
+	all_icons = c("cbfriendly", "chroma", "harmony")
 
-
-
-	qn_icons = intersect(qn, c("cbfriendly", "highC"))
-	qn_other = setdiff(qn, c("cbfriendly", "highC"))
+	qn_icons = intersect(qn, all_icons)
+	qn_other = setdiff(qn, all_icons)
 
 	for (q in qn_other) {
 		e2[[q]] = as.character(e2[[q]])
@@ -336,7 +331,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	}
 
 	for (q in qn_icons) {
-		k = kableExtra::column_spec(k, which(q == e2cols), extra_css = "font-size: 250%; line-height: 40%; vertical-align: center; text-align: center; white-space: nowrap; max-width: 2em; min-width: 2em;", width = "2em")
+		k = kableExtra::column_spec(k, which(q == e2cols), extra_css = "font-size: 200%; line-height: 40%; vertical-align: center; text-align: center; white-space: nowrap; max-width: 2.2em; min-width: 2.2em;", width = "2.2em")
 	}
 
 	kc = k[1]
