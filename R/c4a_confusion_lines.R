@@ -17,8 +17,8 @@ rescale = function(x, from = c(0, 1), to = c(0, 1)) {
 	(x - from[1])/diff(from) * diff(to) + to[1]
 }
 
-cellplot = function (r, c, e) {
-	grid::pushViewport(grid::viewport(layout.pos.row = r, layout.pos.col = c, clip = TRUE))
+cellplot = function (r, c, e, ...) {
+	grid::pushViewport(grid::viewport(layout.pos.row = r, layout.pos.col = c, clip = TRUE, ...))
 	e
 	grid::upViewport()
 }

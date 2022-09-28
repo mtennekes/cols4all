@@ -155,7 +155,7 @@ NULL
 							   '1' = kableExtra::cell_spec("&#9786;", extra_css="font-size: 80%;", tooltip = "Colorblind-friendly!", escape = FALSE),
 							   '-1' = kableExtra::cell_spec("&#128064;", extra_css ="font-size: 60%;", tooltip = "Be careful! Some colors are hard to distinguish by color blind people", escape = FALSE)),
 			 chroma = list('NA' = "",
-			 			   'H' = kableExtra::cell_spec("&#x1f576;", tooltip = "High chroma: ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations", escape = FALSE),
+			 			   'H' = kableExtra::cell_spec("&#x1f576;", tooltip = "High chroma: ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations", escape = FALSE, link = "javascript:customHref('tab_app')"),
 			 			  'M' = "",
 			 			  'L' = kableExtra::cell_spec("&#10045;", tooltip = "Low chroma: ideal for space filling visualizations, such as choropleths", escape = FALSE, extra_css = "color: #000000; font-size: 70%;")), #&#9729; &#10020;
 			 hueType = list(seq = list('NA' = "",

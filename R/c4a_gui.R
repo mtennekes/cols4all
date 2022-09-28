@@ -110,10 +110,11 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		shinyjs::useShinyjs(),
 		shiny::tags$head(shiny::includeCSS(system.file("www/light.css", package = "cols4all"))),
 		shiny::tags$head(shiny::includeCSS(system.file("www/dark.css", package = "cols4all"))),
-
+		shiny::tags$head(shiny::includeScript(system.file("www/func.js", package = "cols4all"))),
 		shiny::tabsetPanel(
 			id="inTabset",
 			shiny::tabPanel("Catelogue",
+							value = "tab_catel",
 					 shiny::fluidRow(
 					 	shiny::column(width = 3,
 					 				  shiny::img(src = "imgResources/cols4all_logo.png", height="200", align = "center", 'vertical-align' = "center")),
@@ -175,11 +176,16 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					 )
 			),
 			shiny::tabPanel("Color Blind Friendliness",
+							value = "tab_cvd",
 					shiny::selectizeInput("cbfPal", "Palette", choices = z$fullname),
 					#shiny::plotOutput("cbfPlot", "Color Blind Friendliness simulation", width = "800px", height = "200px"),
 					shiny::plotOutput("cbfRGB", "Confusion lines", width = "800px", height = "800px")),
-
+			shiny::tabPanel("Application",
+							value = "tab_app",
+					shiny::selectizeInput("appPal", "Palette", choices = z$fullname),
+					shiny::plotOutput("CLplot", "CL plot", width = "600px", height = "600px")),
 			shiny::tabPanel("Contrast (borders needed?)",
+							value = "tab_cont",
 				 	shiny::fluidRow(
 			 			shiny::column(width = 3,
 			 						  shiny::selectizeInput("contrastPal", "Palette", choices = z$fullname),
@@ -443,6 +449,24 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			c4a_confusion_lines(pal_new)
 		})
+
+		#############################
+		## Application tab
+		#############################
+
+
+		output$CLplot = shiny::renderPlot({
+			pal = input$appPal
+			x = c4a_info(pal)
+			n_init = x$ndef
+
+			pal_new = c4a(x$fullname, n = n_init)
+
+			c4a_CL_plot(pal_new)
+		})
+
+
+
 		#############################
 		## Contrast tab
 		#############################
