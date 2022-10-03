@@ -1,6 +1,6 @@
 table_columns = function(type, show.scores) {
 	qn = c("nmax", "cbfriendly", "chroma", "harmony")
-	srt = c("nmax", "cbfriendly", "Cmax", "Crange")
+	srt = c("nmax", "cbfriendly", "Cmax", "harmonyRank")
 
 	if (type %in% c("seq", "div", "bivs", "bivd", "bivg")) {
 		qn = c(qn, "hueType", "contrastWT", "contrastBK")
@@ -16,6 +16,8 @@ table_columns = function(type, show.scores) {
 	}
 	ql = .C4A$labels[qn]
 
+	print(ql)
+	print(qn)
 	list(qn = qn, ql = ql, srt = srt)
 }
 

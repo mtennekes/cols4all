@@ -302,14 +302,7 @@ get_CRmatrix = function(p) {
 
 	diag(m) = NA
 
-
-	grid::grid.newpage()
-	#grid.rect(gp=gpar(fill="grey80"))
-	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc")))
-	#grid.rect(gp=gpar(fill="grey70"))
-	grid::pushViewport(grid::viewport(width = 0.9, height = 0.9))
-	#grid.rect(gp=gpar(fill="grey60"))
-	grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = n + 1, ncol = n + 1)))
+	cex = min(1, 12 / n)
 
 	cellplot = function(rw, cl, e) {
 		grid::pushViewport(grid::viewport(layout.pos.row = rw, layout.pos.col = cl))
@@ -317,53 +310,78 @@ get_CRmatrix = function(p) {
 		grid::upViewport()
 	}
 
-	cellplot(2:(n+1), 2:(n+1), {
-		grid::grid.lines(x = c(0,1), y = c(1, 0), gp = grid::gpar(lwd = 2))
-	})
-
-
-	for (i in 1:n) {
-		cellplot(i+1, 1, {
-			grid::grid.rect(width = 0.9, height = 0.9, gp=grid::gpar(fill = p[i]))
-		})
-		cellplot(1, i+1, {
-			grid::grid.rect(width = 0.9, height = 0.9, gp=grid::gpar(fill = p[i]))
-		})
-		for (j in 1:n) {
-			v = m[i,j]
-			if (is.na(v)) next
-
-
-			#s = ((21 - v) / 20) ^ (15)
-			s = CRsize(v)
-
-			cellplot(i+1,j+1, {
-				grid::grid.points(x = 0.5, y = 0.5, pch = c(15, 17, 16, 16)[s], size = grid::unit(c(1, 0.6, 0.3, 0)[s], units = "lines"))
-			})
-
-			# s = CRsize(v)
-			#
-			# scale = 0.2 * s
-			# if (s != 0) cellplot(i+1,j+1, {
-			# 	grid::grid.polygon(x = sin(c(0, 2/3, 4/3, 0) * pi) * scale + 0.5,
-			# 				 y = cos(c(0, 2/3, 4/3, 0) * pi) * scale + 0.5,
-			# 				 id = rep(1,4),
-			# 				 gp=grid::gpar(lwd = 2, fill = "#cccccc"))
-			# 	grid::grid.text("!", gp=grid::gpar(cex = 0.7 * s, fontface = "bold"))
-			# }) else {
-			# 	cellplot(i+1,j+1, {
-			# 		grid::grid.points(x = 0.5, y = 0.5, pch = 21, size = grid::unit(1, "lines"))
-			# 	})
-			# }
-
-			# vs = sprintf("%6.2f", v)
-			# flag = (v < 1.4)
-			# cellplot(i+1,j+1, {
-			# 	grid::grid.text(vs, x = 0.9, just = "right", gp=grid::gpar(cex = 0.8, fontface=ifelse(flag, "bold", "plain")))
-			# })
-
-		}
+	grid::grid.newpage()
+	#grid::grid.rect(gp=grid::gpar(fill="grey80"))
+	din = par("din")
+	cr = din[1] / din[2]
+	if (cr > 1.25) {
+		grid::pushViewport(grid::viewport(width = grid::unit(1.25, "snpc"), height = grid::unit(1, "snpc"), gp = grid::gpar(cex = cex)))
+	} else {
+		grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(0.8, "snpc"), gp = grid::gpar(cex = cex)))
 	}
+	#grid::grid.rect(gp=grid::gpar(fill="blue"))
+
+	grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = 1, ncol = 2, widths = c(0.8, 0.2))))
+
+	cellplot(1, 1, {
+		#grid::grid.rect(gp=grid::gpar(fill="grey70"))
+		grid::pushViewport(grid::viewport(width = 0.9, height = 0.9))
+		#grid::grid.rect(gp=grid::gpar(fill="grey60"))
+		grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = n + 1, ncol = n + 1)))
+
+		cellplot(2:(n+1), 2:(n+1), {
+			grid::grid.lines(x = c(0,1), y = c(1, 0), gp = grid::gpar(lwd = 2))
+		})
+
+
+		for (i in 1:n) {
+			cellplot(i+1, 1, {
+				grid::grid.rect(width = 0.9, height = 0.9, gp=grid::gpar(fill = p[i]))
+			})
+			cellplot(1, i+1, {
+				grid::grid.rect(width = 0.9, height = 0.9, gp=grid::gpar(fill = p[i]))
+			})
+			for (j in 1:n) {
+				v = m[i,j]
+				if (is.na(v)) next
+
+
+				#s = ((21 - v) / 20) ^ (15)
+				s = CRsize(v)
+
+				cellplot(i+1,j+1, {
+					grid::grid.points(x = 0.5, y = 0.5, pch = c(15, 17, 16, 16)[s], size = grid::unit(c(1, 0.6, 0.3, 0)[s], units = "lines"))
+				})
+
+			}
+		}
+		grid::upViewport(2)
+	})
+	cellplot(1, 2, {
+		#grid::grid.rect(gp=grid::gpar(fill="gold", lwd =4))
+		grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = 6, ncol = 5,
+			widths = grid::unit(c(0.25, 1, 0.25, 1, 1), units = c("lines", "lines", "lines", "null", "lines")),
+			heights = grid::unit(c(1, 1, 1, 1, 1, 1), units = c(rep("lines", 5), "null")))))
+
+		pchs = c(15, 17, 16)
+		sizes = c(1, 0.6, 0.3)
+		texts = c("1.0 to 1.2", "1.2 to 1.5", "1.5 to 2.0")
+
+		# cellplot(2, 2, {
+		# 	grid::grid.text("Contrast Ratio", x = 0, just = "left")
+		# })
+		for (i in 1:3) {
+			cellplot(2 + i, 2, {
+				grid::grid.points(x = 0.5, y = 0.5, pch = pchs[i], size = grid::unit(sizes[i], units = "lines"))
+			})
+			cellplot(2 + i, 4, {
+				grid::grid.text(texts[i], x = 0, just = "left")
+			})
+		}
+		grid::upViewport()
+		# #grid::grid.rect(gp=grid::gpar(fill="yellow"))
+
+	})
 
 }
 

@@ -126,8 +126,11 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					 				  shiny::div(style = "margin-bottom: 5px;", shiny::strong("Palette series")),
 					 				  shiny::div(class = 'multicol',
 					 				  		   shiny::checkboxGroupInput("series", label = "", choices = allseries, selected = series, inline = FALSE)),
-					 				  shiny::actionButton("overview", label = "Overview")
-					 	),
+					 				  shiny::fluidRow(
+					 				  	shiny::column(12, align="right",
+					 				  	shiny::actionButton("all", label = "All"),
+					 				  	shiny::actionButton("none", label = "None"),
+					 				  	shiny::actionButton("overview", label = "Overview")))),
 					 	shiny::column(width = 3,
 					 				  shiny::conditionalPanel(
 					 				  	condition = "input.type1 != 'biv'",
@@ -187,6 +190,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			shiny::tabPanel("Contrast (borders needed?)",
 							value = "tab_cont",
 				 	shiny::fluidRow(
+				 		shiny::column(width = 12,
+				 		shiny::markdown("Two colors shown next to each other are pereived *unstable* when they are equally light (luminant). Even though they may have totally different hues, it is hard to separate the colored shapes. The go-to solution is to use black or white shape borders.")),
 			 			shiny::column(width = 3,
 			 						  shiny::selectizeInput("contrastPal", "Palette", choices = z$fullname),
 			 						  shiny::fluidRow(
@@ -201,29 +206,28 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			 						  )
 			 			),
 			 			shiny::column(width = 9,
-			 						  shiny::plotOutput("table", height = "300px", width = "300px"),
-			 						  shiny::markdown("[Contrast Ratio](http://colorspace.r-forge.r-project.org/reference/contrast_ratio.html). Squares, triangles and dots indicate resp. extremely low (< 1.2), very low (< 1.5), and low (< 2) contrast; use borders to separate them."))),
+			 						  shiny::markdown("**Contrast Ratio**"),
+			 						  shiny::plotOutput("table", height = "300px", width = "400px"),
+			 						  shiny::markdown("Contrast Ratio = (L1 + 0.05) / (L2 + 0.05), where L1 and L2 are the luminances (normalized between 0 and 1) of the lighter and darker colors, respectively."))),
+				 	shiny::fluidRow(
+				 		shiny::column(width = 3,
+				 					  shiny::radioButtons("chart", "Example chart", c("Choropleth", "Barchart"), "Choropleth", inline = FALSE),
+			 					  	  shiny::sliderInput("lwd", "Line Width", min = 0, max = 3, step = 1, value = 0),
+				 					  shiny::selectInput("borders", "Borders", choices = c("black", "white"), selected = "black")),
+				 		shiny::column(
+				 			width = 9,
+				 			shiny::plotOutput("ex", height = "300px", width = "600px")
+				 		)
+
+				 	),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 12,
 				 					  shiny::markdown("**Optical Art** "),
 				 					  shiny::plotOutput("ex_plus", height = "703", width = "900"),
 				 					  shiny::markdown("_Plus Reversed_ by Richard Anuszkiewicz (1960)")
 				 		)
-					),
+					)
 
-				 	shiny::fluidRow(
-				 		shiny::column(width = 3,
-				 				  shiny::radioButtons("chart", "Example chart", c("Barchart", "Choropleth"), "Choropleth", inline = FALSE),
-				 				  shiny::selectInput("borders", "Borders", choices = c("no", "black", "white"), selected = "no"),
-				 				  shiny::conditionalPanel(
-				 				  	condition = "input.borders != 'no'",
-				 				  	shiny::sliderInput("lwd", "Line Width", min = 0.5, max = 3, step = 0.5, value = 1))),
-				 		shiny::column(
-				 			width = 9,
-				 			shiny::plotOutput("ex", height = "300px", width = "600px")
-				 		)
-
-				 	)
 			)
 
 		)
@@ -247,6 +251,15 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			}
 		})
 
+		shiny::observeEvent(input$all, {
+			shiny::freezeReactiveValue(input, "series")
+			shiny::updateCheckboxGroupInput(session, "series", selected = allseries)
+		})
+
+		shiny::observeEvent(input$none, {
+			shiny::freezeReactiveValue(input, "series")
+			shiny::updateCheckboxGroupInput(session, "series", selected = character())
+		})
 
 		shiny::observeEvent(get_cols(), {
 			cols = get_cols()
@@ -326,7 +339,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			print(names(session$userData))
 			type = get_type12()
 			res = table_columns(type, input$advanced)
-			structure(c("name", res$qn), names = c("Name", res$ql))
+			anyD = duplicated(res$ql)
+			structure(c("name", res$qn[!anyD]), names = c("Name", res$ql[!anyD]))
 		})
 
 
@@ -490,16 +504,20 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		output$ex_plus = shiny::renderPlot({
 			cols = get_cols2()
-			c4a_example_Plus_Reversed(cols[1], cols[2], orientation = "landscape")
+			borders = input$borders
+			lwd = input$lwd
+
+			c4a_example_Plus_Reversed(cols[1], cols[2], orientation = "landscape", borders = borders, lwd = lwd)
 		})
 
 		output$ex = shiny::renderPlot({
 			cols = get_cols2()
-			border = if (input$borders == "no") NA else input$borders
+			borders = input$borders
+			lwd = input$lwd
 			if (input$chart == "Barchart") {
-				c4a_example_bars(cols[1], cols[2], border, lwd = input$lwd)
+				c4a_example_bars(cols[1], cols[2], borders = borders, lwd = lwd)
 			} else {
-				c4a_example_map(cols[1], cols[2], border, lwd = input$lwd)
+				c4a_example_map(cols[1], cols[2], borders = borders, lwd = lwd)
 			}
 		})
 

@@ -40,9 +40,11 @@ show_attach_scores = function(z) {
 	if (type %in% c("cat", "bivc")) {
 		z2$harmony = ifelse(z2$Crange < .C4A$CrangeHarm & z2$Lrange < .C4A$LrangeHarm, "H",
 							ifelse(z2$Crange > .C4A$CrangeDisH | z2$Lrange > .C4A$LrangeDisH, "L", "M"))
+		z2$harmonyRank = rank(c("H" = 2000000, "M" = 1000000, "L" = 0)[z2$harmony] + (999000 - z2$Crange * 1000) + (999 - z2$Lrange))
 	} else {
 		z2$harmony = ifelse(z2$Crange < .C4A$CrangeHarm, "H",
 					 ifelse(z2$Crange > .C4A$CrangeDisH, "L", "M"))
+		z2$harmonyRank = rank(z2$Craneg)
 	}
 
 

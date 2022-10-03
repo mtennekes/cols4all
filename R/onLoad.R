@@ -68,10 +68,10 @@ NULL
 		# LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
 		# LCrangeHarmonic = 80/3 # Maximum LCrange values for which the palette is labeled "harmonic"
 
-		CrangeHarm = 40
-		CrangeDisH = 60
+		CrangeHarm = 50
+		CrangeDisH = 80
 		LrangeHarm = 30
-		LrangeDisH = 60
+		LrangeDisH = 50
 
 
 		CrangeHarmonic = 40 # replacement for LCrangeHarmonic (and LrangeWeight)
@@ -124,7 +124,7 @@ NULL
 						  bivg = c("inter_wing_dist", "min_step"))
 		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
 
-		sortRev = c("cbfriendly", "Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
+		sortRev = c("cbfriendly", "harmonyRank", "Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
 
 		labels = c(min_dist = "Minimum distance",
 					min_step = "Minimum step",
@@ -155,7 +155,7 @@ NULL
 							   '1' = kableExtra::cell_spec("&#9786;", extra_css="font-size: 80%;", tooltip = "Colorblind-friendly!", escape = FALSE),
 							   '-1' = kableExtra::cell_spec("&#128064;", extra_css ="font-size: 60%;", tooltip = "Be careful! Some colors are hard to distinguish by color blind people", escape = FALSE)),
 			 chroma = list('NA' = "",
-			 			   'H' = kableExtra::cell_spec("&#x1f576;", tooltip = "High chroma: ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations", escape = FALSE, link = "javascript:customHref('tab_app')"),
+			 			   'H' = kableExtra::cell_spec("&#x1f576;", tooltip = "High chroma: ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations", escape = FALSE),
 			 			  'M' = "",
 			 			  'L' = kableExtra::cell_spec("&#10045;", tooltip = "Low chroma: ideal for space filling visualizations, such as choropleths", escape = FALSE, extra_css = "color: #000000; font-size: 70%;")), #&#9729; &#10020;
 			 hueType = list(seq = list('NA' = "",
