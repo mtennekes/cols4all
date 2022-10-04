@@ -2,6 +2,7 @@ def_n = function(npref = NA, type, series, tab_nmin, tab_nmax) {
 
 	nmin = suppressWarnings(min(tab_nmin[series, type], na.rm = TRUE))
 	nmax = suppressWarnings(max(tab_nmax[series, type], na.rm = TRUE))
+	if (is.infinite(nmin)) return(NULL)
 
 	if (is.na(npref)) npref = switch(type, cat = 7, seq = 7, div = 9, 3)
 	if (is.infinite(nmax)) nmax = 15
@@ -83,6 +84,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		type1 = substr(type, 1, 3)
 	}
 	type12 = paste0(type1, type2)
+
+	init_pal_list = z$fullname[z$type == type12]
+
 
 	#############################
 	## Contrast tab
@@ -182,7 +186,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 							value = "tab_cvd",
 					shiny::selectizeInput("cbfPal", "Palette", choices = z$fullname),
 					#shiny::plotOutput("cbfPlot", "Color Blind Friendliness simulation", width = "800px", height = "200px"),
-					shiny::plotOutput("cbfRGB", "Confusion lines", width = "800px", height = "800px")),
+					shiny::plotOutput("cbfRGB", "Confusion lines", width = "800px", height = "800px"),
+					shiny::selectizeInput("cbfType", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deu", 'Protan (also red-green blind)' = "pro", 'Tritan (blue-yellow)' = "tri"), selected = "none"),
+					shiny::plotOutput("disttable", height = "300px", width = "400px", click = "disttable_click")),
 			shiny::tabPanel("Chroma and Luminance",
 							value = "tab_app",
 					shiny::markdown("**Chroma** (~saturation) is the intensity of the colors. Low chromatic (\"pastel\") colors are recommended for *space-filling visualizations*, like maps and bar charts. High chromatic colors are useful for *small visuals*, such as dots, lines, and text labels. **Luminance** indicates the lightness of the colors.
@@ -251,6 +257,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			}
 		})
 
+		pal_list = shiny::reactiveVal(init_pal_list)
+
 		shiny::observeEvent(input$all, {
 			shiny::freezeReactiveValue(input, "series")
 			shiny::updateCheckboxGroupInput(session, "series", selected = allseries)
@@ -286,15 +294,14 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			if (!(type %in% types_available)) return(NULL)
 			if (type %in% c("cat", "seq", "div")) {
 				series = series_d()
+				if (is.null(series)) return(NULL)
 				ns =  def_n(npref = input$n, type, series, tab_nmin, tab_nmax)
-				# print("+++++++++++++")
-				# print(ns)
 				shiny::freezeReactiveValue(input, "n")
 				shiny::updateSliderInput(session, "n", min = ns$nmin, max = ns$nmax, value = ns$n)
 			} else {
 				ndef = unname(.C4A$ndef[type])
-				mdef = unname(.C4A$mdef[type])
 
+				mdef = unname(.C4A$mdef[type])
 				if (is.na(mdef)) {
 					shinyjs::disable("mbiv")
 				} else {
@@ -316,10 +323,14 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			type = get_type12()
 
 			if (!(type %in% c("cat", "seq", "div"))) return(NULL)
+
 			series = series_d()
+
+			if (is.null(series)) return(NULL)
 			ns =  def_n(npref = input$n, type, series, tab_nmin, tab_nmax)
 			# print("-------------")
 			# print(ns)
+			if (is.null(ns)) return(NULL)
 			shiny::freezeReactiveValue(input, "n")
 			shiny::updateSliderInput(session, "n", min = ns$nmin, max = ns$nmax, value = ns$n)
 			# print("/-------------")
@@ -336,19 +347,24 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		get_cols = shiny::reactive({
+
 			type = get_type12()
 			res = table_columns(type, input$advanced)
 			anyD = duplicated(res$ql)
+
 			structure(c("name", res$qn[!anyD]), names = c("Name", res$ql[!anyD]))
 		})
 
 
 
 		get_values = shiny::reactive({
+
 			if (input$sort == "") return(NULL)
 
 			type = get_type12()
-			list(n = input$n,
+			n = input$n
+			if (is.null(n)) return(NULL)
+			lst = list(n = n,
 				 nbiv = input$nbiv,
 				 mbiv = input$mbiv,
 				 type = type,
@@ -357,11 +373,28 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				 sortRev = input$sortRev,
 				 series = series_d(),
 				 show.scores = input$advanced,
-				 columns = if (input$n > 16) 12 else input$n,
+				 columns = if (n > 16) 12 else n,
 				 na = input$na,
 				 range = if (input$auto_range == "Automatic") NA else input$range,
 				 textcol = input$textcol,
 				 format = input$format)
+
+			if (substr(type, 1, 3) == "biv") {
+				m = n
+			} else {
+				m = 1
+			}
+
+			sel = z$type == type &
+				z$series %in% lst$series &
+				lst$n <= z$nmax
+			if (!any(sel)) {
+				lst$pal_names = character(0)
+			} else {
+				lst$pal_names = sort(z$fullname[sel])
+			}
+
+			lst
 		})
 		#get_values_d = shiny::debounce(get_values, 300)
 
@@ -373,6 +406,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				shiny::freezeReactiveValue(input, "mbiv")
 				shiny::updateSliderInput(session, "mbiv", value = nbiv)
 			}
+
 		})
 
 		# shiny::observe({
@@ -409,14 +443,32 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			}
 		})
 
+		shiny::observe({
+			values = get_values()
+			pals = values$pal_names
+
+			if (length(pals)) {
+				shiny::updateSelectizeInput(session, "cbfPal", choices = pals, selected = pals[1])
+				shiny::updateSelectizeInput(session, "appPal", choices = pals, selected = pals[1])
+				shiny::updateSelectizeInput(session, "contrastPal", choices = pals, selected = pals[1])
+				shinyjs::enable("cbfPal")
+				shinyjs::enable("appPal")
+				shinyjs::enable("contrastPal")
+			} else {
+				shiny::updateSelectizeInput(session, "cbfPal", choices = pals)
+				shiny::updateSelectizeInput(session, "appPal", choices = pals)
+				shiny::updateSelectizeInput(session, "contrastPal", choices = pals)
+
+				shinyjs::disable("cbfPal")
+				shinyjs::disable("appPal")
+				shinyjs::disable("contrastPal")
+			}
+		})
 
 		output$show = function() {
 
 			values = get_values()#_d()
-			sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
-
-
-			if (is.null(values$series)) {
+			if (is.null(values) || is.null(values$series)) {
 				tab = NULL
 			} else {
 				# Create a Progress object
@@ -426,12 +478,15 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 				progress$set(message = "Colors in progress...", value = 0)
 
+				sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
+
 				if (substr(values$type, 1, 3) == "biv") {
 					tab = c4a_table(n = values$nbiv, m = values$mbiv, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format, verbose = FALSE)
 				} else {
 					tab = c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format, verbose = FALSE)
 				}
 			}
+
 			if (is.null(tab)) {
 				kableExtra::kbl(data.frame("No palettes found. Please change the selection."), col.names = " ")
 			} else {
@@ -455,13 +510,41 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		output$cbfRGB = shiny::renderPlot({
 			pal = input$cbfPal
+			cvd = input$cbfType
+
+			if (pal == "") return(NULL)
+
 			x = c4a_info(pal)
 			n_init = x$ndef
 
-			pal_new = c4a(x$fullname, n = n_init)
+			pal_new = as.vector(c4a(x$fullname, n = n_init))
 
 			c4a_confusion_lines(pal_new)
 		})
+
+		output$disttable = shiny::renderPlot({
+			pal = input$cbfPal
+			cvd = input$cbfType
+
+			if (!length(pal)) return(NULL)
+
+			x = c4a_info(pal)
+			n_init = x$ndef
+
+			pal_new = as.vector(c4a(x$fullname, n = n_init))
+
+			pal_new = if (cvd == "deu") {
+				colorspace::deutan(pal_new)
+			} else if (cvd == "pro") {
+				colorspace::protan(pal_new)
+			} else if (cvd == "tri") {
+				colorspace::tritan(pal_new)
+			} else pal_new
+
+
+			c4a_CR_matrix(pal_new, type = "dist", cvd = cvd)
+		})
+
 
 		#############################
 		## Application tab
@@ -470,12 +553,16 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		output$CLplot = shiny::renderPlot({
 			pal = input$appPal
+
+			if (pal == "") return(NULL)
+
 			x = c4a_info(pal)
 			n_init = x$ndef
 
 			pal_new = c4a(x$fullname, n = n_init)
+			type = c4a_info(x$fullname)$type
 
-			c4a_CL_plot(pal_new)
+			c4a_CL_plot(pal_new, Lrange = (type == "cat"))
 		})
 
 
@@ -490,15 +577,23 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		shiny::observeEvent(input$contrastPal, {
 			pal = input$contrastPal
-			x = c4a_info(pal)
-			n_init = x$ndef
+			if (pal == "") {
+				con_values$pal = character(0)
+				con_values$col1 = character(0)
+				con_values$col2 = character(0)
 
-			cols = c(as.vector(c4a(x$fullname, n = n_init)), "#FFFFFF", "#000000")
+			} else {
+				x = c4a_info(pal)
+				n_init = x$ndef
 
-			con_values$pal = cols
+				cols = c(as.vector(c4a(x$fullname, n = n_init)), "#FFFFFF", "#000000")
 
-			con_values$col1 = cols[1]
-			con_values$col2 = cols[2]
+				con_values$pal = cols
+
+				con_values$col1 = cols[1]
+				con_values$col2 = cols[2]
+			}
+
 
 		})
 
@@ -506,6 +601,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		output$ex_plus = shiny::renderPlot({
 			col1 = con_values$col1
 			col2 = con_values$col2
+
+			if (!length(col1)) return(NULL)
 			borders = input$borders
 			lwd = input$lwd
 
@@ -515,6 +612,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		output$ex = shiny::renderPlot({
 			col1 = con_values$col1
 			col2 = con_values$col2
+
+			if (!length(col1)) return(NULL)
+
 			borders = input$borders
 			lwd = input$lwd
 			if (input$chart == "Barchart") {
@@ -528,6 +628,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			col1 = con_values$col1
 			col2 = con_values$col2
 			pal = con_values$pal
+
+			if (!length(col1)) return(NULL)
+
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 			c4a_CR_matrix(pal, id1 = id1, id2 = id2)
@@ -535,6 +638,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		observeEvent(input$table_click, {
 			pal = con_values$pal
+
+			if (!length(pal)) return(NULL)
+
+
 			n = length(pal)
 
 			x = input$table_click$x

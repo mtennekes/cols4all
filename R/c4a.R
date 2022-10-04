@@ -41,7 +41,7 @@ c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bi
 	reverse = xor(reverse, x$reverse)
 
 	if (is.na(n)) n = x$ndef
-	if (is.na(m)) m = x$mdef
+	if (is.na(m)) m = if (is.na(x$mdef)) n else x$mdef
 
 	if (nm_invalid == "error") {
 		tail_str = if (substr(type, 1, 3) == "biv") " columns of colors" else " colors"
@@ -116,6 +116,7 @@ c4a_info = function(palette, no.match = c("error", "null"), verbose = TRUE) {
 	x = as.list(z[palid, ])
 	x$reverse = isrev
 	x$palette = x$palette[[1]]
+
 	x
 }
 

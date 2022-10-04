@@ -74,8 +74,6 @@ NULL
 		LrangeDisH = 50
 
 
-		CrangeHarmonic = 40 # replacement for LCrangeHarmonic (and LrangeWeight)
-
 		Cintense = 100 # chroma of colors that are considered intense
 		Cpastel = 70 # chroma of 'pastel' colors
 		HwidthDivRainbow = 90 # a diverging palette is labeled as 'rainbow hue' if HwidthL or HwidthR are at least HwidthDivRainbow

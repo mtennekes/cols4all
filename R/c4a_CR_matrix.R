@@ -14,9 +14,11 @@ get_dist_matrix = function(p, cvd = NULL) {
 }
 
 
-c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = NULL) {
+c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = "none") {
 	n = length(p)
 	type = match.arg(type)
+
+	if (cvd == "none") cvd = NULL
 
 	m = if (type == "CR") {
 		get_CR_matrix(p)

@@ -1,4 +1,4 @@
-c4a_CL_plot = function(cols) {
+c4a_CL_plot = function(cols, Lrange = FALSE) {
 	grid::grid.newpage()
 
 	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc"), clip = TRUE))
@@ -9,23 +9,65 @@ c4a_CL_plot = function(cols) {
 	sq = 2
 	marg = 1.5
 
+	m = get_hcl_matrix(cols)
+	cr = range(m[, 2])
+	lr = range(m[, 3])
+
 	cellplot(2,2, {
 		grid::grid.rect(gp = grid::gpar(fill = "#EEEEEE"))
 
-		m = get_hcl_matrix(cols)
-
-		cr = range(m[,2]) + c(-marg, marg) * 1.8
-		lr = range(m[,3]) + c(-marg, marg)
 
 
+		cr2 = cr + c(-marg, marg) * 1.8
+		lr2 = lr + c(-marg, marg)
 
-		grid::grid.rect(x = grid::unit(mean(cr), "native"), y = grid::unit(mean(lr), "native"),
-						width = grid::unit(diff(cr), "native"), height = grid::unit(diff(lr), "native"),
+
+
+		grid::grid.rect(x = grid::unit(mean(cr2), "native"), y = grid::unit(mean(lr2), "native"),
+						width = grid::unit(diff(cr2), "native"), height = grid::unit(diff(lr2), "native"),
 						gp = grid::gpar(fill = "#FFFFFF", col = NA))
-
 
 		grid::grid.lines(x = grid::unit(rep(.C4A$Cpastel, 2), "native"), gp = grid::gpar(lty = 2))
 		grid::grid.lines(x = grid::unit(rep(.C4A$Cintense, 2), "native"), gp = grid::gpar(lty = 2))
+
+
+		grid::grid.polyline(x = grid::unit(c(cr[1], cr[1], cr[1], cr[2], cr[2], cr[2]), "native"),
+							y = grid::unit(c(lr2[1] - marg * 0.5, lr2[1] - marg * 1.5, lr2[1] - marg, lr2[1] - marg, lr2[1] - marg * 0.5, lr2[1] - marg * 1.5), "native"),
+							id = c(1, 1, 2, 2, 3, 3), gp = grid::gpar(col = "#555555"))
+
+		grid::grid.rect(x = grid::unit(mean(cr2), "native"), y = grid::unit(lr2[1] - marg * 2.75, "native"),
+						width = grid::unit(diff(cr2), "native"), height = grid::unit(marg * 2, "native"),
+						gp = grid::gpar(fill = "#EEEEEE", col = NA))
+
+		ctext = if (diff(cr) <= .C4A$CrangeHarm) {
+			"Low chroma range"
+		} else if (diff(cr) >= .C4A$CrangeDisH) {
+			"High chroma range"
+		} else {
+			"Medium chroma range"
+		}
+		grid::grid.text(ctext, x = grid::unit(mean(cr2), "native"), y = grid::unit(lr2[1] - marg * 2.5, "native"), gp = grid::gpar(cex = 0.8))
+
+
+		if (Lrange) {
+			grid::grid.polyline(x = grid::unit(cr2[2] + c(marg * 0.5, marg * 1.5, marg, marg, marg * 0.5, marg * 1.5)  * 1.8, "native"),
+								y = grid::unit(c(lr[1], lr[1], lr[1], lr[2], lr[2], lr[2]), "native"),
+								id = c(1, 1, 2, 2, 3, 3), gp = grid::gpar(col = "#555555"))
+
+			ltext = if (diff(lr) <= .C4A$LrangeHarm) {
+				"Low luminance range"
+			} else if (diff(lr) >= .C4A$LrangeDisH) {
+				"High luminance range"
+			} else {
+				"Medium luminance range"
+			}
+			grid::grid.text(ltext, x = grid::unit(cr2[2] + marg * 2.5 * 1.8, "native"), y = grid::unit(mean(lr2), "native"), rot = 90, gp = grid::gpar(cex = 0.8))
+		}
+
+
+
+
+
 
 		#grid::grid.points(m[,2], m[,3], pch = 15, gp = grid::gpar(col = cols))
 		grid::grid.rect(grid::unit(m[,2], "native"), grid::unit(m[,3], "native"), width = grid::unit(sq * 1.8, "native"), height = grid::unit(sq, "native"), gp = grid::gpar(col = NA, fill = cols))
