@@ -110,7 +110,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		shinyjs::useShinyjs(),
 		shiny::tags$head(shiny::includeCSS(system.file("www/light.css", package = "cols4all"))),
 		shiny::tags$head(shiny::includeCSS(system.file("www/dark.css", package = "cols4all"))),
-		shiny::tags$head(shiny::includeScript(system.file("www/func.js", package = "cols4all"))),
+		shiny::tags$head(shiny::includeCSS(system.file("www/misc.css", package = "cols4all"))),
 		shiny::tabsetPanel(
 			id="inTabset",
 			shiny::tabPanel("Catelogue",
@@ -183,32 +183,32 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					shiny::selectizeInput("cbfPal", "Palette", choices = z$fullname),
 					#shiny::plotOutput("cbfPlot", "Color Blind Friendliness simulation", width = "800px", height = "200px"),
 					shiny::plotOutput("cbfRGB", "Confusion lines", width = "800px", height = "800px")),
-			shiny::tabPanel("Application",
+			shiny::tabPanel("Chroma and Luminance",
 							value = "tab_app",
+					shiny::markdown("**Chroma** (~saturation) is the intensity of the colors. Low chromatic (\"pastel\") colors are recommended for *space-filling visualizations*, like maps and bar charts. High chromatic colors are useful for *small visuals*, such as dots, lines, and text labels. **Luminance** indicates the lightness of the colors.
+
+					We call a palette **harmonic** or well-balanced if the range of chroma value range is lower than a certain threshold and for categorical palettes, if the luminance value range is lower than a certain threshold as well. Using a harmonic palette is recommended for data visualization, because its colors will stand out about equally."),
 					shiny::selectizeInput("appPal", "Palette", choices = z$fullname),
 					shiny::plotOutput("CLplot", "CL plot", width = "600px", height = "600px")),
 			shiny::tabPanel("Contrast (borders needed?)",
 							value = "tab_cont",
 				 	shiny::fluidRow(
 				 		shiny::column(width = 12,
-				 		shiny::markdown("Two colors shown next to each other are pereived *unstable* when they are equally light (luminant). Even though they may have totally different hues, it is hard to separate the colored shapes. The go-to solution is to use black or white shape borders.")),
-			 			shiny::column(width = 3,
-			 						  shiny::selectizeInput("contrastPal", "Palette", choices = z$fullname),
-			 						  shiny::fluidRow(
-			 						  	shiny::column(width = 6,
-			 						  				  shiny::radioButtons("col1", "Color 1",
-			 						  				  					choiceNames = getNames(pal_init),
-			 						  				  					choiceValues = pal_init, selected = pal_init[1])),
-			 						  	shiny::column(width = 6,
-			 						  				  shiny::radioButtons("col2", "Color 2",
-			 						  				  					choiceNames = getNames(pal_init),
-			 						  				  					choiceValues = pal_init, selected = pal_init[2]))
-			 						  )
-			 			),
-			 			shiny::column(width = 9,
-			 						  shiny::markdown("**Contrast Ratio**"),
-			 						  shiny::plotOutput("table", height = "300px", width = "400px"),
-			 						  shiny::markdown("Contrast Ratio = (L1 + 0.05) / (L2 + 0.05), where L1 and L2 are the luminances (normalized between 0 and 1) of the lighter and darker colors, respectively."))),
+				 					  shiny::markdown("**Contrast Ratio**"),
+				 					  shiny::markdown("Two colors shown next to each other are pereived *unstable* when they are equally light (luminant). Even though they may have totally different hues, it is hard to separate the colored shapes. The go-to solution is to use black or white shape borders."),
+				 					  shiny::selectizeInput("contrastPal", "Palette", choices = z$fullname),
+				 					  shiny::plotOutput("table", height = "300px", width = "400px", click = "table_click"),
+				 					  shiny::markdown("Contrast Ratio = (L1 + 0.05) / (L2 + 0.05), where L1 and L2 are the luminances (normalized between 0 and 1) of the lighter and darker colors, respectively."))),
+# 			 		shiny::fluidRow(
+# 			 			shiny::column(width = 12,
+# 			 					shiny::div(style="display:inline-block",shiny::radioButtons("col1", "Color 1",
+#  				  				  					choiceNames = getNames(pal_init),
+#  				  				  					choiceValues = pal_init, selected = pal_init[1])))),
+# 			 		shiny::fluidRow(
+# 			 			shiny::column(width = 12,
+#  				  				  shiny::radioButtons("col2", "Color 2",
+#  				  				  					choiceNames = getNames(pal_init),
+#  				  				  					choiceValues = pal_init, selected = pal_init[2]))),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 3,
 				 					  shiny::radioButtons("chart", "Example chart", c("Choropleth", "Barchart"), "Choropleth", inline = FALSE),
@@ -222,7 +222,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				 	),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 12,
-				 					  shiny::markdown("**Optical Art** "),
+				 					  shiny::markdown("**Optical Illusion Art** "),
 				 					  shiny::plotOutput("ex_plus", height = "703", width = "900"),
 				 					  shiny::markdown("_Plus Reversed_ by Richard Anuszkiewicz (1960)")
 				 		)
@@ -336,7 +336,6 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		get_cols = shiny::reactive({
-			print(names(session$userData))
 			type = get_type12()
 			res = table_columns(type, input$advanced)
 			anyD = duplicated(res$ql)
@@ -485,49 +484,73 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		## Contrast tab
 		#############################
 
+		con_values = shiny::reactiveValues(pal = c(pal_init, "#FFFFFF", "#000000"),
+										   col1 = pal_init[1],
+										   col2 = pal_init[2])
+
 		shiny::observeEvent(input$contrastPal, {
 			pal = input$contrastPal
 			x = c4a_info(pal)
 			n_init = x$ndef
 
-			pal_new = c(c4a(x$fullname, n = n_init), "#ffffff", "#000000")
+			cols = c(as.vector(c4a(x$fullname, n = n_init)), "#FFFFFF", "#000000")
 
+			con_values$pal = cols
 
-			shiny::updateRadioButtons(session, inputId = "col1", choiceNames = getNames(pal_new), choiceValues = pal_new, selected = pal_new[1])
-			shiny::updateRadioButtons(session, inputId = "col2", choiceNames = getNames(pal_new), choiceValues = pal_new, selected = pal_new[2])
+			con_values$col1 = cols[1]
+			con_values$col2 = cols[2]
 
 		})
 
-		get_cols2 = shiny::reactive({
-			c(input$col1, input$col2)
-		})
 
 		output$ex_plus = shiny::renderPlot({
-			cols = get_cols2()
+			col1 = con_values$col1
+			col2 = con_values$col2
 			borders = input$borders
 			lwd = input$lwd
 
-			c4a_example_Plus_Reversed(cols[1], cols[2], orientation = "landscape", borders = borders, lwd = lwd)
+			c4a_example_Plus_Reversed(col1, col2, orientation = "landscape", borders = borders, lwd = lwd)
 		})
 
 		output$ex = shiny::renderPlot({
-			cols = get_cols2()
+			col1 = con_values$col1
+			col2 = con_values$col2
 			borders = input$borders
 			lwd = input$lwd
 			if (input$chart == "Barchart") {
-				c4a_example_bars(cols[1], cols[2], borders = borders, lwd = lwd)
+				c4a_example_bars(col1, col2, borders = borders, lwd = lwd)
 			} else {
-				c4a_example_map(cols[1], cols[2], borders = borders, lwd = lwd)
+				c4a_example_map(col1, col2, borders = borders, lwd = lwd)
 			}
 		})
 
 		output$table = shiny::renderPlot({
-			pal = input$contrastPal
-			x = c4a_info(pal)
-			n_init = x$ndef
+			col1 = con_values$col1
+			col2 = con_values$col2
+			pal = con_values$pal
+			id1 = which(col1 == pal)
+			id2 = which(col2 == pal)
+			c4a_CR_matrix(pal, id1 = id1, id2 = id2)
+		})
 
-			pal_new = c(c4a(x$fullname, n = n_init), "#ffffff", "#000000")
-			get_CRmatrix(pal_new)
+		observeEvent(input$table_click, {
+			pal = con_values$pal
+			n = length(pal)
+
+			x = input$table_click$x
+			y = input$table_click$y
+
+			brks_x = seq(0.04, 0.76, length.out = n + 2)
+			brks_y = seq(0, 1, length.out = n + 2)
+
+			x_id = as.integer(cut(x, breaks = brks_x)) - 1
+			y_id = n + 1 - as.integer(cut(y, breaks = brks_y))
+
+			if (!is.na(x_id) && (x_id < 1 || x_id > n)) x_id = NA
+			if (!is.na(y_id) && (y_id < 1 || y_id > n)) y_id = NA
+
+			if (!is.na(x_id)) con_values$col2 = pal[x_id]
+			if (!is.na(y_id)) con_values$col1 = pal[y_id]
 		})
 
 

@@ -1,3 +1,7 @@
 .crosshair {
+	cursor: default;
+}
+
+#table.crosshair {
 	cursor: pointer;
 }

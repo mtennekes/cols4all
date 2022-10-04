@@ -1,6 +1,6 @@
 
 library(sf)
-
+library(grid)
 nc <- st_read(system.file("shape/nc.shp", package="sf")) |> st_transform(crs = 2264)
 nc = nc[, "NAME"]
 nc$geometry =  st_sfc(lapply(nc$geometry, function(nci) {

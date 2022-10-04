@@ -49,7 +49,7 @@ c4a_CL_plot = function(cols) {
 
 
 	cellplot(1, 2, {
-		grid::grid.text(c("*", "■-■"), x = grid::unit(c(.C4A$Cpastel / 2, c(.C4A$Cintense + 180) / 2), "native"), y = c(.3, .5), gp = grid::gpar(cex = c(2, 1.5)))
+		grid::grid.text(c("Low chroma", "High chroma"), x = grid::unit(c(.C4A$Cpastel / 2, c(.C4A$Cintense + 180) / 2), "native"), y = c(.3, .3), gp = grid::gpar(cex = c(1, 1)))
 	}, xscale = c(0, 180))
 
 }
