@@ -26,6 +26,17 @@ c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd 
 		get_dist_matrix(p, cvd = cvd)
 	}
 
+	if (!is.null(cvd)) {
+		p = if (cvd == "deu") {
+			colorspace::deutan(p)
+		} else if (cvd == "pro") {
+			colorspace::protan(p)
+		} else if (cvd == "tri") {
+			colorspace::tritan(p)
+		}
+	}
+
+
 	#m[lower.tri(m)] = NA
 
 
@@ -80,11 +91,7 @@ c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd 
 				v = m[i,j]
 				if (is.na(v)) next
 
-				s = if (type == "CR") {
-					CRsize(v)
-				} else {
-					distsize(v)
-				}
+				s = symbol_size(v, type)
 
 				cellplot(i+1,j+1, {
 					grid::grid.points(x = 0.5, y = 0.5, pch = c(15, 17, 16, 16)[s], size = grid::unit(c(1, 0.6, 0.3, 0)[s], units = "lines"))
@@ -105,7 +112,7 @@ c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd 
 
 		pchs = c(15, 17, 16)
 		sizes = c(1, 0.6, 0.3)
-		texts = c("1.0 to 1.2", "1.2 to 1.5", "1.5 to 2.0")
+		texts = symbol_text(type)
 
 		# cellplot(2, 2, {
 		# 	grid::grid.text("Contrast Ratio", x = 0, just = "left")
@@ -125,12 +132,18 @@ c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd 
 
 }
 
-CRsize = function(cr) {
-	#ifelse(cr <= 4/3, 2, ifelse(cr < 5/3, 1, 0))
-	ifelse(cr <= 1.2, 1, ifelse(cr < 1.5, 2, ifelse(cr < 2, 3, 4)))
+symbol_size = function(cr, type) {
+	brks = .C4A$breaks[[type]]
+	brks_digits = .C4A$breaks_digits[type]
+	cr = round(cr, brks_digits)
+	ifelse(cr <= brks[2], 1, ifelse(cr < brks[3], 2, ifelse(cr < brks[4], 3, 4)))
 }
 
-distsize = function(cr) {
-	#ifelse(cr <= 4/3, 2, ifelse(cr < 5/3, 1, 0))
-	ifelse(cr <= 10, 1, ifelse(cr < 20, 2, ifelse(cr < 30, 3, 4)))
+symbol_text = function(type) {
+	brks = .C4A$breaks[[type]]
+	brks_digits = .C4A$breaks_digits[type]
+	f = formatC(brks, digits = brks_digits, format = "f")
+	mapply(function(a, b) {
+		paste(a, "to", b)
+	}, head(f, -1), f[-1])
 }

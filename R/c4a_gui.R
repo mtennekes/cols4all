@@ -184,11 +184,31 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			),
 			shiny::tabPanel("Color Blind Friendliness",
 							value = "tab_cvd",
-					shiny::selectizeInput("cbfPal", "Palette", choices = z$fullname),
-					#shiny::plotOutput("cbfPlot", "Color Blind Friendliness simulation", width = "800px", height = "200px"),
-					shiny::plotOutput("cbfRGB", "Confusion lines", width = "800px", height = "800px"),
-					shiny::selectizeInput("cbfType", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deu", 'Protan (also red-green blind)' = "pro", 'Tritan (blue-yellow)' = "tri"), selected = "none"),
-					shiny::plotOutput("disttable", height = "300px", width = "400px", click = "disttable_click")),
+							shiny::fluidRow(
+								shiny::column(width = 12,
+											  shiny::selectizeInput("cbfPal", "Palette", choices = z$fullname),
+											  shiny::plotOutput("cbfSim", "Palette simulation", width = "800px", height = "150px"))),
+							shiny::fluidRow(
+								shiny::column(width = 6,
+											  shiny::markdown("<br/><br/>
+											  #### **Confusion Lines**
+											  Color spaces are shown (specifically, CIE xyY space in the sRGB gamut) for normal color vision and three types of color vision deficiency. Note that the palette colors are shown in maximum luminance (given hue and chroma). The *confusion lines* are drawn for the three types of color vision deficiency. The hues of the colors along a confusion line are perceived equally.")),
+								shiny::column(width = 6,
+											  shiny::markdown("<br/><br/>
+											  					#### **Distance Matrix**
+											  					The distances (according to CEI 2000) are shown for each combination of palette colors."))),
+							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Normal color vision**"))),
+							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px")),
+											shiny::column(width = 6, shiny::plotOutput("disttable1", height = "375px", width = "500px", click = "disttable_click"))),
+							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Deutan (red-green blind)**"))),
+							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB2", "Confusion lines1", width = "375px", height = "375px")),
+											shiny::column(width = 6, shiny::plotOutput("disttable2", height = "375px", width = "500px", click = "disttable_click"))),
+							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Protan (also red-green blind)**"))),
+							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB3", "Confusion lines1", width = "375px", height = "375px")),
+											shiny::column(width = 6, shiny::plotOutput("disttable3", height = "375px", width = "500px", click = "disttable_click"))),
+							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Tritan (blue-yellow)**"))),
+							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB4", "Confusion lines1", width = "375px", height = "375px")),
+											shiny::column(width = 6, shiny::plotOutput("disttable4", height = "375px", width = "500px", click = "disttable_click")))),
 			shiny::tabPanel("Chroma and Luminance",
 							value = "tab_app",
 					shiny::markdown("**Chroma** (~saturation) is the intensity of the colors. Low chromatic (\"pastel\") colors are recommended for *space-filling visualizations*, like maps and bar charts. High chromatic colors are useful for *small visuals*, such as dots, lines, and text labels. **Luminance** indicates the lightness of the colors.
@@ -257,7 +277,12 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			}
 		})
 
-		pal_list = shiny::reactiveVal(init_pal_list)
+
+		tab_vals = shiny::reactiveValues(pal = c(pal_init, "#FFFFFF", "#000000"),
+										 col1 = pal_init[1], col2 = pal_init[2],
+										 type = type12)
+
+
 
 		shiny::observeEvent(input$all, {
 			shiny::freezeReactiveValue(input, "series")
@@ -498,53 +523,50 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		## CBF tab
 		#############################
 
-		# output$cbfPlot = shiny::renderPlot({
-		# 	pal = input$cbfPal
-		# 	x = c4a_info(pal)
-		# 	n_init = x$ndef
-		#
-		# 	pal_new = c4a(x$fullname, n = n_init)
-		#
-		# 	colorblindcheck::palette_plot(pal_new)
-		# })
-
-		output$cbfRGB = shiny::renderPlot({
-			pal = input$cbfPal
-			cvd = input$cbfType
-
-			if (pal == "") return(NULL)
-
-			x = c4a_info(pal)
-			n_init = x$ndef
-
-			pal_new = as.vector(c4a(x$fullname, n = n_init))
-
-			c4a_confusion_lines(pal_new)
+		output$cbfSim = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_plot_cvd(pal)
 		})
 
-		output$disttable = shiny::renderPlot({
-			pal = input$cbfPal
-			cvd = input$cbfType
-
-			if (!length(pal)) return(NULL)
-
-			x = c4a_info(pal)
-			n_init = x$ndef
-
-			pal_new = as.vector(c4a(x$fullname, n = n_init))
-
-			pal_new = if (cvd == "deu") {
-				colorspace::deutan(pal_new)
-			} else if (cvd == "pro") {
-				colorspace::protan(pal_new)
-			} else if (cvd == "tri") {
-				colorspace::tritan(pal_new)
-			} else pal_new
-
-
-			c4a_CR_matrix(pal_new, type = "dist", cvd = cvd)
+		output$cbfRGB1 = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_confusion_lines(pal, cvd = "none")
 		})
 
+		output$cbfRGB2 = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_confusion_lines(pal, cvd = "deutan")
+		})
+
+		output$cbfRGB3 = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_confusion_lines(pal, cvd = "protan")
+		})
+
+		output$cbfRGB4 = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_confusion_lines(pal, cvd = "tritan")
+		})
+
+		output$disttable1 = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_CR_matrix(pal, type = "dist", cvd = "none")
+		})
+
+		output$disttable2 = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_CR_matrix(pal, type = "dist", cvd = "deu")
+		})
+
+		output$disttable3 = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_CR_matrix(pal, type = "dist", cvd = "pro")
+		})
+
+		output$disttable4 = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_CR_matrix(pal, type = "dist", cvd = "tri")
+		})
 
 		#############################
 		## Application tab
@@ -552,17 +574,11 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 
 		output$CLplot = shiny::renderPlot({
-			pal = input$appPal
+			pal = tab_vals$pal
 
-			if (pal == "") return(NULL)
+			type = tab_vals$type
 
-			x = c4a_info(pal)
-			n_init = x$ndef
-
-			pal_new = c4a(x$fullname, n = n_init)
-			type = c4a_info(x$fullname)$type
-
-			c4a_CL_plot(pal_new, Lrange = (type == "cat"))
+			c4a_CL_plot(pal, Lrange = (type == type))
 		})
 
 
@@ -571,36 +587,43 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		## Contrast tab
 		#############################
 
-		con_values = shiny::reactiveValues(pal = c(pal_init, "#FFFFFF", "#000000"),
-										   col1 = pal_init[1],
-										   col2 = pal_init[2])
-
-		shiny::observeEvent(input$contrastPal, {
-			pal = input$contrastPal
+		update_reactive = function(pal_name, update_cbf, update_app, update_contrast) {
+			pal = pal_name
 			if (pal == "") {
-				con_values$pal = character(0)
-				con_values$col1 = character(0)
-				con_values$col2 = character(0)
+				tab_vals$pal = character(0)
+				tab_vals$palBW = character(0)
+				tab_vals$col1 = character(0)
+				tab_vals$col2 = character(0)
+				tab_vals$type = character(0)
 
 			} else {
 				x = c4a_info(pal)
 				n_init = x$ndef
 
-				cols = c(as.vector(c4a(x$fullname, n = n_init)), "#FFFFFF", "#000000")
+				cols = as.vector(c4a(x$fullname, n = n_init))
+				colsBW = c(cols, "#FFFFFF", "#000000")
 
-				con_values$pal = cols
+				tab_vals$pal = cols
+				tab_vals$palBW = colsBW
 
-				con_values$col1 = cols[1]
-				con_values$col2 = cols[2]
+				tab_vals$col1 = cols[1]
+				tab_vals$col2 = cols[2]
+				tab_vals$type = x$type
 			}
+			if (update_cbf) shiny::updateSelectizeInput(session, "cbfPal", selected = pal)
+			if (update_app) shiny::updateSelectizeInput(session, "appPal", selected = pal)
+			if (update_contrast) shiny::updateSelectizeInput(session, "contrastPal", selected = pal)
 
+		}
 
-		})
+		shiny::observeEvent(input$cbfPal, update_reactive(input$cbfPal, FALSE, TRUE, TRUE))
+		shiny::observeEvent(input$appPal, update_reactive(input$appPal, TRUE, FALSE, TRUE))
+		shiny::observeEvent(input$contrastPal, update_reactive(input$contrastPal, TRUE, TRUE, FALSE))
 
 
 		output$ex_plus = shiny::renderPlot({
-			col1 = con_values$col1
-			col2 = con_values$col2
+			col1 = tab_vals$col1
+			col2 = tab_vals$col2
 
 			if (!length(col1)) return(NULL)
 			borders = input$borders
@@ -610,8 +633,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		output$ex = shiny::renderPlot({
-			col1 = con_values$col1
-			col2 = con_values$col2
+			col1 = tab_vals$col1
+			col2 = tab_vals$col2
 
 			if (!length(col1)) return(NULL)
 
@@ -625,9 +648,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		output$table = shiny::renderPlot({
-			col1 = con_values$col1
-			col2 = con_values$col2
-			pal = con_values$pal
+			col1 = tab_vals$col1
+			col2 = tab_vals$col2
+			pal = tab_vals$palBW
 
 			if (!length(col1)) return(NULL)
 
@@ -637,7 +660,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		observeEvent(input$table_click, {
-			pal = con_values$pal
+			pal = tab_vals$palBW
 
 			if (!length(pal)) return(NULL)
 
@@ -656,8 +679,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			if (!is.na(x_id) && (x_id < 1 || x_id > n)) x_id = NA
 			if (!is.na(y_id) && (y_id < 1 || y_id > n)) y_id = NA
 
-			if (!is.na(x_id)) con_values$col2 = pal[x_id]
-			if (!is.na(y_id)) con_values$col1 = pal[y_id]
+			if (!is.na(x_id)) tab_vals$col2 = pal[x_id]
+			if (!is.na(y_id)) tab_vals$col1 = pal[y_id]
 		})
 
 

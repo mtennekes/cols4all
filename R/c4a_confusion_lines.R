@@ -88,13 +88,15 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 }
 
 c4a_plot_cvd = function(cols) {
+	grid::grid.newpage()
+
 	n = length(cols)
 
 	cols_lst = c(list(cols), lapply(c("deutan", "protan", "tritan"), FUN = function(cvd) {
 		do.call(eval(parse(text=paste0('colorspace::', cvd))), list(cols))
 	}))
 
-	grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = 5, ncol = n + 1)))
+	grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = 5, ncol = n + 1, widths = grid::unit(c(3, rep(1/n, n)), c("lines", rep("null", n))))))
 
 	for (i in 2:(n+1)) {
 		cellplot(1, i, {
@@ -112,41 +114,41 @@ c4a_plot_cvd = function(cols) {
 	grid::upViewport()
 }
 
-
-c4a_confusion_lines = function(cols = NULL) {
+c4a_confusion_lines = function(cols = NULL, cvd = "none") {
 	grid::grid.newpage()
 
-	grid::pushViewport(grid::viewport(layout = grid::grid.layout(2, 1, heights = list(grid::unit(1, "null"), grid::unit(6, "lines")))))
-
-	cellplot(1, 1, {
-		c4a_plot_cvd(cols)
-	})
-
-	cellplot(2, 1, {
-		grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc"), clip = TRUE))
-		grid::pushViewport(grid::viewport(layout = grid::grid.layout(2, 2)))
-
-		cellplot(1, 1, {
-			plot_rgb(cvd = "none", colors = cols, confusion_lines = FALSE)
-		})
-		cellplot(1, 2, {
-			plot_rgb(cvd = "deutan", colors = cols)
-			grid::grid.rect(x = 0.85, y = 0.95, width = 0.25, height = grid::unit(1, "lines"), gp = grid::gpar(col = NA, fill = "#FFFFFF"))
-			grid::grid.text("Deutan", x = 0.95, y = 0.95, just = c("right", "center"))
-		})
-		cellplot(2, 1, {
-			plot_rgb(cvd = "protan", colors = cols)
-			grid::grid.rect(x = 0.85, y = 0.95, width = 0.25, height = grid::unit(1, "lines"), gp = grid::gpar(col = NA, fill = "#FFFFFF"))
-			grid::grid.text("Protan", x = 0.95, y = 0.95, just = c("right", "center"))
-		})
-		cellplot(2, 2, {
-			plot_rgb(cvd = "tritan", colors = cols)
-			grid::grid.rect(x = 0.85, y = 0.95, width = 0.25, height = grid::unit(1, "lines"), gp = grid::gpar(col = NA, fill = "#FFFFFF"))
-			grid::grid.text("Tritan", x = 0.95, y = 0.95, just = c("right", "center"))
-		})
-	})
+	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc"), clip = TRUE))
+	plot_rgb(cvd = cvd, colors = cols, confusion_lines = cvd != "none")
 
 }
+#
+#
+# c4a_confusion_lines = function(cols = NULL) {
+# 	grid::grid.newpage()
+#
+# 	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc"), clip = TRUE))
+# 	grid::pushViewport(grid::viewport(layout = grid::grid.layout(2, 2)))
+#
+# 	cellplot(1, 1, {
+# 		plot_rgb(cvd = "none", colors = cols, confusion_lines = FALSE)
+# 	})
+# 	cellplot(1, 2, {
+# 		plot_rgb(cvd = "deutan", colors = cols)
+# 		grid::grid.rect(x = 0.85, y = 0.95, width = 0.25, height = grid::unit(1, "lines"), gp = grid::gpar(col = NA, fill = "#FFFFFF"))
+# 		grid::grid.text("Deutan", x = 0.95, y = 0.95, just = c("right", "center"))
+# 	})
+# 	cellplot(2, 1, {
+# 		plot_rgb(cvd = "protan", colors = cols)
+# 		grid::grid.rect(x = 0.85, y = 0.95, width = 0.25, height = grid::unit(1, "lines"), gp = grid::gpar(col = NA, fill = "#FFFFFF"))
+# 		grid::grid.text("Protan", x = 0.95, y = 0.95, just = c("right", "center"))
+# 	})
+# 	cellplot(2, 2, {
+# 		plot_rgb(cvd = "tritan", colors = cols)
+# 		grid::grid.rect(x = 0.85, y = 0.95, width = 0.25, height = grid::unit(1, "lines"), gp = grid::gpar(col = NA, fill = "#FFFFFF"))
+# 		grid::grid.text("Tritan", x = 0.95, y = 0.95, just = c("right", "center"))
+# 	})
+#
+# }
 
 
 
