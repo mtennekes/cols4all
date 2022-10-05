@@ -9,8 +9,24 @@ get_CR_matrix = function(p) {
 	m
 }
 
-get_dist_matrix = function(p, cvd = NULL) {
-	m = colorblindcheck::palette_dist(p, cvd = cvd)
+get_dist_matrix = function(p, cvd = c("none", "deutan", "protan", "tritan")) {
+	cvd = match.arg(cvd)
+	if (cvd == "none") {
+		colorblindcheck::palette_dist(p)
+	} else {
+		colorblindcheck::palette_dist(p, cvd = substr(cvd, 1, 3))
+	}
+}
+
+
+
+sim_cvd = function(pal, cvd = c("none", "deutan", "protan", "tritan")) {
+	cvd = match.arg(cvd)
+	switch(cvd,
+	       none = function(x) x,
+		   deutan = colorspace::deutan,
+		   protan = colorspace::protan,
+		   tritan = colorspace::tritan)(pal)
 }
 
 
@@ -18,23 +34,13 @@ c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd 
 	n = length(p)
 	type = match.arg(type)
 
-	if (cvd == "none") cvd = NULL
-
 	m = if (type == "CR") {
 		get_CR_matrix(p)
 	} else {
 		get_dist_matrix(p, cvd = cvd)
 	}
 
-	if (!is.null(cvd)) {
-		p = if (cvd == "deu") {
-			colorspace::deutan(p)
-		} else if (cvd == "pro") {
-			colorspace::protan(p)
-		} else if (cvd == "tri") {
-			colorspace::tritan(p)
-		}
-	}
+	p = sim_cvd(p, cvd)
 
 
 	#m[lower.tri(m)] = NA

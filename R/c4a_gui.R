@@ -199,16 +199,18 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 											  					The distances (according to CEI 2000) are shown for each combination of palette colors."))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Normal color vision**"))),
 							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px")),
-											shiny::column(width = 6, shiny::plotOutput("disttable1", height = "375px", width = "500px", click = "disttable_click"))),
+											shiny::column(width = 6, shiny::plotOutput("disttable1", height = "375px", width = "500px", click = "disttable1_click"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Deutan (red-green blind)**"))),
 							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB2", "Confusion lines1", width = "375px", height = "375px")),
-											shiny::column(width = 6, shiny::plotOutput("disttable2", height = "375px", width = "500px", click = "disttable_click"))),
+											shiny::column(width = 6, shiny::plotOutput("disttable2", height = "375px", width = "500px", click = "disttable2_click"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Protan (also red-green blind)**"))),
 							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB3", "Confusion lines1", width = "375px", height = "375px")),
-											shiny::column(width = 6, shiny::plotOutput("disttable3", height = "375px", width = "500px", click = "disttable_click"))),
+											shiny::column(width = 6, shiny::plotOutput("disttable3", height = "375px", width = "500px", click = "disttable3_click"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Tritan (blue-yellow)**"))),
 							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB4", "Confusion lines1", width = "375px", height = "375px")),
-											shiny::column(width = 6, shiny::plotOutput("disttable4", height = "375px", width = "500px", click = "disttable_click")))),
+											shiny::column(width = 6, shiny::plotOutput("disttable4", height = "375px", width = "500px", click = "disttable4_click"))),
+							shiny::fluidRow(shiny::column(width = 12,
+														  shiny::plotOutput("cbf_ex", height = "300px", width = "600px")))),
 			shiny::tabPanel("Chroma and Luminance",
 							value = "tab_app",
 					shiny::markdown("**Chroma** (~saturation) is the intensity of the colors. Low chromatic (\"pastel\") colors are recommended for *space-filling visualizations*, like maps and bar charts. High chromatic colors are useful for *small visuals*, such as dots, lines, and text labels. **Luminance** indicates the lightness of the colors.
@@ -280,7 +282,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		tab_vals = shiny::reactiveValues(pal = c(pal_init, "#FFFFFF", "#000000"),
 										 col1 = pal_init[1], col2 = pal_init[2],
-										 type = type12)
+										 type = type12,
+										 cvd = "none")
 
 
 
@@ -550,22 +553,79 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		output$disttable1 = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_CR_matrix(pal, type = "dist", cvd = "none")
+			col1 = tab_vals$col1
+			col2 = tab_vals$col2
+			id1 = which(col1 == pal)
+			id2 = which(col2 == pal)
+
+			cvd = tab_vals$cvd
+
+			if (cvd == "none") {
+				c4a_CR_matrix(pal, type = "dist", cvd = "none", id1 = id1, id2 = id2)
+			} else {
+				c4a_CR_matrix(pal, type = "dist", cvd = "none")
+			}
 		})
 
 		output$disttable2 = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_CR_matrix(pal, type = "dist", cvd = "deu")
+			col1 = tab_vals$col1
+			col2 = tab_vals$col2
+			id1 = which(col1 == pal)
+			id2 = which(col2 == pal)
+
+			cvd = tab_vals$cvd
+			if (cvd == "deutan") {
+				c4a_CR_matrix(pal, type = "dist", cvd = "deutan", id1 = id1, id2 = id2)
+			} else {
+				c4a_CR_matrix(pal, type = "dist", cvd = "deutan")
+			}
 		})
 
 		output$disttable3 = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_CR_matrix(pal, type = "dist", cvd = "pro")
+			col1 = tab_vals$col1
+			col2 = tab_vals$col2
+			id1 = which(col1 == pal)
+			id2 = which(col2 == pal)
+
+			cvd = tab_vals$cvd
+			if (cvd == "protan") {
+				c4a_CR_matrix(pal, type = "dist", cvd = "protan", id1 = id1, id2 = id2)
+			} else {
+				c4a_CR_matrix(pal, type = "dist", cvd = "protan")
+			}
 		})
 
 		output$disttable4 = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_CR_matrix(pal, type = "dist", cvd = "tri")
+			col1 = tab_vals$col1
+			col2 = tab_vals$col2
+			id1 = which(col1 == pal)
+			id2 = which(col2 == pal)
+
+			cvd = tab_vals$cvd
+			if (cvd == "tritan") {
+				c4a_CR_matrix(pal, type = "dist", cvd = "tritan", id1 = id1, id2 = id2)
+			} else {
+				c4a_CR_matrix(pal, type = "dist", cvd = "tritan")
+			}
+		})
+
+		output$cbf_ex = shiny::renderPlot({
+			cols = c(tab_vals$col1, tab_vals$col2)
+			cvd = tab_vals$cvd
+
+			if (!length(cols)) return(NULL)
+
+			hcl = get_hcl_matrix(cols)
+
+			cols_cvd = sim_cvd(cols, cvd)
+
+			borders = ifelse(mean(hcl[,3]>=50), "#000000", "#FFFFFF")
+
+			c4a_example_map(cols_cvd[1], cols_cvd[2], borders = borders, lwd = 1)
+
 		})
 
 		#############################
@@ -659,16 +719,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			c4a_CR_matrix(pal, id1 = id1, id2 = id2)
 		})
 
-		observeEvent(input$table_click, {
-			pal = tab_vals$palBW
-
-			if (!length(pal)) return(NULL)
-
-
+		get_click_id = function(pal, x, y) {
 			n = length(pal)
-
-			x = input$table_click$x
-			y = input$table_click$y
 
 			brks_x = seq(0.04, 0.76, length.out = n + 2)
 			brks_y = seq(0, 1, length.out = n + 2)
@@ -679,8 +731,63 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			if (!is.na(x_id) && (x_id < 1 || x_id > n)) x_id = NA
 			if (!is.na(y_id) && (y_id < 1 || y_id > n)) y_id = NA
 
-			if (!is.na(x_id)) tab_vals$col2 = pal[x_id]
-			if (!is.na(y_id)) tab_vals$col1 = pal[y_id]
+			list(x = x_id, y = y_id)
+		}
+
+		observeEvent(input$disttable1_click, {
+			pal = tab_vals$pal
+			if (!length(pal)) return(NULL)
+
+			ids = get_click_id(pal, input$disttable1_click$x, input$disttable1_click$y)
+
+			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
+			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
+			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$cvd = "none"
+		})
+
+		observeEvent(input$disttable2_click, {
+			pal = tab_vals$pal
+			if (!length(pal)) return(NULL)
+
+			ids = get_click_id(pal, input$disttable2_click$x, input$disttable2_click$y)
+
+			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
+			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
+			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$cvd = "deutan"
+
+		})
+
+		observeEvent(input$disttable3_click, {
+			pal = tab_vals$pal
+			if (!length(pal)) return(NULL)
+
+			ids = get_click_id(pal, input$disttable3_click$x, input$disttable3_click$y)
+
+			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
+			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
+			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$cvd = "protan"
+		})
+
+		observeEvent(input$disttable4_click, {
+			pal = tab_vals$pal
+			if (!length(pal)) return(NULL)
+
+			ids = get_click_id(pal, input$disttable4_click$x, input$disttable4_click$y)
+
+			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
+			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
+			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$cvd = "tritan"
+		})
+
+
+		observeEvent(input$table_click, {
+			pal = tab_vals$palBW
+			if (!length(pal)) return(NULL)
+
+			ids = get_click_id(pal, input$table_click$x, input$table_click$y)
+
+			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
+			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
 		})
 
 

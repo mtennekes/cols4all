@@ -32,15 +32,7 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 		m[nr:1,]
 	}
 
-	cols = if (cvd == "none") {
-		toM(rgb_data$cols, rgb_data$res[1])
-	} else if (cvd == "deutan") {
-		toM(colorspace::deutan(rgb_data$cols), rgb_data$res[1])
-	} else if (cvd == "protan")  {
-		toM(colorspace::protan(rgb_data$cols), rgb_data$res[1])
-	} else {
-		toM(colorspace::tritan(rgb_data$cols), rgb_data$res[1])
-	}
+	cols = toM(sim_cvd(rgb_data$cols, cvd), rgb_data$res[1])
 
 	grid::grid.rect()
 	grid::grid.raster(cols)

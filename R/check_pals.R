@@ -15,16 +15,16 @@ check_div_pal = function(p) {
 	n2 = 18
 	nh2 = n2 / 2
 
-	cvds = c("deu", "pro", "tri")
+	cvds = c("deutan", "protan", "tritan")
 
 	scores = t(sapply(cvds, function(cvd) {
 		inter_wing_dist = local({
-			dm = colorblindcheck::palette_dist(p2, cvd = cvd)
+			dm = get_dist_matrix(p2, cvd = cvd)
 			min(dm[1:nh2, (nh2+1):n2])
 		})
 
 		min_step_size = local({
-			dm = colorblindcheck::palette_dist(p, cvd = cvd)
+			dm = get_dist_matrix(p, cvd = cvd)
 			step_sizes = mapply(function(i,j) dm[i,j], 1:(n-1), 2:n)
 			min(step_sizes)
 		})
@@ -125,10 +125,10 @@ check_bivg_pal = function(p) {
 check_seq_pal = function(p) {
 	n = length(p)
 
-	cvds = c("deu", "pro", "tri")
+	cvds = c("deutan", "protan", "tritan")
 
 	scores = t(sapply(cvds, function(cvd) {
-		m = colorblindcheck::palette_dist(p, cvd = cvd)
+		m = get_dist_matrix(p, cvd = cvd)
 		step_sizes = mapply(function(i,j) m[i,j], 1:(n-1), 2:n)
 		min_step_size = min(step_sizes)
 		max_step_size = max(step_sizes)
@@ -169,10 +169,10 @@ check_seq_pal = function(p) {
 # Check categorical palette. It computes one quality indicator: the \code{min_dist}, the minimal distance between any two colors. This is computed for all three color vision deficiency types: the worst (i.e. lowest) score is returned.
 check_cat_pal = function(p) {
 	if (length(p) == 1) return(c(min_dist = Inf))
-	cvds = c("deu", "pro", "tri")
+	cvds = c("deutan", "protan", "tritan")
 
 	scores = sapply(cvds, function(cvd) {
-		colorblindcheck::palette_dist(p, cvd = cvd)
+		get_dist_matrix(p, cvd = cvd)
 	})
 
 	sc = c(min_dist = as.integer(round(min(scores, na.rm = TRUE))))

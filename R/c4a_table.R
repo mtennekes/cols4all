@@ -250,11 +250,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	e2[['Copy3']] = add_link("📖", zn$cit, function(x) x, tooltip='Copy reference')
 	e2[['Copy4']] = add_link("B", zn$bib, function(x) x, tooltip='Copy BibTex reference')
 
-	sim = switch(cvd.sim,
-				 none = function(x) x,
-				 deutan = colorspace::deutan,
-				 protan = colorspace::protan,
-				 tritan = colorspace::tritan)
+
 
 
 	for (cn in colNames) {
@@ -262,7 +258,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 		sel = (!is.na(cols) & cols != "")
 		cols[!sel] = ""
 		cols_cvd = cols
-		cols_cvd[sel] = sim(cols[sel])
+		cols_cvd[sel] = sim_cvd(cols[sel], cvd.sim)
 
 		textcol = if (text.col == "same") {
 			cols_cvd

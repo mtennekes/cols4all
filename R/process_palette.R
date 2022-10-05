@@ -75,8 +75,8 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 			colNA = "#FFFFFF"
 			for (cand in candidates) {
 				pal2 = c(pal, cand)
-				m = sapply(c("pro", "deu", "tri"), function(cvd) {
-					m = colorblindcheck::palette_dist(pal2, cvd = cvd)
+				m = sapply(c("protan", "deutan", "tritan"), function(cvd) {
+					m = get_dist_matrix(pal2, cvd = cvd)
 					m2 = m[1L:length(pal), (length(pal) + 1L):length(pal2)]
 					apply(m2, MARGIN = 2, min)
 				})
