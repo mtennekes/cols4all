@@ -5,3 +5,11 @@
 #table.crosshair {
 	cursor: pointer;
 }
+
+#contrastPal-label {
+	font-size: 18px;
+}
+
+#chart-label {
+	font-size: 18px;
+}

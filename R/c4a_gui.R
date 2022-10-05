@@ -189,7 +189,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 											  shiny::selectizeInput("cbfPal", "Palette", choices = z$fullname),
 											  shiny::plotOutput("cbfSim", "Palette simulation", width = "800px", height = "150px"))),
 							shiny::fluidRow(
-								shiny::column(width = 6,
+								shiny::column(width = 4,
 											  shiny::markdown("<br/><br/>
 											  #### **Confusion Lines**
 											  Color spaces are shown (specifically, CIE xyY space in the sRGB gamut) for normal color vision and three types of color vision deficiency. Note that the palette colors are shown in maximum luminance (given hue and chroma). The *confusion lines* are drawn for the three types of color vision deficiency. The hues of the colors along a confusion line are perceived equally.")),
@@ -198,19 +198,21 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 											  					#### **Distance Matrix**
 											  					The distances (according to CEI 2000) are shown for each combination of palette colors."))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Normal color vision**"))),
-							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px")),
-											shiny::column(width = 6, shiny::plotOutput("disttable1", height = "375px", width = "500px", click = "disttable1_click"))),
+							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px")),
+											shiny::column(width = 6, shiny::plotOutput("disttable1", height = "375px", width = "500px", click = "disttable1_click")),
+											shiny::column(width = 2, shiny::plotOutput("cbf_ex1", height = "375px", width = "150px"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Deutan (red-green blind)**"))),
-							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB2", "Confusion lines1", width = "375px", height = "375px")),
-											shiny::column(width = 6, shiny::plotOutput("disttable2", height = "375px", width = "500px", click = "disttable2_click"))),
+							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB2", "Confusion lines1", width = "375px", height = "375px")),
+											shiny::column(width = 6, shiny::plotOutput("disttable2", height = "375px", width = "500px", click = "disttable2_click")),
+											shiny::column(width = 2, shiny::plotOutput("cbf_ex2", height = "375px", width = "150px"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Protan (also red-green blind)**"))),
-							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB3", "Confusion lines1", width = "375px", height = "375px")),
-											shiny::column(width = 6, shiny::plotOutput("disttable3", height = "375px", width = "500px", click = "disttable3_click"))),
+							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB3", "Confusion lines1", width = "375px", height = "375px")),
+											shiny::column(width = 6, shiny::plotOutput("disttable3", height = "375px", width = "500px", click = "disttable3_click")),
+											shiny::column(width = 2, shiny::plotOutput("cbf_ex3", height = "375px", width = "150px"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Tritan (blue-yellow)**"))),
-							shiny::fluidRow(shiny::column(width = 6, shiny::plotOutput("cbfRGB4", "Confusion lines1", width = "375px", height = "375px")),
-											shiny::column(width = 6, shiny::plotOutput("disttable4", height = "375px", width = "500px", click = "disttable4_click"))),
-							shiny::fluidRow(shiny::column(width = 12,
-														  shiny::plotOutput("cbf_ex", height = "300px", width = "600px")))),
+							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB4", "Confusion lines1", width = "375px", height = "375px")),
+											shiny::column(width = 6, shiny::plotOutput("disttable4", height = "375px", width = "500px", click = "disttable4_click")),
+											shiny::column(width = 2, shiny::plotOutput("cbf_ex4", height = "375px", width = "150px")))),
 			shiny::tabPanel("Chroma and Luminance",
 							value = "tab_app",
 					shiny::markdown("**Chroma** (~saturation) is the intensity of the colors. Low chromatic (\"pastel\") colors are recommended for *space-filling visualizations*, like maps and bar charts. High chromatic colors are useful for *small visuals*, such as dots, lines, and text labels. **Luminance** indicates the lightness of the colors.
@@ -218,25 +220,20 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					We call a palette **harmonic** or well-balanced if the range of chroma value range is lower than a certain threshold and for categorical palettes, if the luminance value range is lower than a certain threshold as well. Using a harmonic palette is recommended for data visualization, because its colors will stand out about equally."),
 					shiny::selectizeInput("appPal", "Palette", choices = z$fullname),
 					shiny::plotOutput("CLplot", "CL plot", width = "600px", height = "600px")),
-			shiny::tabPanel("Contrast (borders needed?)",
+			shiny::tabPanel("Contrast",
 							value = "tab_cont",
 				 	shiny::fluidRow(
 				 		shiny::column(width = 12,
-				 					  shiny::markdown("**Contrast Ratio**"),
-				 					  shiny::markdown("Two colors shown next to each other are pereived *unstable* when they are equally light (luminant). Even though they may have totally different hues, it is hard to separate the colored shapes. The go-to solution is to use black or white shape borders."),
+				 					  shiny::markdown("#### **Equiluminance**"),
+				 					  shiny::markdown("The border between two colored shapes appears **wobbly** when the colors are equally luminant (˜light), no matter what hue (red, blue, etc.) they have.
+				 					  The **contrast ratio** is a measure for equiluminance, calculated as (L1 + 0.05) / (L2 + 0.05), where L1 and L2 are the luminances (normalized between 0 and 1) of the lighter and darker colors, respectively. Note that the minimum contrast ratio is 1 and the maximum 21.
+
+				 					  The go-to solution to prevent wobbly borders is by using black or white (depending of the lightness of the colors) **border lines**."),
 				 					  shiny::selectizeInput("contrastPal", "Palette", choices = z$fullname),
+				 					  shiny::markdown("#### **Contrast ratio matrix**"),
 				 					  shiny::plotOutput("table", height = "300px", width = "400px", click = "table_click"),
-				 					  shiny::markdown("Contrast Ratio = (L1 + 0.05) / (L2 + 0.05), where L1 and L2 are the luminances (normalized between 0 and 1) of the lighter and darker colors, respectively."))),
-# 			 		shiny::fluidRow(
-# 			 			shiny::column(width = 12,
-# 			 					shiny::div(style="display:inline-block",shiny::radioButtons("col1", "Color 1",
-#  				  				  					choiceNames = getNames(pal_init),
-#  				  				  					choiceValues = pal_init, selected = pal_init[1])))),
-# 			 		shiny::fluidRow(
-# 			 			shiny::column(width = 12,
-#  				  				  shiny::radioButtons("col2", "Color 2",
-#  				  				  					choiceNames = getNames(pal_init),
-#  				  				  					choiceValues = pal_init, selected = pal_init[2]))),
+				 					  shiny::markdown("The symbols indicate how equiluminant a pair of colors is. For any pair of colors with a symbol, especially squares, border lines are recommended to prevent wobbly (unstable) borders."))),
+
 				 	shiny::fluidRow(
 				 		shiny::column(width = 3,
 				 					  shiny::radioButtons("chart", "Example chart", c("Choropleth", "Barchart"), "Choropleth", inline = FALSE),
@@ -250,7 +247,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				 	),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 12,
-				 					  shiny::markdown("**Optical Illusion Art** "),
+				 					  shiny::markdown("#### **Optical Illusion Art** "),
 				 					  shiny::plotOutput("ex_plus", height = "703", width = "900"),
 				 					  shiny::markdown("_Plus Reversed_ by Richard Anuszkiewicz (1960)")
 				 		)
@@ -558,13 +555,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			cvd = tab_vals$cvd
-
-			if (cvd == "none") {
-				c4a_CR_matrix(pal, type = "dist", cvd = "none", id1 = id1, id2 = id2)
-			} else {
-				c4a_CR_matrix(pal, type = "dist", cvd = "none")
-			}
+			c4a_CR_matrix(pal, type = "dist", cvd = "none", id1 = id1, id2 = id2)
 		})
 
 		output$disttable2 = shiny::renderPlot({
@@ -574,12 +565,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			cvd = tab_vals$cvd
-			if (cvd == "deutan") {
-				c4a_CR_matrix(pal, type = "dist", cvd = "deutan", id1 = id1, id2 = id2)
-			} else {
-				c4a_CR_matrix(pal, type = "dist", cvd = "deutan")
-			}
+			c4a_CR_matrix(pal, type = "dist", cvd = "deutan", id1 = id1, id2 = id2)
 		})
 
 		output$disttable3 = shiny::renderPlot({
@@ -589,12 +575,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			cvd = tab_vals$cvd
-			if (cvd == "protan") {
-				c4a_CR_matrix(pal, type = "dist", cvd = "protan", id1 = id1, id2 = id2)
-			} else {
-				c4a_CR_matrix(pal, type = "dist", cvd = "protan")
-			}
+			c4a_CR_matrix(pal, type = "dist", cvd = "protan", id1 = id1, id2 = id2)
 		})
 
 		output$disttable4 = shiny::renderPlot({
@@ -604,18 +585,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			cvd = tab_vals$cvd
-			if (cvd == "tritan") {
-				c4a_CR_matrix(pal, type = "dist", cvd = "tritan", id1 = id1, id2 = id2)
-			} else {
-				c4a_CR_matrix(pal, type = "dist", cvd = "tritan")
-			}
+			c4a_CR_matrix(pal, type = "dist", cvd = "tritan", id1 = id1, id2 = id2)
 		})
 
-		output$cbf_ex = shiny::renderPlot({
-			cols = c(tab_vals$col1, tab_vals$col2)
-			cvd = tab_vals$cvd
-
+		cfb_map = function(cols, cvd) {
 			if (!length(cols)) return(NULL)
 
 			hcl = get_hcl_matrix(cols)
@@ -624,8 +597,21 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			borders = ifelse(mean(hcl[,3]>=50), "#000000", "#FFFFFF")
 
-			c4a_example_map(cols_cvd[1], cols_cvd[2], borders = borders, lwd = 1)
+			c4a_example_map(cols_cvd[1], cols_cvd[2], borders = borders, lwd = 1, crop = TRUE)
+		}
 
+
+		output$cbf_ex1 = shiny::renderPlot({
+			cfb_map(c(tab_vals$col1, tab_vals$col2), "none")
+		})
+		output$cbf_ex2 = shiny::renderPlot({
+			cfb_map(c(tab_vals$col1, tab_vals$col2), "deutan")
+		})
+		output$cbf_ex3 = shiny::renderPlot({
+			cfb_map(c(tab_vals$col1, tab_vals$col2), "protan")
+		})
+		output$cbf_ex4 = shiny::renderPlot({
+			cfb_map(c(tab_vals$col1, tab_vals$col2), "tritan")
 		})
 
 		#############################
@@ -742,7 +728,6 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
-			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$cvd = "none"
 		})
 
 		observeEvent(input$disttable2_click, {
@@ -753,7 +738,6 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
-			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$cvd = "deutan"
 
 		})
 
@@ -765,7 +749,6 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
-			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$cvd = "protan"
 		})
 
 		observeEvent(input$disttable4_click, {
@@ -776,7 +759,6 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
-			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$cvd = "tritan"
 		})
 
 

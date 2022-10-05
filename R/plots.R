@@ -54,8 +54,15 @@ c4a_example_bars = function(col1 = "blue", col2 = "red", borders = "black", lwd 
 }
 
 
-c4a_example_map = function(col1 = "blue", col2 = "red", borders = "black", lwd = 0) {
+c4a_example_map = function(col1 = "blue", col2 = "red", borders = "black", lwd = 0, crop = FALSE) {
 	shp$gp$fill = ifelse(shp$gp$fill == "white", col1, col2)
+
+	if (crop) {
+		xrange = bbx[3] - bbx[1]
+		bbx[1] = bbx[1] + xrange * 0.6
+		bbx[3] = bbx[3] - xrange * 0.2
+	}
+
 	if (lwd == 0) borders = NA
 	if (is.na(borders)) {
 		shp$gp$col = shp$gp$fill
