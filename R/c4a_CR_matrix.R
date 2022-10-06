@@ -145,11 +145,14 @@ symbol_size = function(cr, type) {
 	ifelse(cr <= brks[2], 1, ifelse(cr < brks[3], 2, ifelse(cr < brks[4], 3, 4)))
 }
 
+
 symbol_text = function(type) {
-	brks = .C4A$breaks[[type]]
-	brks_digits = .C4A$breaks_digits[type]
-	f = formatC(brks, digits = brks_digits, format = "f")
-	mapply(function(a, b) {
-		paste(a, "to", b)
-	}, head(f, -1), f[-1])
+	.C4A$interval_labels[[type]]
+
+	# brks = .C4A$breaks[[type]]
+	# brks_digits = .C4A$breaks_digits[type]
+	# f = formatC(brks, digits = brks_digits, format = "f")
+	# mapply(function(a, b) {
+	# 	paste(a, "to", b)
+	# }, head(f, -1), f[-1])
 }

@@ -115,6 +115,14 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		shiny::tags$head(shiny::includeCSS(system.file("www/light.css", package = "cols4all"))),
 		shiny::tags$head(shiny::includeCSS(system.file("www/dark.css", package = "cols4all"))),
 		shiny::tags$head(shiny::includeCSS(system.file("www/misc.css", package = "cols4all"))),
+		shiny::absolutePanel(
+			top = 10,
+			right = 10,
+			width = 100,
+			shiny::checkboxInput("dark", "Dark mode", value = FALSE),
+			shiny::checkboxInput("advanced", "Expert mode", value = FALSE)
+
+		),
 		shiny::tabsetPanel(
 			id="inTabset",
 			shiny::tabPanel("Catelogue",
@@ -122,59 +130,63 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					 shiny::fluidRow(
 					 	shiny::column(width = 3,
 					 				  shiny::img(src = "imgResources/cols4all_logo.png", height="200", align = "center", 'vertical-align' = "center")),
-					 	shiny::column(width = 3,
-					 				  shiny::radioButtons("type1", "Palette Type", choices = types1, selected = type1),
-					 				  shiny::conditionalPanel(
-					 				  	condition = "input.type1 == 'biv'",
-					 				  	shiny::selectizeInput("type2", "Subtype", choices = types2[["biv"]], selected = type2)),
-					 				  shiny::div(style = "margin-bottom: 5px;", shiny::strong("Palette series")),
-					 				  shiny::div(class = 'multicol',
-					 				  		   shiny::checkboxGroupInput("series", label = "", choices = allseries, selected = series, inline = FALSE)),
+					 	shiny::column(width = 9,
 					 				  shiny::fluidRow(
-					 				  	shiny::column(12, align="right",
-					 				  	shiny::actionButton("all", label = "All"),
-					 				  	shiny::actionButton("none", label = "None"),
-					 				  	shiny::actionButton("overview", label = "Overview")))),
-					 	shiny::column(width = 3,
-					 				  shiny::conditionalPanel(
-					 				  	condition = "input.type1 != 'biv'",
-					 				  	shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
-					 				  shiny::conditionalPanel(
-					 				  	condition = "input.type1 == 'biv'",
-					 				  	shiny::fluidRow(
-					 				  		shiny::column(6,
-					 				  					  shiny::sliderInput("nbiv", "Number of columns", min = 3, max = 7, value = 3, ticks = FALSE)),
-					 				  		shiny::column(6,
-					 				  					  shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 7, value = 3, ticks = FALSE))))),
-					 				  shiny::checkboxInput("na", "Color for missing values", value = FALSE),
-					 				  shiny::conditionalPanel(
-					 				  	condition = "input.type1 == 'seq' || input.type1 == 'div'",
-					 				  	shiny::fluidRow(
-					 				  		shiny::column(4,
-					 				  					  #shiny::br(),
-					 				  					  shiny::radioButtons("auto_range", label = "Range", choices = c("Automatic", "Manual"), selected = "Automatic")),
-					 				  		shiny::conditionalPanel(
-					 				  			condition = "input.auto_range == 'Manual'",
-					 				  			shiny::column(8,
-					 				  						  shiny::div(style = "font-size:0;margin-bottom:-10px", shiny::sliderInput("range", "",
-					 				  						  																		 min = 0, max = 1, value = c(0,1), step = .05)),
-					 				  						  shiny::uiOutput("range_info"))))),
-					 				  shiny::fluidRow(
-					 				  	shiny::column(6,
-					 				  		shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = FALSE)
-					 				  	),
-					 				  	shiny::column(6,
-					 				  		shiny::radioButtons("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto"), inline = FALSE)	))),
-					 	shiny::column(
-					 		width = 3,
-					 		shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
-					 		shiny::selectizeInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "name"),
-					 		shiny::checkboxInput("sortRev", "Reverse sorting", value = FALSE),
-					 		shiny::checkboxInput("advanced", "Show underlying scores", value = FALSE),
-					 		shiny::checkboxInput("dark", "Dark mode", value = FALSE)
-					 	),
-
-					 ),
+					 				  	shiny::column(width = 4,
+		 				  				  shiny::radioButtons("type1", "Palette Type", choices = types1, selected = type1),
+		 				  				  shiny::conditionalPanel(
+		 				  				  	condition = "input.type1 == 'biv'",
+		 				  				  	shiny::selectizeInput("type2", "Subtype", choices = types2[["biv"]], selected = type2))),
+					 				  	shiny::column(width = 4,
+					 				  				  shiny::conditionalPanel(
+					 				  				  	condition = "input.type1 != 'biv'",
+					 				  				  	shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
+					 				  				  shiny::conditionalPanel(
+					 				  				  	condition = "input.type1 == 'biv'",
+					 				  				  	shiny::fluidRow(
+					 				  				  		shiny::column(6,
+					 				  				  					  shiny::sliderInput("nbiv", "Number of columns", min = 3, max = 7, value = 3, ticks = FALSE)),
+					 				  				  		shiny::column(6,
+					 				  				  					  shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 7, value = 3, ticks = FALSE))))),
+					 				  				  shiny::checkboxInput("na", "Color for missing values", value = FALSE),
+					 				  				  shiny::conditionalPanel(
+					 				  				  	condition = "input.type1 == 'seq' || input.type1 == 'div'",
+					 				  				  	shiny::fluidRow(
+					 				  				  		shiny::column(4,
+					 				  				  					  #shiny::br(),
+					 				  				  					  shiny::radioButtons("auto_range", label = "Range", choices = c("Automatic", "Manual"), selected = "Automatic")),
+					 				  				  		shiny::conditionalPanel(
+					 				  				  			condition = "input.auto_range == 'Manual'",
+					 				  				  			shiny::column(8,
+					 				  				  						  shiny::div(style = "font-size:0;margin-bottom:-10px", shiny::sliderInput("range", "", min = 0, max = 1, value = c(0,1), step = .05)),
+					 				  		shiny::uiOutput("range_info"))
+					 				  		)
+					 				  ))),
+					 				  shiny::column(width = 4,
+					 				  			  shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none")
+					 				  )),
+					 	shiny::fluidRow(
+					 		shiny::column(width = 4,
+					 					  shiny::div(style = "margin-bottom: 5px;", shiny::strong("Palette series")),
+					 					  shiny::div(class = 'multicol',
+					 					  		   shiny::checkboxGroupInput("series", label = "", choices = allseries, selected = series, inline = FALSE)),
+					 					  shiny::fluidRow(
+					 					  	shiny::column(12, align="right",
+					 					  				  shiny::actionButton("all", label = "All"),
+					 					  				  shiny::actionButton("none", label = "None"),
+					 					  				  shiny::actionButton("overview", label = "Overview")))),
+					 		shiny::column(width = 4,
+					 					  shiny::fluidRow(
+					 					  	shiny::column(6,
+					 					  				  shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = FALSE)
+					 					  	),
+					 					  	shiny::column(6,
+					 					  				  shiny::radioButtons("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto"), inline = FALSE)	))
+					 		),
+					 		shiny::column(width = 4,
+					 					  shiny::selectizeInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "name"),
+					 					  shiny::checkboxInput("sortRev", "Reverse sorting", value = FALSE)
+					 		)))),
 
 					 shiny::fluidRow(
 					 	shiny::column(
@@ -215,11 +227,38 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex4", height = "375px", width = "150px")))),
 			shiny::tabPanel("Chroma and Luminance",
 							value = "tab_app",
-					shiny::markdown("**Chroma** (~saturation) is the intensity of the colors. Low chromatic (\"pastel\") colors are recommended for *space-filling visualizations*, like maps and bar charts. High chromatic colors are useful for *small visuals*, such as dots, lines, and text labels. **Luminance** indicates the lightness of the colors.
+							shiny::fluidRow(
+								shiny::column(width = 12,
+								shiny::markdown("#### **Chroma and Luminance**
 
-					We call a palette **harmonic** or well-balanced if the range of chroma value range is lower than a certain threshold and for categorical palettes, if the luminance value range is lower than a certain threshold as well. Using a harmonic palette is recommended for data visualization, because its colors will stand out about equally."),
-					shiny::selectizeInput("appPal", "Palette", choices = z$fullname),
-					shiny::plotOutput("CLplot", "CL plot", width = "600px", height = "600px")),
+								**Chroma** (~saturation) is the color intensity:
+								- Low chromatic (\"pastel\") colors are recommended for *space-filling visualizations*, like maps and bar charts.
+								- High chromatic colors are useful for *small objects*, such as dots, lines, and text labels.
+
+								**Luminance** is the amount of light emitted from an object (e.g. a computer screen). It is similar to **brightness**, although the latter is a relative measure.
+
+								#### **Harmony**
+
+								It is recommended to use a palette of colors that stand out about equally (for otherwise, one color will draw more attention than another, which may bias our perception and interpretation of the shown data).
+
+								Colors with a high chroma value stand out more than less chromatic colors. Furthermore, against a bright background, dark colors (low luminance) stand out more, while bright colors (high luminance) stand out more against a dark background.
+
+								We call a color palette **harmonic** or well-balanced if
+
+								- Categorical paletes: the range of chroma values is lower than a certain threshold, and the range of luminance values is lower than a certain threshold.
+								- Sequential, diverging, and bivariate palettes: the range of chroma values is lower than a certain threshold.
+
+								Note that harmonic color palettes are usually not color blind friendly. Furthermore, when the luminance values of the colors are about equal, the contrast of those colors is low (equiluminance), which requires the use of border lines.
+
+								#### **CL plot
+								In the chroma-luminance (CL) plot below, the chroma and luminance values for all palette colors are shown. The dashed vertical lines divide chroma into three classes: low, medium, and high. The white box indicates the harmony.
+								"),
+								shiny::selectizeInput("appPal", "Palette", choices = z$fullname),
+								shiny::plotOutput("CLplot", "CL plot", width = "600px", height = "600px"),
+								shiny::markdown("The dashed vertical lines divide chroma into three classes: low, medium, and high. (The threshold settings can be changed.)
+								")
+
+								))),
 			shiny::tabPanel("Contrast",
 							value = "tab_cont",
 				 	shiny::fluidRow(
