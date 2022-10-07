@@ -55,9 +55,9 @@ rgb_data = local({
 		as.data.frame()
 
 	df_e = e |>
-		left_join(df_m) |>
-		replace_na(list(hex = "#FFFFFF")) |>
-		mutate(hex = ifelse(hex == "#000000", "#FFFFFF", hex))
+		left_join(df_m) #|>
+		#replace_na(list(hex = "#FFFFFF")) |>
+		#mutate(hex = ifelse(hex == "#000000", "#FFFFFF", hex))
 
 	toM = function(x, nr) {
 		m = matrix(x, nrow = nr, byrow = TRUE)

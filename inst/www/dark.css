@@ -55,5 +55,6 @@ body.dark {
 }
 
 .dark .nav-tabs>li>a {
+	background: black !important;
     color: #bbbbbb !important;
 }

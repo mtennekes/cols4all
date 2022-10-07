@@ -1,5 +1,12 @@
-c4a_CL_plot = function(cols, Lrange = FALSE) {
+c4a_plot_CL = function(cols, Lrange = FALSE, dark = FALSE) {
 	grid::grid.newpage()
+
+	fc = ifelse(dark, "#FFFFFF", "#000000")
+	bc = ifelse(dark, "#000000", "#FFFFFF")
+	gc = ifelse(dark, "#222222", "#EEEEEE")
+	dc = ifelse(dark, "#BBBBBB", "#555555")
+
+	grid::grid.rect(gp=grid::gpar(fill = bc, col = NA))
 
 	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc"), clip = TRUE))
 	grid::pushViewport(grid::viewport(layout = grid::grid.layout(3, 3,
@@ -14,7 +21,7 @@ c4a_CL_plot = function(cols, Lrange = FALSE) {
 	lr = range(m[, 3])
 
 	cellplot(2,2, {
-		grid::grid.rect(gp = grid::gpar(fill = "#EEEEEE"))
+		grid::grid.rect(gp = grid::gpar(fill = gc, col = fc))
 
 
 
@@ -25,19 +32,19 @@ c4a_CL_plot = function(cols, Lrange = FALSE) {
 
 		grid::grid.rect(x = grid::unit(mean(cr2), "native"), y = grid::unit(mean(lr2), "native"),
 						width = grid::unit(diff(cr2), "native"), height = grid::unit(diff(lr2), "native"),
-						gp = grid::gpar(fill = "#FFFFFF", col = NA))
+						gp = grid::gpar(fill = bc, col = NA))
 
-		grid::grid.lines(x = grid::unit(rep(.C4A$Cpastel, 2), "native"), gp = grid::gpar(lty = 2))
-		grid::grid.lines(x = grid::unit(rep(.C4A$Cintense, 2), "native"), gp = grid::gpar(lty = 2))
+		grid::grid.lines(x = grid::unit(rep(.C4A$Cpastel, 2), "native"), gp = grid::gpar(col = fc, lty = 2))
+		grid::grid.lines(x = grid::unit(rep(.C4A$Cintense, 2), "native"), gp = grid::gpar(col = fc, lty = 2))
 
 
 		grid::grid.polyline(x = grid::unit(c(cr[1], cr[1], cr[1], cr[2], cr[2], cr[2]), "native"),
 							y = grid::unit(c(lr2[1] - marg * 0.5, lr2[1] - marg * 1.5, lr2[1] - marg, lr2[1] - marg, lr2[1] - marg * 0.5, lr2[1] - marg * 1.5), "native"),
-							id = c(1, 1, 2, 2, 3, 3), gp = grid::gpar(col = "#555555"))
+							id = c(1, 1, 2, 2, 3, 3), gp = grid::gpar(col = dc))
 
 		grid::grid.rect(x = grid::unit(mean(cr2), "native"), y = grid::unit(lr2[1] - marg * 2.75, "native"),
 						width = grid::unit(diff(cr2), "native"), height = grid::unit(marg * 2, "native"),
-						gp = grid::gpar(fill = "#EEEEEE", col = NA))
+						gp = grid::gpar(fill = gc, col = NA))
 
 		ctext = if (diff(cr) <= .C4A$CrangeHarm) {
 			"Low chroma range"
@@ -46,13 +53,13 @@ c4a_CL_plot = function(cols, Lrange = FALSE) {
 		} else {
 			"Medium chroma range"
 		}
-		grid::grid.text(ctext, x = grid::unit(mean(cr2), "native"), y = grid::unit(lr2[1] - marg * 2.5, "native"), gp = grid::gpar(cex = 0.8))
+		grid::grid.text(ctext, x = grid::unit(mean(cr2), "native"), y = grid::unit(lr2[1] - marg * 2.5, "native"), gp = grid::gpar(col = fc, cex = 0.8))
 
 
 		if (Lrange) {
 			grid::grid.polyline(x = grid::unit(cr2[2] + c(marg * 0.5, marg * 1.5, marg, marg, marg * 0.5, marg * 1.5)  * 1.8, "native"),
 								y = grid::unit(c(lr[1], lr[1], lr[1], lr[2], lr[2], lr[2]), "native"),
-								id = c(1, 1, 2, 2, 3, 3), gp = grid::gpar(col = "#555555"))
+								id = c(1, 1, 2, 2, 3, 3), gp = grid::gpar(col = dc))
 
 			ltext = if (diff(lr) <= .C4A$LrangeHarm) {
 				"Low luminance range"
@@ -61,7 +68,7 @@ c4a_CL_plot = function(cols, Lrange = FALSE) {
 			} else {
 				"Medium luminance range"
 			}
-			grid::grid.text(ltext, x = grid::unit(cr2[2] + marg * 2.5 * 1.8, "native"), y = grid::unit(mean(lr2), "native"), rot = 90, gp = grid::gpar(cex = 0.8))
+			grid::grid.text(ltext, x = grid::unit(cr2[2] + marg * 2.5 * 1.8, "native"), y = grid::unit(mean(lr2), "native"), rot = 90, gp = grid::gpar(col = fc, cex = 0.8))
 		}
 
 
@@ -76,17 +83,17 @@ c4a_CL_plot = function(cols, Lrange = FALSE) {
 	cellplot(2, 1, {
 		s = seq(10, 90, by = 10)
 		k = length(s)
-		grid::grid.polyline(rep(c(0.85, 1), k), grid::unit(rep(s, each  = 2), "native"), id = rep(1:k, each = 2))
-		grid::grid.text(s, rep(0.75, k), grid::unit(s, "native"), just = "right", gp = grid::gpar(cex = 0.8))
-		grid::grid.text("Luminance", rot = 90, x = 0.2)
+		grid::grid.polyline(rep(c(0.85, 1), k), grid::unit(rep(s, each  = 2), "native"), id = rep(1:k, each = 2), gp = grid::gpar(col = fc))
+		grid::grid.text(s, rep(0.75, k), grid::unit(s, "native"), just = "right", gp = grid::gpar(col = fc, cex = 0.8))
+		grid::grid.text("Luminance", rot = 90, x = 0.2, gp = grid::gpar(col = fc))
 	}, yscale = c(0,100))
 
 	cellplot(3, 2, {
 		s = seq(20, 160, by = 20)
 		k = length(s)
-		grid::grid.polyline(grid::unit(rep(s, each  = 2), "native"), rep(c(0.85, 1), k), id = rep(1:k, each = 2))
-		grid::grid.text(s, grid::unit(s, "native"), rep(0.65, k), just = "center", gp = grid::gpar(cex = 0.8))
-		grid::grid.text("Chroma", y = .2)
+		grid::grid.polyline(grid::unit(rep(s, each  = 2), "native"), rep(c(0.85, 1), k), id = rep(1:k, each = 2), gp = grid::gpar(col = fc))
+		grid::grid.text(s, grid::unit(s, "native"), rep(0.65, k), just = "center", gp = grid::gpar(col = fc, cex = 0.8))
+		grid::grid.text("Chroma", y = .2, gp = grid::gpar(col = fc))
 	}, xscale = c(0,180))
 
 

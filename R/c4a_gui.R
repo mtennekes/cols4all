@@ -225,8 +225,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB4", "Confusion lines1", width = "375px", height = "375px")),
 											shiny::column(width = 6, shiny::plotOutput("disttable4", height = "375px", width = "500px", click = "disttable4_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex4", height = "375px", width = "150px")))),
-			shiny::tabPanel("Chroma and Luminance",
-							value = "tab_app",
+			shiny::tabPanel("Harmony",
+							value = "tab_cl",
 							shiny::fluidRow(
 								shiny::column(width = 12,
 								shiny::markdown("#### **Chroma and Luminance**
@@ -250,10 +250,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 								Note that harmonic color palettes are usually not color blind friendly. Furthermore, when the luminance values of the colors are about equal, the contrast of those colors is low (equiluminance), which requires the use of border lines.
 
-								#### **CL plot
+								#### **CL plot**
 								In the chroma-luminance (CL) plot below, the chroma and luminance values for all palette colors are shown. The dashed vertical lines divide chroma into three classes: low, medium, and high. The white box indicates the harmony.
 								"),
-								shiny::selectizeInput("appPal", "Palette", choices = z$fullname),
+								shiny::selectizeInput("CLPal", "Palette", choices = z$fullname),
 								shiny::plotOutput("CLplot", "CL plot", width = "600px", height = "600px"),
 								shiny::markdown("The dashed vertical lines divide chroma into three classes: low, medium, and high. (The threshold settings can be changed.)
 								")
@@ -292,6 +292,21 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				 		)
 					)
 
+			),
+			shiny::tabPanel("Application",
+							value = "tab_app",
+				shiny::fluidRow(
+					shiny::column(width = 6,
+								  shiny::selectizeInput("APPPal", "Palette", choices = z$fullname),
+
+								  shiny::sliderInput("APPlwd", "Line Width", min = 0, max = 3, step = 1, value = 1),
+								  shiny::selectInput("APPborders", "Borders", choices = c("black", "white"), selected = "black")),
+					shiny::column(width = 6,
+								  shiny::radioButtons("APPdatatype", "Data distribution", choices = c("Random", "Gradient"), selected = "Random"))),
+				shiny::fluidRow(
+					shiny::column(width = 12,
+						shiny::plotOutput("APPmap", "Map", width = 800, height = 400)
+					))
 			)
 
 		)
@@ -513,19 +528,23 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			if (length(pals)) {
 				shiny::updateSelectizeInput(session, "cbfPal", choices = pals, selected = pals[1])
-				shiny::updateSelectizeInput(session, "appPal", choices = pals, selected = pals[1])
+				shiny::updateSelectizeInput(session, "CLPal", choices = pals, selected = pals[1])
 				shiny::updateSelectizeInput(session, "contrastPal", choices = pals, selected = pals[1])
+				shiny::updateSelectizeInput(session, "APPPal", choices = pals, selected = pals[1])
 				shinyjs::enable("cbfPal")
-				shinyjs::enable("appPal")
+				shinyjs::enable("CLPal")
 				shinyjs::enable("contrastPal")
+				shinyjs::enable("APPPal")
 			} else {
 				shiny::updateSelectizeInput(session, "cbfPal", choices = pals)
-				shiny::updateSelectizeInput(session, "appPal", choices = pals)
+				shiny::updateSelectizeInput(session, "CLPal", choices = pals)
 				shiny::updateSelectizeInput(session, "contrastPal", choices = pals)
+				shiny::updateSelectizeInput(session, "APPPal", choices = pals)
 
 				shinyjs::disable("cbfPal")
-				shinyjs::disable("appPal")
+				shinyjs::disable("CLPal")
 				shinyjs::disable("contrastPal")
+				shinyjs::disable("APPPal")
 			}
 		})
 
@@ -564,27 +583,27 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		output$cbfSim = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_plot_cvd(pal)
+			c4a_plot_cvd(pal, dark = input$dark)
 		})
 
 		output$cbfRGB1 = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_confusion_lines(pal, cvd = "none")
+			c4a_plot_confusion_lines(pal, cvd = "none", dark = input$dark)
 		})
 
 		output$cbfRGB2 = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_confusion_lines(pal, cvd = "deutan")
+			c4a_plot_confusion_lines(pal, cvd = "deutan", dark = input$dark)
 		})
 
 		output$cbfRGB3 = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_confusion_lines(pal, cvd = "protan")
+			c4a_plot_confusion_lines(pal, cvd = "protan", dark = input$dark)
 		})
 
 		output$cbfRGB4 = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_confusion_lines(pal, cvd = "tritan")
+			c4a_plot_confusion_lines(pal, cvd = "tritan", dark = input$dark)
 		})
 
 		output$disttable1 = shiny::renderPlot({
@@ -594,7 +613,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_CR_matrix(pal, type = "dist", cvd = "none", id1 = id1, id2 = id2)
+			c4a_plot_dist_matrix(pal, cvd = "none", id1 = id1, id2 = id2, dark = input$dark)
 		})
 
 		output$disttable2 = shiny::renderPlot({
@@ -604,7 +623,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_CR_matrix(pal, type = "dist", cvd = "deutan", id1 = id1, id2 = id2)
+			c4a_plot_dist_matrix(pal, cvd = "deutan", id1 = id1, id2 = id2, dark = input$dark)
 		})
 
 		output$disttable3 = shiny::renderPlot({
@@ -614,7 +633,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_CR_matrix(pal, type = "dist", cvd = "protan", id1 = id1, id2 = id2)
+			c4a_plot_dist_matrix(pal, cvd = "protan", id1 = id1, id2 = id2, dark = input$dark)
 		})
 
 		output$disttable4 = shiny::renderPlot({
@@ -624,7 +643,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_CR_matrix(pal, type = "dist", cvd = "tritan", id1 = id1, id2 = id2)
+			c4a_plot_dist_matrix(pal, cvd = "tritan", id1 = id1, id2 = id2, dark = input$dark)
 		})
 
 		cfb_map = function(cols, cvd) {
@@ -636,7 +655,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			borders = ifelse(mean(hcl[,3]>=50), "#000000", "#FFFFFF")
 
-			c4a_example_map(cols_cvd[1], cols_cvd[2], borders = borders, lwd = 1, crop = TRUE)
+			c4a_plot_map(col1 = cols_cvd[1], col2 = cols_cvd[2], borders = borders, lwd = 1, crop = TRUE, dark = input$dark)
 		}
 
 
@@ -663,16 +682,15 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			type = tab_vals$type
 
-			c4a_CL_plot(pal, Lrange = (type == type))
+			c4a_plot_CL(pal, Lrange = (type == type), dark = input$dark)
 		})
-
 
 
 		#############################
 		## Contrast tab
 		#############################
 
-		update_reactive = function(pal_name, update_cbf, update_app, update_contrast) {
+		update_reactive = function(pal_name, update_cbf, update_CL, update_contrast, update_app) {
 			pal = pal_name
 			if (pal == "") {
 				tab_vals$pal = character(0)
@@ -696,14 +714,17 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				tab_vals$type = x$type
 			}
 			if (update_cbf) shiny::updateSelectizeInput(session, "cbfPal", selected = pal)
-			if (update_app) shiny::updateSelectizeInput(session, "appPal", selected = pal)
+			if (update_CL) shiny::updateSelectizeInput(session, "CLPal", selected = pal)
 			if (update_contrast) shiny::updateSelectizeInput(session, "contrastPal", selected = pal)
+			if (update_app) shiny::updateSelectizeInput(session, "APPPal", selected = pal)
 
 		}
 
-		shiny::observeEvent(input$cbfPal, update_reactive(input$cbfPal, FALSE, TRUE, TRUE))
-		shiny::observeEvent(input$appPal, update_reactive(input$appPal, TRUE, FALSE, TRUE))
-		shiny::observeEvent(input$contrastPal, update_reactive(input$contrastPal, TRUE, TRUE, FALSE))
+		shiny::observeEvent(input$cbfPal, update_reactive(input$cbfPal, FALSE, TRUE, TRUE, TRUE))
+		shiny::observeEvent(input$CLPal, update_reactive(input$CLPal, TRUE, FALSE, TRUE, TRUE))
+		shiny::observeEvent(input$contrastPal, update_reactive(input$contrastPal, TRUE, TRUE, FALSE, TRUE))
+		shiny::observeEvent(input$contrastPal, update_reactive(input$contrastPal, TRUE, TRUE, FALSE, TRUE))
+		shiny::observeEvent(input$APPPal, update_reactive(input$APPPal, TRUE, TRUE, TRUE, FALSE))
 
 
 		output$ex_plus = shiny::renderPlot({
@@ -714,7 +735,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			borders = input$borders
 			lwd = input$lwd
 
-			c4a_example_Plus_Reversed(col1, col2, orientation = "landscape", borders = borders, lwd = lwd)
+			c4a_plot_Plus_Reversed(col1, col2, orientation = "landscape", borders = borders, lwd = lwd)
 		})
 
 		output$ex = shiny::renderPlot({
@@ -726,9 +747,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			borders = input$borders
 			lwd = input$lwd
 			if (input$chart == "Barchart") {
-				c4a_example_bars(col1, col2, borders = borders, lwd = lwd)
+				c4a_plot_bars(col1 = col1, col2 = col2, borders = borders, lwd = lwd, dark = input$dark)
 			} else {
-				c4a_example_map(col1, col2, borders = borders, lwd = lwd)
+				c4a_plot_map(col1 = col1, col2 = col2, borders = borders, lwd = lwd, dark = input$dark)
 			}
 		})
 
@@ -741,7 +762,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
-			c4a_CR_matrix(pal, id1 = id1, id2 = id2)
+			c4a_plot_CR_matrix(pal, id1 = id1, id2 = id2, dark = input$dark)
 		})
 
 		get_click_id = function(pal, x, y) {
@@ -810,6 +831,17 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
 		})
+
+		##############################
+		## Application tab
+		##############################
+
+		output$APPmap = shiny::renderPlot({
+			pal = tab_vals$pal
+
+			c4a_plot_map(pal, borders = input$APPborders, lwd = input$APPlwd, dark = input$dark)
+		})
+
 
 
 	}

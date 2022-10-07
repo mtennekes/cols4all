@@ -29,8 +29,15 @@ sim_cvd = function(pal, cvd = c("none", "deutan", "protan", "tritan")) {
 		   tritan = colorspace::tritan)(pal)
 }
 
+c4a_plot_dist_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE) {
+	plot_matrix(p = p, id1 = id1, id2 = id2, type = "dist", cvd = cvd, dark = dark)
+}
 
-c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = "none") {
+c4a_plot_CR_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE) {
+	plot_matrix(p = p, id1 = id1, id2 = id2, type = "CR", cvd = cvd, dark = dark)
+}
+
+plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = "none", dark = FALSE) {
 	n = length(p)
 	type = match.arg(type)
 
@@ -55,6 +62,13 @@ c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd 
 	}
 
 	grid::grid.newpage()
+
+	fc = ifelse(dark, "#FFFFFF", "#000000")
+	bc = ifelse(dark, "#000000", "#FFFFFF")
+
+	grid::grid.rect(gp=grid::gpar(fill = bc, col = NA))
+
+
 	#grid::grid.rect(gp=grid::gpar(fill="grey80"))
 	din = par("din")
 	cr = din[1] / din[2]
@@ -74,7 +88,7 @@ c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd 
 		grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = n + 1, ncol = n + 1)))
 
 		cellplot(2:(n+1), 2:(n+1), {
-			grid::grid.lines(x = c(0,1), y = c(1, 0), gp = grid::gpar(lwd = 2))
+			grid::grid.lines(x = c(0,1), y = c(1, 0), gp = grid::gpar(lwd = 2, col = fc))
 		})
 
 
@@ -100,9 +114,9 @@ c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd 
 				s = symbol_size(v, type)
 
 				cellplot(i+1,j+1, {
-					grid::grid.points(x = 0.5, y = 0.5, pch = c(15, 17, 16, 16)[s], size = grid::unit(c(1, 0.6, 0.3, 0)[s], units = "lines"))
+					grid::grid.points(x = 0.5, y = 0.5, pch = c(15, 17, 16, 16)[s], size = grid::unit(c(1, 0.6, 0.3, 0)[s], units = "lines"), gp = grid::gpar(col = fc))
 					if (!is.null(id1) && !is.null(id2) && id1 == i && id2 == j) {
-						grid::grid.circle(r = 0.4, gp = grid::gpar(fill = NA, col = "#000000", lwd = 1.5, lty = "dotted"))
+						grid::grid.circle(r = 0.4, gp = grid::gpar(fill = NA, col = fc, lwd = 1.5, lty = "dotted"))
 					}
 				})
 
@@ -125,10 +139,10 @@ c4a_CR_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd 
 		# })
 		for (i in 1:3) {
 			cellplot(2 + i, 2, {
-				grid::grid.points(x = 0.5, y = 0.5, pch = pchs[i], size = grid::unit(sizes[i], units = "lines"))
+				grid::grid.points(x = 0.5, y = 0.5, pch = pchs[i], size = grid::unit(sizes[i], units = "lines"), gp = grid::gpar(col = fc))
 			})
 			cellplot(2 + i, 4, {
-				grid::grid.text(texts[i], x = 0, just = "left")
+				grid::grid.text(texts[i], x = 0, just = "left", gp = grid::gpar(col = fc))
 			})
 		}
 		grid::upViewport()
