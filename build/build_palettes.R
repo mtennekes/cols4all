@@ -686,5 +686,5 @@ local({
 .zbib = bibtex::read.bib("build/references.bib")
 
 save(.z, .s, .zbib, file="R/sysdata.rda", compress="xz")
-
+source("build/build_data.R")
 

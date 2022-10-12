@@ -12,6 +12,8 @@ bbx = tmaptools::bb(st_bbox(nc), -1.1)
 cols = c("white", "black")
 ind = as.integer(substr(nc$NAME, 1, 1) %in% LETTERS[1:13]) + 1
 
+shp_c = st_coordinates(st_centroid(nc))
+
 shp = sf::st_as_grob(nc$geometry, gp = gpar(fill = cols[ind], col = NA))
 
 
@@ -76,7 +78,7 @@ rgb_data = local({
 
 
 
-save(.z, .s, .zbib, shp, bbx, rgb_data, file = "R/sysdata.rda", compress = "xz")
+save(.z, .s, .zbib, shp, shp_c, bbx, rgb_data, file = "R/sysdata.rda", compress = "xz")
 
 
 

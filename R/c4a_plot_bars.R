@@ -1,4 +1,5 @@
 c4a_plot_bars = function(col1 = "blue", col2 = "red", borders = "black", lwd = 0, dark = FALSE) {
+
 	set.seed(1234)
 	if (lwd == 0) borders = NA
 	x = rnorm(5, 40, 10)

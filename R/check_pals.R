@@ -36,8 +36,9 @@ check_div_pal = function(p) {
 
 	sc = as(c(inter_wing_dist = inter_wing_dist, min_step = min_step), "integer")
 	prop = hcl_prop(p)
+	rgb = rgb_prop(p)
 
-	c(sc, prop)
+	c(sc, prop, rgb)
 }
 
 
@@ -61,8 +62,9 @@ check_bivs_pal = function(p) {
 	p2 = c(as.vector(p[lower.tri(p)]), p[1,1], as.vector(p[upper.tri(p)]))
 
 	prop = hcl_prop(p2)
+	rgb = rgb_prop(p)
 
-	c(sc, prop)
+	c(sc, prop, rgb)
 }
 
 check_bivc_pal = function(p) {
@@ -77,8 +79,9 @@ check_bivc_pal = function(p) {
 	p2 = as.vector(p)
 
 	prop = hcl_prop(p2)
+	rgb = rgb_prop(p)
 
-	c(sc, prop)
+	c(sc, prop, rgb)
 }
 
 check_bivd_pal = function(p) {
@@ -99,8 +102,9 @@ check_bivd_pal = function(p) {
 
 	p2 = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
 	prop = hcl_prop(p2)
+	rgb = rgb_prop(p)
 
-	c(sc, prop)
+	c(sc, prop, rgb)
 }
 
 check_bivg_pal = function(p) {
@@ -108,8 +112,9 @@ check_bivg_pal = function(p) {
 
 	p2 = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
 	prop = hcl_prop(p2)
+	rgb = rgb_prop(p)
 
-	c(sc, prop)
+	c(sc, prop, rgb)
 
 }
 
@@ -140,8 +145,9 @@ check_seq_pal = function(p) {
 
 	sc = as(c(min_step = min(scores[,1]), max_step = min(scores[,2])), "integer")
 	prop = hcl_prop(p)
+	rgb = rgb_prop(p)
 
-	c(sc, prop)
+	c(sc, prop, rgb)
 }
 
 # Check cyclic palette
@@ -177,8 +183,9 @@ check_cat_pal = function(p) {
 
 	sc = c(min_dist = as.integer(round(min(scores, na.rm = TRUE))))
 	prop = hcl_prop(p)
+	rgb = rgb_prop(p)
 
-	c(sc, prop)
+	c(sc, prop, rgb)
 }
 
 
@@ -227,23 +234,29 @@ get_hue_width = function(hs) {
 
 
 # HCL characteristics
-analyse_hcl = function(p, type) {
+# analyse_hcl = function(p, type) {
+#
+#
+# 	if (type == "bivs") {
+# 		p = c(as.vector(p[lower.tri(p)]), p[1,1], as.vector(p[upper.tri(p)]))
+# 	} else if (type == "bivd") {
+# 		p = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
+# 	} else if (type == "bivg") {
+# 		p = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
+# 	} else if (type == "bivc") {
+# 		p = as.vector(p)
+# 	}
+#
+#
+# 	c(rgb_prop(p), hcl_prop(p))
+# }
 
 
-	if (type == "bivs") {
-		p = c(as.vector(p[lower.tri(p)]), p[1,1], as.vector(p[upper.tri(p)]))
-	} else if (type == "bivd") {
-		p = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
-	} else if (type == "bivg") {
-		p = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
-	} else if (type == "bivc") {
-		p = as.vector(p)
-	}
+rgb_prop = function(p) {
+	m = t(col2rgb(p))
 
-
-	hcl_prop(p)
+	if (any(m[,1] == 0 & m[,2] == 0 & m[,3] >= 5)) c(Blues = 1) else c(Blues = 0)
 }
-
 
 hcl_prop = function(p) {
 	m = get_hcl_matrix(p)

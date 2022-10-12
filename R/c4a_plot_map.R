@@ -1,9 +1,21 @@
-c4a_plot_map = function(cols = NULL, col1 = "blue", col2 = "red", borders = "black", lwd = 0, crop = FALSE, dark = FALSE) {
+c4a_plot_map = function(cols = NULL, col1 = "blue", col2 = "red", borders = "black", lwd = 0, crop = FALSE, dark = FALSE, dist = c("random", "gradient")) {
+	dist = match.arg(dist)
 
-	if (!is.null(cols)) {
-		shp$gp$fill = rep(cols, length.out = length(shp$gp$fill))
+
+
+
+	if (is.null(cols)) {
+		cols = c(col1, col2)
+	}
+
+	n = length(cols)
+	k = length(shp$gp$fill)
+
+
+	shp$gp$fill = if (dist == "random") {
+		rep(cols, length.out = k)
 	} else {
-		shp$gp$fill = ifelse(shp$gp$fill == "white", col1, col2)
+		cols[round(seq(1 - 0.5/n, n + 0.5/n, length.out = k))]#[order(shp_c[, 1])]
 	}
 
 

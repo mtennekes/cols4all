@@ -63,6 +63,9 @@ show_attach_scores = function(z) {
 	z2$contrast = z2$CRmin < 120
 	z2$contrastWT = z2$CRwt < 120
 	z2$contrastBK = z2$CRbk < 120
+
+
+
 	z2
 }
 

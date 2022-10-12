@@ -120,6 +120,7 @@ NULL
 						  bivc = c("min_dist"),
 						  bivd = c("inter_wing_dist", "min_step"),
 						  bivg = c("inter_wing_dist", "min_step"))
+		rgb = c("Blues")
 		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
 
 		sortRev = c("cbfriendly", "harmonyRank", "Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")

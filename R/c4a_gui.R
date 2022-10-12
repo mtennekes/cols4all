@@ -293,27 +293,37 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					)
 
 			),
+			shiny::tabPanel("Floating",
+							value = "tab_floating",
+				shiny::fluidRow(
+					shiny::column(width = 12,
+								  shiny::plotOutput("floating_c4a", height = "300", width = "600"),
+					shiny::plotOutput("floating_text", height = "300", width = "600"))
+			)),
+
+
 			shiny::tabPanel("Application",
 							value = "tab_app",
 				shiny::fluidRow(
-					shiny::column(width = 6,
-								  shiny::selectizeInput("APPPal", "Palette", choices = z$fullname),
-
-								  shiny::sliderInput("APPlwd", "Line Width", min = 0, max = 3, step = 1, value = 1),
-								  shiny::selectInput("APPborders", "Borders", choices = c("black", "white"), selected = "black")),
-					shiny::column(width = 6,
-								  shiny::radioButtons("APPdatatype", "Data distribution", choices = c("Random", "Gradient"), selected = "Random"))),
-				shiny::fluidRow(
 					shiny::column(width = 12,
-						shiny::plotOutput("APPmap", "Map", width = 800, height = 400)
-					))
-			)
-
+								  shiny::selectizeInput("APPPal", "Palette", choices = z$fullname))),
+				shiny::fluidRow(
+				  	shiny::column(width = 4, shiny::sliderInput("MAPlwd", "Line Width", min = 0, max = 3, step = 1, value = 1)),
+				  	shiny::column(width = 4, shiny::selectInput("MAPborders", "Borders", choices = c("black", "white"), selected = "black")),
+					shiny::column(width = 4, shiny::radioButtons("MAPdist", "Color distribution", choices = c(Random = "random", Gradient = "gradient"), selected = "random"))),
+				shiny::fluidRow(
+					shiny::column(width = 12, shiny::plotOutput("MAPplot", "Map", width = 800, height = 400))),
+				shiny::fluidRow(
+					shiny::column(width = 4, shiny::sliderInput("DOTlwd", "Line Width", min = 0, max = 3, step = 1, value = 1)),
+					shiny::column(width = 4, shiny::selectInput("DOTborders", "Borders", choices = c("black", "white"), selected = "black")),
+					shiny::column(width = 4, shiny::radioButtons("DOTdist", "Color distribution", choices = c(Random = "random", Concentric = "concentric"), selected = "random"))),
+				shiny::fluidRow(
+					shiny::column(width = 12, shiny::plotOutput("DOTplot", "Scatter plot", width = 800, height = 400))),
+				shiny::fluidRow(
+					shiny::column(width = 12, shiny::plotOutput("TXTplot", "Text", width = 800, height = 400)))
 		)
+	))
 
-
-
-	)
 	server = function(input, output, session) {
 		#############################
 		## Catelogue tab
@@ -833,16 +843,35 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		##############################
+		## Floating tab
+		##############################
+
+		output$floating_c4a = shiny::renderPlot({
+			c4a_plot_floating_text(size = 8)
+		})
+		output$floating_text = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_plot_floating_text(words = LETTERS[1:length(pal)], cols = pal, size = 5)
+		})
+
+		##############################
 		## Application tab
 		##############################
 
-		output$APPmap = shiny::renderPlot({
+		output$MAPplot = shiny::renderPlot({
 			pal = tab_vals$pal
-
-			c4a_plot_map(pal, borders = input$APPborders, lwd = input$APPlwd, dark = input$dark)
+			c4a_plot_map(pal, borders = input$MAPborders, lwd = input$MAPlwd, dark = input$dark, dist = input$MAPdist)
 		})
 
+		output$DOTplot = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_plot_scatter(pal,  borders = input$DOTborders, lwd = input$DOTlwd, dark = input$dark, dist = input$DOTdist)
+		})
 
+		output$TXTplot = shiny::renderPlot({
+			pal = tab_vals$pal
+			c4a_plot_text(pal, dark = input$dark)
+		})
 
 	}
 	shiny::shinyApp(ui = ui, server = server)

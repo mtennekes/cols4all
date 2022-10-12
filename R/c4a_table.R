@@ -19,8 +19,8 @@ table_columns = function(type, show.scores) {
 	}
 
 	if (show.scores) {
-		qn = c(qn, .C4A$indicators[[type]], .C4A$hcl)
-		srt = c(srt, .C4A$indicators[[type]], .C4A$hcl)
+		qn = c(qn, .C4A$indicators[[type]], .C4A$hcl, .C4A$rgb)
+		srt = c(srt, .C4A$indicators[[type]], .C4A$hcl, .C4A$rgb)
 	}
 	ql = .C4A$labels[qn]
 

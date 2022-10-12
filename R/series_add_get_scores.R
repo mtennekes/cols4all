@@ -7,7 +7,7 @@ series_add_get_scores = function(z) {
 
 	nmaxmax = max(nmax)
 
-	a = array(as.integer(NA), dim = c(nrow(z), length(.C4A$sc) + length(.C4A$hcl), nmaxmax), dimnames = list(z$fullname, c(.C4A$sc, .C4A$hcl), NULL))
+	a = array(as.integer(NA), dim = c(nrow(z), length(.C4A$sc) + length(.C4A$hcl) + length(.C4A$rgb), nmaxmax), dimnames = list(z$fullname, c(.C4A$sc, .C4A$hcl, .C4A$rgb), NULL))
 
 
 	types = unname(.C4A$types)
