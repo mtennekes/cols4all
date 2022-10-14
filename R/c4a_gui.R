@@ -97,7 +97,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 	x = c4a_info(palette)
 
 	n_init = x$ndef
-	pal_init = c(c4a(x$fullname, n = n_init), "#ffffff", "#000000")
+	pal_init = c(c4a(palette, n = n_init), "#ffffff", "#000000")
 
 
 	getNames = function(p) {
@@ -317,6 +317,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 
 		tab_vals = shiny::reactiveValues(pal = c(pal_init, "#FFFFFF", "#000000"),
+										 pal_name = palette,
 										 col1 = pal_init[1], col2 = pal_init[2],
 										 type = type12,
 										 cvd = "none")
@@ -411,7 +412,6 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		get_cols = shiny::reactive({
-
 			type = get_type12()
 			res = table_columns(type, input$advanced)
 			anyD = duplicated(res$ql)
@@ -422,7 +422,6 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 
 		get_values = shiny::reactive({
-
 			if (input$sort == "") return(NULL)
 
 			type = get_type12()
@@ -511,11 +510,14 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			values = get_values()
 			pals = values$pal_names
 
+
 			if (length(pals)) {
-				shiny::updateSelectizeInput(session, "cbfPal", choices = pals, selected = pals[1])
-				shiny::updateSelectizeInput(session, "CLPal", choices = pals, selected = pals[1])
-				shiny::updateSelectizeInput(session, "contrastPal", choices = pals, selected = pals[1])
-				shiny::updateSelectizeInput(session, "APPPal", choices = pals, selected = pals[1])
+				selPal2 = if (tab_vals$pal_name %in% pals) tab_vals$pal_name else pals[1]
+				shiny::updateSelectizeInput(session, "cbfPal", choices = pals, selected = selPal2)
+				shiny::updateSelectizeInput(session, "CLPal", choices = pals, selected = selPal2)
+				shiny::updateSelectizeInput(session, "contrastPal", choices = pals, selected = selPal2)
+				shiny::updateSelectizeInput(session, "floatPal", choices = pals, selected = selPal2)
+				shiny::updateSelectizeInput(session, "APPPal", choices = pals, selected = selPal2)
 				shinyjs::enable("cbfPal")
 				shinyjs::enable("CLPal")
 				shinyjs::enable("contrastPal")
@@ -524,6 +526,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				shiny::updateSelectizeInput(session, "cbfPal", choices = pals)
 				shiny::updateSelectizeInput(session, "CLPal", choices = pals)
 				shiny::updateSelectizeInput(session, "contrastPal", choices = pals)
+				shiny::updateSelectizeInput(session, "floatPal", choices = pals)
 				shiny::updateSelectizeInput(session, "APPPal", choices = pals)
 
 				shinyjs::disable("cbfPal")
@@ -749,6 +752,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			pal = pal_name
 			if (pal == "") {
 				tab_vals$pal = character(0)
+				tab_vals$pal_name = character(0)
 				tab_vals$palBW = character(0)
 				tab_vals$col1 = character(0)
 				tab_vals$col2 = character(0)
@@ -762,6 +766,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				colsBW = c(cols, "#FFFFFF", "#000000")
 
 				tab_vals$pal = cols
+				tab_vals$pal_name = pal_name
+
 				tab_vals$palBW = colsBW
 
 				tab_vals$col1 = cols[1]
