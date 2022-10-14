@@ -14,7 +14,7 @@ c4a_plot_text = function(cols, dark = FALSE) {
 	cex = min(3, (nl / (n * 1.25)))
 
 	for (i in 1:n) {
-		grid.text(x = 0.25, y = (i - 0.5)/n, paste0(cols[i], " (", rgb_text[i], ")"), just = "left", gp = grid::gpar(cex = cex, col = cols[i]))
+		grid::grid.text(x = 0.25, y = (i - 0.5)/n, paste0(cols[i], " (", rgb_text[i], ")"), just = "left", gp = grid::gpar(cex = cex, col = cols[i]))
 	}
 
 }

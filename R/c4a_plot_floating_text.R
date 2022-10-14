@@ -24,7 +24,7 @@ c4a_plot_floating_text = function(words = c("cols", "4", "all"), cols = c("#0000
 	}
 
 
-	ws = npc_w(words, cex = size * 1.5)
+	ws = npc_w(words, cex = size * 1.1)
 
 
 	grid::grid.text(words, x = -sum(ws)/2 + 0.5 + c(0, head(cumsum(ws), -1)) + ws/2, just = "center",

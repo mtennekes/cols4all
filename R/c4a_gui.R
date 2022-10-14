@@ -201,14 +201,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 											  shiny::selectizeInput("cbfPal", "Palette", choices = z$fullname),
 											  shiny::plotOutput("cbfSim", "Palette simulation", width = "800px", height = "150px"))),
 							shiny::fluidRow(
-								shiny::column(width = 4,
-											  shiny::markdown("<br/><br/>
-											  #### **Confusion Lines**
-											  Color spaces are shown (specifically, CIE xyY space in the sRGB gamut) for normal color vision and three types of color vision deficiency. Note that the palette colors are shown in maximum luminance (given hue and chroma). The *confusion lines* are drawn for the three types of color vision deficiency. The hues of the colors along a confusion line are perceived equally.")),
-								shiny::column(width = 6,
-											  shiny::markdown("<br/><br/>
-											  					#### **Distance Matrix**
-											  					The distances (according to CEI 2000) are shown for each combination of palette colors."))),
+								shiny::column(width = 4, shiny::uiOutput("cvd_text_conf")),
+								shiny::column(width = 6, shiny::uiOutput("cvd_text_dist"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>**Normal color vision**"))),
 							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px")),
 											shiny::column(width = 6, shiny::plotOutput("disttable1", height = "375px", width = "500px", click = "disttable1_click")),
@@ -682,6 +676,43 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			cfb_map(c(tab_vals$col1, tab_vals$col2), "tritan")
 		})
 
+		output$cvd_text_conf = shiny::renderUI({
+			if (!input$advanced) {
+				tagList(
+					shiny::markdown("<br/><br/>
+					  #### **Confusion Lines**
+					  The shown color space (top left) is the CIE xyY space in the sRGB gamut, where for each color (x, y) the maximum luminance (Y) is shown. The marked points indicate the hue and chroma of the palette colors. The plus is the reference white point (D65).
+
+					  Below are the same plots, but with simulated color blind deficiency. The *confusion lines* that are drawn indicate which colors are perceiced equally in terms of hue.")
+				)
+			} else {
+				tagList(
+					shiny::markdown("<br/><br/>
+					  #### **Confusion Lines**
+					  The plot on the top left shows a so-called *color space*, where the point marked with a plus is the central white piont. The palette colors are marked, but these are made brighter.
+
+					  The plots below show how people with color blindness see this. The confusion lines show which colors appear the same (ignoring brightness and intensity) for color blind people.")
+				)
+			}
+		})
+
+		output$cvd_text_dist = shiny::renderUI({
+			if (!input$advanced) {
+				tagList(
+					shiny::markdown("<br/><br/>
+					  #### **Distance Matrix**
+					  Color distances (according to CEI 2000) are shown for each combination of palette colors for people with normal color vision (top right) and people with color vision deficiency.
+					")
+				)
+			} else {
+				tagList(
+					shiny::markdown("<br/><br/>
+					  #### **Distance Matrix**
+					  The plot at the top right shows which colors are similar to each other for people with normal color vision. Other plots below show this for people with color blindness.
+					")
+				)
+			}
+		})
 		#############################
 		## Application tab
 		#############################
@@ -841,6 +872,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
 		})
+
+
+
 
 		##############################
 		## Floating tab
