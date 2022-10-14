@@ -1,4 +1,4 @@
-c4a_plot_floating_text = function(words = c("cols", "4", "all"), cols = c("#0000FF", "#FF0000"), size = 10) {
+c4a_plot_floating_text = function(words = c("cols", "4", "all"), cols = c("#0000FF", "#FF0000"), size = 10, bg = "#000000") {
 	n1 = length(words)
 	n2 = length(cols)
 
@@ -9,7 +9,7 @@ c4a_plot_floating_text = function(words = c("cols", "4", "all"), cols = c("#0000
 
 	grid::grid.newpage()
 
-	grid::grid.rect(gp=grid::gpar(fill = "#000000"))
+	grid::grid.rect(gp=grid::gpar(fill = bg, col = NA))
 
 	#grid::pushViewport(grid::viewport(width = ))
 

@@ -222,31 +222,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			shiny::tabPanel("Harmony",
 							value = "tab_cl",
 							shiny::fluidRow(
-								shiny::column(width = 12,
-								shiny::markdown("#### **Chroma and Luminance**
-
-								**Chroma** (~saturation) is the color intensity:
-								- Low chromatic (\"pastel\") colors are recommended for *space-filling visualizations*, like maps and bar charts.
-								- High chromatic colors are useful for *small objects*, such as dots, lines, and text labels.
-
-								**Luminance** is the amount of light emitted from an object (e.g. a computer screen). It is similar to **brightness**, although the latter is a relative measure.
-
-								#### **Harmony**
-
-								It is recommended to use a palette of colors that stand out about equally (for otherwise, one color will draw more attention than another, which may bias our perception and interpretation of the shown data).
-
-								Colors with a high chroma value stand out more than less chromatic colors. Furthermore, against a bright background, dark colors (low luminance) stand out more, while bright colors (high luminance) stand out more against a dark background.
-
-								We call a color palette **harmonic** or well-balanced if
-
-								- Categorical paletes: the range of chroma values is lower than a certain threshold, and the range of luminance values is lower than a certain threshold.
-								- Sequential, diverging, and bivariate palettes: the range of chroma values is lower than a certain threshold.
-
-								Note that harmonic color palettes are usually not color blind friendly. Furthermore, when the luminance values of the colors are about equal, the contrast of those colors is low (equiluminance), which requires the use of border lines.
-
-								#### **CL plot**
-								In the chroma-luminance (CL) plot below, the chroma and luminance values for all palette colors are shown. The dashed vertical lines divide chroma into three classes: low, medium, and high. The white box indicates the harmony.
-								"),
+								shiny::column(width = 12, shiny::uiOutput("harm_text_cl"),
 								shiny::selectizeInput("CLPal", "Palette", choices = z$fullname),
 								shiny::plotOutput("CLplot", "CL plot", width = "600px", height = "600px"),
 								shiny::markdown("The dashed vertical lines divide chroma into three classes: low, medium, and high. (The threshold settings can be changed.)
@@ -257,11 +233,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 							value = "tab_cont",
 				 	shiny::fluidRow(
 				 		shiny::column(width = 12,
-				 					  shiny::markdown("#### **Equiluminance**"),
-				 					  shiny::markdown("The border between two colored shapes appears **wobbly** when the colors are equally luminant (˜light), no matter what hue (red, blue, etc.) they have.
-				 					  The **contrast ratio** is a measure for equiluminance, calculated as (L1 + 0.05) / (L2 + 0.05), where L1 and L2 are the luminances (normalized between 0 and 1) of the lighter and darker colors, respectively. Note that the minimum contrast ratio is 1 and the maximum 21.
-
-				 					  The go-to solution to prevent wobbly borders is by using black or white (depending of the lightness of the colors) **border lines**."),
+				 					  shiny::uiOutput("contrast_text_el"),
 				 					  shiny::selectizeInput("contrastPal", "Palette", choices = z$fullname),
 				 					  shiny::markdown("#### **Contrast ratio matrix**"),
 				 					  shiny::plotOutput("table", height = "300px", width = "400px", click = "table_click"),
@@ -291,8 +263,17 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 							value = "tab_floating",
 				shiny::fluidRow(
 					shiny::column(width = 12,
-								  shiny::plotOutput("floating_c4a", height = "300", width = "600"),
-					shiny::plotOutput("floating_text", height = "300", width = "600"))
+								  shiny::uiOutput("float_text_intro0"))),
+				shiny::fluidRow(
+					shiny::column(width = 6, shiny::plotOutput("floating_c4a_bk", height = "200", width = "400"),
+								  shiny::uiOutput("float_text_intro1")
+								  ),
+					shiny::column(width = 6, shiny::plotOutput("floating_c4a_w", height = "200", width = "400"),
+								  shiny::uiOutput("float_text_intro2"))),
+				shiny::fluidRow(
+					shiny::column(width = 12,
+					shiny::selectizeInput("floatPal", "Palette", choices = z$fullname),
+					shiny::plotOutput("floating_text", height = "200", width = "800"))
 			)),
 
 
@@ -681,9 +662,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				tagList(
 					shiny::markdown("<br/><br/>
 					  #### **Confusion Lines**
-					  The shown color space (top left) is the CIE xyY space in the sRGB gamut, where for each color (x, y) the maximum luminance (Y) is shown. The marked points indicate the hue and chroma of the palette colors. The plus is the reference white point (D65).
+					  The shown color space (below) is the CIE xyY space in the sRGB gamut, where for each color (x, y) the maximum luminance (Y) is shown. The marked points indicate the hue and chroma of the palette colors. The plus is the reference white point (D65).
 
-					  Below are the same plots, but with simulated color blind deficiency. The *confusion lines* that are drawn indicate which colors are perceiced equally in terms of hue.")
+					  The plots after that are the same, but with simulated color blind deficiency. The *confusion lines* that are drawn indicate which colors are perceiced equally in terms of hue.")
 				)
 			} else {
 				tagList(
@@ -714,9 +695,42 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			}
 		})
 		#############################
-		## Application tab
+		## Harmony tab
 		#############################
 
+
+		output$harm_text_cl = shiny::renderUI({
+			#if (!input$advanced) {
+				tagList(
+					shiny::markdown("#### **Chroma and Luminance**
+
+									**Chroma** (~saturation) is the color intensity:
+									- Low chromatic (\"pastel\") colors are recommended for *space-filling visualizations*, like maps and bar charts.
+									- High chromatic colors are useful for *small objects*, such as dots, lines, and text labels.
+
+									**Luminance** is the amount of light emitted from an object (e.g. a computer screen). It is similar to **brightness**, although the latter is a relative measure.
+
+									#### **Harmony**
+
+									It is recommended to use a palette of colors that stand out about equally (for otherwise, one color will draw more attention than another, which may bias our perception and interpretation of the shown data).
+
+									Colors with a high chroma value stand out more than less chromatic colors. Furthermore, against a bright background, dark colors (low luminance) stand out more, while bright colors (high luminance) stand out more against a dark background.
+
+									We call a color palette **harmonic** or well-balanced if
+
+									- Categorical paletes: the range of chroma values is lower than a certain threshold, and the range of luminance values is lower than a certain threshold.
+									- Sequential, diverging, and bivariate palettes: the range of chroma values is lower than a certain threshold.
+
+									Note that harmonic color palettes are usually not color blind friendly. Furthermore, when the luminance values of the colors are about equal, the contrast of those colors is low (equiluminance), which requires the use of border lines.
+
+									#### **CL plot**
+									In the chroma-luminance (CL) plot below, the chroma and luminance values for all palette colors are shown. The dashed vertical lines divide chroma into three classes: low, medium, and high. The white box indicates the harmony.
+									")
+				)
+			# } else {
+			#
+			# }
+		})
 
 		output$CLplot = shiny::renderPlot({
 			pal = tab_vals$pal
@@ -731,7 +745,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		## Contrast tab
 		#############################
 
-		update_reactive = function(pal_name, update_cbf, update_CL, update_contrast, update_app) {
+		update_reactive = function(pal_name, pal_nr) {
 			pal = pal_name
 			if (pal == "") {
 				tab_vals$pal = character(0)
@@ -754,18 +768,19 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				tab_vals$col2 = cols[2]
 				tab_vals$type = x$type
 			}
-			if (update_cbf) shiny::updateSelectizeInput(session, "cbfPal", selected = pal)
-			if (update_CL) shiny::updateSelectizeInput(session, "CLPal", selected = pal)
-			if (update_contrast) shiny::updateSelectizeInput(session, "contrastPal", selected = pal)
-			if (update_app) shiny::updateSelectizeInput(session, "APPPal", selected = pal)
+			if (pal_nr != 1) shiny::updateSelectizeInput(session, "cbfPal", selected = pal)
+			if (pal_nr != 2) shiny::updateSelectizeInput(session, "CLPal", selected = pal)
+			if (pal_nr != 3) shiny::updateSelectizeInput(session, "contrastPal", selected = pal)
+			if (pal_nr != 4) shiny::updateSelectizeInput(session, "floatPal", selected = pal)
+			if (pal_nr != 5) shiny::updateSelectizeInput(session, "APPPal", selected = pal)
 
 		}
 
-		shiny::observeEvent(input$cbfPal, update_reactive(input$cbfPal, FALSE, TRUE, TRUE, TRUE))
-		shiny::observeEvent(input$CLPal, update_reactive(input$CLPal, TRUE, FALSE, TRUE, TRUE))
-		shiny::observeEvent(input$contrastPal, update_reactive(input$contrastPal, TRUE, TRUE, FALSE, TRUE))
-		shiny::observeEvent(input$contrastPal, update_reactive(input$contrastPal, TRUE, TRUE, FALSE, TRUE))
-		shiny::observeEvent(input$APPPal, update_reactive(input$APPPal, TRUE, TRUE, TRUE, FALSE))
+		shiny::observeEvent(input$cbfPal, update_reactive(input$cbfPal, 1))
+		shiny::observeEvent(input$CLPal, update_reactive(input$CLPal, 2))
+		shiny::observeEvent(input$contrastPal, update_reactive(input$contrastPal, 3))
+		shiny::observeEvent(input$floatPal, update_reactive(input$floatPal, 4))
+		shiny::observeEvent(input$APPPal, update_reactive(input$APPPal, 5))
 
 
 		output$ex_plus = shiny::renderPlot({
@@ -805,6 +820,18 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			id2 = which(col2 == pal)
 			c4a_plot_CR_matrix(pal, id1 = id1, id2 = id2, dark = input$dark)
 		})
+
+		output$contrast_text_el = shiny::renderUI({
+			tagList(
+				shiny::markdown("#### **Equiluminance**"),
+				shiny::markdown("The border between two colored shapes appears **wobbly** when the colors are equally luminant (˜light), no matter what hue (red, blue, etc.) they have.
+				 					  The **contrast ratio** is a measure for equiluminance, calculated as (L1 + 0.05) / (L2 + 0.05), where L1 and L2 are the luminances (normalized between 0 and 1) of the lighter and darker colors, respectively. Note that the minimum contrast ratio is 1 and the maximum 21.
+
+				 					  The go-to solution to prevent wobbly borders is by using black or white (depending of the lightness of the colors) **border lines**."),
+			)
+		})
+
+
 
 		get_click_id = function(pal, x, y) {
 			n = length(pal)
@@ -880,13 +907,42 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		## Floating tab
 		##############################
 
-		output$floating_c4a = shiny::renderPlot({
-			c4a_plot_floating_text(size = 8)
+		output$floating_c4a_bk = shiny::renderPlot({
+			c4a_plot_floating_text(size = 8, bg = "#000000")
 		})
+
+		output$floating_c4a_w = shiny::renderPlot({
+			c4a_plot_floating_text(size = 8, bg = "#FFFFFF")
+		})
+
+		output$float_text_intro0 = shiny::renderUI(
+			if (!input$advanced) {
+				shiny::markdown("#### **Floating text**<br></br>")
+			} else {
+				shiny::markdown("#### **Chromostereopsis**<br></br>")
+			}
+		)
+
+		output$float_text_intro1 = shiny::renderUI({
+			if (!input$advanced) {
+				shiny::markdown("<br></br>Do you see a 3D effect? Most people will see pure red text in front of pure blue text.")
+			} else {
+				shiny::markdown("<br></br>Due to chromostereopsis, people perceive a depth effect when pure blue objects are plotted near pure red objects. Most people will see pure red text in front of pure blue text.")
+			}
+		})
+
+		output$float_text_intro2 = shiny::renderUI({
+			shiny::markdown("<br></br>This visual illusion also appears to a white background, but less severe.")
+		})
+
 		output$floating_text = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_plot_floating_text(words = LETTERS[1:length(pal)], cols = pal, size = 5)
+			c4a_plot_floating_text(words = LETTERS[1:length(pal)], cols = pal, size = 8, bg = ifelse(input$dark, "#000000", "#FFFFFF"))
 		})
+
+
+
+
 
 		##############################
 		## Application tab
