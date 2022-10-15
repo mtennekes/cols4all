@@ -273,7 +273,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				shiny::fluidRow(
 					shiny::column(width = 12,
 					shiny::selectizeInput("floatPal", "Palette", choices = z$fullname),
-					shiny::plotOutput("floating_text", height = "200", width = "800"))
+					shiny::plotOutput("floating_text1", height = "200", width = "800"),
+					shiny::plotOutput("floating_text2", height = "400", width = "400"))
 			)),
 
 
@@ -941,12 +942,20 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			shiny::markdown("<br></br>This visual illusion also appears to a white background, but less severe.")
 		})
 
-		output$floating_text = shiny::renderPlot({
+		output$floating_text1 = shiny::renderPlot({
 			pal = tab_vals$pal
 			c4a_plot_floating_text(words = LETTERS[1:length(pal)], cols = pal, size = 8, bg = ifelse(input$dark, "#000000", "#FFFFFF"))
 		})
 
 
+		output$floating_text2 = shiny::renderPlot({
+			pal = tab_vals$pal
+
+			w = approx_wave(pal)
+			ids = c(which.min(w)[1], which.max(w)[1])
+
+			c4a_plot_floating_text(words = LETTERS[ids], cols = pal[ids], size = 16, bg = ifelse(input$dark, "#000000", "#FFFFFF"))
+		})
 
 
 

@@ -16,7 +16,7 @@ c4a_plot_floating_text = function(words = c("cols", "4", "all"), cols = c("#0000
 	d = par("din")
 	dasp = d[1] / d[2]
 
-	grid::pushViewport(grid::viewport(width = grid::unit(2, "snpc"), height = grid::unit(1, "snpc")))
+	#grid::pushViewport(grid::viewport(width = grid::unit(2, "snpc"), height = grid::unit(1, "snpc")))
 
 
 	npc_w = function(txt, cex = 1) {

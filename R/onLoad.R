@@ -120,10 +120,10 @@ NULL
 						  bivc = c("min_dist"),
 						  bivd = c("inter_wing_dist", "min_step"),
 						  bivg = c("inter_wing_dist", "min_step"))
-		rgb = c("Blues")
+		rgb = c("DL")
 		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
 
-		sortRev = c("cbfriendly", "harmonyRank", "Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax")
+		sortRev = c("cbfriendly", "harmonyRank", "Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax", "DL")
 
 		labels = c(min_dist = "Minimum distance",
 					min_step = "Minimum step",
@@ -147,16 +147,18 @@ NULL
 					contrast = "Contrast",
 					contrastWT = "Contrast",
 					contrastBK = "Contrast",
+					float = "Floating",
+					DL = "Wavelength Range",
 					nmax = "Max number")
 
 		tc = list(cbfriendly = list('NA' = "",
 									'0' = "",
 							   '1' = kableExtra::cell_spec("&#9786;", extra_css="font-size: 80%;", tooltip = "Colorblind-friendly!", escape = FALSE),
-							   '-1' = kableExtra::cell_spec("&#128064;", extra_css ="font-size: 60%;", tooltip = "Be careful! Some colors are hard to distinguish by color blind people", escape = FALSE)),
+							   '-1' = kableExtra::cell_spec("&#128064;", extra_css ="font-size: 60%;", tooltip = "Be careful! Some colors are hard to distinguish by color blind people (see tab 'Color Blind Friendliness'", escape = FALSE)),
 			 chroma = list('NA' = "",
-			 			   'H' = kableExtra::cell_spec("&#x1f576;", tooltip = "High chroma: ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations", escape = FALSE),
+			 			   'H' = kableExtra::cell_spec("&#x1f576;", tooltip = "High chroma: ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations (see tab 'Harmony')", escape = FALSE),
 			 			  'M' = "",
-			 			  'L' = kableExtra::cell_spec("&#10045;", tooltip = "Low chroma: ideal for space filling visualizations, such as choropleths", escape = FALSE, extra_css = "color: #000000; font-size: 70%;")), #&#9729; &#10020;
+			 			  'L' = kableExtra::cell_spec("&#10045;", tooltip = "Low chroma: ideal for space filling visualizations, such as choropleths (see tab 'Harmony')", escape = FALSE, extra_css = "color: #000000; font-size: 70%;")), #&#9729; &#10020;
 			 hueType = list(seq = list('NA' = "",
 			 						  'MH' = "",
 			 						  'RH' = kableExtra::cell_spec("&#127752;",
@@ -201,26 +203,31 @@ NULL
 			 harmony = list('NA' = "",
 			 			    'M' = "",
 			 				'L' =  kableExtra::cell_spec("&#92601;",
-			 												 tooltip = "Colors are not well-balanced (lightness / chroma)", escape = FALSE,
+			 												 tooltip = "Colors are not well-balanced (lightness / chroma). See tab 'Harmony'", escape = FALSE,
 			 												 extra_css = "font-size: 100%; vertical-align: -0.1em; line-height: 0px;"),
 			 				'H' = kableExtra::cell_spec("🎵",
-			 											   tooltip = "Harmonic, well-balanced colors (colors are equally saturated and light)", escape = FALSE,
+			 											   tooltip = "Harmonic, well-balanced colors (colors are equally saturated and light). See tab 'Harmony'", escape = FALSE,
 			 											   extra_css = "font-size: 60%; vertical-align: -0.1em; line-height: 0px;")),
 			 contrast = list('NA' = "",
 			 				'FALSE' =  "",
 			 				'TRUE' = kableExtra::cell_spec("&#127937;",
-			 											   tooltip = "Low contrast between some colors; use borders to separate them",
+			 											   tooltip = "Low contrast between some colors; use borders to separate them (see tab 'Contrast')",
 			 											   escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px; margin-right: -10px;")),
 			 contrastWT = list('NA' = "",
 			 				  'FALSE' =  "",
 			 				  'TRUE' = kableExtra::cell_spec("&#127987;",
-			 				  							   tooltip = "Low contrast with white background",
+			 				  							   tooltip = "Low contrast with white background  (see tab 'Contrast')",
 			 				  							   escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px; margin-right: -10px;")),
 			 contrastBK = list('NA' = "",
 			 				  'FALSE' =  "",
 			 				  'TRUE' = kableExtra::cell_spec("&#127988;",
-			 				  							   tooltip = "Low contrast with black background",
-			 				  							   escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px;"))
+			 				  							   tooltip = "Low contrast with black background  (see tab 'Contrast')",
+			 				  							   escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px;")),
+			 float = list('NA' = "",
+			 			 'FALSE' = "",
+			 			 'TRUE' = kableExtra::cell_spec("&#128507;",
+			 			 							   tooltip = "(Almost) pure blue colors detected, which may cause a floating (3D) effect next to red colors (see tab 'Floating')",
+			 			 							   escape = FALSE, extra_css = "font-size: 170%; vertical-align: 0em; line-height: 0px; color: '#000000'"))
 		)
 
 

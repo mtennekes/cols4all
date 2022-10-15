@@ -11,11 +11,11 @@ table_columns = function(type, show.scores) {
 	srt = c(srt, "cbfriendly", "Cmax", "harmonyRank")
 
 	if (type %in% c("seq", "div", "bivs", "bivd", "bivg")) {
-		qn = c(qn, "hueType", "contrastWT", "contrastBK")
-		srt = c(srt, {if (type %in% c("div", "bivs", "bivd", "bivg")) "HwidthLR" else "Hwidth"}, "CRwt", "CRbk")
+		qn = c(qn, "hueType", "contrastWT", "contrastBK", "float")
+		srt = c(srt, {if (type %in% c("div", "bivs", "bivd", "bivg")) "HwidthLR" else "Hwidth"}, "CRwt", "CRbk", "DL")
 	} else {
-		qn = c(qn, "contrast", "contrastWT", "contrastBK")
-		srt = c(srt, "CRmin", "CRwt", "CRbk")
+		qn = c(qn, "contrast", "contrastWT", "contrastBK", "float")
+		srt = c(srt, "CRmin", "CRwt", "CRbk", "DL")
 	}
 
 	if (show.scores) {
@@ -284,7 +284,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 
 	rownames(e2) = NULL
-	for (var in c("cbfriendly", "chroma",  "hueType", "harmony", "contrast", "contrastWT", "contrastBK")) {
+	for (var in c("cbfriendly", "chroma",  "hueType", "harmony", "contrast", "contrastWT", "contrastBK", "float")) {
 		tcv = .C4A$tc[[var]]
 		if (any(names(tcv) %in% c("seq", "cat", "div"))) tcv = tcv[[type]]
 		if (var %in% qn) {
