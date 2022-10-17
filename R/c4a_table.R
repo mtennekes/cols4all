@@ -12,10 +12,10 @@ table_columns = function(type, show.scores) {
 
 	if (type %in% c("seq", "div", "bivs", "bivd", "bivg")) {
 		qn = c(qn, "hueType", "contrastWT", "contrastBK", "float")
-		srt = c(srt, {if (type %in% c("div", "bivs", "bivd", "bivg")) "HwidthLR" else "Hwidth"}, "CRwt", "CRbk", "DL")
+		srt = c(srt, {if (type %in% c("div", "bivs", "bivd", "bivg")) "HwidthLR" else "Hwidth"}, "CRwt", "CRbk", "Blues")
 	} else {
 		qn = c(qn, "contrast", "contrastWT", "contrastBK", "float")
-		srt = c(srt, "CRmin", "CRwt", "CRbk", "DL")
+		srt = c(srt, "CRmin", "CRwt", "CRbk", "Blues")
 	}
 
 	if (show.scores) {

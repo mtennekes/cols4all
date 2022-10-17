@@ -64,7 +64,7 @@ show_attach_scores = function(z) {
 	z2$contrastWT = z2$CRwt < 120
 	z2$contrastBK = z2$CRbk < 120
 
-	z2$float = z2$DL >= 80
+	z2$float = z2$Blues >= .C4A$Blues
 
 	z2
 }

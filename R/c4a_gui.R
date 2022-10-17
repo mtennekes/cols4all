@@ -263,19 +263,23 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 							value = "tab_floating",
 				shiny::fluidRow(
 					shiny::column(width = 12,
-								  shiny::uiOutput("float_text_intro0"))),
+								  shiny::uiOutput("float_text_intro0"),
+								  shiny::selectizeInput("floatPal", "Palette", choices = z$fullname),
+								  shiny::plotOutput("float_letters", "Float letter", height = 120, width = 960),
+								  shiny::uiOutput("float_text_intro1"))),
 				shiny::fluidRow(
-					shiny::column(width = 6, shiny::plotOutput("floating_c4a_bk", height = "200", width = "400"),
-								  shiny::uiOutput("float_text_intro1")
-								  ),
-					shiny::column(width = 6, shiny::plotOutput("floating_c4a_w", height = "200", width = "400"),
-								  shiny::uiOutput("float_text_intro2"))),
-				shiny::fluidRow(
-					shiny::column(width = 12,
-					shiny::selectizeInput("floatPal", "Palette", choices = z$fullname),
-					shiny::plotOutput("floating_text1", height = "200", width = "800"),
-					shiny::plotOutput("floating_text2", height = "400", width = "400"))
-			)),
+					shiny::column(width = 8,
+								  shiny::plotOutput("floating_rings", height = 550, width = 550),
+								  shiny::br(),
+					shiny::fluidRow(
+						shiny::column(width = 3, shiny::markdown("[_Visual illusion by Michael Bach_](https://michaelbach.de/ot/col-chromostereopsis/)")),
+						shiny::column(width = 3, shiny::radioButtons("float_full", "Colors", choices = c("Pure blue and red (black background)" = "full", "Palette colors" =  "palette"), selected = "palette")),
+						shiny::column(width = 3, shiny::checkboxInput("float_rev", "Reverse colors", value = FALSE)))),
+					shiny::column(width = 4,
+								  shiny::plotOutput("float_letters_AB", "Float letter", height = 150, width = 300),
+								  shiny::uiOutput("float_text_intro2"))
+				)),
+
 
 
 			shiny::tabPanel("Application",
@@ -299,6 +303,23 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					shiny::column(width = 12, shiny::plotOutput("TXTplot", "Text", width = 800, height = 400)))
 		)
 	))
+
+
+	#################################################################################################################################################################################
+	#################################################################################################################################################################################
+	#################################################################################################################################################################################
+	#################################################################################################################################################################################
+	#################################################################################################################################################################################
+	##############################################################                                             ######################################################################
+	##############################################################           Server                            ######################################################################
+	##############################################################                                             ######################################################################
+	#################################################################################################################################################################################
+	#################################################################################################################################################################################
+	#################################################################################################################################################################################
+	#################################################################################################################################################################################
+	#################################################################################################################################################################################
+	#################################################################################################################################################################################
+
 
 	server = function(input, output, session) {
 		#############################
@@ -924,38 +945,61 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		output$float_text_intro0 = shiny::renderUI(
 			if (!input$advanced) {
-				shiny::markdown("#### **Floating text**<br></br>")
+				shiny::markdown("#### **Floating objects**<br></br>")
 			} else {
 				shiny::markdown("#### **Chromostereopsis**<br></br>")
 			}
 		)
 
 		output$float_text_intro1 = shiny::renderUI({
-			if (!input$advanced) {
-				shiny::markdown("<br></br>Do you see a 3D effect? Most people will see pure red text in front of pure blue text.")
-			} else {
-				shiny::markdown("<br></br>Due to chromostereopsis, people perceive a depth effect when pure blue objects are plotted near pure red objects. Most people will see pure red text in front of pure blue text.")
-			}
+			pal = tab_vals$pal
+			b = approx_blues(pal)
+			yes = (max(b) >= .C4A$Blues)
+
+#			if (!input$advanced) {
+				shiny::markdown(paste0("<br></br>Do you see a 3D effect? ",
+					ifelse(!input$dark, "Probably not, because the background is white. Against a dark background, blue objects may appear a little farther way than red objects. To make sure, the most bluish and the most reddish colors are plotted next to each other below",
+					ifelse(yes, "Probably yes, because this palette contains (almost) pure blue colors. Please look at the most bluish and the most reddish colors, which are plotted next to each below.", "Probably not too much, because this palette does not contains pure blue colors. Please look at the most bluish and the most reddish colors, which are plotted next to each below."))))
+		# 	} else {
+		# 		shiny::markdown("<br></br>Due to chromostereopsis, people perceive a depth effect when pure blue objects are plotted near pure red objects. Most people will see pure red text in front of pure blue text.")
+		# 	}
 		})
 
 		output$float_text_intro2 = shiny::renderUI({
-			shiny::markdown("<br></br>This visual illusion also appears to a white background, but less severe.")
+			shiny::markdown("<br></br>Due to a visual illusion callsed chromostereopsis, people perceive a depth effect when pure blue objects are plotted near pure red objects. Most people will see pure red text in front of pure blue text. Please look at the image below to see this illusion in full effect.")
 		})
 
-		output$floating_text1 = shiny::renderPlot({
+		output$float_letters = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_plot_floating_text(words = LETTERS[1:length(pal)], cols = pal, size = 8, bg = ifelse(input$dark, "#000000", "#FFFFFF"))
+			c4a_plot_floating_text(pal, dark = input$dark)
 		})
 
-
-		output$floating_text2 = shiny::renderPlot({
+		output$float_letters_AB = shiny::renderPlot({
 			pal = tab_vals$pal
 
-			w = approx_wave(pal)
-			ids = c(which.min(w)[1], which.max(w)[1])
-
-			c4a_plot_floating_text(words = LETTERS[ids], cols = pal[ids], size = 16, bg = ifelse(input$dark, "#000000", "#FFFFFF"))
+			b = approx_blues(pal)
+			r = approx_reds(pal)
+			ids = c(which.max(b)[1], which.max(r)[1])
+			c4a_plot_floating_text(pal[ids], words = LETTERS[ids], dark = input$dark)
 		})
+
+		output$floating_rings = shiny::renderPlot({
+			if (input$float_full == "palette") {
+				pal = tab_vals$pal
+
+				b = approx_blues(pal)
+				r = approx_reds(pal)
+				ids = c(which.max(b)[1], which.max(r)[1])
+
+				if (input$float_rev) ids = rev(ids)
+				c4a_plot_floating_rings(col1 = pal[ids[2]], col2 = pal[ids[1]], dark = input$dark)
+			} else {
+				cols = c("#FF0000", "#0000FF")
+				if (input$float_rev) cols = rev(cols)
+				c4a_plot_floating_rings(cols[1], cols[2])
+			}
+		})
+
 
 
 

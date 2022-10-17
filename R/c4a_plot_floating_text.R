@@ -1,35 +1,53 @@
-c4a_plot_floating_text = function(words = c("cols", "4", "all"), cols = c("#0000FF", "#FF0000"), size = 10, bg = "#000000") {
-	n1 = length(words)
-	n2 = length(cols)
-
-	n = max(n1, n2)
-
-	words = rep(words, length.out = n)
-	cols = rep(cols, length.out = n)
-
+c4a_plot_floating_text = function(cols = c("#0000FF", "#FF0000"), words = NULL, size = 10, dark = TRUE) {
 	grid::grid.newpage()
+
+	bg = if (dark) "#000000" else "#FFFFFF"
 
 	grid::grid.rect(gp=grid::gpar(fill = bg, col = NA))
 
-	#grid::pushViewport(grid::viewport(width = ))
+	k = length(cols)
 
-	d = par("din")
-	dasp = d[1] / d[2]
-
-	#grid::pushViewport(grid::viewport(width = grid::unit(2, "snpc"), height = grid::unit(1, "snpc")))
-
-
-	npc_w = function(txt, cex = 1) {
-		as.vector(grid::convertWidth(grid::stringWidth(txt), unitTo = "npc")) * cex
+	if (is.null(words)) {
+		words = c(LETTERS, letters)[1:k]
+	} else {
+		words = rep(words, lenth.out = k)
 	}
 
+	m = (k - 1) %/% 8 + 1
 
-	ws = npc_w(words, cex = size * 1.1)
+	n = min(k, 8)
 
+	dev = par("din")
 
-	grid::grid.text(words, x = -sum(ws)/2 + 0.5 + c(0, head(cumsum(ws), -1)) + ws/2, just = "center",
-					gp = grid::gpar(cex = size, fontface = "bold", col = cols))
+	dasp = dev[1] / dev[2]
+	pasp = n / m
 
+	if (dasp > pasp) {
+		u = grid::convertHeight(grid::unit(1, "npc"), "lines") / m
+		grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = m, ncol = n + 1,
+																	 widths = grid::unit(c(rep(u, n), 1), units = c(rep("lines", 8), "null")),
+																	 heights = grid::unit(rep(u, m), units = rep("lines", m)))))
+	} else {
+		u = grid::convertWidth(grid::unit(1, "npc"), "lines") / n
+		grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = m + 1, ncol = n,
+																	 widths = grid::unit(rep(u, n), units = rep("lines")),
+																	 heights = grid::unit(c(rep(u, m), 1), units = c(rep("lines", m), "null")))))
+	}
+
+	z = 0
+	for (j in 1:m) {
+		for (i in 1:n) {
+			z = z + 1
+			if (z <= k) {
+				cellplot(j, i, {
+					grid::grid.rect(width = 0.95, height = 0.95, gp = grid::gpar(col = NA, fill = cols[z]))
+					grid::grid.text(words[z], gp = grid::gpar(col = bg, fontface = "bold", cex = u))
+				})
+			}
+		}
+	}
+	grid::upViewport(1)
 
 }
+
 

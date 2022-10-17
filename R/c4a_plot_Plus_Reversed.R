@@ -26,6 +26,45 @@ c4a_plot_Plus_Reversed = function(col1 = "blue", col2 = "red", borders = "black"
 
 	r = grDevices::as.raster(x)
 
+	grid::grid.newpage()
+
+	grid::grid.raster(r)
+}
+
+#
+# x = png::readPNG("inst/img/floating_rings.png")
+#
+# x2 = x[seq(1,1020,by=2), seq(1,1020,by=2),]
+#
+# x = x[,,1:3]
+# x[x>0 & x < 0.01] = 0
+#
+#
+# dim(x2)
+#
+# x3 = array(0, dim = c(550, 550, 3))
+#
+# x3[21:530, 21:530, ] = x2[,,1:3]
+#
+# png::writePNG(x3, "inst/img/floating_rings3.png")
+
+
+c4a_plot_floating_rings = function(col1 = "red", col2 = "blue", borders = "black", dark = TRUE) {
+	x = png::readPNG("inst/img/floating_rings.png")
+
+	id1 = (x[,,1] == 1)
+	id2 = (x[,,3] == 1)
+
+	m = col2rgb(c(col1, col2)) / 255
+
+	x[id1] = rep(m[,1], each = sum(id1))
+	x[id2] = rep(m[,2], each = sum(id2))
+
+	if (!dark) x[!id1 & !id2] = 1
+
+	r = grDevices::as.raster(x)
+
+	grid::grid.newpage()
 
 	grid::grid.raster(r)
 }

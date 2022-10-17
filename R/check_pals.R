@@ -251,19 +251,34 @@ get_hue_width = function(hs) {
 # 	c(rgb_prop(p), hcl_prop(p))
 # }
 
-approx_wave = function(p) {
+# approx_wave = function(p) {
+# 	co = unname(t(col2rgb(p)))
+# 	co[rowSums(co) == 0, ] = 1
+#
+# 	round((co[,3] * 440 + co[,2] * 540 + co[,1] * 565) / rowSums(co))
+# }
+
+
+approx_blues = function(p) {
 	co = unname(t(col2rgb(p)))
 	co[rowSums(co) == 0, ] = 1
-
-	round((co[,3] * 440 + co[,2] * 540 + co[,1] * 565) / rowSums(co))
+	round(co[,3] / apply(co[,1:2], MARGIN = 1, max), 2)
 }
+
+
+approx_reds = function(p) {
+	co = unname(t(col2rgb(p)))
+	co[rowSums(co) == 0, ] = 1
+	round(co[,1] / apply(co[,2:3], MARGIN = 1, max), 2)
+}
+
 
 rgb_prop = function(p) {
 
-	wave_approx = approx_wave(p)
-	wave_diff = max(wave_approx) - min(wave_approx)
+	blues = approx_blues(p)
 
-	c(DL = wave_diff)
+
+	c(Blues = max(blues))
 }
 
 hcl_prop = function(p) {
