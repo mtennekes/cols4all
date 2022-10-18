@@ -261,24 +261,30 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			),
 			shiny::tabPanel("Floating",
 							value = "tab_floating",
-				shiny::fluidRow(
-					shiny::column(width = 12,
-								  shiny::uiOutput("float_text_intro0"),
-								  shiny::selectizeInput("floatPal", "Palette", choices = z$fullname),
-								  shiny::plotOutput("float_letters", "Float letter", height = 120, width = 960),
-								  shiny::uiOutput("float_text_intro1"))),
-				shiny::fluidRow(
-					shiny::column(width = 8,
-								  shiny::plotOutput("floating_rings", height = 550, width = 550),
-								  shiny::br(),
-					shiny::fluidRow(
-						shiny::column(width = 3, shiny::markdown("[_Visual illusion by Michael Bach_](https://michaelbach.de/ot/col-chromostereopsis/)")),
-						shiny::column(width = 3, shiny::radioButtons("float_full", "Colors", choices = c("Pure blue and red (black background)" = "full", "Palette colors" =  "palette"), selected = "palette")),
-						shiny::column(width = 3, shiny::checkboxInput("float_rev", "Reverse colors", value = FALSE)))),
-					shiny::column(width = 4,
-								  shiny::plotOutput("float_letters_AB", "Float letter", height = 150, width = 300),
-								  shiny::uiOutput("float_text_intro2"))
-				)),
+							shiny::fluidRow(
+								shiny::column(width = 12,
+											  shiny::uiOutput("float_text_intro0"),
+											  shiny::uiOutput("float_text_intro1"))),
+							shiny::fluidRow(
+								shiny::column(width = 8,
+											  shiny::plotOutput("floating_rings", height = 550, width = 550),
+											  shiny::br(),
+											  shiny::fluidRow(
+											  	shiny::column(width = 4,
+											  				  shiny::markdown("[_Visual illusion by Michael Bach_](https://michaelbach.de/ot/col-chromostereopsis/)"),
+											  				  shiny::checkboxInput("float_change", "Use palette colors", value = FALSE),
+											  				  shiny::checkboxInput("float_rev", "Reverse colors", value = FALSE)))),
+
+								shiny::column(width = 4,
+											  shiny::selectizeInput("floatPal", "Palette", choices = z$fullname),
+											  shiny::plotOutput("float_letters_AB", "Float letter", height = 150, width = 300),
+											  shiny::uiOutput("float_text_intro2")
+											  )
+							),
+							shiny::fluidRow(
+								shiny::column(width = 12,
+											  shiny::plotOutput("float_letters", "Float letter", height = 120, width = 960)))),
+
 
 
 
@@ -935,14 +941,6 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		## Floating tab
 		##############################
 
-		output$floating_c4a_bk = shiny::renderPlot({
-			c4a_plot_floating_text(size = 8, bg = "#000000")
-		})
-
-		output$floating_c4a_w = shiny::renderPlot({
-			c4a_plot_floating_text(size = 8, bg = "#FFFFFF")
-		})
-
 		output$float_text_intro0 = shiny::renderUI(
 			if (!input$advanced) {
 				shiny::markdown("#### **Floating objects**<br></br>")
@@ -953,17 +951,23 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		output$float_text_intro1 = shiny::renderUI({
 			pal = tab_vals$pal
+			pal_name = tab_vals$pal_name
 			b = approx_blues(pal)
+			r = approx_reds(pal)
 			yes = (max(b) >= .C4A$Blues)
+			bw = which.max(b)
+			rw = which.max(r)
 
 #			if (!input$advanced) {
-				shiny::markdown(paste0("<br></br>Do you see a 3D effect? ",
-					ifelse(!input$dark, "Probably not, because the background is white. Against a dark background, blue objects may appear a little farther way than red objects. To make sure, the most bluish and the most reddish colors are plotted next to each other below",
-					ifelse(yes, "Probably yes, because this palette contains (almost) pure blue colors. Please look at the most bluish and the most reddish colors, which are plotted next to each below.", "Probably not too much, because this palette does not contains pure blue colors. Please look at the most bluish and the most reddish colors, which are plotted next to each below."))))
-		# 	} else {
-		# 		shiny::markdown("<br></br>Due to chromostereopsis, people perceive a depth effect when pure blue objects are plotted near pure red objects. Most people will see pure red text in front of pure blue text.")
-		# 	}
+				shiny::markdown(paste0("<br></br>Do you see a 3D effect?
+
+					Most people will perceive the blue part to be a bit farther away than the red part, but others will perceive the other way round. This is because of a visual illusion called _chromostereopsis_.
+
+					This effect is most prominent with a pure blue color and a red color against a black background. The palette ", pal_name,
+					ifelse(yes, paste0("does contain an (almost) pure blue color, namely color ", c(LETTERS, letters)[bw], "), so this illision can also be seen with this color and a red color, e.g. color", c(LETTERS, letters[rw])),
+						   paste0("does not contain an (almost) pure blue color, so this visual illusion will probably be less prominent. The bluest color is color ", c(LETTERS, letters)[bw], ". The illusion can be tested with a red color from the palette, e.g. color", c(LETTERS, letters)[rw]))))
 		})
+
 
 		output$float_text_intro2 = shiny::renderUI({
 			shiny::markdown("<br></br>Due to a visual illusion callsed chromostereopsis, people perceive a depth effect when pure blue objects are plotted near pure red objects. Most people will see pure red text in front of pure blue text. Please look at the image below to see this illusion in full effect.")
@@ -971,7 +975,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		output$float_letters = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_plot_floating_text(pal, dark = input$dark)
+			c4a_plot_floating_text(pal, dark = input$dark, size = 1.25)
 		})
 
 		output$float_letters_AB = shiny::renderPlot({
@@ -980,11 +984,11 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			b = approx_blues(pal)
 			r = approx_reds(pal)
 			ids = c(which.max(b)[1], which.max(r)[1])
-			c4a_plot_floating_text(pal[ids], words = LETTERS[ids], dark = input$dark)
+			c4a_plot_floating_text(pal[ids], words = LETTERS[ids], dark = input$dark, size = 1.25)
 		})
 
 		output$floating_rings = shiny::renderPlot({
-			if (input$float_full == "palette") {
+			if (input$float_change) {
 				pal = tab_vals$pal
 
 				b = approx_blues(pal)

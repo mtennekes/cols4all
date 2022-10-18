@@ -1,4 +1,4 @@
-c4a_plot_floating_text = function(cols = c("#0000FF", "#FF0000"), words = NULL, size = 10, dark = TRUE) {
+c4a_plot_floating_text = function(cols = c("#0000FF", "#FF0000"), words = NULL, size = 1, dark = TRUE) {
 	grid::grid.newpage()
 
 	bg = if (dark) "#000000" else "#FFFFFF"
@@ -41,7 +41,7 @@ c4a_plot_floating_text = function(cols = c("#0000FF", "#FF0000"), words = NULL, 
 			if (z <= k) {
 				cellplot(j, i, {
 					grid::grid.rect(width = 0.95, height = 0.95, gp = grid::gpar(col = NA, fill = cols[z]))
-					grid::grid.text(words[z], gp = grid::gpar(col = bg, fontface = "bold", cex = u))
+					grid::grid.text(words[z], gp = grid::gpar(col = bg, fontface = "bold", cex = u * size))
 				})
 			}
 		}
