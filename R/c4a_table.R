@@ -328,7 +328,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 	for (q in qn_other) {
 		if (q %in% dupl) {
-			k = kableExtra::column_spec(k, which(q == e2cols), width = "2em", extra_css = "text-align: center; vertical-align: center; overflow: hidden; text-overflow: ellipsis; max-width: 2em; min-width: 2em;")
+			k = kableExtra::column_spec(k, which(q == e2cols), width = "2.2em", extra_css = "text-align: center; vertical-align: center; overflow: hidden; text-overflow: ellipsis; max-width: 2.2em; min-width: 2.2em;")
 		} else {
 			k = kableExtra::column_spec(k, which(q == e2cols), width = "4em", extra_css = "text-align: center; vertical-align: center; overflow: hidden; text-overflow: ellipsis; max-width: 4em; min-width: 4em;")
 		}

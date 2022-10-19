@@ -142,13 +142,13 @@ NULL
 					CRwt = "Contrast-Ratio white",
 					CRbk = "Contrast-Ratio black",
 					cbfriendly = "Colorblind-friendly",
-					chroma = "Chroma",
-					harmony = "Harmony",
+					chroma = "Vivid",
+					harmony = "Harmonic",
 					hueType = "Hues",
-					contrast = "Contrast",
-					contrastWT = "Contrast",
-					contrastBK = "Contrast",
-					float = "Floating",
+					contrast = "&nbsp;&nbsp;Contrast",
+					contrastWT = "&nbsp;&nbsp;Contrast",
+					contrastBK = "&nbsp;&nbsp;Contrast",
+					float = "3D Blues",
 					Blues = "Dominant blues",
 					nmax = "Max number")
 
@@ -157,9 +157,9 @@ NULL
 							   '1' = kableExtra::cell_spec("&#9786;", extra_css="font-size: 80%;", tooltip = "Colorblind-friendly!", escape = FALSE),
 							   '-1' = kableExtra::cell_spec("&#128064;", extra_css ="font-size: 60%;", tooltip = "Be careful! Some colors are hard to distinguish by color blind people (see tab 'Color Blind Friendliness'", escape = FALSE)),
 			 chroma = list('NA' = "",
-			 			   'H' = kableExtra::cell_spec("&#x1f576;", tooltip = "High chroma: ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations (see tab 'Harmony')", escape = FALSE),
+			 			   'H' = kableExtra::cell_spec("&#x1f576;", tooltip = "Vivid colors (high chroma): ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations (see tab 'Vividness & Harmony')", escape = FALSE),
 			 			  'M' = "",
-			 			  'L' = kableExtra::cell_spec("&#10057;", tooltip = "Low chroma: ideal for space filling visualizations, such as choropleths (see tab 'Harmony')", escape = FALSE, extra_css = "font-size: 70%;")), #&#9729; &#10020;
+			 			  'L' = kableExtra::cell_spec("&#10057;", tooltip = "Pastel colors (low chroma): ideal for space filling visualizations, such as choropleths (see tab 'Vividness & Harmony')", escape = FALSE, extra_css = "font-size: 70%;")), #&#9729; &#10020;
 			 hueType = list(seq = list('NA' = "",
 			 						  'MH' = "",
 			 						  'RH' = kableExtra::cell_spec("&#127752;",
@@ -236,7 +236,7 @@ NULL
 		nmin = c(cat = 1, seq = 2, div = 3, bivs = 2, bivc = 7, bivd = 3, bivg = 2)
 		mdef = c(bivc = 5, bivd = 5, bivg = 5)
 		breaks = list(CR = c(1,1.2, 1.5, 2), dist = c(0, 2, 5, 10))
-		interval_labels = list(CR = c("Extreme low", "Very low", "Low"), dist = c("Extreme close", "Very close", "Close"))
+		interval_labels = list(CR = c("Extremely low", "Very low", "Low"), dist = c("Extremely close", "Very close", "Close"))
 		breaks_digits = c(CR = 1, dist = 0)
 	})
 	fill_P()
