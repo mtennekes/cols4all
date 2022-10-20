@@ -212,7 +212,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					  #### **Confusion lines**")),
 								shiny::column(width = 6, shiny::markdown("<br/><br/>
 					  #### **Distance matrices**"))),
-							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>Normal color vision"))),
+							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("Normal color vision"))),
 							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px")),
 											shiny::column(width = 6, shiny::plotOutput("disttable1", height = "375px", width = "500px", click = "disttable1_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex1", height = "375px", width = "150px"))),
@@ -241,6 +241,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 							value = "tab_cont",
 				 	shiny::fluidRow(
 				 		shiny::column(width = 12,
+				 					  shiny::markdown("<br/><br/>
+					  #### **Equiluminance**
+
+							Equally bright colors (with low contrast between them) drawn next to each other will cause 'wobbly' borders. Using border lines solves this."),
 				 					  shiny::selectizeInput("contrastPal", "Palette", choices = z$fullname),
 				 					  shiny::markdown("#### **Contrast ratio matrix**"),
 				 					  shiny::plotOutput("table", height = "300px", width = "400px", click = "table_click"))),
@@ -271,9 +275,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 								shiny::column(width = 12,
 											  shiny::selectizeInput("floatPal", "Palette", choices = z$fullname),
 											  shiny::markdown("<br/><br/>
-					  #### **Chromostereopsis**<br/><br/>
+					  #### **Chromostereopsis**
 
-							Do you see een 3D effect of the blue colors? (If not check 'Use original colors' below)"))),
+							Do you see een 3D effect? If not check 'Use original colors' below. Chromostereopsis is a visual illusion that happens when a blue color is shown next to a red color with a dark background."))),
 
 							shiny::fluidRow(
 								shiny::column(width = 8,
@@ -283,9 +287,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 											  shiny::checkboxInput("float_rev", "Reverse colors", value = FALSE)),
 								shiny::column(width = 4,
 											  shiny::plotOutput("float_letters", "Float letter", height = 80, width = 300),
-											  shiny::markdown("The bluest and reddest (approximately) colors next to each other:"),
-
-											  shiny::plotOutput("float_letters_AB", "Float letter", height = 150, width = 300)))),
+											  shiny::uiOutput("float_selection"),
+											  shiny::plotOutput("float_letters_AB", "Float letter", height = 150, width = 300)
+											  ))),
 
 
 
@@ -542,7 +546,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 
 			if (length(pals)) {
-				selPal2 = if (tab_vals$pal_name %in% pals) tab_vals$pal_name else pals[1]
+				selPal2 = if (length(tab_vals$pal_name) && tab_vals$pal_name %in% pals) tab_vals$pal_name else pals[1]
 				shiny::updateSelectizeInput(session, "cbfPal", choices = pals, selected = selPal2)
 				shiny::updateSelectizeInput(session, "CLPal", choices = pals, selected = selPal2)
 				shiny::updateSelectizeInput(session, "contrastPal", choices = pals, selected = selPal2)
@@ -873,22 +877,48 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			c4a_plot_floating_text(pal, dark = input$dark, size = 1.25)
 		})
 
-		output$float_letters_AB = shiny::renderPlot({
+		output$float_selection = shiny::renderUI({
 			pal = tab_vals$pal
 
 			b = approx_blues(pal)
 			r = approx_reds(pal)
 			ids = c(which.max(b)[1], which.max(r)[1])
-			c4a_plot_floating_text(pal[ids], words = LETTERS[ids], dark = input$dark, size = 1.25)
+
+
+			if (max(b) > .C4A$Blues && max(r) > 1) {
+				btext = paste0("Color ", c(LETTERS, letters)[ids[1]], " is very blue, so a 3D effect will likely occur (at least, with a dark background). We will plot it next to a red color in the palette, color ", c(LETTERS, letters)[ids[2]])
+			} else if (max(b) > 1 && max(r) > 1) {
+				btext = paste0("Color ", c(LETTERS, letters)[ids[1]], " is blue, so a 3D effect might  occur (at least with a dark background).  We will plot it next to a red color in the palette, color ", c(LETTERS, letters)[ids[2]])
+			} else if (max(b) > 1 && max(r) <= 1) {
+				btext = paste0("The palette contains blue color(s), e.g. color ", c(LETTERS, letters)[ids[1]]," but no red(dish) color, so a 3D effect will probably not occur.")
+			} else {
+				btext = "This palette does not contain any blue color, so a 3D effect does not happen."
+			}
+
+
+			shiny::tagList(
+				shiny::markdown(paste(btext)),
+				shiny::selectInput("float_col1", "Color 1", choices = c(LETTERS, letters)[1:length(pal)], selected = c(LETTERS, letters)[ids[1]]),
+				shiny::selectInput("float_col2", "Color 2", choices = c(LETTERS, letters)[1:length(pal)], selected = c(LETTERS, letters)[ids[2]])
+			)
+		})
+
+		output$float_letters_AB = shiny::renderPlot({
+			pal = tab_vals$pal
+
+			ids = c(which(c(LETTERS,letters) == input$float_col1),
+					which(c(LETTERS,letters) == input$float_col2))
+			if (length(ids) == 2) {
+				c4a_plot_floating_text(pal[ids], words = c(LETTERS, letters)[ids], dark = input$dark, size = 1.25)
+			}
 		})
 
 		output$floating_rings = shiny::renderPlot({
 			if (!input$float_original) {
 				pal = tab_vals$pal
 
-				b = approx_blues(pal)
-				r = approx_reds(pal)
-				ids = c(which.max(b)[1], which.max(r)[1])
+				ids = c(which(c(LETTERS,letters) == input$float_col1),
+						which(c(LETTERS,letters) == input$float_col2))
 
 				if (input$float_rev) ids = rev(ids)
 				c4a_plot_floating_rings(col1 = pal[ids[2]], col2 = pal[ids[1]], dark = input$dark)

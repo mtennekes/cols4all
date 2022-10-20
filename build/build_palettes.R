@@ -664,16 +664,35 @@ local({
 local({
 	pals = structure(lapply(MetBrewer::MetPalettes, "[[", 1), names = names(MetBrewer::MetPalettes))
 	cbf = which(sapply(MetBrewer::MetPalettes, "[[", 3))
-	seq = c("Greek", "Hokusai1", "Hokusai2", "Hokusai3", "Manet", "Monet", "Moreau", "OKeeffe2", "Peru1", "Peru2", "Pillement", "Renoir", "Tam", "Tara", "VanGogh3")
+	seq = c("Greek", "Hokusai1", "Hokusai2", "Hokusai3", "Manet", "OKeeffe2", "Tam", "VanGogh3")
 	div = c("Benedictus", "Cassatt1", "Cassatt2", "Demuth", "Hiroshige", "Homer1", "Homer2", "Ingres", "Isfahan1", "Johnson", "Morgenstern", "OKeeffe1", "Paquin", "Troy")
-	types = ifelse(names(pals) %in% seq, "seq", ifelse(names(pals) %in% div, "div", "cat"))
 
-	pals_cbf = pals[cbf]
-	types_cbf = types[cbf]
+	bivc = "Monet"
 
-	c4a_palettes_add(pals_cbf, types = types_cbf, series = "met")
+	pals$Monet = pals$Monet[c(3:1, 4:6, 9:7)]
+
+	types = ifelse(names(pals) %in% seq, "seq", ifelse(names(pals) %in% div, "div", ifelse(names(pals) %in% bivc, "bivc", "cat")))
+
+	#pals_cbf = pals[cbf]
+	#types_cbf = types[cbf]
+
+	c4a_palettes_add(pals, types = types, series = "met", biv.method = "bycol3")
 })
 
+local({
+	library(NatParksPalettes)
+
+	seq = c("Arches2", "CapitolReef", "Denali", "Glacier", "WindCave")
+	div = c("Acadia", "Arches", "Olympic")
+
+
+	pals = structure(lapply(NatParksPalettes::NatParksPalettes, "[[", 1), names = names(NatParksPalettes::NatParksPalettes))
+
+	types = ifelse(names(pals) %in% seq, "seq", ifelse(names(pals) %in% div, "div", "cat"))
+
+	c4a_palettes_add(pals, types = types, series = "parks")
+
+})
 
 
 

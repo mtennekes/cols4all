@@ -233,7 +233,7 @@ NULL
 
 
 		nmax = c(cat = 36, seq = 15, div = 15, bivs = 7, bivc = 7, bivd = 7, bivg = 7)
-		nmin = c(cat = 1, seq = 2, div = 3, bivs = 2, bivc = 7, bivd = 3, bivg = 2)
+		nmin = c(cat = 1, seq = 2, div = 3, bivs = 2, bivc = 2, bivd = 3, bivg = 2)
 		mdef = c(bivc = 5, bivd = 5, bivg = 5)
 		breaks = list(CR = c(1,1.2, 1.5, 2), dist = c(0, 2, 5, 10))
 		interval_labels = list(CR = c("Extremely low", "Very low", "Low"), dist = c("Extremely close", "Very close", "Close"))
