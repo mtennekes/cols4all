@@ -32,6 +32,8 @@ Suggests:
 	ggplot2,
 	scales,
 	tmap
+Remotes:
+    haozhu233/kableExtra
 URL: https://github.com/mtennekes/cols4all
 BugReports: https://github.com/mtennekes/cols4all/issues
 Roxygen: list(markdown = TRUE)
