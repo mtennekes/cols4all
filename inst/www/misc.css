@@ -6,10 +6,8 @@
 	cursor: pointer;
 }
 
-#contrastPal-label {
-	font-size: 18px;
-}
-
 #chart-label {
 	font-size: 18px;
+	margin-top: 12px;
+	margin-bottom: 12px;
 }

@@ -232,6 +232,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 							value = "tab_cl",
 							shiny::fluidRow(
 								shiny::column(width = 12,
+											  shiny::markdown("<br/><br/>
+					  #### **Vividness & Harmony**
+
+							How bright (luminance) and vivid (chroma) are the colors in a palette?<br/><br/>"),
 											  shiny::selectizeInput("CLPal", "Palette", choices = z$fullname),
 											  shiny::markdown("<br/><br/>
 					  #### **Chroma-Luminance plot**"),
@@ -244,10 +248,11 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				 					  shiny::markdown("<br/><br/>
 					  #### **Equiluminance**
 
-							Equally bright colors (with low contrast between them) drawn next to each other will cause 'wobbly' borders. Using border lines solves this."),
+							Colors that are equally bright (luminant) may cause 'wobbly' borders when drawn next to each other. Using border lines solves this potential problem.<br/><br/>"),
 				 					  shiny::selectizeInput("contrastPal", "Palette", choices = z$fullname),
-				 					  shiny::markdown("#### **Contrast ratio matrix**"),
-				 					  shiny::plotOutput("table", height = "300px", width = "400px", click = "table_click"))),
+				 					  shiny::markdown("#### **Contrast ratio**"),
+				 					  shiny::plotOutput("table", height = "300px", width = "400px", click = "table_click"),
+				 					  shiny::markdown("A low contrast ratio means that colors are about equally bright (luminant)"),)),
 
 				 	shiny::fluidRow(
 				 		shiny::column(width = 3,
@@ -312,7 +317,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				shiny::fluidRow(
 					shiny::column(width = 12, shiny::plotOutput("DOTplot", "Scatter plot", width = 800, height = 400))),
 				shiny::fluidRow(
-					shiny::column(width = 12, shiny::plotOutput("TXTplot", "Text", width = 800, height = 400)))
+					shiny::column(width = 12, shiny::plotOutput("TXTplot1", "Text", width = 800, height = 120))),
+				shiny::fluidRow(
+					shiny::column(width = 12, shiny::plotOutput("TXTplot2", "Text", width = 800, height = 120)))
 		)
 	))
 
@@ -352,6 +359,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		tab_vals = shiny::reactiveValues(pal = c(pal_init, "#FFFFFF", "#000000"),
 										 pal_name = palette,
+										 n = n_init,
 										 col1 = pal_init[1], col2 = pal_init[2],
 										 type = type12,
 										 cvd = "none")
@@ -543,7 +551,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		shiny::observe({
 			values = get_values()
 			pals = values$pal_names
-
+			#n = values$n
 
 			if (length(pals)) {
 				selPal2 = if (length(tab_vals$pal_name) && tab_vals$pal_name %in% pals) tab_vals$pal_name else pals[1]
@@ -555,6 +563,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				shinyjs::enable("cbfPal")
 				shinyjs::enable("CLPal")
 				shinyjs::enable("contrastPal")
+				shinyjs::enable("floatPal")
 				shinyjs::enable("APPPal")
 			} else {
 				shiny::updateSelectizeInput(session, "cbfPal", choices = pals)
@@ -566,6 +575,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				shinyjs::disable("cbfPal")
 				shinyjs::disable("CLPal")
 				shinyjs::disable("contrastPal")
+				shinyjs::disable("floatPal")
 				shinyjs::disable("APPPal")
 			}
 		})
@@ -604,31 +614,43 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		#############################
 
 		output$cbfSim = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			c4a_plot_cvd(pal, dark = input$dark)
 		})
 
 		output$cbfRGB1 = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			c4a_plot_confusion_lines(pal, cvd = "none", dark = input$dark)
 		})
 
 		output$cbfRGB2 = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			c4a_plot_confusion_lines(pal, cvd = "deutan", dark = input$dark)
 		})
 
 		output$cbfRGB3 = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			c4a_plot_confusion_lines(pal, cvd = "protan", dark = input$dark)
 		})
 
 		output$cbfRGB4 = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			c4a_plot_confusion_lines(pal, cvd = "tritan", dark = input$dark)
 		})
 
 		output$disttable1 = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			col1 = tab_vals$col1
 			col2 = tab_vals$col2
@@ -639,6 +661,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		output$disttable2 = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			col1 = tab_vals$col1
 			col2 = tab_vals$col2
@@ -649,6 +673,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		output$disttable3 = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			col1 = tab_vals$col1
 			col2 = tab_vals$col2
@@ -659,6 +685,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		output$disttable4 = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			col1 = tab_vals$col1
 			col2 = tab_vals$col2
@@ -682,15 +710,19 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 
 		output$cbf_ex1 = shiny::renderPlot({
+			if (!length(tab_vals$col1)) return(NULL)
 			cfb_map(c(tab_vals$col1, tab_vals$col2), "none")
 		})
 		output$cbf_ex2 = shiny::renderPlot({
+			if (!length(tab_vals$col1)) return(NULL)
 			cfb_map(c(tab_vals$col1, tab_vals$col2), "deutan")
 		})
 		output$cbf_ex3 = shiny::renderPlot({
+			if (!length(tab_vals$col1)) return(NULL)
 			cfb_map(c(tab_vals$col1, tab_vals$col2), "protan")
 		})
 		output$cbf_ex4 = shiny::renderPlot({
+			if (!length(tab_vals$col1)) return(NULL)
 			cfb_map(c(tab_vals$col1, tab_vals$col2), "tritan")
 		})
 
@@ -703,6 +735,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		output$CLplot = shiny::renderPlot({
 			pal = tab_vals$pal
+
+			if (!length(pal)) return(NULL)
 
 			type = tab_vals$type
 
@@ -747,6 +781,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			if (pal_nr != 5) shiny::updateSelectizeInput(session, "APPPal", selected = pal)
 
 		}
+
 
 		shiny::observeEvent(input$cbfPal, update_reactive(input$cbfPal, 1))
 		shiny::observeEvent(input$CLPal, update_reactive(input$CLPal, 2))
@@ -874,11 +909,14 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		output$float_letters = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_plot_floating_text(pal, dark = input$dark, size = 1.25)
+			if (!length(pal)) return(NULL)
+
+			c4a_plot_text(pal, dark = input$dark, size = 1.25, frame = TRUE)
 		})
 
 		output$float_selection = shiny::renderUI({
 			pal = tab_vals$pal
+			if (!length(pal)) return(NULL)
 
 			b = approx_blues(pal)
 			r = approx_reds(pal)
@@ -906,14 +944,16 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		output$float_letters_AB = shiny::renderPlot({
 			pal = tab_vals$pal
 
+			if (!length(pal)) return(NULL)
 			ids = c(which(c(LETTERS,letters) == input$float_col1),
 					which(c(LETTERS,letters) == input$float_col2))
 			if (length(ids) == 2) {
-				c4a_plot_floating_text(pal[ids], words = c(LETTERS, letters)[ids], dark = input$dark, size = 1.25)
+				c4a_plot_text(pal[ids], words = c(LETTERS, letters)[ids], dark = input$dark, size = 1.25, frame = TRUE)
 			}
 		})
 
 		output$floating_rings = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
 			if (!input$float_original) {
 				pal = tab_vals$pal
 
@@ -937,18 +977,31 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		##############################
 
 		output$MAPplot = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			c4a_plot_map(pal, borders = input$MAPborders, lwd = input$MAPlwd, dark = input$dark, dist = input$MAPdist)
 		})
 
 		output$DOTplot = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			c4a_plot_scatter(pal,  borders = input$DOTborders, lwd = input$DOTlwd, dark = input$dark, dist = input$DOTdist)
 		})
 
-		output$TXTplot = shiny::renderPlot({
+		output$TXTplot1 = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
 			pal = tab_vals$pal
 			c4a_plot_text(pal, dark = input$dark)
+		})
+
+		output$TXTplot2 = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
+			pal = tab_vals$pal
+			c4a_plot_text(pal, dark = input$dark, frame = TRUE)
 		})
 
 
@@ -957,7 +1010,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		##############################
 
 		observeEvent(input$info, {
-			shiny::showModal(shiny::modalDialog(title = "Methodology",
+			shiny::showModal(shiny::modalDialog(title = "Background",
 												shiny::includeMarkdown(system.file("markdown/overview.md", package = "cols4all")),
 												footer = shiny::modalButton("Close"),
 												style = "color: #000000;"))

@@ -142,7 +142,7 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 				grid::grid.points(x = 0.5, y = 0.5, pch = pchs[i], size = grid::unit(sizes[i], units = "lines"), gp = grid::gpar(col = fc))
 			})
 			cellplot(2 + i, 4, {
-				grid::grid.text(texts[i], x = 0, just = "left", gp = grid::gpar(col = fc))
+				grid::grid.text(texts[i], x = 0, just = "left", gp = grid::gpar(col = fc, cex = 0.9))
 			})
 		}
 		grid::upViewport()
