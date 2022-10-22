@@ -36,7 +36,7 @@ c4a_plot_text = function(cols = c("#0000FF", "#FF0000"), words = NULL, size = 1,
 	if (dasp > pasp) {
 		u = grid::convertHeight(grid::unit(1, "npc"), "lines") / m
 		grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = m, ncol = n + 1,
-																	 widths = grid::unit(c(rep(u, n), 1), units = c(rep("lines", 8), "null")),
+																	 widths = grid::unit(c(rep(u, n), 1), units = c(rep("lines", n), "null")),
 																	 heights = grid::unit(rep(u, m), units = rep("lines", m)))))
 	} else {
 		u = grid::convertWidth(grid::unit(1, "npc"), "lines") / n

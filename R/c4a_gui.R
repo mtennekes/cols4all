@@ -362,7 +362,9 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 										 n = n_init,
 										 col1 = pal_init[1], col2 = pal_init[2],
 										 type = type12,
-										 cvd = "none")
+										 cvd = "none",
+										 b = approx_blues(pal_init),
+										 r = approx_reds(pal_init))
 
 
 
@@ -565,7 +567,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				tab_vals$type = values$type
 				tab_vals$col1 = cols[1]
 				tab_vals$col2 = cols[2]
-
+				tab_vals$b = approx_blues(cols)
+				tab_vals$r = approx_reds(cols)
 
 			} else {
 				tab_vals$pal = character(0)
@@ -575,6 +578,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				tab_vals$palBW = character(0)
 				tab_vals$col1 = character(0)
 				tab_vals$col2 = character(0)
+				tab_vals$b = integer(0)
+				tab_vals$r = integer(0)
 				tab_vals$type = character(0)
 			}
 
@@ -948,26 +953,23 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			c4a_plot_text(pal, dark = input$dark, size = 1.25, frame = TRUE)
 		})
 
-		get_blue_red = shiny::reactive({
-			pal = tab_vals$pal
-			if (!length(pal)) return(NULL)
-
-			b = approx_blues(pal)
-			r = approx_reds(pal)
-			ids = c(which.max(b)[1], which.max(r)[1])
-			list(b=b, r=r, ids=ids)
-		})
 
 		output$float_selection = shiny::renderUI({
 			pal = tab_vals$pal
-			br = get_blue_red()
+			b = tab_vals$b
+			r = tab_vals$r
 
-			if (max(br$b) > .C4A$Blues && max(br$r) > 1) {
-				btext = paste0("Color ", c(LETTERS, letters)[br$ids[1]], " is very blue, so a 3D effect will likely occur (at least, with a dark background). We will plot it next to a red color in the palette, color ", c(LETTERS, letters)[br$ids[2]])
-			} else if (max(br$b) > 1 && max(br$r) > 1) {
-				btext = paste0("Color ", c(LETTERS, letters)[br$ids[1]], " is blue, so a 3D effect might  occur (at least with a dark background).  We will plot it next to a red color in the palette, color ", c(LETTERS, letters)[br$ids[2]])
-			} else if (max(br$b) > 1 && max(br$r) <= 1) {
-				btext = paste0("The palette contains blue color(s), e.g. color ", c(LETTERS, letters)[br$ids[1]]," but no red(dish) color, so a 3D effect will probably not occur.")
+			ids = c(which.max(b)[1], which.max(r)[1])
+
+
+			#br = get_blue_red()
+
+			if (max(b) > .C4A$Blues && max(r) > 1) {
+				btext = paste0("Color ", c(LETTERS, letters)[ids[1]], " is very blue, so a 3D effect will likely occur (at least, with a dark background). We will plot it next to a red color in the palette, color ", c(LETTERS, letters)[ids[2]])
+			} else if (max(b) > 1 && max(r) > 1) {
+				btext = paste0("Color ", c(LETTERS, letters)[ids[1]], " is blue, so a 3D effect might  occur (at least with a dark background).  We will plot it next to a red color in the palette, color ", c(LETTERS, letters)[ids[2]])
+			} else if (max(b) > 1 && max(r) <= 1) {
+				btext = paste0("The palette contains blue color(s), e.g. color ", c(LETTERS, letters)[ids[1]]," but no red(dish) color, so a 3D effect will probably not occur.")
 			} else {
 				btext = "This palette does not contain any blue color, so a 3D effect does not happen."
 			}
@@ -975,19 +977,29 @@ print("update")
 
 			shiny::tagList(
 				shiny::markdown(paste(btext)),
-				shiny::selectInput("float_col1", "Color 1", choices = c(LETTERS, letters)[1:length(pal)], selected = c(LETTERS, letters)[br$ids[1]]),
-				shiny::selectInput("float_col2", "Color 2", choices = c(LETTERS, letters)[1:length(pal)], selected = c(LETTERS, letters)[br$ids[2]])
+				shiny::selectInput("float_col1", "Color 1", choices = c(LETTERS, letters)[1:length(pal)], selected = c(LETTERS, letters)[ids[1]]),
+				shiny::selectInput("float_col2", "Color 2", choices = c(LETTERS, letters)[1:length(pal)], selected = c(LETTERS, letters)[ids[2]])
 			)
+		})
+
+		shiny::observeEvent(input$float_col1, {
+			tab_vals$col1 = tab_vals$pal[which(c(LETTERS, letters) == input$float_col1)]
+		})
+
+		shiny::observeEvent(input$float_col2, {
+			tab_vals$col2 = tab_vals$pal[which(c(LETTERS, letters) == input$float_col2)]
 		})
 
 		output$float_letters_AB = shiny::renderPlot({
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 
-			ids = c(which(c(LETTERS,letters) == input$float_col1),
-					which(c(LETTERS,letters) == input$float_col2))
-			if (length(ids) == 2) {
-				c4a_plot_text(pal[ids], words = c(LETTERS, letters)[ids], dark = input$dark, size = 1.25, frame = TRUE)
+			cols = c(tab_vals$col1, tab_vals$col2)
+
+			lL = c(LETTERS,letters)[c(which(pal == cols[1]),
+					which(pal == cols[2]))]
+			if (length(lL) == 2) {
+				c4a_plot_text(cols, words = lL, dark = input$dark, size = 1.25, frame = TRUE)
 			}
 		})
 
@@ -996,11 +1008,11 @@ print("update")
 			if (!input$float_original) {
 				pal = tab_vals$pal
 
-				ids = c(which(c(LETTERS,letters) == input$float_col1),
-						which(c(LETTERS,letters) == input$float_col2))
 
-				if (input$float_rev) ids = rev(ids)
-				c4a_plot_floating_rings(col1 = pal[ids[2]], col2 = pal[ids[1]], dark = input$dark)
+				cols = c(tab_vals$col1, tab_vals$col2)
+
+				if (input$float_rev) cols = rev(cols)
+				c4a_plot_floating_rings(col1 = cols[2], col2 = cols[1], dark = input$dark)
 			} else {
 				cols = c("#FF0000", "#0000FF")
 				if (input$float_rev) cols = rev(cols)
