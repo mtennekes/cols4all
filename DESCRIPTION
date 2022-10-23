@@ -11,8 +11,8 @@ Authors@R: c(
 	person("Helgasoft", email = "contact@helgasoft.com", role = "ctb")
 	)
 Description: Color palettes for all people, including those with color vision deficiency. Palettes, organized by source and type, are scored on several properties such as color-blind-friendliness and harmony. Furthermore each palette is assigned a distinct color for missing values. Own palettes can be loaded as well. ggplot2 scales are included.
-Version: 0.3
-Date: 2022-04-03
+Version: 0.4
+Date: 2022-10-22
 Encoding: UTF-8
 Depends:
     R (>= 3.5.0),

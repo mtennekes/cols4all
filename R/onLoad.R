@@ -1,6 +1,6 @@
 #' cols4all overview
 #'
-#' Color palettes for all people, including those with color vision deficiency. Palettes, organized by source and type, are scored on several properties such as color-blind-friendliness and harmony. Furthermore each palette is assigned a distinct color for missing values. Own palettes can be loaded as well. ggplot2 scales are included.
+#' cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palettes have been organized by source and type, and scored on several properties such as color-blind-friendliness and harmony. Furthermore each palette is assigned a distinct color for missing values. Own palettes can be loaded as well. ggplot2 scales are included.
 #'
 #' This page provides a brief overview of all package functions.
 #'
@@ -157,7 +157,7 @@ NULL
 							   '1' = kableExtra::cell_spec("&#9786;", extra_css="font-size: 80%;", tooltip = "Colorblind-friendly!", escape = FALSE),
 							   '-1' = kableExtra::cell_spec("&#128064;", extra_css ="font-size: 60%;", tooltip = "Be careful! Some colors are hard to distinguish by color blind people (see tab 'Color Blind Friendliness'", escape = FALSE)),
 			 chroma = list('NA' = "",
-			 			   'H' = kableExtra::cell_spec("&#x1f576;", tooltip = "Vivid colors (high chroma): ideal for small important objects to stand out (e.g. markers on a map), but not suited for space filling visualizations (see tab 'Vividness & Harmony')", escape = FALSE),
+			 			   'H' = kableExtra::cell_spec("&#x1f576;", tooltip = "Vivid colors (high chroma): ideal for small important objects to stand out (e.g. markers on a map), but less suited for space filling visualizations (see tab 'Vividness & Harmony')", escape = FALSE),
 			 			  'M' = "",
 			 			  'L' = kableExtra::cell_spec("&#10057;", tooltip = "Pastel colors (low chroma): ideal for space filling visualizations, such as choropleths (see tab 'Vividness & Harmony')", escape = FALSE, extra_css = "font-size: 70%;")), #&#9729; &#10020;
 			 hueType = list(seq = list('NA' = "",
@@ -204,10 +204,10 @@ NULL
 			 harmony = list('NA' = "",
 			 			    'M' = "",
 			 				'L' =  kableExtra::cell_spec("&#92601;",
-			 												 tooltip = "Colors are not well-balanced (lightness / chroma). See tab 'Harmony'", escape = FALSE,
+			 												 tooltip = "Colors are not well-balanced (lightness / chroma). See tab 'Vividness & Harmony'", escape = FALSE,
 			 												 extra_css = "font-size: 100%; vertical-align: -0.1em; line-height: 0px;"),
 			 				'H' = kableExtra::cell_spec("🎵",
-			 											   tooltip = "Harmonic, well-balanced colors (colors are equally saturated and light). See tab 'Harmony'", escape = FALSE,
+			 											   tooltip = "Harmonic, well-balanced colors (colors are equally saturated and light). See tab 'Vividness & Harmony'", escape = FALSE,
 			 											   extra_css = "font-size: 60%; vertical-align: -0.1em; line-height: 0px;")),
 			 contrast = list('NA' = "",
 			 				'FALSE' =  "",
@@ -227,7 +227,7 @@ NULL
 			 float = list('NA' = "",
 			 			 'FALSE' = "",
 			 			 'TRUE' = kableExtra::cell_spec("B7#9",
-			 			 							   tooltip = "Floating Blues: (almost) pure blue colors detected, which may cause a floating (3D) effect next to red colors (see tab 'Floating')",
+			 			 							   tooltip = "This palette has got the blues; it contains a pure blue color which may cause a floating (3D) effect next to red colors (see tab '3D Blues')",
 			 			 							   escape = FALSE, extra_css = "font-size: 80%; vertical-align: 0em; line-height: 0px; color: '#000000'"))
 		)
 

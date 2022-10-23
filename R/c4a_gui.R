@@ -553,12 +553,11 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			values = get_values()
 			pals = values$pal_names
 			n = values$n
-
 			if (length(pals)) {
 				tab_vals$pals = pals
 				tab_vals$n = n
 				tab_vals$pals = pals
-				if (length(tab_vals$pal_name) && !(tab_vals$pal_name %in% pals)) {
+				if (!length(tab_vals$pal_name) || !(tab_vals$pal_name %in% pals)) {
 					tab_vals$pal_name = pals[1]
 				}
 				cols = as.vector(c4a(tab_vals$pal_name, n = n))
@@ -582,37 +581,34 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				tab_vals$r = integer(0)
 				tab_vals$type = character(0)
 			}
-
-
-			#   shiny::updateSelectizeInput(session, "cbfPal", choices = pals, selected = selPal2)
-			# 	shiny::updateSelectizeInput(session, "CLPal", choices = pals, selected = selPal2)
-			# 	shiny::updateSelectizeInput(session, "contrastPal", choices = pals, selected = selPal2)
-			# 	shiny::updateSelectizeInput(session, "floatPal", choices = pals, selected = selPal2)
-			# 	shiny::updateSelectizeInput(session, "APPPal", choices = pals, selected = selPal2)
-			# 	shinyjs::enable("cbfPal")
-			# 	shinyjs::enable("CLPal")
-			# 	shinyjs::enable("contrastPal")
-			# 	shinyjs::enable("floatPal")
-			# 	shinyjs::enable("APPPal")
-			# } else {
-			# 	shiny::updateSelectizeInput(session, "cbfPal", choices = pals)
-			# 	shiny::updateSelectizeInput(session, "CLPal", choices = pals)
-			# 	shiny::updateSelectizeInput(session, "contrastPal", choices = pals)
-			# 	shiny::updateSelectizeInput(session, "floatPal", choices = pals)
-			# 	shiny::updateSelectizeInput(session, "APPPal", choices = pals)
-			#
-			# 	shinyjs::disable("cbfPal")
-			# 	shinyjs::disable("CLPal")
-			# 	shinyjs::disable("contrastPal")
-			# 	shinyjs::disable("floatPal")
-			# 	shinyjs::disable("APPPal")
-			# }
 		})
 
 		shiny::observe({
 			if (length(tab_vals$pal)) {
 				shiny::updateSelectizeInput(session, "cbfPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
+				shiny::updateSelectizeInput(session, "CLPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
+				shiny::updateSelectizeInput(session, "contrastPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
+				shiny::updateSelectizeInput(session, "floatPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
+				shiny::updateSelectizeInput(session, "APPPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
+				shinyjs::enable("cbfPal")
+				shinyjs::enable("CLPal")
+				shinyjs::enable("contrastPal")
+				shinyjs::enable("floatPal")
+				shinyjs::enable("APPPal")
+			} else {
+				shiny::updateSelectizeInput(session, "cbfPal", choices = character(0))
+				shiny::updateSelectizeInput(session, "CLPal", choices = character(0))
+				shiny::updateSelectizeInput(session, "contrastPal", choices = character(0))
+				shiny::updateSelectizeInput(session, "floatPal", choices = character(0))
+				shiny::updateSelectizeInput(session, "APPPal", choices = character(0))
+
+				shinyjs::disable("cbfPal")
+				shinyjs::disable("CLPal")
+				shinyjs::disable("contrastPal")
+				shinyjs::disable("floatPal")
+				shinyjs::disable("APPPal")
 			}
+
 		})
 
 		shiny::observeEvent(input$cbfPal, update_reactive(input$cbfPal, 1))
@@ -630,6 +626,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				tab_vals$palBW = character(0)
 				tab_vals$col1 = character(0)
 				tab_vals$col2 = character(0)
+				tab_vals$b = integer(0)
+				tab_vals$b = integer(0)
 				tab_vals$type = character(0)
 
 			} else {
@@ -643,8 +641,18 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 				tab_vals$palBW = colsBW
 
-				tab_vals$col1 = cols[1]
-				tab_vals$col2 = cols[2]
+				tab_vals$b = approx_blues(cols)
+				tab_vals$r = approx_reds(cols)
+
+				if (pal_nr == 4) {
+					# select maximum floating colors
+					tab_vals$col1 = cols[which.max(tab_vals$b)]
+					tab_vals$col2 = cols[which.max(tab_vals$r)]
+				} else {
+					tab_vals$col1 = cols[1]
+					tab_vals$col2 = cols[2]
+				}
+
 				tab_vals$type = x$type
 			}
 			if (pal_nr != 1) shiny::updateSelectizeInput(session, "cbfPal", choices = tab_vals$pals, selected = pal)
@@ -830,10 +838,11 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 
 		output$ex_plus = shiny::renderPlot({
+
 			col1 = tab_vals$col1
+			if (!length(col1)) return(NULL)
 			col2 = tab_vals$col2
 
-			if (!length(col1)) return(NULL)
 			borders = input$borders
 			lwd = input$lwd
 
@@ -841,10 +850,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		output$ex = shiny::renderPlot({
-			col1 = tab_vals$col1
-			col2 = tab_vals$col2
 
+			col1 = tab_vals$col1
 			if (!length(col1)) return(NULL)
+			col2 = tab_vals$col2
 
 			borders = input$borders
 			lwd = input$lwd
@@ -856,11 +865,12 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 		output$table = shiny::renderPlot({
+
 			col1 = tab_vals$col1
+			if (!length(col1)) return(NULL)
 			col2 = tab_vals$col2
 			pal = tab_vals$palBW
 
-			if (!length(col1)) return(NULL)
 
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
@@ -956,6 +966,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 		output$float_selection = shiny::renderUI({
 			pal = tab_vals$pal
+			if (!length(pal)) return(NULL)
 			b = tab_vals$b
 			r = tab_vals$r
 
@@ -973,7 +984,6 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			} else {
 				btext = "This palette does not contain any blue color, so a 3D effect does not happen."
 			}
-print("update")
 
 			shiny::tagList(
 				shiny::markdown(paste(btext)),
