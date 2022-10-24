@@ -1,4 +1,4 @@
-c4a_plot_Plus_Reversed = function(col1 = "blue", col2 = "red", borders = "black", lwd = 0, orientation = c("portrait", "landscape")) {
+c4a_plot_Plus_Reversed = function(col1 = "#A93028", col2 = "#1F6758", borders = "black", lwd = 0, orientation = c("portrait", "landscape")) {
 	orientation = match.arg(orientation)
 	#library(terra)
 	#library(sf)

@@ -269,7 +269,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				 		shiny::column(width = 12,
 				 					  shiny::markdown("#### **Optical Illusion Art** "),
 				 					  shiny::plotOutput("ex_plus", height = "703", width = "900"),
-				 					  shiny::markdown("_Plus Reversed_ by Richard Anuszkiewicz (1960)")
+				 					  shiny::markdown("<br/><br/>_Plus Reversed_ by Richard Anuszkiewicz (1960)"),
+				 					  shiny::checkboxInput("plus_rev_original", "Use original colors", value = FALSE),
 				 		)
 					)
 
@@ -838,15 +839,20 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 
 		output$ex_plus = shiny::renderPlot({
-
-			col1 = tab_vals$col1
-			if (!length(col1)) return(NULL)
-			col2 = tab_vals$col2
-
 			borders = input$borders
 			lwd = input$lwd
 
-			c4a_plot_Plus_Reversed(col1, col2, orientation = "landscape", borders = borders, lwd = lwd)
+			if (input$plus_rev_original) {
+				c4a_plot_Plus_Reversed(orientation = "landscape", borders = borders, lwd = lwd)
+			} else {
+				col1 = tab_vals$col1
+				if (!length(col1)) return(NULL)
+				col2 = tab_vals$col2
+
+				c4a_plot_Plus_Reversed(col1, col2, orientation = "landscape", borders = borders, lwd = lwd)
+
+			}
+
 		})
 
 		output$ex = shiny::renderPlot({
