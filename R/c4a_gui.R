@@ -303,8 +303,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			shiny::tabPanel("Application",
 							value = "tab_app",
 				shiny::fluidRow(
-					shiny::column(width = 12,
-								  shiny::selectizeInput("APPPal", "Palette", choices = init_pal_list))),
+					shiny::column(width = 4,
+								  shiny::selectizeInput("APPPal", "Palette", choices = init_pal_list)),
+					shiny::column(width = 4,
+								  shiny::selectizeInput("APPcvd", "Color vision deficinecy", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"))),
 				shiny::fluidRow(
 				  	shiny::column(width = 4, shiny::sliderInput("MAPlwd", "Line Width", min = 0, max = 3, step = 1, value = 1)),
 				  	shiny::column(width = 4, shiny::selectInput("MAPborders", "Borders", choices = c("black", "white"), selected = "black")),
@@ -1044,31 +1046,34 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		##############################
 
 		output$MAPplot = shiny::renderPlot({
-			if (!length(tab_vals$pal)) return(NULL)
-
 			pal = tab_vals$pal
-			c4a_plot_map(pal, borders = input$MAPborders, lwd = input$MAPlwd, dark = input$dark, dist = input$MAPdist)
+			if (!length(pal)) return(NULL)
+			pal2 = cols4all:::sim_cvd(pal, input$APPcvd)
+
+			c4a_plot_map(pal2, borders = input$MAPborders, lwd = input$MAPlwd, dark = input$dark, dist = input$MAPdist)
 		})
 
 		output$DOTplot = shiny::renderPlot({
-			if (!length(tab_vals$pal)) return(NULL)
-
 			pal = tab_vals$pal
-			c4a_plot_scatter(pal,  borders = input$DOTborders, lwd = input$DOTlwd, dark = input$dark, dist = input$DOTdist)
+			if (!length(pal)) return(NULL)
+			pal2 = cols4all:::sim_cvd(pal, input$APPcvd)
+
+			c4a_plot_scatter(pal2,  borders = input$DOTborders, lwd = input$DOTlwd, dark = input$dark, dist = input$DOTdist)
 		})
 
 		output$TXTplot1 = shiny::renderPlot({
-			if (!length(tab_vals$pal)) return(NULL)
-
 			pal = tab_vals$pal
-			c4a_plot_text(pal, dark = input$dark)
+			if (!length(pal)) return(NULL)
+			pal2 = cols4all:::sim_cvd(pal, input$APPcvd)
+
+			c4a_plot_text(pal2, dark = input$dark)
 		})
 
 		output$TXTplot2 = shiny::renderPlot({
-			if (!length(tab_vals$pal)) return(NULL)
-
 			pal = tab_vals$pal
-			c4a_plot_text(pal, dark = input$dark, frame = TRUE)
+			if (!length(pal)) return(NULL)
+			pal2 = cols4all:::sim_cvd(pal, input$APPcvd)
+			c4a_plot_text(pal2, dark = input$dark, frame = TRUE)
 		})
 
 
