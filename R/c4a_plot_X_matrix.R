@@ -9,13 +9,17 @@ get_CR_matrix = function(p) {
 	m
 }
 
-get_dist_matrix = function(p, cvd = c("none", "deutan", "protan", "tritan")) {
+get_dist_matrix = function(p, cvd = c("none", "deutan", "protan", "tritan"), whole_matrix = FALSE) {
 	cvd = match.arg(cvd)
-	if (cvd == "none") {
+	m = if (cvd == "none") {
 		colorblindcheck::palette_dist(p)
 	} else {
 		colorblindcheck::palette_dist(p, cvd = substr(cvd, 1, 3))
 	}
+	if (whole_matrix) {
+		m[lower.tri(m)] = m[upper.tri(m)]
+	}
+	m
 }
 
 
@@ -44,7 +48,7 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 	m = if (type == "CR") {
 		get_CR_matrix(p)
 	} else {
-		get_dist_matrix(p, cvd = cvd)
+		get_dist_matrix(p, cvd = cvd, whole_matrix = TRUE)
 	}
 
 	p = sim_cvd(p, cvd)
