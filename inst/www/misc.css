@@ -6,6 +6,19 @@
 	cursor: pointer;
 }
 
+#disttable1.crosshair {
+	cursor: pointer;
+}
+#disttable2.crosshair {
+	cursor: pointer;
+}
+#disttable3.crosshair {
+	cursor: pointer;
+}
+#disttable4.crosshair {
+	cursor: pointer;
+}
+
 #chart-label {
 	font-size: 18px;
 	margin-top: 12px;

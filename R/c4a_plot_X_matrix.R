@@ -17,7 +17,7 @@ get_dist_matrix = function(p, cvd = c("none", "deutan", "protan", "tritan"), who
 		colorblindcheck::palette_dist(p, cvd = substr(cvd, 1, 3))
 	}
 	if (whole_matrix) {
-		m[lower.tri(m)] = m[upper.tri(m)]
+		m[lower.tri(m)] = t(m)[lower.tri(m)]
 	}
 	m
 }

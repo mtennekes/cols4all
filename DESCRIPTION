@@ -23,15 +23,16 @@ Imports:
     abind,
     colorspace
 Suggests:
-	colorblindcheck,
-	kableExtra,
-	knitr,
-	shiny,
-	shinydashboard,
-	shinyjs,
-	ggplot2,
-	scales,
-	tmap
+    colorblindcheck,
+    kableExtra,
+    knitr,
+    shiny,
+    shinydashboard,
+    shinyjs,
+    ggplot2,
+    scales,
+    tmap,
+    rmarkdown
 URL: https://github.com/mtennekes/cols4all
 BugReports: https://github.com/mtennekes/cols4all/issues
 Roxygen: list(markdown = TRUE)

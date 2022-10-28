@@ -1,3 +1,9 @@
+<style>
+ul {
+    list-style-type: none;
+    margin-left: 0px;
+}
+</style>
 #### **Basics**
 
 The human eye has three types of cones, which are sensitive to light of different wavelengths: long, medium, and short. Their peak sensitivities (of 565, 540, and 440 nm respectively) correspond to the primary colors red, green, and blue. In computer graphics, a color is usually defined as RGB, which is a mixture of those three primary colors. RGB colors are often represented in hex-format (e.g. #FF00FF), where the first two characters specify red (in hex, so FF means 255), the third and fourth green (00 means 0) and the last two blue. So #FF00FF is purple. Formally, the color space is known as _sRGB_.
@@ -39,7 +45,7 @@ Regarding the used **hues**, we distinguish
   - Two-hue palettes (&#x262F;) each wing has its own distinct hue, which is highly recommended
   - Spectral (&#127752;) which are easy to distinguish colors, but less suitable for quantitative analysis
  
-##### Tab panel "Colorblind Friendliness & Hues"
+#### _Tab panel_
 
 In the plot at the top of the panel, the palette colors are shown in the original colors, and simulated for the three types of color vision deficiency.
 
@@ -49,9 +55,9 @@ The lines shown in the simulated triangle color spaces are called **confusion li
 
 The **distance matrices** show which colors are similar to each other for people with normal color vision and for people with color vision deficiency. The used symbols are:
 
-- &#9632 (extremely close): `dist <= 2`
-- &#9650 (very close): `2 < dist <= 5` 
-- &#9650 (close): `5 < dist <= 10`
+- &#9632; (extremely close): `dist <= 2`
+- &#9650; (very close): `2 < dist <= 5` 
+- &#9650; (close): `5 < dist <= 10`
 
 You can click on the matrix to select two colors. On the right hand side of the screen are examples of maps using the two selected colors.
 
@@ -74,7 +80,7 @@ Why? Because it is recommended to use a palette of colors that stand out about e
 
 Note that harmonic color palettes are usually not color blind friendly. Furthermore, when the luminance values of the colors are about equal, the contrast of those colors is low, which requires the use of border lines (see below).
 
-##### Tab panel "Vividness & Harmony"
+#### _Tab panel_
 
 In the chroma-luminance (CL) plot, the chroma and luminance values for all palette colors are shown. The dashed vertical lines divide chroma into three classes: low, medium, and high. The white box indicates the harmony.
 
@@ -86,16 +92,35 @@ The border between two colored shapes appears **wobbly** when the colors are equ
 
 The **contrast ratio** is a measure for equiluminance, calculated as `CR = (L1 + 0.05) / (L2 + 0.05)`, where `L1` and `L2` are the luminances (normalized between 0 and 1) of the lighter and darker colors, respectively. Note that the minimum contrast ratio is 1 and the maximum 21.
 
+In the overview table, there are three flags that indicate low contrast (`CR < 1.2`):
+
+- <font size="1">&#127937;</font>: Between two colors of the palettes
+- <font size="1">&#127987;</font>: Between one color of the palette and white
+- <font size="1">&#127988;</font>: Between one color of the palette and black
+
 The go-to solution to prevent wobbly borders is by using black or white (depending of the lightness of the colors) **border lines**."
 
-##### Tab panel "Contrast"
+#### _Tab panel_
 
 The contrast ratio matrix shows the contrast ratio for each pair of colors. The used symbols are:
 
-- &#9632 (extremely low): `CR <= 1.2`
-- &#9650 (very low): `1.2 < CR <= 1.5` 
-- &#9650 (low): `1.5 < CR <= 2.0`
+- <font size="3">&#9632;</font> (extremely low): `CR <= 1.2`
+- <font size="2">&#9650;</font> (very low): `1.2 < CR <= 1.5` 
+- <font size="1">&#9679;</font> (low): `1.5 < CR <= 2.0`
 
 When colors with a low contrast ratio are shown next to each other, border lines are recommended to prevent wobbly (unstable) borders.
 
 You can click on the matrix to select two colors. The example charts and the optical illusion art illustrate how severe this problem is, and how border lines can help.
+
+#### **3D Blues**
+
+Pure blue colors, by which we mean a 0 or very low number for the R (red) and G (green) channels and a high number for the B (blue) channel may cause a visual illusion called **chromostereopsis**. This effect is especially prominent when blue objects are shown next to red objects against a black background.
+
+The table column "3D Blues" indicates when a palette contains a pure blue color. The used symbol is B7#9 (which refers to a music chord used in blues music). 
+
+#### _Tab panel_
+
+
+#### **Application**
+
+#### _Tab panel_

@@ -40,27 +40,34 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 
 	grid::grid.raster(cols)
 
+	w = hex2xyY("#FFFFFF")
+	x0 = rescale(w[,1], from = rgb_data$xrange, to = c(0, 1))
+	y0 = rescale(w[,2], from = rgb_data$yrange, to = c(0, 1))
+
 	if (confusion_lines) {
+		a0 = head(seq(0, 2 * pi, length.out = 30), -1)
 		a1 = head(seq(0, 2 * pi, length.out = 100), -1)
 		a2 = head(seq(0, 2 * pi, length.out = 200), -1)
 
-		ind = (rbind(rep(1, 3), diag(3)) == TRUE)[match(cvd, c("none", "deutan", "protan", "tritan")), ]
+		#ind = (rbind(rep(1, 3), diag(3)) == TRUE)[match(cvd, c("none", "deutan", "protan", "tritan")), ]
+		ind = match(cvd, c("none", "deutan", "protan", "tritan"))
 
-		coords = list(c(0.747, 0.253), c(1.4, -0.4), c(0.171, 0))[ind]
+		co = list(w[,1:2], c(0.747, 0.253), c(1.4, -0.4), c(0.171, 0))[[ind]]
 
-		alist = list(a1, a2, a1)[ind]
+		a = list(a0, a1, a1, a2, a1)[[ind]]
 
-		coords_scale = lapply(coords, function(co) {
-			c(rescale(co[1], from = rgb_data$xrange, to = c(0, 1)),
-			  rescale(co[2], from = rgb_data$yrange, to = c(0, 1)))
-		})
+		co2 = c(rescale(co[1], from = rgb_data$xrange, to = c(0, 1)),
+					 rescale(co[2], from = rgb_data$yrange, to = c(0, 1)))
 
-		mapply(function(co, a) {
-			for (ai in a) {
-				grid::grid.lines(c(co[1], co[1] + 5 * cos(ai)),
-						   c(co[2], co[2] + 5 * sin(ai)), gp=grid::gpar(col="#000000"))
+		for (ai in a) {
+			if (cvd == "none") {
+				grid::grid.lines(c(co2[1] + .025 * cos(ai), co2[1] + 5 * cos(ai)),
+								 c(co2[2] + .025 * sin(ai), co2[2] + 5 * sin(ai)), gp=grid::gpar(col="#555555"))
+			} else {
+				grid::grid.lines(c(co2[1], co2[1] + 5 * cos(ai)),
+								 c(co2[2], co2[2] + 5 * sin(ai)), gp=grid::gpar(col="#000000"))
 			}
-		}, coords_scale, alist)
+		}
 	}
 
 	if (!is.null(colors)) {
@@ -72,9 +79,6 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 	}
 
 	if (white) {
-		w = hex2xyY("#FFFFFF")
-		x0 = rescale(w[,1], from = rgb_data$xrange, to = c(0, 1))
-		y0 = rescale(w[,2], from = rgb_data$yrange, to = c(0, 1))
 		grid::grid.points(x0, y0, size = grid::unit(.5, "lines"), pch = 3)
 
 	}
@@ -91,6 +95,6 @@ c4a_plot_confusion_lines = function(cols = NULL, cvd = "none", dark = FALSE) {
 
 	grid::grid.rect(gp=grid::gpar(fill = bc, col = NA))
 
-	plot_rgb(cvd = cvd, colors = cols, confusion_lines = cvd != "none", dark = dark)
+	plot_rgb(cvd = cvd, colors = cols, confusion_lines = TRUE, dark = dark)
 
 }

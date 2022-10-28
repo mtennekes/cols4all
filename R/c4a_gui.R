@@ -209,14 +209,19 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 											  shiny::plotOutput("cbfSim", "Palette simulation", width = "800px", height = "150px"))),
 							shiny::fluidRow(
 								shiny::column(width = 4, shiny::markdown("<br/><br/>
-					  #### **Confusion lines**")),
+					  #### **Hue lines**")),
 								shiny::column(width = 6, shiny::markdown("<br/><br/>
 					  #### **Distance matrices**"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("Normal color vision"))),
 							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px")),
 											shiny::column(width = 6, shiny::plotOutput("disttable1", height = "375px", width = "500px", click = "disttable1_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex1", height = "375px", width = "150px"))),
-							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>Deutan (red-green blind)"))),
+							shiny::fluidRow(
+								shiny::column(width = 4, shiny::markdown("<br/><br/>
+					  #### **Confusion lines**"))),
+								#shiny::column(width = 6, shiny::markdown("<br/><br/>
+					  #### **Distance matrices**"))),
+							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("Deutan (red-green blind)"))),
 							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB2", "Confusion lines1", width = "375px", height = "375px")),
 											shiny::column(width = 6, shiny::plotOutput("disttable2", height = "375px", width = "500px", click = "disttable2_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex2", height = "375px", width = "150px"))),
