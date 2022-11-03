@@ -199,7 +199,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					 		shiny::tableOutput("show"))
 					 )
 			),
-			shiny::tabPanel("Color Blind Friendliness & Hues",
+			shiny::tabPanel("Color Blind Friendliness",
 							value = "tab_cvd",
 							shiny::fluidRow(
 								shiny::column(width = 12,
@@ -233,18 +233,24 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB4", "Confusion lines1", width = "375px", height = "375px")),
 											shiny::column(width = 6, shiny::plotOutput("disttable4", height = "375px", width = "500px", click = "disttable4_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex4", height = "375px", width = "150px")))),
-			shiny::tabPanel("Vividness & Harmony",
+			shiny::tabPanel("HCL Analysis",
 							value = "tab_cl",
 							shiny::fluidRow(
 								shiny::column(width = 12,
-											  shiny::markdown("<br/><br/>
-					  #### **Vividness & Harmony**
+											  shiny::selectizeInput("CLPal", "Palette", choices = init_pal_list),
+											  shiny::markdown("#### **Hue**
+
+							What hues do the palette colors have?"),
+											  shiny::plotOutput("anaHUE", "Hue plot", width = "400px", height = "400px"))),
+											  #shiny::plotOutput("anaRGB1", "RGB plot", width = "500px", height = "500px"),
+											  #shiny::sliderInput("rgbL", label = "Luminance", min = 5, max = 100, value = 100, step = 1))),
+
+							shiny::fluidRow(
+								shiny::column(width = 12,
+											  shiny::markdown("#### **Chroma-Luminance plot**
 
 							How bright (luminance) and vivid (chroma) are the colors in a palette?<br/><br/>"),
-											  shiny::selectizeInput("CLPal", "Palette", choices = init_pal_list),
-											  shiny::markdown("<br/><br/>
-					  #### **Chroma-Luminance plot**"),
-								shiny::plotOutput("CLplot", "CL plot", width = "600px", height = "600px")
+											  shiny::plotOutput("CLplot", "CL plot", width = "600px", height = "600px")
 								))),
 			shiny::tabPanel("Contrast",
 							value = "tab_cont",
@@ -825,6 +831,18 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		#############################
 
 
+		output$anaHUE = shiny::renderPlot({
+			if (!length(tab_vals$pal)) return(NULL)
+
+			pal = tab_vals$pal
+			c4a_plot_hues(pal, dark = input$dark)
+		})
+		# output$anaRGB1 = shiny::renderPlot({
+		# 	if (!length(tab_vals$pal)) return(NULL)
+		#
+		# 	pal = tab_vals$pal
+		# 	c4a_plot_rgb_space(pal, cvd = "none", dark = input$dark, L = paste0("L", input$rgbL))
+		# })
 
 		output$CLplot = shiny::renderPlot({
 			pal = tab_vals$pal

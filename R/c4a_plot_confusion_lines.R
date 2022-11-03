@@ -4,6 +4,11 @@ xyY2XYZ = function(x, y, Y) {
 	XYZ(X, Y, Z)
 }
 
+XYZ2xyY = function(X, Y, Z) {
+	x = X / (X+Y+Z)
+	y = Y / (X+Y+Z)
+	c(x=x, y=y, Y=Y)
+}
 
 hex2xyY = function(cols) {
 	co = coords(as(hex2RGB(cols), "XYZ"))
@@ -24,7 +29,17 @@ cellplot = function (r, c, e, ...) {
 }
 
 
-plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lines = TRUE, colors = NULL, white = TRUE, dark = FALSE) {
+plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lines = TRUE, colors = NULL, white = TRUE, dark = FALSE, L = "L100") {
+	grid::grid.newpage()
+
+	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc"), clip = TRUE))
+
+	fc = ifelse(dark, "#FFFFFF", "#000000")
+	bc = ifelse(dark, "#000000", "#FFFFFF")
+
+	grid::grid.rect(gp=grid::gpar(fill = bc, col = NA))
+
+
 	cvd = match.arg(cvd)
 
 	fc = ifelse(dark, "#FFFFFF", "#000000")
@@ -36,9 +51,10 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 	}
 
 	#rgb_data$cols[rgb_data$cols == "#FFFFFF"] = NA
-	cols = toM(sim_cvd(rgb_data$cols, cvd), rgb_data$res[1])
+	cols = rgb_data$cols_list[[L]]
+	colsM = toM(sim_cvd(cols, cvd), rgb_data$res[1])
 
-	grid::grid.raster(cols)
+	grid::grid.raster(colsM)
 
 	w = hex2xyY("#FFFFFF")
 	x0 = rescale(w[,1], from = rgb_data$xrange, to = c(0, 1))
@@ -85,16 +101,10 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 
 }
 
-c4a_plot_confusion_lines = function(cols = NULL, cvd = "none", dark = FALSE) {
-	grid::grid.newpage()
+c4a_plot_rgb_space = function(cols = NULL, cvd = "none", dark = FALSE, L = "L100") {
+	plot_rgb(cvd = cvd, colors = cols, confusion_lines = FALSE, dark = dark, L = L)
+}
 
-	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc"), clip = TRUE))
-
-	fc = ifelse(dark, "#FFFFFF", "#000000")
-	bc = ifelse(dark, "#000000", "#FFFFFF")
-
-	grid::grid.rect(gp=grid::gpar(fill = bc, col = NA))
-
-	plot_rgb(cvd = cvd, colors = cols, confusion_lines = TRUE, dark = dark)
-
+c4a_plot_confusion_lines = function(cols = NULL, cvd = "none", dark = FALSE, L = "L100") {
+	plot_rgb(cvd = cvd, colors = cols, confusion_lines = TRUE, dark = dark, L = L)
 }

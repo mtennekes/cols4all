@@ -226,7 +226,7 @@ get_hue_width = function(hs) {
 			}
 			if (gap > gap_max) gap_max = gap
 		}
-		Hwidth = round(360 - gap_max)
+		round(360 - gap_max)
 	}
 
 }

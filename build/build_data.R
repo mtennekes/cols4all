@@ -19,15 +19,19 @@ shp = sf::st_as_grob(nc$geometry, gp = gpar(fill = cols[ind], col = NA))
 
 vars = load("R/sysdata.rda")
 
+Ls = seq(10,100,by=1)
+LCH = colorspace::polarLUV(Ls, 50, 50)
+Ys = coords(as(LCH, "XYZ"))[,2]
 
 rgb_data = local({
+	library(colorspace)
 	xrange = c(0.11, 0.68)
 	yrange = c(0.05,0.62)
 	res = c(201, 201)
 
 	d = expand.grid(x = seq(xrange[1], xrange[2], length.out = res[1]),
 					y = seq(yrange[1], yrange[2], length.out = res[2]),
-					Y = seq(0, 100, by = 0.5))
+					Y = Ys)
 
 	X = xyY2XYZ(d$x, d$y, Y = d$Y)
 	Z = as(X, "RGB")
@@ -45,21 +49,6 @@ rgb_data = local({
 
 
 	library(tidyverse)
-	df_m = df |>
-		group_by(x,y) |>
-		arrange(desc(Y)) |>
-		slice(1) |>
-		ungroup() |>
-		arrange(x, y)
-
-	e = expand.grid(x = seq(xrange[1], xrange[2], length.out = res[1]),
-					y = seq(yrange[1], yrange[2], length.out = res[2])) |>
-		as.data.frame()
-
-	df_e = e |>
-		left_join(df_m) #|>
-		#replace_na(list(hex = "#FFFFFF")) |>
-		#mutate(hex = ifelse(hex == "#000000", "#FFFFFF", hex))
 
 	toM = function(x, nr) {
 		m = matrix(x, nrow = nr, byrow = TRUE)
@@ -67,16 +56,37 @@ rgb_data = local({
 	}
 
 
-	cols = df_e$hex
+	cols_list = lapply(Ys, function(Y2) {
+		if (Y2 == 100) {
+			df_m = df |>
+				group_by(x,y) |>
+				arrange(desc(Y)) |>
+				slice(1) |>
+				ungroup() |>
+				arrange(x, y)
+		} else {
+			df_m = df |>
+				filter(Y == Y2) |>
+				arrange(x, y)
+		}
+		e = expand.grid(x = seq(xrange[1], xrange[2], length.out = res[1]),
+						y = seq(yrange[1], yrange[2], length.out = res[2])) |>
+			as.data.frame()
+		df_e = e |>
+			left_join(df_m) #|>
+		df_e$hex
+	})
+	names(cols_list) = paste0("L", Ls)
 
 	list(xrange = xrange,
-					yrange = yrange,
-					res = res,
-					cols = cols)
+		 yrange = yrange,
+		 res = res,
+		 cols_list = cols_list)
 
 })
 
-
+# keep only step 10 luminance
+rgb_data$cols_list = rgb_data$cols_list[paste0("L", seq(10, 100, by = 10))]
 
 save(.z, .s, .zbib, shp, shp_c, bbx, rgb_data, file = "R/sysdata.rda", compress = "xz")
 

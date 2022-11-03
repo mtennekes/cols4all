@@ -34,8 +34,8 @@ c4a_plot_CL = function(cols, Lrange = FALSE, dark = FALSE) {
 						width = grid::unit(diff(cr2), "native"), height = grid::unit(diff(lr2), "native"),
 						gp = grid::gpar(fill = bc, col = NA))
 
-		grid::grid.lines(x = grid::unit(rep(.C4A$Cpastel, 2), "native"), gp = grid::gpar(col = fc, lty = 2))
-		grid::grid.lines(x = grid::unit(rep(.C4A$Cintense, 2), "native"), gp = grid::gpar(col = fc, lty = 2))
+		#grid::grid.lines(x = grid::unit(rep(.C4A$Cpastel, 2), "native"), gp = grid::gpar(col = fc, lty = 2))
+		#grid::grid.lines(x = grid::unit(rep(.C4A$Cintense, 2), "native"), gp = grid::gpar(col = fc, lty = 2))
 
 
 		grid::grid.polyline(x = grid::unit(c(cr[1], cr[1], cr[1], cr[2], cr[2], cr[2]), "native"),
@@ -46,13 +46,14 @@ c4a_plot_CL = function(cols, Lrange = FALSE, dark = FALSE) {
 						width = grid::unit(diff(cr2), "native"), height = grid::unit(marg * 2, "native"),
 						gp = grid::gpar(fill = gc, col = NA))
 
-		ctext = if (diff(cr) <= .C4A$CrangeHarm) {
-			"Low chroma range"
-		} else if (diff(cr) >= .C4A$CrangeDisH) {
-			"High chroma range"
-		} else {
-			"Medium chroma range"
-		}
+		ctext = paste0("C range: ", round(diff(cr)), {
+			if (diff(cr) <= .C4A$CrangeHarm) {
+				" (low)"
+			} else if (diff(cr) >= .C4A$CrangeDisH) {
+				" (high)"
+			} else " (medium)"
+		})
+
 		grid::grid.text(ctext, x = grid::unit(mean(cr2), "native"), y = grid::unit(lr2[1] - marg * 2.5, "native"), gp = grid::gpar(col = fc, cex = 0.8))
 
 
@@ -61,13 +62,13 @@ c4a_plot_CL = function(cols, Lrange = FALSE, dark = FALSE) {
 								y = grid::unit(c(lr[1], lr[1], lr[1], lr[2], lr[2], lr[2]), "native"),
 								id = c(1, 1, 2, 2, 3, 3), gp = grid::gpar(col = dc))
 
-			ltext = if (diff(lr) <= .C4A$LrangeHarm) {
-				"Low luminance range"
-			} else if (diff(lr) >= .C4A$LrangeDisH) {
-				"High luminance range"
-			} else {
-				"Medium luminance range"
-			}
+			ltext = paste0("L range: ", round(diff(lr)), {
+				if (diff(lr) <= .C4A$LrangeHarm) {
+					" (low)"
+				} else if (diff(lr) >= .C4A$LrangeHarm) {
+					" (high)"
+				} else " (medium)"
+			})
 			grid::grid.text(ltext, x = grid::unit(cr2[2] + marg * 2.5 * 1.8, "native"), y = grid::unit(mean(lr2), "native"), rot = 90, gp = grid::gpar(col = fc, cex = 0.8))
 		}
 
@@ -77,7 +78,9 @@ c4a_plot_CL = function(cols, Lrange = FALSE, dark = FALSE) {
 
 
 		#grid::grid.points(m[,2], m[,3], pch = 15, gp = grid::gpar(col = cols))
-		grid::grid.rect(grid::unit(m[,2], "native"), grid::unit(m[,3], "native"), width = grid::unit(sq * 1.8, "native"), height = grid::unit(sq, "native"), gp = grid::gpar(col = NA, fill = cols))
+		grid::grid.rect(grid::unit(m[,2], "native"), grid::unit(m[,3], "native"), width = grid::unit(sq * 1.8, "native"), height = grid::unit(sq, "native"), gp = grid::gpar(col = fc, fill = cols))
+
+		grid::grid.text(seq_along(cols), x = grid::unit(m[,2], "native") + grid::unit(0.75, "lines"), grid::unit(m[,3], "native"), gp = grid::gpar(col = fc))
 	}, yscale = c(0,100), xscale = c(0,180))
 
 	cellplot(2, 1, {
