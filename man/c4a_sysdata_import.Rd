@@ -3,20 +3,29 @@
 \name{c4a_sysdata_import}
 \alias{c4a_sysdata_import}
 \alias{c4a_sysdata_export}
+\alias{c4a_sysdata_remove}
 \title{Import and export system data}
 \usage{
-c4a_sysdata_import(x)
+c4a_sysdata_import(data)
 
 c4a_sysdata_export()
+
+c4a_sysdata_remove(fullnames = NULL, series = NULL, are.you.sure = NA)
 }
 \arguments{
-\item{x}{system data}
+\item{data}{cols4all data (see \code{c4a_data})}
+
+\item{fullnames}{full palette names (so in the format \code{series.palette_name})}
+
+\item{series}{a character vector of series names that should be removed (use \code{"all"} to remove all).}
+
+\item{are.you.sure}{are you sure you want to remove series?}
 }
 \value{
 \code{c4a_sysdata_export} returns the system data
 }
 \description{
-Import and export system data. \code{c4a_sysdata_import} will import system data and overwrite the current system data. System data includes palette data and pre-calculated color-blind-friendliness scores. \code{c4a_sysdata_export} will export the current system data. These functions are for advanced use; the functions \code{\link{c4a_palettes_add}} and \code{\link{c4a_palettes_remove}} are user-friendly interfaces to change the loaded palettes.
+Import and export system data. \code{c4a_sysdata_import} will import system data and overwrite the current system data, \code{c4a_sysdata_export} will export the current system data, and \code{c4a_sysdata_remove} (partly) removes system data.
 }
 \examples{
 x = c4a_sysdata_export()

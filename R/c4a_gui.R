@@ -57,7 +57,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		series = intersect(series, allseries)
 	}
 	if (!length(series)) {
-		message("No palette series to show. Either restart c4a_gui with different parameters, add series with c4a_palettes_add, or import data with c4a_sysdata_import")
+		message("No palette series to show. Either restart c4a_gui with different parameters, add palette data with c4a_load or c4a_sysdata_import")
 		return(invisible(NULL))
 	}
 
@@ -137,7 +137,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 					 	shiny::column(width = 9,
 					 				  shiny::fluidRow(
 					 				  	shiny::column(width = 4,
-		 				  				  shiny::radioButtons("type1", "Palette Type", choices = types1, selected = type1),
+		 				  				  shiny::radioButtons("type1", "Palette type", choices = types1, selected = type1),
 		 				  				  shiny::conditionalPanel(
 		 				  				  	condition = "input.type1 == 'biv'",
 		 				  				  	shiny::selectizeInput("type2", "Subtype", choices = types2[["biv"]], selected = type2))),
@@ -254,19 +254,39 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 								))),
 			shiny::tabPanel("Contrast",
 							value = "tab_cont",
+							shiny::fluidRow(
+								shiny::column(width = 12,
+											  shiny::markdown("<br/><br/>
+					  #### **Contrast**"),
+											  shiny::selectizeInput("contrastPal", "Palette", choices = init_pal_list))),
+				 	shiny::fluidRow(
+				 		shiny::column(width = 6,
+				 					  shiny::plotOutput("table", height = "300px", width = "400px", click = "table_click"),
+				 					  shiny::markdown("
+				 					  Low contrast ratio (solid symbols): two colors may appear 'wobbly'. Border lines will solve this.
+
+				 					  High contrast ratio (open symbols): safe to print text in one color with a background in the other color."),),
+				 		shiny::column(width = 6,
+	 					  shiny::markdown("<br></br>
+						  				#### **Readable text?**
+
+						  				<font size='1'>&#x25CB;</font> Minimum required contrast ratio for text
+
+						  				<font size='2'>&#x25B3;</font> Also suitable for people with slight visual impairment (WCAG 2.0 Level AA)
+
+						  				<font size='4'>&#x25FB;</font> Also suitable for people with severe visual impairment (WCAG 2.0 Level AAA)"),
+	 					  shiny::plotOutput("textPlot", height = "200", width = "400")
+				 		)),
+
 				 	shiny::fluidRow(
 				 		shiny::column(width = 12,
 				 					  shiny::markdown("<br/><br/>
-					  #### **Equiluminance**
+				 					  #### **Equiluminance**
 
-							Colors that are equally bright (luminant) may cause 'wobbly' borders when drawn next to each other. Using border lines solves this potential problem.<br/><br/>"),
-				 					  shiny::selectizeInput("contrastPal", "Palette", choices = init_pal_list),
-				 					  shiny::markdown("#### **Contrast ratio**"),
-				 					  shiny::plotOutput("table", height = "300px", width = "400px", click = "table_click"),
-				 					  shiny::markdown("A low contrast ratio means that colors are about equally bright (luminant)"),)),
-
+				 					  <font size='4'>&#x25FE;</font><font size='2'>&#x25B2;</font><font size='1'>&#x25CF;</font> Two so-called equilimunent colors will appear 'wobbly' next to each other. Border lines will solve this."))),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 3,
+				 					  shiny::markdown(""),
 				 					  shiny::radioButtons("chart", "Example chart", c("Choropleth", "Barchart"), "Choropleth", inline = FALSE),
 			 					  	  shiny::sliderInput("lwd", "Line Width", min = 0, max = 3, step = 1, value = 0),
 				 					  shiny::selectInput("borders", "Borders", choices = c("black", "white"), selected = "black")),
@@ -278,7 +298,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				 	),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 12,
-				 					  shiny::markdown("#### **Optical Illusion Art** "),
+				 					  shiny::markdown("**Optical Illusion Art**"),
 				 					  shiny::plotOutput("ex_plus", height = "703", width = "900"),
 				 					  shiny::markdown("<br/><br/>_Plus Reversed_ by Richard Anuszkiewicz (1960)"),
 				 					  shiny::checkboxInput("plus_rev_original", "Use original colors", value = FALSE),
@@ -834,8 +854,13 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		output$anaHUE = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
+			width = switch(tab_vals$type,
+						   seq = "total",
+						   div = "halves",
+						   "none")
+
 			pal = tab_vals$pal
-			c4a_plot_hues(pal, dark = input$dark)
+			c4a_plot_hues(pal, dark = input$dark, width = width)
 		})
 		# output$anaRGB1 = shiny::renderPlot({
 		# 	if (!length(tab_vals$pal)) return(NULL)
@@ -909,7 +934,13 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 
+		output$textPlot = shiny::renderPlot({
+			col1 = tab_vals$col1
+			if (!length(col1)) return(NULL)
+			col2 = tab_vals$col2
 
+			c4a_plot_text2(c(col1, col2, dark = input$dark))
+		})
 
 		get_click_id = function(pal, x, y) {
 			n = length(pal)

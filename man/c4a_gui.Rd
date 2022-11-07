@@ -53,60 +53,8 @@ c4a_table(
 \item{verbose}{should messages and warnings be printed?}
 }
 \description{
-Graphical user interface to analyse palettes. \code{c4a_table} shows a table that can be opened in the browser. \code{c4a_gui} is a graphical user interface (shiny app) around this table. The package \code{kableExtra} is required for \code{c4a_table} and for \code{c4a_gui} the pacakges \code{shiny} and \code{shinyjs}.
+Graphical user interface to analyse palettes. \code{c4a_table} shows a table that can be opened in the browser. \code{c4a_gui} is a graphical user interface (shiny app) around this table.
 }
-\section{Table Columns}{
-
-
-\tabular{lll}{
-\strong{Column            } \tab \strong{Name} \tab \strong{Description} \cr
-Max n \tab \code{"nmax"} \tab Maximum number of colors (\code{"cat"} only) \cr
-Colorblind-friendly \tab \code{"cbfriendly"} \tab Is it color-blind friendy? \cr
-Harmonic palette \tab \code{"harmonic"} \tab Are the colors in harmony with each other? \cr
-Intense colors \tab \verb{"highC} \tab Are there any intense (saturated) colors? \cr
-Hue type \tab \code{"hueType"} \tab How many different hue ranges are used? For a sequential (\code{"seq"}) palette we consider three classes. 1) "single hue" where one hue is used, which is recommended for quantitative analysis. This is indicated by a paint brush icon 2) "spectral hue" where a wide range of hues are used, e.g. a rainbow palette. This less suitable for quantitative analysis but better to read different colors. This is indicated by a rainbow icon 3) a trade-off between the two mentioned classes (no icon used). For a diverging (\code{"div"}) palette, we also consider similar three classes. 1) "two hues", where one hue is used for the left wing and one for the right wing. 2) "spectral hue" and 3) trade-off. \cr
-Ranking \tab \code{"rank"} \tab Ranking of palettes taking the above into account
-}
-}
-
-\section{Color-blind-friendliness indicators}{
-
-
-\tabular{lll}{
-\strong{Indicator            } \tab \strong{Name} \tab \strong{Description} \cr
-Minimum distance \tab \code{"min_dist"} \tab Minimum distance between any two colors for any color vision deficiency type. This is a measure to which extend categorical palettes (type \code{"cat"}) are suitable for people with color vision deficiency \cr
-Minimum step \tab \code{"min_step"} \tab Minimum distance between two neighboring colors in a sequential (\code{"seq"}) or diverging (\code{"div"}) palette, for any color vision deficiency type. The larger, the better. \cr
-Maximum step \tab \code{"max_step"} \tab Maximum distance between two neighboring colors in a sequential (\code{"seq"}) palette, for any color vision deficiency type. For sequential palettes that score the same on \code{"min_step"}, the ones with lower \code{"max_step"} values are slightly preferable, because this means that the distances between neighboring colors is more homogeneous. \cr
-Inter-wing-distance \tab \code{"inter_wing_dist"} \tab Minimum distance between any color in the left wing to any color in the right wing of a diverging (\code{"div"}) palette, for any color vision deficiency type. The larger, the better. \cr
-}
-
-Color-blind friendliness scores are calculated as:
-\itemize{
-\item \code{"cat"} \code{min_step}
-\item \code{"seq"} \code{min_step} - \code{max_step} / 1000
-\item \code{"div"} min(\code{inter_wing_dist}, \code{min_step} * 2)
-}
-
-Note: these formulas are in development, and may change in the near future. Suggestions are welcome (via github issues).
-}
-
-\section{General indicators}{
-
-
-We use the HCL color space, where H is the hue, C the chroma and L the lightness. See the \code{colorspace} package (that is used under the hood) for details.
-
-\tabular{lll}{
-\strong{Indicator            } \tab \strong{Name} \tab \strong{Description} \cr
-Chroma max \tab \code{"Cmax"} \tab Maximum chroma value. We have set the threshold for the label "intense colors" at 100. \cr
-Hue width \tab \code{"Hwidth"} \tab The width/range of hue values that are used. For instance, if a palette has hue values 100, 140, and 220, the Hwidth is 120. Since hues are provided in degrees, a hue width close to 360 means that many hues are used (e.g. in a rainbow palette). The primary use is to determine the hue type (see above). \cr
-Hue width L \tab \code{"HwidthL"} \tab Same, but only for the left wing of the palette (useful for diverging palettes) \cr
-Hue width R \tab \code{"HwidthR"} \tab Same, but only for the right wing of the palette (useful for diverging palettes) \cr
-Luminance range \tab \code{"Lrange"} \tab The range of luminance values of the colors. The smaller, the better for a what we call harmonic palette. However, this is at the expense of having distinguishable colors (which contribute to color-blind-friendliness). \cr
-Chroma range \tab \verb{"Crange} \tab The range of chroma values of the colors. Like \code{"Lrange"}, the lower the better. \cr
-Lum/Chr range \tab \code{"LCrange"} \tab Defined as max(2 * \code{Lrange}, \code{Crange}), and used to label a palette "harmonic". This formula is determined by some trial-and-error, so suggestions for improvement are welcome.
-}
-}
-
 \examples{
 if (requireNamespace("shiny") && requireNamespace("kableExtra") && interactive()) {
 

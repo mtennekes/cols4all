@@ -6,7 +6,7 @@
 \alias{cols4all}
 \title{cols4all overview}
 \description{
-Color palettes for all people, including those with color vision deficiency. Palettes, organized by source and type, are scored on several properties such as color-blind-friendliness and harmony. Furthermore each palette is assigned a distinct color for missing values. Own palettes can be loaded as well. ggplot2 scales are included.
+cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palettes have been organized by source and type, and scored on several properties such as color-blind-friendliness and harmony. Furthermore each palette is assigned a distinct color for missing values. Own palettes can be loaded as well. ggplot2 scales are included.
 }
 \details{
 This page provides a brief overview of all package functions.
@@ -33,8 +33,8 @@ This page provides a brief overview of all package functions.
 \section{Importing and exporting palettes}{
 
 \tabular{ll}{
-\code{\link{c4a_palettes_add}}\tab Add color palettes \cr
-\code{\link{c4a_palettes_remove}}\tab Remove color palettes \cr
+\code{\link{c4a_data}}\tab Build color palette data \cr
+\code{\link{c4a_load}}\tab Load color palette data \cr
 \code{\link{c4a_sysdata_import}}\tab Import system data \cr
 \code{\link{c4a_sysdata_export}}\tab Export system data \cr
 }

@@ -1,6 +1,21 @@
-#' Add and remove palette series
+#' Build and load palette data
 #'
-#' Add and remove palette series. `c4a_palettes_add` can be used to add own palette series and  `c4a_palettes_remove` to remove palette series. `c4a_palettes_add_as_is` is the same as `c4a_palettes_add`, but by default without any processing. These functions require the R package `colorblindcheck`.
+#' Build palette data. Both `c4a_data` and `c4a_data_as_is` build data palette. The difference is that the former processes the palettes (see below) whereas the latter takes the palette data as is. Data can subsequently be loaded into cols4all via `c4a_load`.
+#'
+#' In cols4all, palettes are organized by series and by type. The **series** or 'family' specifies where the palettes belong to. For instance `"brewer"` stands for the color palettes from ColorBrewer. In cols4all we distinguish 7 **types**:
+#'
+#' **`"cat"`** categorical
+#' **`"seq"`** sequential
+#' **`"div"`** diverging
+#' **`"bivs`** bivariate (sequential x sequential)
+#' **`"bivc`** bivariate (sequential x categorical)
+#' **`"bivd`** bivariate (sequential x diverging)
+#' **`"bivg`** bivariate (sequential x desaturated (grayscale))
+#'
+#' This function structures the palette data, such that it is consistent with the other palette data. This includes:
+#'
+#' * Palette names are made consistent. We use the convention `"my_series.my_palette"`, so all lower case, a period to separate the series name from the palette name, and underscores to separate words.
+#' * (Only for `c4a_data`, bypassed for `c4a_data_as_is`)  Categorical palettes: black is removed from categorical palettes, and a grayscale color is assigned to be used for missing values (other grayscale colors are removed). Sequential palettes are sorted from light to dark.
 #'
 #' Indexing: for a categorical `"cat"` palette, an optional `"index"` attribute determines which colors to use for which lengths: if the palette consists of k colors, index should be a list of k, where the i-th element is an integer vector of length i with values 1,2,...,k. See `c4a_info("rainbow")` and  for an example.
 #'
@@ -12,8 +27,8 @@
 #'
 #' @param x named list of color palettes. See details for indexing.
 #' @param xNA colors for missing values. Vector of the same length as x (or length 1). For `NA` values, the color for missing values is automatically determined (preferable a light grayscale color, but if it is indistinguishable by color blind people, a light color with a low chroma value is selected)
-#' @param types character vector of the same length as x (or length 1), which determines the type of palette `"cat"`, `"seq"`, or `"div"`.
-#' @param series for `c4a_palettes_add`, a character vector of the same length as x (or length 1), which determines the series. For `c4a_palettes_remove` a character vector of series names that should be removed (use `"all"` to remove all).
+#' @param types character vector of the same length as x (or length 1), which determines the type of palette: `"cat"`, `"seq"`, `"div"`, `"bivs"`, `"bivc"`, `"bivd"`, or `"bivg"`. See details.
+#' @param series a character vector of the same length as x (or length 1), which determines the series.
 #' @param nmin,nmax,ndef minimum / maximum / default number of colors for the palette. By default: `nmin = 1`, for `"cat"` `nmax` and `ndef` the number of supplied colors. For the other types, `nmax` is `Inf`. `ndef` is 7 for `"seq"`, 9. For diverging palettes, these numbers refer to the number of columns. (See `mmin`, `mmax`, `mdef` for the rows)
 #' @param mmin,mmax,mdef minimum / maximum / default number of rows for bivariate palettes.
 #' @param format.palette.name should palette names be formatted to lowercase/underscore format?
@@ -24,14 +39,12 @@
 #' @param space color space in which interpolated colors are determined. Options: `"rgb"` (RGB) and `"Lab"` (CIE Lab).
 #' @param range_matrix_args list of lists, one for each palette. Each such list specifies the range of sequential and diverging palettes, in case they are not indexed. See details.
 #' @param bib bibtex reference in the form of a `utils::bibentry` object.
-#' @param are.you.sure are you sure you want to remove series?
-#' @param fullnames full palette names (so in the format `series.palette_name`)
-#' @param ... passed on to `c4a_palettes_add`
-#' @example ./examples/c4a_palettes_add.R
-#' @rdname c4a_palettes_add
-#' @name c4a_palettes_add
+#' @param ... passed on to `c4a_data`
+#' @example ./examples/c4a_data.R
+#' @rdname c4a_data
+#' @name c4a_data
 #' @export
-c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, ndef = NA, mmin = NA, mmax = NA, mdef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL), bib = NA) {
+c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = NA, ndef = NA, mmin = NA, mmax = NA, mdef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL), bib = NA) {
 
 	if (!requireNamespace("colorblindcheck")) stop("Please install colorblindcheck")
 
@@ -195,6 +208,17 @@ c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, nd
 		names(zb) = z$fullname
 	}
 
+	structure(list(data = z, scores = s, citation = zb), class = "c4a_data")
+}
+
+#' @rdname c4a_data
+#' @name c4a_load
+#' @param data cols4all data created with `c4a_data`
+#' @export
+c4a_load = function(data) {
+	z = data$data
+	s = data$scores
+	zb = data$citation
 
 	if (!is.null(.z)) {
 		.z$bib = NULL
@@ -213,15 +237,18 @@ c4a_palettes_add = function(x, xNA = NA, types, series, nmin = NA, nmax = NA, nd
 	attach_bib()
 	fill_P()
 	invisible(NULL)
+
 }
 
-#' @rdname c4a_palettes_add
-#' @name c4a_palettes_add_as_is
+
+
+#' @rdname c4a_data
+#' @name c4a_data_as_is
 #' @export
-c4a_palettes_add_as_is = function(..., format.palette.name = FALSE, remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE, light.to.dark = FALSE, remove.names = FALSE) {
+c4a_data_as_is = function(..., format.palette.name = FALSE, remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE, light.to.dark = FALSE, remove.names = FALSE) {
 
 	args = c(list(...), list(format.palette.name = format.palette.name, take.gray.for.NA = take.gray.for.NA, remove.other.grays = remove.other.grays, remove.blacks = remove.blacks, light.to.dark = light.to.dark, remove.names = remove.names))
-	do.call(c4a_palettes_add, args)
+	do.call(c4a_data, args)
 }
 
 
@@ -256,49 +283,4 @@ check_s = function(s, n) {
 	if (!setequal(dimnames(s)[[2]], .C4A$sc)) stop("columns (second dim) in x$s should correspond to", paste(.C4A$sc, collapse = ","), call. = FALSE)
 	if (d[3] != max(.C4A$nmax)) stop("Third dimension of x$s should be", d[3], call. = FALSE)
 	s
-}
-
-
-#' @rdname c4a_palettes_add
-#' @name c4a_palettes_remove
-#' @export
-c4a_palettes_remove = function(fullnames = NULL, series = NULL, are.you.sure = NA) {
-
-	def_f = !missing(fullnames)
-	def_s = !missing(series)
-
-	if (def_f || def_s) {
-		if (identical(are.you.sure, FALSE)) stop("Please set are.you.sure to TRUE if you are", call. = FALSE)
-	} else {
-		if (!identical(are.you.sure, TRUE)) stop("Without specifying fullnames or series, all palettes will be removed. Please set are.you.sure to TRUE if you are", call. = FALSE)
-	}
-
-	z = .C4A$z
-	s = .C4A$s
-
-	if (def_f) {
-		sel = z$fullname %in% fullnames
-		mes = paste0("cols4all palettes \"", paste(intersect(fullnames, z$fullname), collapse = "\", \""), "\" removed")
-	} else if (def_s) {
-		sel = z$series %in% series
-		mes = paste0("cols4all series \"", paste(intersect(series, z$series), collapse = "\", \""), "\" removed")
-	} else {
-		sel = TRUE
-		mes = "all cols4all series removed"
-	}
-
-	if (all(sel)) {
-		z2 = NULL
-		s2 = NULL
-	} else {
-		z2 = z[!sel, ]
-		s2 = s[!sel, ,]
-	}
-
-	message(mes)
-
-	.C4A$z = z2
-	.C4A$s = s2
-	fill_P()
-	invisible(NULL)
 }

@@ -80,7 +80,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	z = .C4A$z
 
 	if (is.null(z)) {
-		if (verbose) message("No palette series loaded. Please reload cols4all, add series with c4a_palettes_add, or import data with c4a_sysdata_import")
+		if (verbose) message("No palette series loaded. Please reload cols4all, load palette data with c4a_load or c4a_sysdata_import")
 		return(invisible(NULL))
 	}
 

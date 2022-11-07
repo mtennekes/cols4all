@@ -1,12 +1,12 @@
 #' cols4all overview
 #'
-#' cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palettes have been organized by source and type, and scored on several properties such as color-blind-friendliness and harmony. Furthermore each palette is assigned a distinct color for missing values. Own palettes can be loaded as well. ggplot2 scales are included.
+#' cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by series and type and have been scored on several properties such as color-blind-friendliness, and harmony. By default 436 palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types categorical, sequential, and diverging it also includes bivariate color palettes. ggplot2 scales are included.
 #'
 #' This page provides a brief overview of all package functions.
 #'
 #' @section Main functions:
 #' \tabular{ll}{
-#' \code{\link{c4a_gui}}\tab GUI (shiny app) to analyse the palettes \cr
+#' \code{\link{c4a_gui}}\tab Dashboard to analyse the palettes \cr
 #' \code{\link{c4a}}\tab Get the colors of a palette \cr
 #' }
 #'
@@ -14,15 +14,15 @@
 #' \tabular{ll}{
 #' \code{\link{c4a_palettes}}\tab Get available palette names \cr
 #' \code{\link{c4a_series}}\tab Get available series names\cr
-#' \code{\link{c4a_info}}\tab Get palette information (such as type and maximum number of colors) \cr
+#' \code{\link{c4a_info}}\tab Get palette information from a specific palette (such as type and maximum number of colors) \cr
 #' \code{\link{c4a_citation}}\tab Show how to cites palettes (with bibtex code) \cr
 #' \code{\link{.P}}\tab Environment via which palette names can be browsed with auto-completion (using `$`) \cr
 #' }
 #'
 #' @section Importing and exporting palettes:
 #' \tabular{ll}{
-#' \code{\link{c4a_palettes_add}}\tab Add color palettes \cr
-#' \code{\link{c4a_palettes_remove}}\tab Remove color palettes \cr
+#' \code{\link{c4a_data}}\tab Build color palette data \cr
+#' \code{\link{c4a_load}}\tab Load color palette data \cr
 #' \code{\link{c4a_sysdata_import}}\tab Import system data \cr
 #' \code{\link{c4a_sysdata_export}}\tab Export system data \cr
 #' }
@@ -235,9 +235,11 @@ NULL
 		nmax = c(cat = 36, seq = 15, div = 15, bivs = 7, bivc = 7, bivd = 7, bivg = 7)
 		nmin = c(cat = 1, seq = 2, div = 3, bivs = 2, bivc = 2, bivd = 3, bivg = 2)
 		mdef = c(bivc = 5, bivd = 5, bivg = 5)
-		breaks = list(CR = c(1,1.2, 1.5, 2), dist = c(0, 2, 5, 10))
-		interval_labels = list(CR = c("Extremely low", "Very low", "Low"), dist = c("Extremely close", "Very close", "Close"))
-		breaks_digits = c(CR = 1, dist = 0)
+		matrix_breaks = list(CR = c(1, 1.2, 1.5, 2, 3, 4.5, 7), dist = c(0, 2, 5, 10))
+		matrix_pchs = list(CR = c(15, 17, 16, 1, 1, 2, 0), dist = c(15, 17, 16, 1))
+		matrix_sizes = list(CR = c(1, 0.6, 0.3, 0, 0.3, 0.6, 1), dist = c(1, 0.6, 0.3, 0))
+		matrix_interval_labels = list(CR = c("1.0 - 1.2", "1.2 - 1.5", "1.5 - 2.0", "", "3.0 - 4.5", "4.5 - 7.0", "7.0 +"), dist = c("Extremely close", "Very close", "Close"))
+		matrix_breaks_digits = c(CR = 1, dist = 0)
 	})
 	fill_P()
 }

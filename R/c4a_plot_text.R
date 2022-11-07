@@ -1,3 +1,29 @@
+c4a_plot_text2 = function(cols = c("#0000FF", "#FF0000"), dark = FALSE) {
+	grid::grid.newpage()
+	bg = if (dark) "#000000" else "#FFFFFF"
+
+	grid::grid.rect(gp=grid::gpar(fill = bg, col = NA))
+
+	grid::pushViewport(grid::viewport(layout = grid::grid.layout(4, 4, heights = grid::unit(rep(1, 4), units = c("null", "lines", "null", "lines")), widths = grid::unit(rep(1, 4), units = c("null", "lines", "null", "lines")))))
+
+	cellplot(1, 1, {
+		grid::grid.rect(gp = grid::gpar(fill = cols[1], col = NA))
+		grid::grid.text("Font size 14pt", gp = grid::gpar(col = cols[2], fontsize = 14))
+	})
+	cellplot(3, 1, {
+		grid::grid.rect(gp = grid::gpar(fill = cols[2], col = NA))
+		grid::grid.text("Font size 14pt", gp = grid::gpar(col = cols[1], fontsize = 14))
+	})
+	cellplot(1, 3, {
+		grid::grid.rect(gp = grid::gpar(fill = cols[1], col = NA))
+		grid::grid.text("Font size 18pt", gp = grid::gpar(col = cols[2], fontsize = 18))
+	})
+	cellplot(3, 3, {
+		grid::grid.rect(gp = grid::gpar(fill = cols[2], col = NA))
+		grid::grid.text("Font size 18pt", gp = grid::gpar(col = cols[1], fontsize = 18))
+	})
+}
+
 c4a_plot_text = function(cols = c("#0000FF", "#FF0000"), words = NULL, size = 1, dark = TRUE, frame = FALSE) {
 	grid::grid.newpage()
 

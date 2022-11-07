@@ -208,27 +208,35 @@ get_rgb_triple = function(p) {
 }
 
 
-# hue width: how far are hues apart from each other?
+# hue width: h)w far are hues apart from each other?
 # method: find largest gap, i.e. hue range for which no hues are present. Hwidth = 360 - gap
 get_hue_width = function(hs) {
 	hs = na.omit(hs)
 	if (!length(hs)) {
-		0
+		w = 0
+		h_max = 0
 	} else {
 		hs = c(hs, hs + 360)
 		gap = 0
 		gap_max = 0
+		h_max = 0
 		for (h in 0:720) {
 			if (any(hs == h)) {
 				gap = 0
 			} else {
 				gap = gap + 1
 			}
-			if (gap > gap_max) gap_max = gap
+			if (gap > gap_max) {
+				gap_max = gap
+				h_max = h
+			}
 		}
-		round(360 - gap_max)
+		w = round(360 - gap_max)
 	}
+	attr(w, "hueR") = (h_max + w) %% 360
+	attr(w, "hueL") = (h_max + 1) %% 360
 
+	w
 }
 
 
