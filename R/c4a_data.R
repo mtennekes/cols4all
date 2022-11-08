@@ -220,6 +220,7 @@ c4a_load = function(data) {
 	s = data$scores
 	zb = data$citation
 
+	fnms = z$fullname
 	if (!is.null(.z)) {
 		.z$bib = NULL
 		.z$cit = NULL
