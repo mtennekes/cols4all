@@ -51,7 +51,6 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 	# check color list
 	if (!is.list(x)) stop("x is not a list")
 	nms = names(x)
-	if (anyDuplicated(nms)) stop("Duplicated names found")
 	x = lapply(x, validate_colors)
 
 	# number of palettes
@@ -127,6 +126,10 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 	seriesID = which(series != "")
 	fnms = nms
 	if (length(seriesID)) fnms[seriesID] = paste0(series[seriesID], ".", fnms[seriesID])
+
+
+	if (anyDuplicated(fnms)) stop("Duplicated names found")
+
 
 	names(x) = nms
 
@@ -218,19 +221,25 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 c4a_load = function(data) {
 	z = data$data
 	s = data$scores
-	zb = data$citation
+	zbib = data$citation
 
 	fnms = z$fullname
-	if (!is.null(.z)) {
-		.z$bib = NULL
-		.z$cit = NULL
-		if (any(fnms %in% .z$fullname)) stop("Fulnames already exist: ", paste(intersect(fnms, .z$fullname), collapse = ", "))
+
+	z2 = .C4A$z
+	s2 = .C4A$s
+	zbib2 = .C4A$zbib
+
+
+	if (!is.null(z2)) {
+		z2bib = NULL
+		z2$cit = NULL
+		if (any(fnms %in% z2$fullname)) stop("Fulnames already exist: ", paste(intersect(fnms, z2$fullname), collapse = ", "))
 
 		z = rbind(.z, z)
 		s = abind::abind(.s, s, along=1)
 	}
 
-	zbib = do.call(c, c(list(.zbib), zb))
+	zbib = do.call(c, c(list(zbib2), zbib))
 
 	.C4A$z = z
 	.C4A$zbib = zbib
@@ -257,19 +266,19 @@ c4a_data_as_is = function(..., format.palette.name = FALSE, remove.blacks = FALS
 
 check_z = function(z) {
 	name <- series <- fullname <- type <- nmax <- NULL
-	if (!is.data.frame(z) || !setequal(c("name", "series", "fullname", "type", "palette", "na", "nmin", "nmax", "ndef", "mmin", "mmax", "mdef"), names(z))) stop("z should be a dataframe of colums: name, series, fullname, type, palette, na, nmin, nmax, ndef, mmin, mmax, and mdef")
+	if (!is.data.frame(z) || !setequal(c("name", "series", "fullname", "type", "palette", "na", "nmin", "nmax", "ndef", "mmin", "mmax", "mdef"), names(z))) stop("data should be a dataframe of colums: name, series, fullname, type, palette, na, nmin, nmax, ndef, mmin, mmax, and mdef")
 
 	within(z, {
-		if (!is.character(name)) stop("x$z$name should be a character column", call. = FALSE)
-		if (!is.character(series)) stop("x$z$series should be a character column", call. = FALSE)
-		if (!is.character(fullname)) stop("x$z$fullname should be a character column", call. = FALSE)
-		if (!is.character(type)) stop("x$z$type should be a character column", call. = FALSE)
-		if (!is.list(palette)) stop("x$z$palette should be a list column", call. = FALSE)
-		if (!is.character(na) || all(is.na(na))) stop("x$z$na should be a character column", call. = FALSE)
+		if (!is.character(name)) stop("x$data$name should be a character column", call. = FALSE)
+		if (!is.character(series)) stop("x$data$series should be a character column", call. = FALSE)
+		if (!is.character(fullname)) stop("x$data$fullname should be a character column", call. = FALSE)
+		if (!is.character(type)) stop("x$data$type should be a character column", call. = FALSE)
+		if (!is.list(palette)) stop("x$data$palette should be a list column", call. = FALSE)
+		if (!is.character(na) || all(is.na(na))) stop("x$data$na should be a character column", call. = FALSE)
 
-		if (anyDuplicated(fullname)) stop("x$z$fullname should consist of unique values", call. = FALSE)
-		if (!all(type %in% unname(.C4A$types))) stop("x$z$type should consist of", paste(unname(.C4A$types), collapse = ","), "values only", call. = FALSE)
-		if (!is.numeric(nmax)) stop("x$z$nmax should be a numeric column", call. = FALSE)
+		if (anyDuplicated(fullname)) stop("x$data$fullname should consist of unique values", call. = FALSE)
+		if (!all(type %in% unname(.C4A$types))) stop("x$data$type should consist of", paste(unname(.C4A$types), collapse = ","), "values only", call. = FALSE)
+		if (!is.numeric(nmax)) stop("x$data$nmax should be a numeric column", call. = FALSE)
 
 		palette = I(lapply(palette, validate_colors))
 		if (any(!is.na(na))) na[!is.na(na)] = validate_colors(na[!is.na(na)])
@@ -277,11 +286,13 @@ check_z = function(z) {
 }
 
 check_s = function(s, n) {
-	if (!is.array(s)) stop("x$s is not an array", call. = FALSE)
+	if (!is.array(s)) stop("x$scores is not an array", call. = FALSE)
 	d = dim(s)
 
-	if (d[1] != n) stop("number of rows (first dim) of x$s does not correspond to the number of rows in x$z", call. = FALSE)
-	if (!setequal(dimnames(s)[[2]], .C4A$sc)) stop("columns (second dim) in x$s should correspond to", paste(.C4A$sc, collapse = ","), call. = FALSE)
-	if (d[3] != max(.C4A$nmax)) stop("Third dimension of x$s should be", d[3], call. = FALSE)
+	snames = c(.C4A$sc, .C4A$hcl, .C4A$rgb)
+
+	if (d[1] != n) stop("number of rows (first dim) of x$s does not correspond to the number of rows in x$data", call. = FALSE)
+	if (!setequal(dimnames(s)[[2]], snames)) stop("columns (second dim) in x$scores should correspond to", paste(snames, collapse = ","), call. = FALSE)
+	if (d[3] != max(.C4A$nmax)) stop("Third dimension of x$scores should be", d[3], call. = FALSE)
 	s
 }

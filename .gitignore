@@ -38,3 +38,7 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 inst/doc
+
+# produced vignettes
+inst/markdown/*.html
+inst/markdown/*.pdf

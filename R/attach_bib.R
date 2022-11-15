@@ -2,6 +2,8 @@ attach_bib = function() {
 	z = .C4A$z
 	zbib = .C4A$zbib
 
+	if (is.null(zbib)) return(NULL)
+
 	bnames = names(zbib)
 	split_names = lapply(bnames, function(bn) {
 		strsplit(bn, split = ".", fixed = TRUE)[[1]][-1]

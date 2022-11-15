@@ -9,11 +9,11 @@
 #' @name c4a_sysdata_import
 #' @export
 c4a_sysdata_import = function(data) {
-	if (!is.list(data) || !setequal(c("z", "s", "zbib"), names(data))) stop("data should be a list of three: z, s, zbib", call. = FALSE)
+	if (!is.list(data) || !setequal(c("data", "scores", "citation"), names(data))) stop("data should be a list of three: data, scores, citation", call. = FALSE)
 
-	z = check_z(data$z)
-	s = check_s(data$s, nrow(z))
-	zbib = data$zbib # to do: check
+	z = check_z(data$data)
+	s = check_s(data$scores, nrow(z))
+	zbib = data$citation # to do: check
 
 	message("cols4all system data imported successfully")
 

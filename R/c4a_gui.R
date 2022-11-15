@@ -25,7 +25,7 @@ def_n = function(npref = NA, type, series, tab_nmin, tab_nmax) {
 #' @rdname c4a_gui
 #' @name c4a_gui
 #' @export
-c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "hcl", "tol", "viridis", "c4a")) {
+c4a_gui = function(type = "cat", n = NA, series = "all") {
 	if (!requireNamespace("shiny")) stop("Please install shiny")
 	if (!requireNamespace("shinyjs")) stop("Please install shinyjs")
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
@@ -289,7 +289,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 				 					  shiny::markdown(""),
 				 					  shiny::radioButtons("chart", "Example chart", c("Choropleth", "Barchart"), "Choropleth", inline = FALSE),
 			 					  	  shiny::sliderInput("lwd", "Line Width", min = 0, max = 3, step = 1, value = 0),
-				 					  shiny::selectInput("borders", "Borders", choices = c("black", "white"), selected = "black")),
+				 					  shiny::selectizeInput("borders", "Borders", choices = c("black", "white"), selected = "black")),
 				 		shiny::column(
 				 			width = 9,
 				 			shiny::plotOutput("ex", height = "300px", width = "600px")
@@ -340,13 +340,13 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 								  shiny::selectizeInput("APPcvd", "Color vision deficinecy", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"))),
 				shiny::fluidRow(
 				  	shiny::column(width = 4, shiny::sliderInput("MAPlwd", "Line Width", min = 0, max = 3, step = 1, value = 1)),
-				  	shiny::column(width = 4, shiny::selectInput("MAPborders", "Borders", choices = c("black", "white"), selected = "black")),
+				  	shiny::column(width = 4, shiny::selectizeInput("MAPborders", "Borders", choices = c("black", "white"), selected = "black")),
 					shiny::column(width = 4, shiny::radioButtons("MAPdist", "Color distribution", choices = c(Random = "random", Gradient = "gradient"), selected = "random"))),
 				shiny::fluidRow(
 					shiny::column(width = 12, shiny::plotOutput("MAPplot", "Map", width = 800, height = 400))),
 				shiny::fluidRow(
 					shiny::column(width = 4, shiny::sliderInput("DOTlwd", "Line Width", min = 0, max = 3, step = 1, value = 1)),
-					shiny::column(width = 4, shiny::selectInput("DOTborders", "Borders", choices = c("black", "white"), selected = "black")),
+					shiny::column(width = 4, shiny::selectizeInput("DOTborders", "Borders", choices = c("black", "white"), selected = "black")),
 					shiny::column(width = 4, shiny::radioButtons("DOTdist", "Color distribution", choices = c(Random = "random", Concentric = "concentric"), selected = "random"))),
 				shiny::fluidRow(
 					shiny::column(width = 12, shiny::plotOutput("DOTplot", "Scatter plot", width = 800, height = 400))),
@@ -391,7 +391,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		})
 
 
-		tab_vals = shiny::reactiveValues(pal = c(pal_init, "#FFFFFF", "#000000"),
+		tab_vals = shiny::reactiveValues(pal = pal_init,
+										 palBW = c(pal_init, "#FFFFFF", "#000000"),
 										 pal_name = palette,
 										 n = n_init,
 										 col1 = pal_init[1], col2 = pal_init[2],
@@ -417,7 +418,7 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 			sort = shiny::isolate(input$sort)
 			shiny::freezeReactiveValue(input, "sort")
 			sortNew = if (sort %in% cols) sort else "name"
-			shiny::updateSelectInput(session, "sort", choices  = cols,selected = sortNew)
+			shiny::updateSelectizeInput(session, "sort", choices  = cols,selected = sortNew)
 		})
 
 		shiny::observeEvent(input$dark, {
@@ -1049,8 +1050,8 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 
 			shiny::tagList(
 				shiny::markdown(paste(btext)),
-				shiny::selectInput("float_col1", "Color 1", choices = c(LETTERS, letters)[1:length(pal)], selected = c(LETTERS, letters)[ids[1]]),
-				shiny::selectInput("float_col2", "Color 2", choices = c(LETTERS, letters)[1:length(pal)], selected = c(LETTERS, letters)[ids[2]])
+				shiny::selectizeInput("float_col1", "Color 1", choices = c(LETTERS, letters)[1:length(pal)], selected = c(LETTERS, letters)[ids[1]]),
+				shiny::selectizeInput("float_col2", "Color 2", choices = c(LETTERS, letters)[1:length(pal)], selected = c(LETTERS, letters)[ids[2]])
 			)
 		})
 
@@ -1136,9 +1137,10 @@ c4a_gui = function(type = "cat", n = NA, series = c("misc", "brewer", "scico", "
 		##############################
 
 		observeEvent(input$info, {
-			shiny::showModal(shiny::modalDialog(title = "Background",
+			shiny::showModal(shiny::modalDialog(title = "cols4all",
 												shiny::includeMarkdown(system.file("markdown/overview.md", package = "cols4all")),
 												footer = shiny::modalButton("Close"),
+												easyClose = TRUE,
 												style = "color: #000000;"))
 		})
 
