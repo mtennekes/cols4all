@@ -247,7 +247,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 							shiny::fluidRow(
 								shiny::column(width = 12,
-											  shiny::markdown("#### **Chroma-Luminance plot**
+											  shiny::markdown("#### **Chroma-Luminance**
 
 							How bright (luminance) and vivid (chroma) are the colors in a palette?<br/><br/>"),
 											  shiny::plotOutput("CLplot", "CL plot", width = "600px", height = "600px")
@@ -257,33 +257,25 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 							shiny::fluidRow(
 								shiny::column(width = 12,
 											  shiny::markdown("<br/><br/>
-					  #### **Contrast**"),
+					  #### **Contrast Ratio**"),
 											  shiny::selectizeInput("contrastPal", "Palette", choices = init_pal_list))),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 6,
-				 					  shiny::plotOutput("table", height = "300px", width = "400px", click = "table_click"),
-				 					  shiny::markdown("
-				 					  Low contrast ratio (solid symbols): two colors may appear 'wobbly'. Border lines will solve this.
-
-				 					  High contrast ratio (open symbols): safe to print text in one color with a background in the other color."),),
+				 					  shiny::plotOutput("table", height = "300px", width = "400px", click = "table_click")),
 				 		shiny::column(width = 6,
 	 					  shiny::markdown("<br></br>
-						  				#### **Readable text?**
-
-						  				<font size='1'>&#x25CB;</font> Minimum required contrast ratio for text
-
-						  				<font size='2'>&#x25B3;</font> Also suitable for people with slight visual impairment (WCAG 2.0 Level AA)
-
-						  				<font size='4'>&#x25FB;</font> Also suitable for people with severe visual impairment (WCAG 2.0 Level AAA)"),
+#### **Text readability**
+"),
+	 					  shiny::uiOutput("textCR"),
 	 					  shiny::plotOutput("textPlot", height = "200", width = "400")
 				 		)),
 
 				 	shiny::fluidRow(
 				 		shiny::column(width = 12,
 				 					  shiny::markdown("<br/><br/>
-				 					  #### **Equiluminance**
-
-				 					  <font size='4'>&#x25FE;</font><font size='2'>&#x25B2;</font><font size='1'>&#x25CF;</font> Two so-called equilimunent colors will appear 'wobbly' next to each other. Border lines will solve this."))),
+				 					  #### **Border lines needed?**
+				 					  "),
+				 					  shiny::uiOutput("bordersCR"))),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 3,
 				 					  shiny::markdown(""),
@@ -314,7 +306,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 											  shiny::markdown("<br/><br/>
 					  #### **Chromostereopsis**
 
-							Do you see een 3D effect? If not check 'Use original colors' below. Chromostereopsis is a visual illusion that happens when a blue color is shown next to a red color with a dark background."))),
+							Do you see a 3D effect? If not check 'Use original colors' below. Chromostereopsis is a visual illusion that happens when a blue color is shown next to a red color with a dark background."))),
 
 							shiny::fluidRow(
 								shiny::column(width = 8,
@@ -395,7 +387,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 										 palBW = c(pal_init, "#FFFFFF", "#000000"),
 										 pal_name = palette,
 										 n = n_init,
-										 col1 = pal_init[1], col2 = pal_init[2],
+										 colA1 = pal_init[1], colA2 = pal_init[2],
+										 colB1 = pal_init[1], colB2 = pal_init[2],
+										 colC1 = pal_init[1], colC2 = pal_init[2],
 										 type = type12,
 										 cvd = "none",
 										 b = approx_blues(pal_init),
@@ -599,8 +593,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				tab_vals$pal = cols
 				tab_vals$palBW = c(cols, "#FFFFFF", "#000000")
 				tab_vals$type = values$type
-				tab_vals$col1 = cols[1]
-				tab_vals$col2 = cols[2]
+				tab_vals$colA1 = cols[1]
+				tab_vals$colA2 = cols[2]
+				tab_vals$colB1 = cols[1]
+				tab_vals$colB2 = cols[2]
+				tab_vals$colC1 = cols[1]
+				tab_vals$colC2 = cols[2]
 				tab_vals$b = approx_blues(cols)
 				tab_vals$r = approx_reds(cols)
 
@@ -610,8 +608,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				tab_vals$pal_name = character(0)
 				tab_vals$n = integer(0)
 				tab_vals$palBW = character(0)
-				tab_vals$col1 = character(0)
-				tab_vals$col2 = character(0)
+				tab_vals$colA1 = character(0)
+				tab_vals$colA2 = character(0)
+				tab_vals$colB1 = character(0)
+				tab_vals$colB2 = character(0)
+				tab_vals$colC1 = character(0)
+				tab_vals$colC2 = character(0)
 				tab_vals$b = integer(0)
 				tab_vals$r = integer(0)
 				tab_vals$type = character(0)
@@ -659,8 +661,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				tab_vals$pal_name = character(0)
 				tab_vals$n = integer(0)
 				tab_vals$palBW = character(0)
-				tab_vals$col1 = character(0)
-				tab_vals$col2 = character(0)
+				tab_vals$colA1 = character(0)
+				tab_vals$colA2 = character(0)
+				tab_vals$colB1 = character(0)
+				tab_vals$colB2 = character(0)
+				tab_vals$colC1 = character(0)
+				tab_vals$colC2 = character(0)
 				tab_vals$b = integer(0)
 				tab_vals$b = integer(0)
 				tab_vals$type = character(0)
@@ -681,11 +687,14 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 				if (pal_nr == 4) {
 					# select maximum floating colors
-					tab_vals$col1 = cols[which.max(tab_vals$b)]
-					tab_vals$col2 = cols[which.max(tab_vals$r)]
+					tab_vals$colC1 = cols[which.max(tab_vals$b)]
+					tab_vals$colC2 = cols[which.max(tab_vals$r)]
+				} else if (pal_nr == 1) {
+					tab_vals$colA1 = cols[1]
+					tab_vals$colA2 = cols[2]
 				} else {
-					tab_vals$col1 = cols[1]
-					tab_vals$col2 = cols[2]
+					tab_vals$colB1 = cols[1]
+					tab_vals$colB2 = cols[2]
 				}
 
 				tab_vals$type = x$type
@@ -772,8 +781,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			col1 = tab_vals$col1
-			col2 = tab_vals$col2
+			col1 = tab_vals$colA1
+			col2 = tab_vals$colA2
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
@@ -784,8 +793,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			col1 = tab_vals$col1
-			col2 = tab_vals$col2
+			col1 = tab_vals$colA1
+			col2 = tab_vals$colA2
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
@@ -796,8 +805,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			col1 = tab_vals$col1
-			col2 = tab_vals$col2
+			col1 = tab_vals$colA1
+			col2 = tab_vals$colA2
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
@@ -808,8 +817,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			col1 = tab_vals$col1
-			col2 = tab_vals$col2
+			col1 = tab_vals$colA1
+			col2 = tab_vals$colA2
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
@@ -830,20 +839,20 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 
 		output$cbf_ex1 = shiny::renderPlot({
-			if (!length(tab_vals$col1)) return(NULL)
-			cfb_map(c(tab_vals$col1, tab_vals$col2), "none")
+			if (!length(tab_vals$colA1)) return(NULL)
+			cfb_map(c(tab_vals$colA1, tab_vals$colA2), "none")
 		})
 		output$cbf_ex2 = shiny::renderPlot({
-			if (!length(tab_vals$col1)) return(NULL)
-			cfb_map(c(tab_vals$col1, tab_vals$col2), "deutan")
+			if (!length(tab_vals$colA1)) return(NULL)
+			cfb_map(c(tab_vals$colA1, tab_vals$colA2), "deutan")
 		})
 		output$cbf_ex3 = shiny::renderPlot({
-			if (!length(tab_vals$col1)) return(NULL)
-			cfb_map(c(tab_vals$col1, tab_vals$col2), "protan")
+			if (!length(tab_vals$colA1)) return(NULL)
+			cfb_map(c(tab_vals$colA1, tab_vals$colA2), "protan")
 		})
 		output$cbf_ex4 = shiny::renderPlot({
-			if (!length(tab_vals$col1)) return(NULL)
-			cfb_map(c(tab_vals$col1, tab_vals$col2), "tritan")
+			if (!length(tab_vals$colA1)) return(NULL)
+			cfb_map(c(tab_vals$colA1, tab_vals$colA2), "tritan")
 		})
 
 
@@ -896,9 +905,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (input$plus_rev_original) {
 				c4a_plot_Plus_Reversed(orientation = "landscape", borders = borders, lwd = lwd)
 			} else {
-				col1 = tab_vals$col1
+				col1 = tab_vals$colB1
 				if (!length(col1)) return(NULL)
-				col2 = tab_vals$col2
+				col2 = tab_vals$colB2
 
 				c4a_plot_Plus_Reversed(col1, col2, orientation = "landscape", borders = borders, lwd = lwd)
 
@@ -908,9 +917,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		output$ex = shiny::renderPlot({
 
-			col1 = tab_vals$col1
+			col1 = tab_vals$colB1
 			if (!length(col1)) return(NULL)
-			col2 = tab_vals$col2
+			col2 = tab_vals$colB2
 
 			borders = input$borders
 			lwd = input$lwd
@@ -923,9 +932,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		output$table = shiny::renderPlot({
 
-			col1 = tab_vals$col1
+			col1 = tab_vals$colB1
 			if (!length(col1)) return(NULL)
-			col2 = tab_vals$col2
+			col2 = tab_vals$colB2
 			pal = tab_vals$palBW
 
 
@@ -934,11 +943,46 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			c4a_plot_CR_matrix(pal, id1 = id1, id2 = id2, dark = input$dark)
 		})
 
+		output$textCR = shiny::renderUI({
+			col1 = tab_vals$colB1
+			if (!length(col1)) return(NULL)
+			col2 = tab_vals$colB2
+
+			cr = colorspace::contrast_ratio(col1, col2)
+
+			if (cr >= 7) {
+				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "), safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **AAA**"))
+			} else if (cr >= 4.5) {
+				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "): safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **AA**"))
+			} else if (cr >= 3) {
+				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "): safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **A**"))
+			} else {
+				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "): not safe to print text according to the Web Content Accessibility Guidelines (WCAG)"))
+			}
+		})
+
+		output$bordersCR = shiny::renderUI({
+			col1 = tab_vals$colB1
+			if (!length(col1)) return(NULL)
+			col2 = tab_vals$colB2
+
+			cr = colorspace::contrast_ratio(col1, col2)
+
+			if (cr <= 1.2) {
+				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "): strongly recommended to use border lines when plotting these colors next to each other"))
+			} else if (cr <= 1.5) {
+				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "): recommended to use border lines when plotting these colors next to each other"))
+			} else if (cr <= 2) {
+				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "), : consider to use border lines when plotting these colors next to each other"))
+			} else {
+				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "), colors can be plot next to each other without border lines"))
+			}
+		})
 
 		output$textPlot = shiny::renderPlot({
-			col1 = tab_vals$col1
+			col1 = tab_vals$colB1
 			if (!length(col1)) return(NULL)
-			col2 = tab_vals$col2
+			col2 = tab_vals$colB2
 
 			c4a_plot_text2(c(col1, col2, dark = input$dark))
 		})
@@ -964,8 +1008,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			ids = get_click_id(pal, input$disttable1_click$x, input$disttable1_click$y)
 
-			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
-			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
+			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
+			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
 		})
 
 		observeEvent(input$disttable2_click, {
@@ -974,8 +1018,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			ids = get_click_id(pal, input$disttable2_click$x, input$disttable2_click$y)
 
-			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
-			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
+			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
+			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
 
 		})
 
@@ -985,8 +1029,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			ids = get_click_id(pal, input$disttable3_click$x, input$disttable3_click$y)
 
-			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
-			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
+			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
+			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
 		})
 
 		observeEvent(input$disttable4_click, {
@@ -995,8 +1039,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			ids = get_click_id(pal, input$disttable4_click$x, input$disttable4_click$y)
 
-			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
-			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
+			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
+			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
 		})
 
 
@@ -1006,8 +1050,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			ids = get_click_id(pal, input$table_click$x, input$table_click$y)
 
-			if (!is.na(ids$x)) tab_vals$col2 = pal[ids$x]
-			if (!is.na(ids$y)) tab_vals$col1 = pal[ids$y]
+			if (!is.na(ids$x)) tab_vals$colB2 = pal[ids$x]
+			if (!is.na(ids$y)) tab_vals$colB1 = pal[ids$y]
 		})
 
 
@@ -1056,18 +1100,18 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		})
 
 		shiny::observeEvent(input$float_col1, {
-			tab_vals$col1 = tab_vals$pal[which(c(LETTERS, letters) == input$float_col1)]
+			tab_vals$colC1 = tab_vals$pal[which(c(LETTERS, letters) == input$float_col1)]
 		})
 
 		shiny::observeEvent(input$float_col2, {
-			tab_vals$col2 = tab_vals$pal[which(c(LETTERS, letters) == input$float_col2)]
+			tab_vals$colC2 = tab_vals$pal[which(c(LETTERS, letters) == input$float_col2)]
 		})
 
 		output$float_letters_AB = shiny::renderPlot({
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 
-			cols = c(tab_vals$col1, tab_vals$col2)
+			cols = c(tab_vals$colC1, tab_vals$colC2)
 
 			lL = c(LETTERS,letters)[c(which(pal == cols[1]),
 					which(pal == cols[2]))]
@@ -1082,7 +1126,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				pal = tab_vals$pal
 
 
-				cols = c(tab_vals$col1, tab_vals$col2)
+				cols = c(tab_vals$colC1, tab_vals$colC2)
 
 				if (input$float_rev) cols = rev(cols)
 				c4a_plot_floating_rings(col1 = cols[2], col2 = cols[1], dark = input$dark)
