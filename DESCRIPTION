@@ -22,7 +22,7 @@ Imports:
     grDevices,
     stats,
     abind,
-    colorspace
+    colorspace (>= 2.1)
 Suggests:
     colorblindcheck,
     kableExtra,
