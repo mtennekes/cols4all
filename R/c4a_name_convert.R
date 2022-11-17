@@ -35,8 +35,6 @@ check_name_presence = function(name, verbose = TRUE) {
 #' @param name palette name to be converted
 #' @param no.match what happens is no match is found? Options: `"error"`: an error is thrown, `"null"`: `NULL` is returned
 #' @param verbose should messages be printed?
-#' @example ./examples/c4a_name_convert.R
-#' @export
 c4a_name_convert = function(name, no.match = c("error", "null"), verbose = TRUE) {
 	no.match = match.arg(no.match)
 	name2 = check_name_presence(name, verbose)

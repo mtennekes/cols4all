@@ -16,10 +16,3 @@ c4a_name_convert(name, no.match = c("error", "null"), verbose = TRUE)
 \description{
 Converts a name to a known palette name, if it exists. Otherwise, either an error is thrown or \code{NULL} is returned
 }
-\examples{
-c4a_name_convert("Blues")
-c4a_name_convert("Jazz", no.match = "null")
-c4a_name_convert("Rainbow")
-c4a_name_convert("RdYlBu")
-c4a_name_convert("magma")
-}

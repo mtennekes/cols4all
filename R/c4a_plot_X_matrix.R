@@ -161,8 +161,8 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 
 symbol_size = function(cr, type) {
 	brks = .C4A$matrix_breaks[[type]]
-	brks_digits = .C4A$matrix_breaks_digits[type]
-	cr = round(cr, brks_digits)
+	#brks_digits = .C4A$matrix_breaks_digits[type]
+	#cr = round(cr, brks_digits)
 	id = which(cr <= brks[-1])[1]
 	if (is.na(id)) id = length(brks)
 	id

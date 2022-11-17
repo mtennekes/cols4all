@@ -5,11 +5,7 @@
 \alias{c4a_table}
 \title{Graphical user interface to analyse palettes}
 \usage{
-c4a_gui(
-  type = "cat",
-  n = NA,
-  series = c("misc", "brewer", "scico", "hcl", "tol", "viridis", "c4a")
-)
+c4a_gui(type = "cat", n = NA, series = "all")
 
 c4a_table(
   type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"),
@@ -30,7 +26,7 @@ c4a_table(
 \arguments{
 \item{type}{type of palette: \code{"cat"} for categorical (aka qualitative), \code{"seq"} for sequential, \code{"div"} for diverging, and \code{"bivs"}/\code{"bivc"}/\code{"bivd"}/\code{"bivg"} for bivariate (seq-seq, seq-cat, seq-div, and uncertainty-seq). For \code{c4a_gui} it only determines which type is shown initially.}
 
-\item{n, m}{for univariate palettes, \code{n} is the number of displayed colors. For bivariate palettes \code{"biv"}, \code{n} and \code{m} are the number of columns and rows respectively. If omitted: for \code{"cat"} the full palette is displayed, for \code{"seq"} and \code{"div"}, 9 colors, and for \code{"bivs"}/\code{"bivc"}/\code{"bivd"}/\code{"bivg"} 4 columns and rows. For \code{c4a_gui} it only determines which number of colors initially.}
+\item{n, m}{\code{n} is the number of displayed colors. For bivariate palettes \code{"biv"}, \code{n} and \code{m} are the number of columns and rows respectively. If omitted: for \code{"cat"} the full palette is displayed, for \code{"seq"} and \code{"div"}, 9 colors, and for \code{"bivs"}/\code{"bivc"}/\code{"bivd"}/\code{"bivg"} 4 columns and rows. For \code{c4a_gui} it only determines which number of colors initially.}
 
 \item{series}{Series of palettes to show. See \code{\link{c4a_series}} for options. By default, \code{"all"}, which means all series. For \code{c4a_gui} it only determines which series are shown initially.}
 
@@ -42,7 +38,7 @@ c4a_table(
 
 \item{text.col}{The text color of the colors. By default \code{"same"}, which means that they are the same as the colors themselves (so invisible, but available for selection). \code{"auto"} means automatic: black for light colors and white for dark colors.}
 
-\item{range}{vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on \code{n}. See \code{c4a_gui}, or the internal functions \code{cols4all::default_range_seq} and \code{cols4all::default_range_div} to see what the automatic values are.}
+\item{range}{vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on \code{n}.}
 
 \item{include.na}{should color for missing values be shown? \code{FALSE} by default}
 

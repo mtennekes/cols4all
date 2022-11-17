@@ -120,13 +120,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			right = 40,
 			width = 90,
 			shiny::checkboxInput("dark", "Dark mode", value = FALSE)),
-		shiny::absolutePanel(
-			top = 10,
-			right = 10,
-			width = 20,
-			shiny::actionButton("info", "", shiny::icon("info"),
-								style="color: #fff; background-color: #337ab7; border-color: #2e6da4")
-		),
+		# shiny::absolutePanel(
+		# 	top = 10,
+		# 	right = 10,
+		# 	width = 20,
+		# 	shiny::actionButton("info", "", shiny::icon("info"),
+		# 						style="color: #fff; background-color: #337ab7; border-color: #2e6da4")
+		# ),
 		shiny::tabsetPanel(
 			id="inTabset",
 			shiny::tabPanel("Overview",
@@ -384,12 +384,14 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
+										 na = FALSE,
 										 palBW = c(pal_init, "#FFFFFF", "#000000"),
 										 pal_name = palette,
 										 n = n_init,
 										 colA1 = pal_init[1], colA2 = pal_init[2],
 										 colB1 = pal_init[1], colB2 = pal_init[2],
 										 colC1 = pal_init[1], colC2 = pal_init[2],
+										 CR = colorspace::contrast_ratio(pal_init[1], pal_init[2]),
 										 type = type12,
 										 cvd = "none",
 										 b = approx_blues(pal_init),
@@ -585,11 +587,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (length(pals)) {
 				tab_vals$pals = pals
 				tab_vals$n = n
-				tab_vals$pals = pals
 				if (!length(tab_vals$pal_name) || !(tab_vals$pal_name %in% pals)) {
 					tab_vals$pal_name = pals[1]
 				}
 				cols = as.vector(c4a(tab_vals$pal_name, n = n))
+				na = values$na
+				tab_vals$na = na
+				if (na) cols = c(cols, c4a_na(tab_vals$pal_name))
 				tab_vals$pal = cols
 				tab_vals$palBW = c(cols, "#FFFFFF", "#000000")
 				tab_vals$type = values$type
@@ -597,6 +601,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				tab_vals$colA2 = cols[2]
 				tab_vals$colB1 = cols[1]
 				tab_vals$colB2 = cols[2]
+				tab_vals$CR = colorspace::contrast_ratio(cols[1], cols[2])
 				tab_vals$colC1 = cols[1]
 				tab_vals$colC2 = cols[2]
 				tab_vals$b = approx_blues(cols)
@@ -604,6 +609,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			} else {
 				tab_vals$pal = character(0)
+				tab_vals$na = logical(0)
 				tab_vals$pals = character(0)
 				tab_vals$pal_name = character(0)
 				tab_vals$n = integer(0)
@@ -612,6 +618,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				tab_vals$colA2 = character(0)
 				tab_vals$colB1 = character(0)
 				tab_vals$colB2 = character(0)
+				tab_vals$CR = numeric(0)
 				tab_vals$colC1 = character(0)
 				tab_vals$colC2 = character(0)
 				tab_vals$b = integer(0)
@@ -665,6 +672,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				tab_vals$colA2 = character(0)
 				tab_vals$colB1 = character(0)
 				tab_vals$colB2 = character(0)
+				tab_vals$CR = numeric(0)
 				tab_vals$colC1 = character(0)
 				tab_vals$colC2 = character(0)
 				tab_vals$b = integer(0)
@@ -675,6 +683,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				x = c4a_info(pal)
 
 				cols = as.vector(c4a(x$fullname, n = tab_vals$n))
+				if (tab_vals$na) cols = c(cols, c4a_na(tab_vals$pal_name))
+
 				colsBW = c(cols, "#FFFFFF", "#000000")
 
 				tab_vals$pal = cols
@@ -695,6 +705,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				} else {
 					tab_vals$colB1 = cols[1]
 					tab_vals$colB2 = cols[2]
+					tab_vals$CR = colorspace::contrast_ratio(cols[1], cols[2])
+
 				}
 
 				tab_vals$type = x$type
@@ -944,39 +956,36 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		})
 
 		output$textCR = shiny::renderUI({
-			col1 = tab_vals$colB1
-			if (!length(col1)) return(NULL)
-			col2 = tab_vals$colB2
+			cr = tab_vals$CR
+			if (!length(cr)) return(NULL)
 
-			cr = colorspace::contrast_ratio(col1, col2)
-
-			if (cr >= 7) {
-				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "), safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **AAA**"))
+			txt = if (cr >= 7) {
+				"safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **AAA**"
 			} else if (cr >= 4.5) {
-				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "): safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **AA**"))
+				"safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **AA**"
 			} else if (cr >= 3) {
-				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "): safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **A**"))
+				"safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **A**"
 			} else {
-				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "): not safe to print text according to the Web Content Accessibility Guidelines (WCAG)"))
+				"not safe to print text according to the Web Content Accessibility Guidelines (WCAG)"
 			}
+
+			shiny::markdown(paste0("**Contrast ratio** (", sprintf("%.2f", round(cr, 1)), "): ", txt))
 		})
 
 		output$bordersCR = shiny::renderUI({
-			col1 = tab_vals$colB1
-			if (!length(col1)) return(NULL)
-			col2 = tab_vals$colB2
+			cr = tab_vals$CR
+			if (!length(cr)) return(NULL)
 
-			cr = colorspace::contrast_ratio(col1, col2)
-
-			if (cr <= 1.2) {
-				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "): strongly recommended to use border lines when plotting these colors next to each other"))
+			txt = if (cr <= 1.2) {
+				"strongly recommended to use border lines when plotting these colors next to each other"
 			} else if (cr <= 1.5) {
-				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "): recommended to use border lines when plotting these colors next to each other"))
+				"recommended to use border lines when plotting these colors next to each other"
 			} else if (cr <= 2) {
-				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "), : consider to use border lines when plotting these colors next to each other"))
+				"consider to use border lines when plotting these colors next to each other"
 			} else {
-				shiny::markdown(paste0("**Contrast ratio** (", round(cr, 1), "), colors can be plot next to each other without border lines"))
+				"colors can be plot next to each other without border lines"
 			}
+			shiny::markdown(paste0("**Contrast ratio** (", sprintf("%.2f", round(cr, 1)), "): ", txt))
 		})
 
 		output$textPlot = shiny::renderPlot({
@@ -984,7 +993,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(col1)) return(NULL)
 			col2 = tab_vals$colB2
 
-			c4a_plot_text2(c(col1, col2, dark = input$dark))
+			c4a_plot_text2(c(col1, col2), dark = input$dark)
 		})
 
 		get_click_id = function(pal, x, y) {
@@ -1052,6 +1061,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			if (!is.na(ids$x)) tab_vals$colB2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$colB1 = pal[ids$y]
+
+			if (!is.na(ids$x) || !is.na(id$y)) tab_vals$CR = colorspace::contrast_ratio(tab_vals$colB1, tab_vals$colB2)
 		})
 
 
@@ -1149,7 +1160,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(pal)) return(NULL)
 			pal2 = cols4all:::sim_cvd(pal, input$APPcvd)
 
-			c4a_plot_map(pal2, borders = input$MAPborders, lwd = input$MAPlwd, dark = input$dark, dist = input$MAPdist)
+			c4a_plot_map(pal2, borders = input$MAPborders, lwd = input$MAPlwd, include.na = tab_vals$na, dark = input$dark, dist = input$MAPdist)
 		})
 
 		output$DOTplot = shiny::renderPlot({

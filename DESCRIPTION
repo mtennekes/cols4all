@@ -5,6 +5,7 @@ Type: Package
 LazyLoad: yes
 Authors@R: c(
 	person("Martijn", "Tennekes", email = "mtennekes@gmail.com", role = c("aut", "cre")),
+	person("Marco", "Puts", email = "marco.puts@gmail.com", role = "ctb"),
 	person("Achim", "Zeileis", email = "Achim.Zeileis@R-project.org", role = "ctb"),
 	person("Jakub", "Nowosad", email = "nowosad.jakub@gmail.com", role = "ctb"),
 	person("Robin", "Lovelace", email = "rob00x@gmail.com", role = "ctb"),
@@ -12,7 +13,7 @@ Authors@R: c(
 	)
 Description: Color palettes for all people, including those with color vision deficiency. Palettes, organized by source and type, are scored on several properties such as color-blind-friendliness and harmony. Furthermore each palette is assigned a distinct color for missing values. Own palettes can be loaded as well. ggplot2 scales are included.
 Version: 0.4
-Date: 2022-10-22
+Date: 2022-11-17
 Encoding: UTF-8
 Depends:
     R (>= 3.5.0),

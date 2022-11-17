@@ -1,4 +1,4 @@
-c4a_plot_map = function(cols = NULL, col1 = "blue", col2 = "red", borders = "black", lwd = 0, crop = FALSE, dark = FALSE, dist = c("random", "gradient")) {
+c4a_plot_map = function(cols = NULL, col1 = "blue", col2 = "red", borders = "black", lwd = 0, include.na = FALSE, crop = FALSE, dark = FALSE, dist = c("random", "gradient")) {
 	dist = match.arg(dist)
 
 
@@ -8,14 +8,16 @@ c4a_plot_map = function(cols = NULL, col1 = "blue", col2 = "red", borders = "bla
 		cols = c(col1, col2)
 	}
 
-	n = length(cols)
+	n = length(cols) - include.na
 	k = length(shp$gp$fill)
 
 
 	shp$gp$fill = if (dist == "random") {
 		rep(cols, length.out = k)
 	} else {
-		cols[round(seq(1 - 0.5/n, n + 0.5/n, length.out = k))]#[order(shp_c[, 1])]
+		x = cols[round(seq(1 - 0.5/n, n + 0.5/n, length.out = k))]#[order(shp_c[, 1])]
+		if (include.na) x[sample.int(k, round(k/10))] = cols[n+1]
+		x
 	}
 
 
