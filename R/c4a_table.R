@@ -48,6 +48,7 @@ table_columns = function(type, show.scores) {
 #' @importFrom grDevices hcl
 #' @importFrom stats lm predict
 #' @importFrom utils tail
+#' @importFrom png readPNG
 #' @example ./examples/c4a_table.R
 #' @seealso References of the palettes: \code{\link{cols4all-package}}.
 #' @export

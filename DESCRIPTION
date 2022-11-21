@@ -22,6 +22,7 @@ Imports:
     grDevices,
     stats,
     abind,
+    png,
     colorspace (>= 2.1)
 Suggests:
     colorblindcheck,
