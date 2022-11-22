@@ -32,8 +32,9 @@ c4a_plot_map = function(cols = NULL, col1 = "blue", col2 = "red", borders = "bla
 		shp$gp$col = shp$gp$fill
 	} else {
 		shp$gp$col = borders
-		shp$gp$lwd = lwd
+		shp$gp$lwd = as.numeric(lwd)
 	}
+
 
 	sasp = (bbx[3] - bbx[1]) / (bbx[4] - bbx[2])
 	dasp = dev.size()[1] / dev.size()[2]
