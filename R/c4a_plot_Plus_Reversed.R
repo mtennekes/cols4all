@@ -3,10 +3,10 @@ c4a_plot_Plus_Reversed = function(col1 = "#A93028", col2 = "#1F6758", borders = 
 	#library(terra)
 	#library(sf)
 	#library(stars)
-	x = png::readPNG("inst/img/Richard-Anuszkiewicz-_Plus-Reversed.png")
+	x = png::readPNG(system.file("img/plus_rev.png", package = "cols4all"))
 
 	if (lwd > 0) {
-		y = round(png::readPNG("inst/img/Richard-Anuszkiewicz-_Plus-Reversed_borders.png"), 1)
+		y = round(png::readPNG(system.file("img/plus_rev_borders.png", package = "cols4all")), 1)
 	}
 
 
@@ -50,7 +50,7 @@ c4a_plot_Plus_Reversed = function(col1 = "#A93028", col2 = "#1F6758", borders = 
 
 
 c4a_plot_floating_rings = function(col1 = "red", col2 = "blue", borders = "black", dark = TRUE) {
-	x = png::readPNG("inst/img/floating_rings.png")
+	x = png::readPNG(system.file("img/floating_rings.png", package = "cols4all"))
 
 	id1 = (x[,,1] == 1)
 	id2 = (x[,,3] == 1)
