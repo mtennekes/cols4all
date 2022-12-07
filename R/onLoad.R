@@ -279,7 +279,7 @@ c4a_options = function(...) {
 			 											   escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px; margin-right: -10px;")),
 			 contrastWT = list('NA' = "",
 			 				  'FALSE' =  "",
-			 				  'TRUE' = kableExtra::cell_spec("&#x2690;",#or &#9872; was &#127987;",
+			 				  'TRUE' = kableExtra::cell_spec("&#127987;",
 			 				  							   tooltip = "Low contrast with white background  (see tab 'Contrast')",
 			 				  							   escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px; margin-right: -10px;")),
 			 contrastBK = list('NA' = "",
