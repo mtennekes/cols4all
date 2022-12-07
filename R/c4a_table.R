@@ -203,7 +203,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 	e2[['Copy1']] = add_link("©", palList, function(x) paste0("[&quot;", paste0(x, collapse = "&quot;, &quot;"), "&quot;]"), tooltip='Copy colors: [&quot;#111111&quot;, &quot;#222222&quot;]')
 	e2[['Copy2']] = add_link("R", palList, function(x) paste0("c(&quot;", paste0(x, collapse = "&quot;, &quot;"), "&quot;)"), tooltip='Copy colors to R: c(&quot;#111111&quot;, &quot;#222222&quot;)')
-	e2[['Copy3']] = add_link("📖", zn$cit, function(x) x, tooltip='Copy reference')
+	e2[['Copy3']] = add_link("&#128214;", zn$cit, function(x) x, tooltip='Copy reference')
 	e2[['Copy4']] = add_link("B", zn$bib, function(x) x, tooltip='Copy BibTex reference')
 
 
