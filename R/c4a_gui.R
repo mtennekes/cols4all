@@ -108,7 +108,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 
 
-
+	.C4A_HASH = new.env(FALSE, parent=environment())
+	.C4A_HASH$vals = list()
+	.C4A_HASH$tables = list()
 
 	ui = shiny::fluidPage(
 		shinyjs::useShinyjs(),
@@ -727,6 +729,18 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (is.null(values) || is.null(values$series)) {
 				tab = NULL
 			} else {
+
+				if (length(.C4A_HASH$vals)) {
+					iden = vapply(.C4A_HASH$vals, function(cv) {
+						identical(cv, values)
+					}, FUN.VALUE = logical(1))
+					if (any(iden)) {
+						return(.C4A_HASH$tables[[which(iden)[1]]])
+					}
+				}
+
+
+
 				# Create a Progress object
 				progress <- shiny::Progress$new()
 				# Make sure it closes when we exit this reactive, even if there's an error
@@ -746,6 +760,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (is.null(tab)) {
 				kableExtra::kbl(data.frame("No palettes found. Please change the selection."), col.names = " ")
 			} else {
+				.C4A_HASH$vals = c(.C4A_HASH$vals, list(values))
+				.C4A_HASH$tables = c(.C4A_HASH$tables, tab)
 				tab
 			}
 		}
