@@ -22,7 +22,7 @@ table_columns = function(type, show.scores) {
 		qn = c(qn, .C4A$indicators[[type]], .C4A$hcl, .C4A$rgb)
 		srt = c(srt, .C4A$indicators[[type]], .C4A$hcl, .C4A$rgb)
 	}
-	ql = .C4A$labels[qn]
+	ql = gsub("&nbsp;", "", .C4A$labels[qn])
 
 	list(qn = qn, ql = ql, srt = srt)
 }
@@ -242,7 +242,9 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	rownames(e2) = NULL
 	for (var in c("cbfriendly", "chroma",  "hueType", "harmony", "contrast", "contrastWT", "contrastBK", "float")) {
 		tcv = .C4A$tc[[var]]
-		if (any(names(tcv) %in% c("seq", "cat", "div"))) tcv = tcv[[type]]
+		if (any(names(tcv) %in% c("seq", "cat", "div"))) {
+			tcv = if (type %in% names(tcv)) tcv[[type]]	else tcv[["x"]]
+		}
 		if (var %in% qn) {
 			chr = as.character(e2[[var]])
 			chr[is.na(chr)] = "NA"
