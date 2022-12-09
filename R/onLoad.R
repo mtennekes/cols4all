@@ -208,9 +208,9 @@ c4a_options = function(...) {
 					chroma = "Vivid",
 					harmony = "Equity",
 					hueType = "Hues",
-					contrast = "&nbsp;&nbsp;Contrast",
-					contrastWT = "&nbsp;&nbsp;Contrast",
-					contrastBK = "&nbsp;&nbsp;Contrast",
+					contrast = "&nbsp;&nbsp;Low contrast",
+					contrastWT = "&nbsp;&nbsp;Low contrast",
+					contrastBK = "&nbsp;&nbsp;Low contrast",
 					float = "3D Blues",
 					Blues = "Dominant blues",
 					nmax = "Max number")
@@ -268,10 +268,10 @@ c4a_options = function(...) {
 			 						  'M' = "",
 			 						  'L' =  kableExtra::cell_spec("&#x2260;",
 			 						  							 tooltip = "Inequity: colors are not equally vivid and/or bright. See tab 'HCL Analysis'", escape = FALSE,
-			 						  							 extra_css = "font-size: 80%; vertical-align: -0.1em; line-height: 0px;"),
+			 						  							 extra_css = "font-size: 80%; vertical-align: 0.2em; line-height: 0px;"),
 			 						  'H' = kableExtra::cell_spec("&#x3d;",
 			 						  							tooltip = "Equity: colors are equally vivid and bright. See tab 'HCL Analysis'", escape = FALSE,
-			 						  							extra_css = "font-size: 80%; vertical-align: -0.1em; line-height: 0px;")),
+			 						  							extra_css = "font-size: 80%; vertical-align: 0.2em; line-height: 0px;")),
 			 			   x = list('NA' = "",
 			 					 'M' = "",
 			 					 'L' =  kableExtra::cell_spec("&#x2260;",
@@ -297,9 +297,9 @@ c4a_options = function(...) {
 			 				  							   escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px;")),
 			 float = list('NA' = "",
 			 			 'FALSE' = "",
-			 			 'TRUE' = kableExtra::cell_spec("B7#9",
+			 			 'TRUE' = kableExtra::cell_spec("&#128313;",
 			 			 							   tooltip = "This palette has got the blues; it contains a pure blue color which may cause a floating (3D) effect next to red colors (see tab '3D Blues')",
-			 			 							   escape = FALSE, extra_css = "font-size: 80%; vertical-align: 0em; line-height: 0px; color: '#000000'"))
+			 			 							   escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px; color: '#000000'"))
 		)
 
 
