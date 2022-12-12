@@ -5,7 +5,7 @@ Type: Package
 LazyLoad: yes
 Authors@R: c(
 	person("Martijn", "Tennekes", email = "mtennekes@gmail.com", role = c("aut", "cre")),
-	person("Marco", "Puts", email = "marco.puts@gmail.com", role = "ctb"),
+	person("Marco", "Puts", email = "mputs@acm.org", role = "ctb"),
 	person("Achim", "Zeileis", email = "Achim.Zeileis@R-project.org", role = "ctb"),
 	person("Jakub", "Nowosad", email = "nowosad.jakub@gmail.com", role = "ctb"),
 	person("Robin", "Lovelace", email = "rob00x@gmail.com", role = "ctb"),

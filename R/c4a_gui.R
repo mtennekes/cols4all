@@ -295,7 +295,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				 					  shiny::markdown("**Optical Illusion Art**"),
 				 					  shiny::plotOutput("ex_plus", height = "703", width = "900"),
 				 					  shiny::markdown("<br/><br/>_Plus Reversed_ by Richard Anuszkiewicz (1960)"),
-				 					  shiny::checkboxInput("plus_rev_original", "Use original colors", value = FALSE),
+				 					  shiny::checkboxInput("plus_rev_original", "Use optical illusion's original colors", value = FALSE),
 				 		)
 					)
 
@@ -314,7 +314,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 								shiny::column(width = 8,
 											  shiny::plotOutput("floating_rings", height = 550, width = 550),
 											  shiny::markdown("<br/><br/>[_Visual illusion by Michael Bach_](https://michaelbach.de/ot/col-chromostereopsis/)"),
-											  shiny::checkboxInput("float_original", "Use original colors", value = FALSE),
+											  shiny::checkboxInput("float_original", "Use optical illusion's original colors", value = FALSE),
 											  shiny::checkboxInput("float_rev", "Reverse colors", value = FALSE)),
 								shiny::column(width = 4,
 											  shiny::plotOutput("float_letters", "Float letter", height = 80, width = 300),
