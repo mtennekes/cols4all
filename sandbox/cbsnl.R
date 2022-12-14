@@ -35,6 +35,7 @@ dat = c4a_data(cbsnl_cols, xNA = "grey88",
 			   nmin = nmin, nmax = nmax, ndef = nmin,
 			   types = cbsnl_types, series = "cbsnl", bib = cbsnl_bib)
 saveRDS(dat, file = "sandbox/cbsnl.rds")
+dat = readRDS("sandbox/cbsnl.rds")
 c4a_load(dat)
 
 \dontrun{

@@ -206,7 +206,7 @@ c4a_options = function(...) {
 					CRbk = "Contrast-Ratio black",
 					cbfriendly = "Colorblind-friendly",
 					chroma = "Vivid",
-					harmony = "Fairness",
+					harmony = "Fair",
 					hueType = "Hues",
 					contrast = "&nbsp;&nbsp;Low contrast",
 					contrastWT = "&nbsp;&nbsp;Low contrast",
@@ -214,6 +214,17 @@ c4a_options = function(...) {
 					float = "3D Blues",
 					Blues = "Dominant blues",
 					nmax = "Max number")
+
+		th = list(series = kableExtra::cell_spec("Series", tooltip = "Palette series. See last column for references"),
+				  name = kableExtra::cell_spec("Name", tooltip = "Palette name"),
+				  cbfriendly = kableExtra::cell_spec("Colorblind-friendly", tooltip = "Is the palette suitable for colorblind people?"),
+				  chroma = kableExtra::cell_spec("Vivid", tooltip = "Are the colors vivid  or pastel?"),
+				  nmax = kableExtra::cell_spec("Max number", tooltip = "Maximum number of colors"),
+				  harmony = kableExtra::cell_spec("Fair", tooltip = "Do colors stand out about equally?"),
+				  contrast = kableExtra::cell_spec("Low contrast", tooltip = "Colors with low contrast are hard to separate. Are there any?"),
+				  float = kableExtra::cell_spec("3D Blues", tooltip = "Is there a pure blue color that may cause a 3D illusion?"),
+				  hueType = kableExtra::cell_spec("Hues", tooltip = "How many different hues are used?"),
+				  references = kableExtra::cell_spec("References", tooltip = "Click to copy the colors and references"))
 
 		tc = list(cbfriendly = list('NA' = "",
 									'0' = "",

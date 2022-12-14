@@ -20,15 +20,38 @@ def_n = function(npref = NA, type, series, tab_nmin, tab_nmax) {
 	list(n = n, nmin = nmin, nmax = nmax)
 }
 
+check_installed_packages = function(packages) {
+	x = vapply(packages, requireNamespace, FUN.VALUE = logical(1), quietly = TRUE)
+
+	r = packages[!x]
+
+	if (any(!x)) {
+		if (menu(c("Yes", "No"),
+				 title = paste0("The package", ifelse(sum(!x) > 1, "s ", " "), paste(r, collapse = ", "), ifelse(sum(!x) > 1, " are", " is"), " required. Would you like to install ", ifelse(sum(!x) > 1, "them?", "it?"))) == "1") {
+			install.packages(r)
+			x2 = vapply(packages, requireNamespace, FUN.VALUE = logical(1), quietly = TRUE)
+			if (any(!x2)) {
+				stop(paste0("The required package(s) ", paste(packages[!x2], collapse = ", "), " could not be installed. Please check the installation manually."), call. = FALSE)
+			}
+
+			TRUE
+		} else {
+			FALSE
+		}
+	} else {
+		TRUE
+	}
+}
 
 
 #' @rdname c4a_gui
 #' @name c4a_gui
 #' @export
 c4a_gui = function(type = "cat", n = NA, series = "all") {
-	if (!requireNamespace("shiny")) stop("Please install shiny")
-	if (!requireNamespace("shinyjs")) stop("Please install shinyjs")
-	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
+
+
+	if (!check_installed_packages(c("shiny", "shinyjs", "kableExtra"))) return(invisible(NULL))
+
 
 	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
 
@@ -122,13 +145,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			right = 40,
 			width = 90,
 			shiny::checkboxInput("dark", "Dark mode", value = FALSE)),
-		# shiny::absolutePanel(
-		# 	top = 10,
-		# 	right = 10,
-		# 	width = 20,
-		# 	shiny::actionButton("info", "", shiny::icon("info"),
-		# 						style="color: #fff; background-color: #337ab7; border-color: #2e6da4")
-		# ),
+		shiny::absolutePanel(
+			top = 10,
+			right = 10,
+			width = 20,
+			shiny::actionButton("info", "", shiny::icon("info"),
+								style="color: #fff; background-color: #337ab7; border-color: #2e6da4")
+		),
 		shiny::tabsetPanel(
 			id="inTabset",
 			shiny::tabPanel("Overview",

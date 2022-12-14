@@ -57,14 +57,24 @@ table_columns = function(type, show.scores) {
 c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
 	id = NULL
 
+	type = match.arg(type)
+
+	if (is.null(n)) {
+		n = if (type == "cat") {
+			7
+		} else if (type == "bivc") {
+			3
+		} else .C4A$ndef[type]
+
+	}
+
+
 	#if (length(series) == 2) browser()
 
 	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
 
 	.labels = .C4A$labels
 
-	type = match.arg(type)
-	show.ranking = (!is.null(n))
 	cvd.sim = match.arg(cvd.sim)
 
 	if (substr(type, 1, 3) == "biv") {
@@ -264,13 +274,25 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	}
 
 	e2cols = c("series", "label", qn, colNames, "Copy1", "Copy2", "Copy3", "Copy4")
-	e2nms = c("Series", "Name", ql, colNames, "", "", "", "")
+	e2nms = c(series = "Series", name = "Name", ql, colNames, references = "References", "", "", "")
 
 	dupl = e2cols[e2nms %in% e2nms[duplicated(e2nms)]]
 
 	e2nms[duplicated(e2nms)] = ""
 
-	k = kableExtra::kbl(e2[, e2cols], col.names = e2nms, escape = F)
+	e2th = e2nms
+
+
+	for (i in 1:length(.C4A$th)) {
+		hd = names(.C4A$th)[i]
+		id = which(names(e2nms) == hd)
+		if (length(id)) {
+			e2th[id] = .C4A$th[[i]]
+		}
+	}
+
+
+	k = kableExtra::kbl(e2[, e2cols], col.names = e2th, escape = F)
 
 	for (cN in colNames) {
 		k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "6em", width_max = "6em")
