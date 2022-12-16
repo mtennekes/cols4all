@@ -135,6 +135,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	.C4A_HASH$vals = list()
 	.C4A_HASH$tables = list()
 
+	infoBoxUI = function(inp) {
+		shiny::div(style="display: inline-block", shiny::HTML("<h4 style='font-weight: bold; display: inline;'>Hue lines</h4>"), shiny::actionButton(inp, "", shiny::icon("circle-info", "fa-2x"), style = "border: none;"))
+	}
+
 	ui = shiny::fluidPage(
 		shinyjs::useShinyjs(),
 		shiny::tags$head(shiny::includeCSS(system.file("www/light.css", package = "cols4all"))),
@@ -145,13 +149,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			right = 40,
 			width = 90,
 			shiny::checkboxInput("dark", "Dark mode", value = FALSE)),
-		shiny::absolutePanel(
-			top = 10,
-			right = 10,
-			width = 20,
-			shiny::actionButton("info", "", shiny::icon("info"),
-								style="color: #fff; background-color: #337ab7; border-color: #2e6da4")
-		),
+		# shiny::absolutePanel(
+		# 	top = 10,
+		# 	right = 10,
+		# 	width = 20,
+		# 	shiny::actionButton("info", "", shiny::icon("info"),
+		# 						style="color: #fff; background-color: #337ab7; border-color: #2e6da4")
+		# ),
 		shiny::tabsetPanel(
 			id="inTabset",
 			shiny::tabPanel("Overview",
@@ -233,7 +237,14 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					  #### **Color blindness simulation**"),
 											  shiny::plotOutput("cbfSim", "Palette simulation", width = "800px", height = "150px"))),
 							shiny::fluidRow(
-								shiny::column(width = 4, shiny::markdown("<br/><br/>
+								shiny::column(width = 4,
+											  shiny::br(),
+											  shiny::br(),
+											  #shiny::markdown("<br/><br/>"),
+											  infoBoxUI("infoHueLines")),
+
+
+
 					  #### **Hue lines**")),
 								shiny::column(width = 6, shiny::markdown("<br/><br/>
 					  #### **Distance matrices**"))),
@@ -407,6 +418,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 		})
 
+		anno = shiny::reactiveValues(hueLines = FALSE)
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
 										 na = FALSE,
@@ -804,7 +816,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			c4a_plot_confusion_lines(pal, cvd = "none", dark = input$dark)
+			c4a_plot_confusion_lines(pal, cvd = "none", dark = input$dark, annotation = anno$hueLines)
 		})
 
 		output$cbfRGB2 = shiny::renderPlot({
@@ -1229,6 +1241,20 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		##############################
 		## Application tab
 		##############################
+
+
+		infoBoxDialog = function(title, mdfile) {
+			shiny::showModal(shiny::modalDialog(title = title,
+											shiny::includeMarkdown(system.file(mdfile, package = "cols4all")),
+											footer = shiny::modalButton("Close"),
+											easyClose = TRUE,
+											style = "color: #000000;"))
+		}
+
+		#observeEvent(input$infoHueLines, infoBoxDialog("Hue Lines", "markdown/infoHueLines.md"))
+		observeEvent(input$infoHueLines, {
+			anno$hueLines = !anno$hueLines
+		})
 
 		observeEvent(input$info, {
 			shiny::showModal(shiny::modalDialog(title = "cols4all",

@@ -29,7 +29,7 @@ cellplot = function (r, c, e, ...) {
 }
 
 
-plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lines = TRUE, colors = NULL, white = TRUE, dark = FALSE, L = "L100") {
+plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lines = TRUE, colors = NULL, white = TRUE, dark = FALSE, L = "L100", annotation = FALSE) {
 	grid::grid.newpage()
 
 	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc"), clip = TRUE))
@@ -97,6 +97,13 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 	if (white) {
 		grid::grid.points(x0, y0, size = grid::unit(.5, "lines"), pch = 3)
 
+
+	}
+	if (annotation) {
+		p = png::readPNG(system.file("img/hue_lines.png", package = "cols4all"))
+		r = grDevices::as.raster(p)
+
+		grid::grid.raster(r)
 	}
 
 }
@@ -105,6 +112,6 @@ c4a_plot_rgb_space = function(cols = NULL, cvd = "none", dark = FALSE, L = "L100
 	plot_rgb(cvd = cvd, colors = cols, confusion_lines = FALSE, dark = dark, L = L)
 }
 
-c4a_plot_confusion_lines = function(cols = NULL, cvd = "none", dark = FALSE, L = "L100") {
-	plot_rgb(cvd = cvd, colors = cols, confusion_lines = TRUE, dark = dark, L = L)
+c4a_plot_confusion_lines = function(cols = NULL, cvd = "none", dark = FALSE, L = "L100", annotation = FALSE) {
+	plot_rgb(cvd = cvd, colors = cols, confusion_lines = TRUE, dark = dark, L = L, annotation = annotation)
 }
