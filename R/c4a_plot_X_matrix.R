@@ -33,15 +33,15 @@ sim_cvd = function(pal, cvd = c("none", "deutan", "protan", "tritan")) {
 		   tritan = colorspace::tritan)(pal)
 }
 
-c4a_plot_dist_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE) {
-	plot_matrix(p = p, id1 = id1, id2 = id2, type = "dist", cvd = cvd, dark = dark)
+c4a_plot_dist_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, annotation = FALSE) {
+	plot_matrix(p = p, id1 = id1, id2 = id2, type = "dist", cvd = cvd, dark = dark, annotation = annotation)
 }
 
-c4a_plot_CR_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE) {
-	plot_matrix(p = p, id1 = id1, id2 = id2, type = "CR", cvd = cvd, dark = dark)
+c4a_plot_CR_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, annotation = FALSE) {
+	plot_matrix(p = p, id1 = id1, id2 = id2, type = "CR", cvd = cvd, dark = dark, annotation = annotation)
 }
 
-plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = "none", dark = FALSE) {
+plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = "none", dark = FALSE, annotation = FALSE) {
 	n = length(p)
 	type = match.arg(type)
 
@@ -156,6 +156,17 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 		# #grid::grid.rect(gp=grid::gpar(fill="yellow"))
 
 	})
+
+
+	if (annotation) {
+		p = png::readPNG(system.file("img/dist.png", package = "cols4all"))
+		if (dark) {
+			p[,,1:3] = 1 - p[,,1:3]
+		}
+		r = grDevices::as.raster(p)
+
+		grid::grid.raster(r)
+	}
 
 }
 

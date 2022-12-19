@@ -101,6 +101,9 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 	}
 	if (annotation) {
 		p = png::readPNG(system.file("img/hue_lines.png", package = "cols4all"))
+		if (dark) {
+			p[,,1:3] = 1 - p[,,1:3]
+		}
 		r = grDevices::as.raster(p)
 
 		grid::grid.raster(r)

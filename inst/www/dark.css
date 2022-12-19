@@ -36,11 +36,11 @@ body.dark {
 }
 
 .dark .btn-default {
-    background-color: #181818;
-    color: #F0F0F0;
+    background-color: #000000;
+    color: #D0D0D0
 }
 .dark .btn-default:hover {
-    background: #282828;
+    background: #000000;
     color: #88b5dd;
 }
 

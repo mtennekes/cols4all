@@ -135,8 +135,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	.C4A_HASH$vals = list()
 	.C4A_HASH$tables = list()
 
-	infoBoxUI = function(inp) {
-		shiny::div(style="display: inline-block", shiny::HTML("<h4 style='font-weight: bold; display: inline;'>Hue lines</h4>"), shiny::actionButton(inp, "", shiny::icon("circle-info", "fa-2x"), style = "border: none;"))
+	infoBoxUI = function(inp, title) {
+		shiny::div(style="display: inline-block", shiny::HTML(paste0("<h4 style='font-weight: bold; display: inline;'>", title ,"</h4>")), shiny::actionButton(inp, "", shiny::icon("comment-dots", "fa-2x"), style = "border: none;"))
 	}
 
 	ui = shiny::fluidPage(
@@ -233,21 +233,24 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 							shiny::fluidRow(
 								shiny::column(width = 12,
 											  shiny::selectizeInput("cbfPal", "Palette", choices = init_pal_list),
-											  shiny::markdown("<br/><br/>
-					  #### **Color blindness simulation**"),
+											  shiny::br(),
+											  shiny::br(),
+											  infoBoxUI("infoCVD", "Color blindness simulation"),
 											  shiny::plotOutput("cbfSim", "Palette simulation", width = "800px", height = "150px"))),
 							shiny::fluidRow(
 								shiny::column(width = 4,
 											  shiny::br(),
 											  shiny::br(),
 											  #shiny::markdown("<br/><br/>"),
-											  infoBoxUI("infoHueLines")),
+											  infoBoxUI("infoHueLines", "Hue lines")),
 
 
 
 					  #### **Hue lines**")),
-								shiny::column(width = 6, shiny::markdown("<br/><br/>
-					  #### **Distance matrices**"))),
+								shiny::column(width = 6,
+											  shiny::br(),
+											  shiny::br(),
+											  infoBoxUI("infoDist", "Distance matrices"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("Normal color vision"))),
 							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px")),
 											shiny::column(width = 6, shiny::plotOutput("disttable1", height = "375px", width = "500px", click = "disttable1_click")),
@@ -418,7 +421,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 		})
 
-		anno = shiny::reactiveValues(hueLines = FALSE)
+		anno = shiny::reactiveValues(hue_lines = FALSE, cvd = FALSE, dist = FALSE)
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
 										 na = FALSE,
@@ -809,14 +812,14 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			c4a_plot_cvd(pal, dark = input$dark)
+			c4a_plot_cvd(pal, dark = input$dark, annotation = anno$cvd)
 		})
 
 		output$cbfRGB1 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			c4a_plot_confusion_lines(pal, cvd = "none", dark = input$dark, annotation = anno$hueLines)
+			c4a_plot_confusion_lines(pal, cvd = "none", dark = input$dark, annotation = anno$hue_lines)
 		})
 
 		output$cbfRGB2 = shiny::renderPlot({
@@ -849,7 +852,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "none", id1 = id1, id2 = id2, dark = input$dark)
+			c4a_plot_dist_matrix(pal, cvd = "none", id1 = id1, id2 = id2, dark = input$dark, annotation = anno$dist)
 		})
 
 		output$disttable2 = shiny::renderPlot({
@@ -1253,8 +1256,15 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		#observeEvent(input$infoHueLines, infoBoxDialog("Hue Lines", "markdown/infoHueLines.md"))
 		observeEvent(input$infoHueLines, {
-			anno$hueLines = !anno$hueLines
+			anno$hue_lines = !anno$hue_lines
 		})
+		observeEvent(input$infoDist, {
+			anno$dist = !anno$dist
+		})
+		observeEvent(input$infoCVD, {
+			anno$cvd = !anno$cvd
+		})
+
 
 		observeEvent(input$info, {
 			shiny::showModal(shiny::modalDialog(title = "cols4all",
