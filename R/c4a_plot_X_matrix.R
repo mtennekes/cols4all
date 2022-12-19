@@ -156,10 +156,14 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 		# #grid::grid.rect(gp=grid::gpar(fill="yellow"))
 
 	})
-
+	grid::upViewport(2)
 
 	if (annotation) {
-		p = png::readPNG(system.file("img/dist.png", package = "cols4all"))
+		if (cvd == "none") {
+			p = png::readPNG(system.file("img/dist.png", package = "cols4all"))
+		} else {
+			p = png::readPNG(system.file("img/pdist.png", package = "cols4all"))
+		}
 		if (dark) {
 			p[,,1:3] = 1 - p[,,1:3]
 		}

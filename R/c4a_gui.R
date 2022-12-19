@@ -136,7 +136,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	.C4A_HASH$tables = list()
 
 	infoBoxUI = function(inp, title) {
-		shiny::div(style="display: inline-block", shiny::HTML(paste0("<h4 style='font-weight: bold; display: inline;'>", title ,"</h4>")), shiny::actionButton(inp, "", shiny::icon("comment-dots", "fa-2x"), style = "border: none;"))
+		shiny::div(style="display: inline-block", shiny::HTML(paste0("<h4 style='font-weight: bold; display: inline;'>", title ,"</h4>")), shiny::actionButton(inp, "", shiny::icon("fa-regular fa-circle-question", "fa-2x", verify_fa = FALSE), style = "border: none;"))
 	}
 
 	ui = shiny::fluidPage(
@@ -241,7 +241,6 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 								shiny::column(width = 4,
 											  shiny::br(),
 											  shiny::br(),
-											  #shiny::markdown("<br/><br/>"),
 											  infoBoxUI("infoHueLines", "Hue lines")),
 
 
@@ -250,14 +249,20 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 								shiny::column(width = 6,
 											  shiny::br(),
 											  shiny::br(),
-											  infoBoxUI("infoDist", "Distance matrices"))),
+											  infoBoxUI("infoDist", "Distance matrix"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("Normal color vision"))),
 							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px")),
 											shiny::column(width = 6, shiny::plotOutput("disttable1", height = "375px", width = "500px", click = "disttable1_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex1", height = "375px", width = "150px"))),
 							shiny::fluidRow(
-								shiny::column(width = 4, shiny::markdown("<br/><br/>
-					  #### **Confusion lines**"))),
+								shiny::column(width = 4,
+											  shiny::br(),
+											  shiny::br(),
+											  infoBoxUI("infoConf", "Confusion lines")),
+								shiny::column(width = 6,
+											  shiny::br(),
+											  shiny::br(),
+											  infoBoxUI("infoPDist", "Perceived distance matrices"))),
 								#shiny::column(width = 6, shiny::markdown("<br/><br/>
 					  #### **Distance matrices**"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("Deutan (red-green blind)"))),
@@ -421,7 +426,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 		})
 
-		anno = shiny::reactiveValues(hue_lines = FALSE, cvd = FALSE, dist = FALSE)
+		anno = shiny::reactiveValues(hue_lines = FALSE, cvd = FALSE, dist = FALSE, conf = FALSE, pdist = FALSE)
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
 										 na = FALSE,
@@ -826,21 +831,21 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			c4a_plot_confusion_lines(pal, cvd = "deutan", dark = input$dark)
+			c4a_plot_confusion_lines(pal, cvd = "deutan", dark = input$dark, annotation = anno$conf)
 		})
 
 		output$cbfRGB3 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			c4a_plot_confusion_lines(pal, cvd = "protan", dark = input$dark)
+			c4a_plot_confusion_lines(pal, cvd = "protan", dark = input$dark, annotation = anno$conf)
 		})
 
 		output$cbfRGB4 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			c4a_plot_confusion_lines(pal, cvd = "tritan", dark = input$dark)
+			c4a_plot_confusion_lines(pal, cvd = "tritan", dark = input$dark, annotation = anno$conf)
 		})
 
 		output$disttable1 = shiny::renderPlot({
@@ -864,7 +869,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "deutan", id1 = id1, id2 = id2, dark = input$dark)
+			c4a_plot_dist_matrix(pal, cvd = "deutan", id1 = id1, id2 = id2, dark = input$dark, annotation = anno$pdist)
 		})
 
 		output$disttable3 = shiny::renderPlot({
@@ -876,7 +881,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "protan", id1 = id1, id2 = id2, dark = input$dark)
+			c4a_plot_dist_matrix(pal, cvd = "protan", id1 = id1, id2 = id2, dark = input$dark, annotation = anno$pdist)
 		})
 
 		output$disttable4 = shiny::renderPlot({
@@ -888,7 +893,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "tritan", id1 = id1, id2 = id2, dark = input$dark)
+			c4a_plot_dist_matrix(pal, cvd = "tritan", id1 = id1, id2 = id2, dark = input$dark, annotation = anno$pdist)
 		})
 
 		cfb_map = function(cols, cvd) {
@@ -1257,22 +1262,46 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		#observeEvent(input$infoHueLines, infoBoxDialog("Hue Lines", "markdown/infoHueLines.md"))
 		observeEvent(input$infoHueLines, {
 			anno$hue_lines = !anno$hue_lines
+			if (anno$hue_lines) {
+				updateActionButton(session, "infoHueLines", icon = shiny::icon("fa-regular fa-circle-xmark", "fa-2x", verify_fa = FALSE))
+			} else {
+				updateActionButton(session, "infoHueLines", icon = shiny::icon("fa-regular fa-circle-question", "fa-2x", verify_fa = FALSE))
+			}
+
 		})
 		observeEvent(input$infoDist, {
 			anno$dist = !anno$dist
+			if (anno$dist) {
+				updateActionButton(session, "infoDist", icon = shiny::icon("fa-regular fa-circle-xmark", "fa-2x", verify_fa = FALSE))
+			} else {
+				updateActionButton(session, "infoDist", icon = shiny::icon("fa-regular fa-circle-question", "fa-2x", verify_fa = FALSE))
+			}
+		})
+		observeEvent(input$infoPDist, {
+			anno$pdist = !anno$pdist
+			if (anno$pdist) {
+				updateActionButton(session, "infoPDist", icon = shiny::icon("fa-regular fa-circle-xmark", "fa-2x", verify_fa = FALSE))
+			} else {
+				updateActionButton(session, "infoPDist", icon = shiny::icon("fa-regular fa-circle-question", "fa-2x", verify_fa = FALSE))
+			}
 		})
 		observeEvent(input$infoCVD, {
 			anno$cvd = !anno$cvd
+			if (anno$cvd) {
+				updateActionButton(session, "infoCVD", icon = shiny::icon("fa-regular fa-circle-xmark", "fa-2x", verify_fa = FALSE))
+			} else {
+				updateActionButton(session, "infoCVD", icon = shiny::icon("fa-regular fa-circle-question", "fa-2x", verify_fa = FALSE))
+			}
+		})
+		observeEvent(input$infoConf, {
+			anno$conf = !anno$conf
+			if (anno$conf) {
+				updateActionButton(session, "infoConf", icon = shiny::icon("fa-regular fa-circle-xmark", "fa-2x", verify_fa = FALSE))
+			} else {
+				updateActionButton(session, "infoConf", icon = shiny::icon("fa-regular fa-circle-question", "fa-2x", verify_fa = FALSE))
+			}
 		})
 
-
-		observeEvent(input$info, {
-			shiny::showModal(shiny::modalDialog(title = "cols4all",
-												shiny::includeMarkdown(system.file("markdown/overview.md", package = "cols4all")),
-												footer = shiny::modalButton("Close"),
-												easyClose = TRUE,
-												style = "color: #000000;"))
-		})
 
 	}
 	shiny::shinyApp(ui = ui, server = server)

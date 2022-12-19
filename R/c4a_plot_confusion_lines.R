@@ -70,7 +70,7 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 
 		co = list(w[,1:2], c(0.747, 0.253), c(1.4, -0.4), c(0.171, 0))[[ind]]
 
-		a = list(a0, a1, a1, a2, a1)[[ind]]
+		a = list(a0, a1, a2, a1)[[ind]]
 
 		co2 = c(rescale(co[1], from = rgb_data$xrange, to = c(0, 1)),
 					 rescale(co[2], from = rgb_data$yrange, to = c(0, 1)))
@@ -100,7 +100,12 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 
 	}
 	if (annotation) {
-		p = png::readPNG(system.file("img/hue_lines.png", package = "cols4all"))
+		if (cvd == "none") {
+			p = png::readPNG(system.file("img/hue_lines.png", package = "cols4all"))
+		} else {
+			p = png::readPNG(system.file("img/conf_lines.png", package = "cols4all"))
+		}
+
 		if (dark) {
 			p[,,1:3] = 1 - p[,,1:3]
 		}
