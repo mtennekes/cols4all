@@ -251,7 +251,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 											  shiny::br(),
 											  infoBoxUI("infoDist", "Distance matrix"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("Normal color vision"))),
-							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px")),
+							shiny::fluidRow(shiny::column(width = 4,
+														  shiny::div(style = "position: relative;",
+														  		   shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px"),
+														  		   shiny::img(id = "aniHL", class = "hide", src = "", width = "375px", height = "375px", style = "position: absolute; left: 0px; right: 0px"))),
 											shiny::column(width = 6, shiny::plotOutput("disttable1", height = "375px", width = "500px", click = "disttable1_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex1", height = "375px", width = "150px"))),
 							shiny::fluidRow(
@@ -266,15 +269,24 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 								#shiny::column(width = 6, shiny::markdown("<br/><br/>
 					  #### **Distance matrices**"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("Deutan (red-green blind)"))),
-							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB2", "Confusion lines1", width = "375px", height = "375px")),
+							shiny::fluidRow(shiny::column(width = 4,
+														  shiny::div(style = "position: relative;",
+														  		   shiny::plotOutput("cbfRGB2", "Confusion lines1", width = "375px", height = "375px"),
+														  		   shiny::img(id = "aniCL1", class = "hide", src = "", width = "375px", height = "375px", style = "position: absolute; left: 0px; right: 0px"))),
 											shiny::column(width = 6, shiny::plotOutput("disttable2", height = "375px", width = "500px", click = "disttable2_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex2", height = "375px", width = "150px"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>Protan (also red-green blind)"))),
-							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB3", "Confusion lines1", width = "375px", height = "375px")),
+							shiny::fluidRow(shiny::column(width = 4,
+														  shiny::div(style = "position: relative;",
+														  		   shiny::plotOutput("cbfRGB3", "Confusion lines1", width = "375px", height = "375px"),
+														  		   shiny::img(id = "aniCL2", class = "hide", src = "", width = "375px", height = "375px", style = "position: absolute; left: 0px; right: 0px"))),
 											shiny::column(width = 6, shiny::plotOutput("disttable3", height = "375px", width = "500px", click = "disttable3_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex3", height = "375px", width = "150px"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>Tritan (blue-yellow)"))),
-							shiny::fluidRow(shiny::column(width = 4, shiny::plotOutput("cbfRGB4", "Confusion lines1", width = "375px", height = "375px")),
+							shiny::fluidRow(shiny::column(width = 4,
+														  shiny::div(style = "position: relative;",
+														  		   shiny::plotOutput("cbfRGB4", "Confusion lines1", width = "375px", height = "375px"),
+														  		   shiny::img(id = "aniCL3", class = "hide", src = "", width = "375px", height = "375px", style = "position: absolute; left: 0px; right: 0px"))),
 											shiny::column(width = 6, shiny::plotOutput("disttable4", height = "375px", width = "500px", click = "disttable4_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex4", height = "375px", width = "150px")))),
 			shiny::tabPanel("HCL Analysis",
@@ -426,7 +438,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 		})
 
-		anno = shiny::reactiveValues(hue_lines = FALSE, cvd = FALSE, dist = FALSE, conf = FALSE, pdist = FALSE)
+		anno = shiny::reactiveValues(hue_lines = FALSE, cvd = FALSE, dist = FALSE, conf_lines = FALSE, pdist = FALSE)
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
 										 na = FALSE,
@@ -824,28 +836,28 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			c4a_plot_confusion_lines(pal, cvd = "none", dark = input$dark, annotation = anno$hue_lines)
+			c4a_plot_confusion_lines(pal, cvd = "none", dark = input$dark)
 		})
 
 		output$cbfRGB2 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			c4a_plot_confusion_lines(pal, cvd = "deutan", dark = input$dark, annotation = anno$conf)
+			c4a_plot_confusion_lines(pal, cvd = "deutan", dark = input$dark)
 		})
 
 		output$cbfRGB3 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			c4a_plot_confusion_lines(pal, cvd = "protan", dark = input$dark, annotation = anno$conf)
+			c4a_plot_confusion_lines(pal, cvd = "protan", dark = input$dark)
 		})
 
 		output$cbfRGB4 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			c4a_plot_confusion_lines(pal, cvd = "tritan", dark = input$dark, annotation = anno$conf)
+			c4a_plot_confusion_lines(pal, cvd = "tritan", dark = input$dark)
 		})
 
 		output$disttable1 = shiny::renderPlot({
@@ -1260,15 +1272,37 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		}
 
 		#observeEvent(input$infoHueLines, infoBoxDialog("Hue Lines", "markdown/infoHueLines.md"))
-		observeEvent(input$infoHueLines, {
-			anno$hue_lines = !anno$hue_lines
-			if (anno$hue_lines) {
-				updateActionButton(session, "infoHueLines", icon = shiny::icon("fa-regular fa-circle-xmark", "fa-2x", verify_fa = FALSE))
-			} else {
-				updateActionButton(session, "infoHueLines", icon = shiny::icon("fa-regular fa-circle-question", "fa-2x", verify_fa = FALSE))
-			}
 
-		})
+		oE = function(i, a, id, gif) {
+			observeEvent(input[[i]], {
+				anno[[a]] = !anno[[a]]
+				if (anno[[a]]) {
+					for (d in id) {
+						shinyjs::removeClass(id = d, class = "hide")
+						shinyjs::runjs(paste0("
+						var logo = document.getElementById('", d, "');
+						logo.src = 'imgResources/", gif, "';
+					"))
+					}
+					updateActionButton(session, i, icon = shiny::icon("fa-regular fa-circle-xmark", "fa-2x", verify_fa = FALSE))
+				} else {
+					for (d in id) {
+						shinyjs::addClass(id = d, class = "hide")
+						shinyjs::runjs(paste0("
+						var logo = document.getElementById('", d, "');
+						logo.src = '';
+					"))
+					}
+					shinyjs::addClass(id = id, class = "hide")
+					updateActionButton(session, i, icon = shiny::icon("fa-regular fa-circle-question", "fa-2x", verify_fa = FALSE))
+				}
+
+			})
+		}
+
+		oE("infoHueLines", "hue_lines", "aniHL", "hue_lines.gif")
+		oE("infoConf", "conf_lines", c("aniCL1", "aniCL2", "aniCL3"), "conf_lines.gif")
+
 		observeEvent(input$infoDist, {
 			anno$dist = !anno$dist
 			if (anno$dist) {
@@ -1291,14 +1325,6 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				updateActionButton(session, "infoCVD", icon = shiny::icon("fa-regular fa-circle-xmark", "fa-2x", verify_fa = FALSE))
 			} else {
 				updateActionButton(session, "infoCVD", icon = shiny::icon("fa-regular fa-circle-question", "fa-2x", verify_fa = FALSE))
-			}
-		})
-		observeEvent(input$infoConf, {
-			anno$conf = !anno$conf
-			if (anno$conf) {
-				updateActionButton(session, "infoConf", icon = shiny::icon("fa-regular fa-circle-xmark", "fa-2x", verify_fa = FALSE))
-			} else {
-				updateActionButton(session, "infoConf", icon = shiny::icon("fa-regular fa-circle-question", "fa-2x", verify_fa = FALSE))
 			}
 		})
 

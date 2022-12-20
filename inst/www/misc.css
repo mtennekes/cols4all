@@ -24,3 +24,30 @@
 	margin-bottom: 12px;
 }
 
+#cbfRGB1 {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
+#cbfRGB2 {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
+#cbfRGB3 {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
+#cbfRGB4 {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
+.hide {
+	display: none;
+}
