@@ -6,16 +6,16 @@
 	cursor: pointer;
 }
 
-#simi.crosshair {
+#cbfSimi.crosshair {
 	cursor: pointer;
 }
-#disttable2.crosshair {
+#cbfPSimi1.crosshair {
 	cursor: pointer;
 }
-#disttable3.crosshair {
+#cbfPSimi2.crosshair {
 	cursor: pointer;
 }
-#disttable4.crosshair {
+#cbfPSimi3.crosshair {
 	cursor: pointer;
 }
 
@@ -24,31 +24,55 @@
 	margin-bottom: 12px;
 }
 
-#cbfRGB1 {
+#cbfSimu {
 	position: absolute;
 	left: 0px;
 	right: 0px;
 }
 
-#cbfRGB2 {
+#cbfHL {
 	position: absolute;
 	left: 0px;
 	right: 0px;
 }
 
-#cbfRGB3 {
+#cbfCL1 {
 	position: absolute;
 	left: 0px;
 	right: 0px;
 }
 
-#cbfRGB4 {
+#cbfCL2 {
 	position: absolute;
 	left: 0px;
 	right: 0px;
 }
 
-#simi {
+#cbfCL3 {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
+#cbfSimi {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
+#cbfPSimi1 {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
+#cbfPSimi2 {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
+#cbfPSimi3 {
 	position: absolute;
 	left: 0px;
 	right: 0px;

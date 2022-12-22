@@ -48,7 +48,8 @@ check_installed_packages = function(packages) {
 #' @name c4a_gui
 #' @export
 c4a_gui = function(type = "cat", n = NA, series = "all") {
-
+	ani_off = shiny::icon("circle-xmark", "fa-2x fa-solid", verify_fa = FALSE)
+	ani_on = shiny::icon("circle-info", "fa-2x fa-light", verify_fa = FALSE)
 
 	if (!check_installed_packages(c("shiny", "shinyjs", "kableExtra"))) return(invisible(NULL))
 
@@ -136,7 +137,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	.C4A_HASH$tables = list()
 
 	infoBoxUI = function(inp, title) {
-		shiny::div(style="display: inline-block", shiny::HTML(paste0("<h4 style='font-weight: bold; display: inline;'>", title ,"</h4>")), shiny::actionButton(inp, "", shiny::icon("circle-question", "fa-2x", verify_fa = FALSE), style = "border: none;"))
+		shiny::div(style="display: inline-block", shiny::HTML(paste0("<h4 style='font-weight: bold; display: inline;'>", title ,"</h4>")), shiny::actionButton(inp, "", ani_on, style = "border: none;"))
+	}
+	plotOverlay = function(outputId, width, height, id, click = NULL) {
+		shiny::div(style = paste0("position: relative; width: ", width, "; height: ", height, ";"),
+				   shiny::plotOutput(outputId = outputId, width = width, height = height, click = click),
+				   shiny::img(id = id, class = "hide", src = "", style = "pointer-events: none; position: absolute; left: 0px; right: 0px"))
 	}
 
 	ui = shiny::fluidPage(
@@ -235,8 +241,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 											  shiny::selectizeInput("cbfPal", "Palette", choices = init_pal_list),
 											  shiny::br(),
 											  shiny::br(),
-											  infoBoxUI("infoCVD", "Color blindness simulation"),
-											  shiny::plotOutput("cbfSim", "Palette simulation", width = "800px", height = "150px"))),
+											  infoBoxUI("infoSimu", "Color blindness simulation"),
+											  plotOverlay("cbfSimu", width = "800px", height = "150px", "aniSimu"))),
 							shiny::fluidRow(
 								shiny::column(width = 4,
 											  shiny::br(),
@@ -251,15 +257,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 											  shiny::br(),
 											  infoBoxUI("infoSimi", "Similarity matrix"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("Normal color vision"))),
-							shiny::fluidRow(shiny::column(width = 4,
-														  shiny::div(style = "position: relative;",
-														  		   shiny::plotOutput("cbfRGB1", "Confusion lines1", width = "375px", height = "375px"),
-														  		   shiny::img(id = "aniHL", class = "hide", src = "", style = "position: absolute; left: 0px; right: 0px"))),
-											shiny::column(width = 6,
-														  shiny::div(style = "position: relative;",
-														  		   shiny::plotOutput("simi", height = "375px", width = "500px", click = "simi_click"),
-														  		   shiny::img(id = "aniSimi", class = "hide", src = "", style = "position: absolute; left: 0px; right: 0px; pointer-events: none;"))),
-														  #)),
+							shiny::fluidRow(shiny::column(width = 4, plotOverlay("cbfHL", width = "375px", height = "375px", "aniHL")),
+											shiny::column(width = 6, plotOverlay("cbfSimi", width = "500px", height = "375px", "aniSimi", click = "cbfSimi_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex1", height = "375px", width = "150px"))),
 							shiny::fluidRow(
 								shiny::column(width = 4,
@@ -269,29 +268,20 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 								shiny::column(width = 6,
 											  shiny::br(),
 											  shiny::br(),
-											  infoBoxUI("infoPDist", "Perceived distance matrices"))),
+											  infoBoxUI("infoPSimi", "Perceived similarity matrices"))),
 								#shiny::column(width = 6, shiny::markdown("<br/><br/>
 					  #### **Distance matrices**"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("Deutan (red-green blind)"))),
-							shiny::fluidRow(shiny::column(width = 4,
-														  shiny::div(style = "position: relative;",
-														  		   shiny::plotOutput("cbfRGB2", "Confusion lines1", width = "375px", height = "375px"),
-														  		   shiny::img(id = "aniCL1", class = "hide", src = "", width = "375px", height = "375px", style = "position: absolute; left: 0px; right: 0px"))),
-											shiny::column(width = 6, shiny::plotOutput("disttable2", height = "375px", width = "500px", click = "disttable2_click")),
+							shiny::fluidRow(shiny::column(width = 4, plotOverlay("cbfCL1", width = "375px", height = "375px", "aniCL1")),
+											shiny::column(width = 6, plotOverlay("cbfPSimi1", width = "500px", height = "375px", "aniPSimi1", click = "cbfPSimi1_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex2", height = "375px", width = "150px"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>Protan (also red-green blind)"))),
-							shiny::fluidRow(shiny::column(width = 4,
-														  shiny::div(style = "position: relative;",
-														  		   shiny::plotOutput("cbfRGB3", "Confusion lines1", width = "375px", height = "375px"),
-														  		   shiny::img(id = "aniCL2", class = "hide", src = "", width = "375px", height = "375px", style = "position: absolute; left: 0px; right: 0px"))),
-											shiny::column(width = 6, shiny::plotOutput("disttable3", height = "375px", width = "500px", click = "disttable3_click")),
+							shiny::fluidRow(shiny::column(width = 4, plotOverlay("cbfCL2", width = "375px", height = "375px", "aniCL2")),
+											shiny::column(width = 6, plotOverlay("cbfPSimi2", width = "500px", height = "375px", "aniPSimi2", click = "cbfPSimi2_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex3", height = "375px", width = "150px"))),
 							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("<br/><br/>Tritan (blue-yellow)"))),
-							shiny::fluidRow(shiny::column(width = 4,
-														  shiny::div(style = "position: relative;",
-														  		   shiny::plotOutput("cbfRGB4", "Confusion lines1", width = "375px", height = "375px"),
-														  		   shiny::img(id = "aniCL3", class = "hide", src = "", width = "375px", height = "375px", style = "position: absolute; left: 0px; right: 0px"))),
-											shiny::column(width = 6, shiny::plotOutput("disttable4", height = "375px", width = "500px", click = "disttable4_click")),
+							shiny::fluidRow(shiny::column(width = 4, plotOverlay("cbfCL3", width = "375px", height = "375px", "aniCL3")),
+											shiny::column(width = 6, plotOverlay("cbfPSimi3", width = "500px", height = "375px", "aniPSimi3", click = "cbfPSimi3_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex4", height = "375px", width = "150px")))),
 			shiny::tabPanel("HCL Analysis",
 							value = "tab_cl",
@@ -442,7 +432,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 		})
 
-		anno = shiny::reactiveValues(hue_lines = FALSE, cvd = FALSE, simi = FALSE, conf_lines = FALSE, pdist = FALSE)
+		anno = shiny::reactiveValues(simu = FALSE, hue_lines = FALSE, cvd = FALSE, simi = FALSE, psimi = FALSE, conf_lines = FALSE)
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
 										 na = FALSE,
@@ -829,42 +819,42 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		## CBF tab
 		#############################
 
-		output$cbfSim = shiny::renderPlot({
+		output$cbfSimu = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
 			c4a_plot_cvd(pal, dark = input$dark)
 		})
 
-		output$cbfRGB1 = shiny::renderPlot({
+		output$cbfHL = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
 			c4a_plot_confusion_lines(pal, cvd = "none", dark = input$dark)
 		})
 
-		output$cbfRGB2 = shiny::renderPlot({
+		output$cbfCL1 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
 			c4a_plot_confusion_lines(pal, cvd = "deutan", dark = input$dark)
 		})
 
-		output$cbfRGB3 = shiny::renderPlot({
+		output$cbfCL2 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
 			c4a_plot_confusion_lines(pal, cvd = "protan", dark = input$dark)
 		})
 
-		output$cbfRGB4 = shiny::renderPlot({
+		output$cbfCL3 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
 			c4a_plot_confusion_lines(pal, cvd = "tritan", dark = input$dark)
 		})
 
-		output$simi = shiny::renderPlot({
+		output$cbfSimi = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
@@ -876,7 +866,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			c4a_plot_dist_matrix(pal, cvd = "none", id1 = id1, id2 = id2, dark = input$dark)
 		})
 
-		output$disttable2 = shiny::renderPlot({
+		output$cbfPSimi1 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
@@ -888,7 +878,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			c4a_plot_dist_matrix(pal, cvd = "deutan", id1 = id1, id2 = id2, dark = input$dark)
 		})
 
-		output$disttable3 = shiny::renderPlot({
+		output$cbfPSimi2 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
@@ -900,7 +890,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			c4a_plot_dist_matrix(pal, cvd = "protan", id1 = id1, id2 = id2, dark = input$dark)
 		})
 
-		output$disttable4 = shiny::renderPlot({
+		output$cbfPSimi3 = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
@@ -1086,42 +1076,42 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			list(x = x_id, y = y_id)
 		}
 
-		observeEvent(input$simi_click, {
+		observeEvent(input$cbfSimi_click, {
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 
-			ids = get_click_id(pal, input$simi_click$x, input$simi_click$y)
+			ids = get_click_id(pal, input$cbfSimi_click$x, input$cbfSimi_click$y)
 
 			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
 		})
 
-		observeEvent(input$disttable2_click, {
+		observeEvent(input$cbfPSimi1_click, {
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 
-			ids = get_click_id(pal, input$disttable2_click$x, input$disttable2_click$y)
+			ids = get_click_id(pal, input$cbfPSimi1_click$x, input$cbfPSimi1_click$y)
 
 			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
 
 		})
 
-		observeEvent(input$disttable3_click, {
+		observeEvent(input$cbfPSimi2_click, {
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 
-			ids = get_click_id(pal, input$disttable3_click$x, input$disttable3_click$y)
+			ids = get_click_id(pal, input$cbfPSimi2_click$x, input$cbfPSimi2_click$y)
 
 			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
 		})
 
-		observeEvent(input$disttable4_click, {
+		observeEvent(input$cbfPSimi3_click, {
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 
-			ids = get_click_id(pal, input$disttable4_click$x, input$disttable4_click$y)
+			ids = get_click_id(pal, input$cbfPSimi3_click$x, input$cbfPSimi3_click$y)
 
 			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
@@ -1303,7 +1293,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 						"))
 					}
 
-					updateActionButton(session, i, icon = shiny::icon("circle-xmark", "fa-2x", verify_fa = FALSE))
+					updateActionButton(session, i, icon = ani_off)
 				} else {
 					for (d in id) {
 						shinyjs::addClass(id = d, class = "hide")
@@ -1314,7 +1304,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					"))
 					}
 					shinyjs::addClass(id = id, class = "hide")
-					updateActionButton(session, i, icon = shiny::icon("circle-question", "fa-2x", verify_fa = FALSE))
+					updateActionButton(session, i, icon = ani_on)
 				}
 
 			})
@@ -1323,25 +1313,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		oE("infoHueLines", "hue_lines", "aniHL", "hue_lines")
 		oE("infoConf", "conf_lines", c("aniCL1", "aniCL2", "aniCL3"), c("conf_linesD", "conf_linesP", "conf_linesT"))
 		oE("infoSimi", "simi", "aniSimi", "simi")
-
-
-		observeEvent(input$infoPDist, {
-			anno$pdist = !anno$pdist
-			if (anno$pdist) {
-				updateActionButton(session, "infoPDist", icon = shiny::icon("circle-xmark", "fa-2x", verify_fa = FALSE))
-			} else {
-				updateActionButton(session, "infoPDist", icon = shiny::icon("circle-question", "fa-2x", verify_fa = FALSE))
-			}
-		})
-		observeEvent(input$infoCVD, {
-			anno$cvd = !anno$cvd
-			if (anno$cvd) {
-				updateActionButton(session, "infoCVD", icon = shiny::icon("circle-xmark", "fa-2x", verify_fa = FALSE))
-			} else {
-				updateActionButton(session, "infoCVD", icon = shiny::icon("circle-question", "fa-2x", verify_fa = FALSE))
-			}
-		})
-
+		oE("infoPSimi", "psimi", c("aniPSimi1", "aniPSimi2", "aniPSimi3"), c("simiD", "simiP", "simiT"))
+		oE("infoSimu", "simu", "aniSimu", "simu")
 
 	}
 	shiny::shinyApp(ui = ui, server = server)

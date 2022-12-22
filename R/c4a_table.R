@@ -208,13 +208,12 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 				paste0("javascript:navigator.clipboard.writeText(`", do.call(fun, list(x = ref[[did]])), "`)")
 			}
 		}, USE.NAMES = FALSE)
-		kableExtra::cell_spec(txt1, link=links1, tooltip=tooltip, escape = FALSE, extra_css = "text-decoration: none; color: #B4B4B4;")
+		kableExtra::cell_spec(txt1, link=links1, tooltip=tooltip, escape = FALSE, extra_css = "font-size: 80%; text-decoration: none; color: #A1A1A1;")
 	}
-
-	e2[['Copy1']] = add_link("©", palList, function(x) paste0("[&quot;", paste0(x, collapse = "&quot;, &quot;"), "&quot;]"), tooltip='Copy colors: [&quot;#111111&quot;, &quot;#222222&quot;]')
-	e2[['Copy2']] = add_link("R", palList, function(x) paste0("c(&quot;", paste0(x, collapse = "&quot;, &quot;"), "&quot;)"), tooltip='Copy colors to R: c(&quot;#111111&quot;, &quot;#222222&quot;)')
-	e2[['Copy3']] = add_link("&#128214;", zn$cit, function(x) x, tooltip='Copy reference')
-	e2[['Copy4']] = add_link("B", zn$bib, function(x) x, tooltip='Copy BibTex reference')
+	e2[['Copy1']] = add_link("&#128214;", zn$cit, function(x) x, tooltip='Copy reference (APA style)')
+	e2[['Copy2']] = add_link("Bib", zn$bib, function(x) x, tooltip='Copy BibTex reference')
+	e2[['Copy3']] = add_link("JS", palList, function(x) paste0("[&quot;", paste0(x, collapse = "&quot;, &quot;"), "&quot;]"), tooltip='Copy colors to standard format (e.g used by Javascript and Python): [&quot;#111111&quot;, &quot;#222222&quot;]')
+	e2[['Copy4']] = add_link("R", palList, function(x) paste0("c(&quot;", paste0(x, collapse = "&quot;, &quot;"), "&quot;)"), tooltip='Copy colors to R: c(&quot;#111111&quot;, &quot;#222222&quot;)')
 
 
 

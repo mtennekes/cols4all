@@ -16,6 +16,38 @@ grid.t = function(text, x, y, scale = 1, bg = TRUE) {
 
 }
 
+
+################################
+#### Simu ######################
+################################
+for (scale in 1:2) {
+	unlink("temp", recursive = T, force = T)
+	dir.create("temp")
+	for (i in 1:3) {
+		png(paste0("temp/simu", i, ".png"), width = 800*scale, height = 150*scale, bg = "transparent")
+		#c4a_plot_cvd(cols = c4a("brewer.set1", 7))
+		if (i >= 1) {
+			grid.lines(x = c(0.35, 0.75), y = c(0.75, 0.75), arrow = arrow(length = unit(0.1, "npc"), ends = "both"), gp = gpar(lwd = 2 * scale))
+			grid.t("Palette colors", 0.55, 0.75, scale)
+		}
+		if (i >= 2) {
+			grid.lines(x = c(0.07, 0.07), y = c(0.08, 0.61), gp = gpar(lwd = 3 * scale))
+			grid.lines(x = c(0.07, 0.1), y = c(0.33, 0.33), gp = gpar(lwd = 3 * scale))
+			grid.t("Types of color blindness", 0.2, 0.33, scale)
+		}
+		if (i >= 3) {
+			grid.lines(x = c(0.35, 0.75), y = c(0.33, 0.33), arrow = arrow(length = unit(0.1, "npc"), ends = "both"), gp = gpar(lwd = 2 * scale))
+			grid.t("Perceived by color blind people !", 0.55, 0.33, scale)
+		}
+		dev.off()
+	}
+	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 800*scale, height = 150*scale, delay = 1.5, gif_file = paste0("inst/img/simu", scale, "x.gif"), loop = FALSE)
+
+}
+
+
+
+
 ################################
 #### HUE lines #################
 ################################
@@ -128,6 +160,47 @@ for (scale in 1:2) {
 ################################
 #### perc dist matrices ########
 ################################
+
+for (scale in 1:2) {
+	for (X in c("D", "P", "T")) {
+		unlink("temp", recursive = T, force = T)
+		dir.create("temp")
+		for (i in 1:4) {
+			png(paste0("temp/dist", i, ".png"), width = 500 * scale, height = 375 * scale, bg = "transparent")
+			#c4a_plot_dist_matrix(c4a("brewer.accent", 7))
+			if (i >= 1) {
+				grid.t("Color 1", x = 0.05, y = 0.92, scale)
+				grid.t("Color 2", x = 0.1, y = 0.97, scale)
+				grid.lines(x = c(0.05, 0.05), y = c(0.9, 0.82), arrow = arrow(length = unit(0.015, "npc")), gp = gpar(lwd = 2 * scale))
+				grid.lines(x = c(0.15, 0.2), y = c(0.97, 0.97), arrow = arrow(length = unit(0.015, "npc")), gp = gpar(lwd = 2 * scale))
+			}
+			if (i >= 2) {
+				grid.t(paste0("How similiar are these 2 colors\n accoriding to\ncolor blind people - ", switch(X, D="deutans", P="protans", T="tritans"), " - ?"), 0.7, 0.55, scale)
+				grid.circle(x = 0.45, y = 0.55, r = 0.06, gp = gpar(fill = "#FFFFFF", lwd = 3 * scale))
+				grid.t("?", 0.45, 0.55, scale * 1.5, bg = FALSE)
+				grid.lines(x = c(0.16, 0.39), y = c(0.55, 0.55), gp = gpar(lwd = 3 * scale))
+				grid.lines(x = c(0.45, 0.45), y = c(0.64, 0.82), gp = gpar(lwd = 3 * scale))
+				#grid.lines(x = c(0.56, 0.355), y = c(0.88, 0.49), gp = gpar(lwd = 3, lty = "dotted"))
+			}
+
+			if (i >= 3) {
+				grid.t("Symbol = similar", 0.7, 0.3, scale)
+				grid.curve(x1 = 0.8, x2 = 0.94, y1 = 0.3, y2 = 0.7, gp = gpar(lwd = 3 * scale), arrow = arrow(length = unit(0.02, "npc")))
+			}
+			if (i >= 4) {
+				grid.t("No symbol = not similar,\ntherefore each to distinguish", 0.7, 0.2, scale)
+			}
+
+
+
+			dev.off()
+		}
+		gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 500 * scale, height = 375 * scale, delay = 1.5, gif_file = paste0("inst/img/simi", X, scale, "x.gif"), loop = FALSE)
+	}
+}
+
+
+
 
 for (X in c("D", "P", "T")) {
 	unlink("temp", recursive = T, force = T)
