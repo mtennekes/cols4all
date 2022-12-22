@@ -33,15 +33,15 @@ sim_cvd = function(pal, cvd = c("none", "deutan", "protan", "tritan")) {
 		   tritan = colorspace::tritan)(pal)
 }
 
-c4a_plot_dist_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, annotation = FALSE) {
-	plot_matrix(p = p, id1 = id1, id2 = id2, type = "dist", cvd = cvd, dark = dark, annotation = annotation)
+c4a_plot_dist_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, title = "Similarity") {
+	plot_matrix(p = p, id1 = id1, id2 = id2, type = "dist", cvd = cvd, dark = dark, title = title)
 }
 
-c4a_plot_CR_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, annotation = FALSE) {
-	plot_matrix(p = p, id1 = id1, id2 = id2, type = "CR", cvd = cvd, dark = dark, annotation = annotation)
+c4a_plot_CR_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, title = "Contrast ratio") {
+	plot_matrix(p = p, id1 = id1, id2 = id2, type = "CR", cvd = cvd, dark = dark, title = title)
 }
 
-plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = "none", dark = FALSE, annotation = FALSE) {
+plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = "none", dark = FALSE, annotation = FALSE, title = "Contrast ratio") {
 	n = length(p)
 	type = match.arg(type)
 
@@ -142,7 +142,7 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 
 
 		cellplot(2, 2, {
-			grid::grid.text("Contrast Ratio", x = 0, just = "left")
+			grid::grid.text(title, x = 0, just = "left")
 		})
 		for (i in 1:length(texts)) {
 			cellplot(2 + i, 2, {
@@ -157,20 +157,6 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 
 	})
 	grid::upViewport(2)
-
-	if (annotation) {
-		if (cvd == "none") {
-			p = png::readPNG(system.file("img/dist.png", package = "cols4all"))
-		} else {
-			p = png::readPNG(system.file("img/pdist.png", package = "cols4all"))
-		}
-		if (dark) {
-			p[,,1:3] = 1 - p[,,1:3]
-		}
-		r = grDevices::as.raster(p)
-
-		grid::grid.raster(r)
-	}
 
 }
 

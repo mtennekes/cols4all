@@ -6,7 +6,7 @@
 	cursor: pointer;
 }
 
-#disttable1.crosshair {
+#simi.crosshair {
 	cursor: pointer;
 }
 #disttable2.crosshair {
@@ -43,6 +43,12 @@
 }
 
 #cbfRGB4 {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
+#simi {
 	position: absolute;
 	left: 0px;
 	right: 0px;
