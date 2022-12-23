@@ -78,6 +78,13 @@
 	right: 0px;
 }
 
+
+#anaHUE {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
 .hide {
 	display: none;
 }

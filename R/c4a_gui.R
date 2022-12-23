@@ -136,8 +136,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	.C4A_HASH$vals = list()
 	.C4A_HASH$tables = list()
 
-	infoBoxUI = function(inp, title) {
-		shiny::div(style="display: inline-block", shiny::HTML(paste0("<h4 style='font-weight: bold; display: inline;'>", title ,"</h4>")), shiny::actionButton(inp, "", ani_on, style = "border: none;"))
+	infoBoxUI = function(inp = NULL, title) {
+		if (is.null(inp)) {
+			# padding to compensate for button
+			shiny::div(style="display: inline-block; padding: 5px;", shiny::HTML(paste0("<h4 style='font-weight: bold; display: inline;'>", title ,"</h4>")))
+		} else {
+			shiny::div(style="display: inline-block", shiny::HTML(paste0("<h4 style='font-weight: bold; display: inline;'>", title ,"</h4>")), shiny::actionButton(inp, "", ani_on, style = "border: none;"))
+		}
 	}
 	plotOverlay = function(outputId, width, height, id, click = NULL) {
 		shiny::div(style = paste0("position: relative; width: ", width, "; height: ", height, ";"),
@@ -285,16 +290,28 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex4", height = "375px", width = "150px")))),
 			shiny::tabPanel("HCL Analysis",
 							value = "tab_cl",
+
 							shiny::fluidRow(
 								shiny::column(width = 12,
-											  shiny::selectizeInput("CLPal", "Palette", choices = init_pal_list),
-											  shiny::markdown("#### **Hue**
+											  shiny::selectizeInput("CLPal", "Palette", choices = init_pal_list))),
+							shiny::fluidRow(
+								shiny::column(width = 6,
+											  infoBoxUI("infoHUE", "Hue necklace"),
+											  plotOverlay("anaHUE", width = "400px", height = "400px", "aniHUE")),
+								shiny::column(width = 3,
+											  infoBoxUI(title = "HCL space"),
+											  shiny::img(src = "imgResources/hcl_spacex1.png", srcset = "imgResources/hcl_spacex1.png 1x, imgResources/hcl_spacex2.png 2x"),
+											  shiny::markdown("
+															**Dimensions**
 
-							What hues do the palette colors have?"),
-											  shiny::plotOutput("anaHUE", "Hue plot", width = "400px", height = "400px"))),
-											  #shiny::plotOutput("anaRGB1", "RGB plot", width = "500px", height = "500px"),
-											  #shiny::sliderInput("rgbL", label = "Luminance", min = 5, max = 100, value = 100, step = 1))),
+															Hue - in degrees (0 to 360)
 
+															Chroma - in the range (0 to 100 or above*)
+
+															Luminance - in the range (0 to 100)
+
+															*The maximum C depends on H and L
+															"))),
 							shiny::fluidRow(
 								shiny::column(width = 12,
 											  shiny::markdown("#### **Chroma-Luminance**
@@ -432,7 +449,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 		})
 
-		anno = shiny::reactiveValues(simu = FALSE, hue_lines = FALSE, cvd = FALSE, simi = FALSE, psimi = FALSE, conf_lines = FALSE)
+		anno = shiny::reactiveValues(simu = FALSE, hue_lines = FALSE, cvd = FALSE, simi = FALSE, psimi = FALSE, conf_lines = FALSE, hue_neck = FALSE)
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
 										 na = FALSE,
@@ -1315,6 +1332,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		oE("infoSimi", "simi", "aniSimi", "simi")
 		oE("infoPSimi", "psimi", c("aniPSimi1", "aniPSimi2", "aniPSimi3"), c("simiD", "simiP", "simiT"))
 		oE("infoSimu", "simu", "aniSimu", "simu")
+		oE("infoHUE", "hue_neck", "aniHUE", "simi")
 
 	}
 	shiny::shinyApp(ui = ui, server = server)

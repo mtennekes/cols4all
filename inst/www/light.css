@@ -27,7 +27,8 @@ input[type="checkbox"], input[type="radio"] {
 .action-button {
 	font-size: 12px !important;
 	padding: 5px;
-	margin-bottom: 10px;
+	vertical-align: middle;
+	margin-bottom: 5px;
 }
 
 .btn-default {

@@ -124,13 +124,13 @@ c4a_plot_hues = function(pal, dark = FALSE, C_grey = 5, width = c("none", "total
 	rt[ht > 45 & ht < 135] = "right"
 
 
-	plot_Hw = function(HWidth) {
-		HL = attr(Hwidth, "hueL")
-		HR = attr(Hwidth, "hueR")
+	plot_Hw = function(HW) {
+		HL = attr(HW, "hueL")
+		HR = attr(HW, "hueR")
 		grid::grid.lines(x = grid::unit(c(cx, cx + sin(HL / 180 * pi) * (rd-0.15)), "npc"),
-						 y = grid::unit(c(cy, cy + cos(HL / 180 * pi) * (rd-0.15)), "npc"), arrow = arrow(length = grid::unit(0.02, "npc")))
+						 y = grid::unit(c(cy, cy + cos(HL / 180 * pi) * (rd-0.15)), "npc"), arrow = grid::arrow(length = grid::unit(0.02, "npc")))
 		grid::grid.lines(x = grid::unit(c(cx, cx + sin(HR / 180 * pi) * (rd-0.15)), "npc"),
-						 y = grid::unit(c(cy, cy + cos(HR / 180 * pi) * (rd-0.15)), "npc"), arrow = arrow(length = grid::unit(0.02, "npc")))
+						 y = grid::unit(c(cy, cy + cos(HR / 180 * pi) * (rd-0.15)), "npc"), arrow = grid::arrow(length = grid::unit(0.02, "npc")))
 		if (HR < HL) HR = HR + 360
 		coords = t(sapply(HL:HR, function(h) {
 			c(cx + sin(h/180*pi) * 0.07,
@@ -142,7 +142,7 @@ c4a_plot_hues = function(pal, dark = FALSE, C_grey = 5, width = c("none", "total
 
 		grid::grid.polyline(x = grid::unit(coords[,1], "npc"),
 							y = grid::unit(coords[,2], "npc"))
-		grid::grid.text(paste0(HWidth, "°"),
+		grid::grid.text(paste0(HW, "°"),
 						x = grid::unit(tcoords[1], "npc"),
 						y = grid::unit(tcoords[2], "npc"),
 						just = "right")

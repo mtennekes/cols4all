@@ -199,28 +199,32 @@ for (scale in 1:2) {
 	}
 }
 
-
-
-
-for (X in c("D", "P", "T")) {
+################################
+#### HUE necklace #################
+################################
+for (scale in 1:2) {
 	unlink("temp", recursive = T, force = T)
 	dir.create("temp")
 	for (i in 1:4) {
-		png(paste0("temp/conf_lines", X, i, ".png"), width = 375, height = 375, bg = "transparent")
-		#c4a_plot_confusion_lines(cols = c4a("brewer.set1", 7), cvd = switch(X, D="deutan", P="protan", T="tritan"))
+		png(paste0("temp/hue_lines", i, ".png"), width = 375*scale, height = 375*scale, bg = "transparent")
+		#c4a_plot_confusion_lines(cols = c4a("brewer.set1", 7))
 		if (i >= 1) {
-			#grid.lines(x = c(0.12, 0.25), y = c(0.63, 0.55)+0.1, arrow = arrow(length = unit(0.02, "npc")), gp = gpar(lwd = 2))
-			grid.polyline(x = c(0.08, 0.34, 0.93, 0.08), y = c(0.03, 0.96, 0.49, 0.03), gp = gpar(lwd = 2))
-			grid.t(paste0("The same color space,\nbut perceived by color\nblind people - ", switch(X, D="deutans", P="protans", T="tritans")), 0.2, 0.65+0.1)
+			grid.t("The whole 'rainbow' hue sprectrum\nis displayed on the background cord", 0.5, 0.7, scale)
 		}
 		if (i >= 2) {
-			grid.t("Colors along each line\nmay be hard to distinguish", 0.55, 0.3)
-			grid.lines(coords[[X]]$x, coords[[X]]$y, gp = gpar(lwd = 4, lty = "dotted"))
+			grid.t("We use three dimensions: hue, chroma (vividness), and luminance (brightness)
+
+
+				   For geeks - ", 0.5, 0.7, scale)
+		}
+		if (i >= 3) {
+			grid.t("1, 2, 3, ... Palette colors\n-They may appear brighter-", 0.7, 0.15, scale)
+		}
+		if (i >= 4) {
+			grid.t("See below how color blind people perceive this !", x = 0.5, y = 0.03, scale)
 		}
 		dev.off()
 	}
-	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 375, height = 375, delay = 1.5, gif_file = paste0("inst/img/conf_lines", X, ".gif"), loop = FALSE)
+	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 400*scale, height = 400*scale, delay = 1.5, gif_file = paste0("inst/img/hue_neck", scale, "x.gif"), loop = FALSE)
+
 }
-
-
-
