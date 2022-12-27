@@ -172,5 +172,4 @@ c4a_plot_hues = function(pal, dark = FALSE, C_grey = 5, width = c("none", "total
 		grid::grid.text(paste0("(Almost) grayscale: ",format_ids(which(wg))), x = grid::unit(0.45, "npc"), y = grid::unit(0.05, "npc"), just = "right", gp = grid::gpar(col = fc))
 	}
 
-
 }

@@ -85,6 +85,12 @@
 	right: 0px;
 }
 
+#anaCL {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
 .hide {
 	display: none;
 }

@@ -205,26 +205,49 @@ for (scale in 1:2) {
 for (scale in 1:2) {
 	unlink("temp", recursive = T, force = T)
 	dir.create("temp")
-	for (i in 1:4) {
+	for (i in 1:3) {
 		png(paste0("temp/hue_lines", i, ".png"), width = 375*scale, height = 375*scale, bg = "transparent")
-		#c4a_plot_confusion_lines(cols = c4a("brewer.set1", 7))
+		#c4a_plot_hues(c4a("brewer.set1", 7))
 		if (i >= 1) {
-			grid.t("The whole 'rainbow' hue sprectrum\nis displayed on the background cord", 0.5, 0.7, scale)
+			grid.t("Where are the palette colors placed\non the hue necklace?", 0.53, 0.75, scale, bg = FALSE)
 		}
 		if (i >= 2) {
-			grid.t("We use three dimensions: hue, chroma (vividness), and luminance (brightness)
-
-
-				   For geeks - ", 0.5, 0.7, scale)
+			grid.t("The distribution can be used for further analysis,", 0.53, 0.65, scale, bg = FALSE)
 		}
 		if (i >= 3) {
-			grid.t("1, 2, 3, ... Palette colors\n-They may appear brighter-", 0.7, 0.15, scale)
+			grid.t("For instance:\n- are the colors of a categorical palette\nequally spread out?\n - do sequential palette colors have\none hue or a spectrum of hues?", 0.53, 0.45, scale, bg = FALSE)
 		}
-		if (i >= 4) {
-			grid.t("See below how color blind people perceive this !", x = 0.5, y = 0.03, scale)
-		}
+
 		dev.off()
 	}
-	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 400*scale, height = 400*scale, delay = 1.5, gif_file = paste0("inst/img/hue_neck", scale, "x.gif"), loop = FALSE)
-
+	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 375*scale, height = 375*scale, delay = 1.5, gif_file = paste0("inst/img/hue_neck", scale, "x.gif"), loop = FALSE)
 }
+
+
+################################
+#### CL plot #################
+################################
+for (scale in 1:2) {
+	unlink("temp", recursive = T, force = T)
+	dir.create("temp")
+	for (i in 1:3) {
+		png(paste0("temp/cl_plot", i, ".png"), width = 600*scale, height = 600*scale, bg = "transparent")
+		#c4a_plot_CL(c4a("brewer.set1", 7))
+		if (i >= 1) {
+			grid.t("Horizontal axes: how vivid are the colors?", 0.5, 0.07, scale, bg = FALSE)
+		}
+		if (i >= 2) {
+			grid.t("Vertical axes:\nhow bright are the colors?", 0.2, 0.3, scale, bg = FALSE)
+		}
+		if (i >= 3) {
+			grid.t("Fairness: do the palette colors stand out about equally?", 0.7, 0.26, scale, bg = TRUE)
+			grid.t("High chroma colors stand out more than 'pastel' colors", 0.7, 0.22, scale, bg = TRUE)
+			grid.t("Dark colors stand out more against a white background", 0.7, 0.18, scale, bg = TRUE)
+			grid.t("Bright colors stand out more against a black background", 0.7, 0.14, scale, bg = TRUE)
+		}
+
+		dev.off()
+	}
+	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 600*scale, height = 600*scale, delay = 1.5, gif_file = paste0("inst/img/cl_plot", scale, "x.gif"), loop = FALSE)
+}
+

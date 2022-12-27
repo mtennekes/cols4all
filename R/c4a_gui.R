@@ -310,15 +310,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 															Luminance - in the range (0 to 100)
 
-															*The maximum C depends on H and L
+															<font size ='1'>*The maximum C depends on H and L</font>
 															"))),
 							shiny::fluidRow(
 								shiny::column(width = 12,
-											  shiny::markdown("#### **Chroma-Luminance**
-
-							How bright (luminance) and vivid (chroma) are the colors in a palette?<br/><br/>"),
-											  shiny::plotOutput("CLplot", "CL plot", width = "600px", height = "600px")
-								))),
+											  infoBoxUI("infoCL", "Chroma-Luminance"),
+											  plotOverlay("anaCL", width = "600px", height = "600px", "aniCL")))),
 			shiny::tabPanel("Contrast",
 							value = "tab_cont",
 							shiny::fluidRow(
@@ -449,7 +446,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 		})
 
-		anno = shiny::reactiveValues(simu = FALSE, hue_lines = FALSE, cvd = FALSE, simi = FALSE, psimi = FALSE, conf_lines = FALSE, hue_neck = FALSE)
+		anno = shiny::reactiveValues(simu = FALSE, hue_lines = FALSE, cvd = FALSE, simi = FALSE, psimi = FALSE, conf_lines = FALSE, hue_neck = FALSE, cl_plot = FALSE)
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
 										 na = FALSE,
@@ -973,7 +970,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		# 	c4a_plot_rgb_space(pal, cvd = "none", dark = input$dark, L = paste0("L", input$rgbL))
 		# })
 
-		output$CLplot = shiny::renderPlot({
+		output$anaCL = shiny::renderPlot({
 			pal = tab_vals$pal
 
 			if (!length(pal)) return(NULL)
@@ -1332,7 +1329,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		oE("infoSimi", "simi", "aniSimi", "simi")
 		oE("infoPSimi", "psimi", c("aniPSimi1", "aniPSimi2", "aniPSimi3"), c("simiD", "simiP", "simiT"))
 		oE("infoSimu", "simu", "aniSimu", "simu")
-		oE("infoHUE", "hue_neck", "aniHUE", "simi")
+		oE("infoHUE", "hue_neck", "aniHUE", "hue_neck")
+		oE("infoCL", "cl_plot", "aniCL", "cl_plot")
 
 	}
 	shiny::shinyApp(ui = ui, server = server)

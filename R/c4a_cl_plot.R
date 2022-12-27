@@ -46,12 +46,14 @@ c4a_plot_CL = function(cols, Lrange = FALSE, dark = FALSE) {
 						width = grid::unit(diff(cr2), "native"), height = grid::unit(marg * 2, "native"),
 						gp = grid::gpar(fill = gc, col = NA))
 
+
 		ctext = paste0("C range: ", round(diff(cr)), {
-			if (diff(cr) <= .C4A$CrangeHarm) {
-				" (low)"
-			} else if (diff(cr) >= .C4A$CrangeDisH) {
-				" (high)"
-			} else " (medium)"
+			""
+			# if (diff(cr) <= .C4A$CrangeHarm) {
+			# 	" (low)"
+			# } else if (diff(cr) >= .C4A$CrangeDisH) {
+			# 	" (high)"
+			# } else " (medium)"
 		})
 
 		grid::grid.text(ctext, x = grid::unit(mean(cr2), "native"), y = grid::unit(lr2[1] - marg * 2.5, "native"), gp = grid::gpar(col = fc, cex = 0.8))
@@ -100,9 +102,10 @@ c4a_plot_CL = function(cols, Lrange = FALSE, dark = FALSE) {
 	}, xscale = c(0,180))
 
 
-	cellplot(1, 2, {
-		grid::grid.text(c("Low chroma", "High chroma"), x = grid::unit(c(.C4A$Cpastel / 2, c(.C4A$Cintense + 180) / 2), "native"), y = c(.3, .3), gp = grid::gpar(cex = c(1, 1)))
-	}, xscale = c(0, 180))
+	# cellplot(1, 2, {
+	# 	grid::grid.text(c("Low chroma", "High chroma"), x = grid::unit(c(.C4A$Cpastel / 2, c(.C4A$Cintense + 180) / 2), "native"), y = c(.3, .3), gp = grid::gpar(cex = c(1, 1)))
+	# }, xscale = c(0, 180))
 
+	grid::upViewport(2)
 }
 
