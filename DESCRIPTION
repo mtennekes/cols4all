@@ -23,6 +23,7 @@ Imports:
     stats,
     abind,
     png,
+    stringdist,
     colorspace (>= 2.1)
 Suggests:
     colorblindcheck,
@@ -39,4 +40,4 @@ URL: https://github.com/mtennekes/cols4all
 BugReports: https://github.com/mtennekes/cols4all/issues
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3

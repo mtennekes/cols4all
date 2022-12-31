@@ -4,12 +4,16 @@
 \alias{c4a_name_convert}
 \title{Converts a name to a known palette name, if it exists.}
 \usage{
-c4a_name_convert(name, no.match = c("error", "null"), verbose = TRUE)
+c4a_name_convert(
+  name,
+  no.match = c("message", "error", "null"),
+  verbose = TRUE
+)
 }
 \arguments{
 \item{name}{palette name to be converted}
 
-\item{no.match}{what happens is no match is found? Options: \code{"error"}: an error is thrown, \code{"null"}: \code{NULL} is returned}
+\item{no.match}{what happens is no match is found? Options: \code{"message"}: a message is thrown with suggestions, \code{"error"}: an error is thrown, \code{"null"}: \code{NULL} is returned}
 
 \item{verbose}{should messages be printed?}
 }

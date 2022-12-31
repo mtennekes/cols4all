@@ -1,6 +1,6 @@
 #' cols4all overview
 #'
-#' cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by series and type and have been scored on several properties such as color-blind-friendliness, and harmony. By default 436 palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types categorical, sequential, and diverging it also includes bivariate color palettes. ggplot2 scales are included.
+#' cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by series and type and have been scored on several properties such as color-blind-friendliness and fairness. By default 436 palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types categorical, sequential, and diverging it also includes bivariate color palettes. ggplot2 scales are included.
 #'
 #' This page provides a brief overview of all package functions.
 #'
@@ -128,8 +128,6 @@ c4a_options = function(...) {
 					  bivg = c(inter_wing_dist = 3, min_step = 1))
 
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
-		# LrangeWeight = 2/3 # LCrange (which determines harmony) is calculated as max(Lrange * LrangeWeight, Crange * (1-LrangeWeight))
-		# LCrangeHarmonic = 80/3 # Maximum LCrange values for which the palette is labeled "harmonic"
 
 		CrangeHarm = 50
 		CrangeDisH = 80
@@ -206,7 +204,7 @@ c4a_options = function(...) {
 					CRbk = "Contrast-Ratio black",
 					cbfriendly = "Colorblind-friendly",
 					chroma = "Vivid",
-					harmony = "Fair",
+					fair = "Fair",
 					hueType = "Hues",
 					contrast = "&nbsp;&nbsp;Low contrast",
 					contrastWT = "&nbsp;&nbsp;Low contrast",
@@ -220,7 +218,7 @@ c4a_options = function(...) {
 				  cbfriendly = kableExtra::cell_spec("Colorblind-friendly", tooltip = "Is the palette suitable for colorblind people?"),
 				  chroma = kableExtra::cell_spec("Vivid", tooltip = "Are the colors vivid  or pastel?"),
 				  nmax = kableExtra::cell_spec("Max number", tooltip = "Maximum number of colors"),
-				  harmony = kableExtra::cell_spec("Fair", tooltip = "Do colors stand out about equally?"),
+				  fair = kableExtra::cell_spec("Fair", tooltip = "Do colors stand out about equally?"),
 				  contrast = kableExtra::cell_spec("Low contrast", tooltip = "Colors with low contrast are hard to separate. Are there any?"),
 				  float = kableExtra::cell_spec("3D Blues", tooltip = "Is there a pure blue color that may cause a 3D illusion?"),
 				  hueType = kableExtra::cell_spec("Hues", tooltip = "How many different hues are used?"),
@@ -275,7 +273,7 @@ c4a_options = function(...) {
 			 			   										 tooltip = "Each dimension has its own distinct hue: recommended!",
 			 			   										 escape = FALSE, extra_css = "font-size: 200%; vertical-align: -0.2em; line-height: 0px;"))
 			 ),
-			 harmony = list(cat = list('NA' = "",
+			 fair = list(cat = list('NA' = "",
 			 						  'M' = "",
 			 						  'L' =  kableExtra::cell_spec("&#10799;",
 			 						  							 tooltip = "Unfair: colors are not equally vivid and/or bright. See tab 'HCL Analysis'", escape = FALSE,

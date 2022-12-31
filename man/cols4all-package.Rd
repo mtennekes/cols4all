@@ -6,7 +6,7 @@
 \alias{cols4all}
 \title{cols4all overview}
 \description{
-cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by series and type and have been scored on several properties such as color-blind-friendliness, and harmony. By default 436 palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types categorical, sequential, and diverging it also includes bivariate color palettes. ggplot2 scales are included.
+cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by series and type and have been scored on several properties such as color-blind-friendliness and fairness. By default 436 palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types categorical, sequential, and diverging it also includes bivariate color palettes. ggplot2 scales are included.
 }
 \details{
 This page provides a brief overview of all package functions.

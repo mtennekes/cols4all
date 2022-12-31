@@ -4,12 +4,12 @@
 \alias{c4a_info}
 \title{Get information from a cols4all palette}
 \usage{
-c4a_info(palette, no.match = c("error", "null"), verbose = TRUE)
+c4a_info(palette, no.match = c("message", "error", "null"), verbose = TRUE)
 }
 \arguments{
 \item{palette}{name of the palette}
 
-\item{no.match}{what happens is no match is found? Options: \code{"error"}: an error is thrown, \code{"null"}: \code{NULL} is returned}
+\item{no.match}{what happens is no match is found? Options: \code{"message"}: a message is thrown with suggestions, \code{"error"}: an error is thrown, \code{"null"}: \code{NULL} is returned}
 
 \item{verbose}{should messages be printed?}
 }

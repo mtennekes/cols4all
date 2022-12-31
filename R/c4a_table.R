@@ -7,8 +7,8 @@ table_columns = function(type, show.scores) {
 		srt = "nmax"
 	}
 
-	qn = c(qn, "cbfriendly", "chroma", "harmony")
-	srt = c(srt, "cbfriendly", "Cmax", "harmonyRank")
+	qn = c(qn, "cbfriendly", "chroma", "fair")
+	srt = c(srt, "cbfriendly", "Cmax", "fairRank")
 
 	if (type %in% c("seq", "div", "bivs", "bivd", "bivg")) {
 		qn = c(qn, "hueType", "contrastWT", "contrastBK", "float")
@@ -249,7 +249,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 
 	rownames(e2) = NULL
-	for (var in c("cbfriendly", "chroma",  "hueType", "harmony", "contrast", "contrastWT", "contrastBK", "float")) {
+	for (var in c("cbfriendly", "chroma",  "hueType", "fair", "contrast", "contrastWT", "contrastBK", "float")) {
 		tcv = .C4A$tc[[var]]
 		if (any(names(tcv) %in% c("seq", "cat", "div"))) {
 			tcv = if (type %in% names(tcv)) tcv[[type]]	else tcv[["x"]]
@@ -262,7 +262,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	}
 
 
-	all_icons = c("cbfriendly", "chroma", "harmony")
+	all_icons = c("cbfriendly", "chroma", "fair")
 
 	qn_icons = intersect(qn, all_icons)
 	qn_other = setdiff(qn, all_icons)

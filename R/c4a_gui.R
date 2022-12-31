@@ -948,7 +948,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 
 		#############################
-		## Harmony tab
+		## HCL analysis tab
 		#############################
 
 
@@ -1039,13 +1039,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(cr)) return(NULL)
 
 			txt = if (cr >= 7) {
-				"safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **AAA**"
+				"safe to print text according to [WCAG 2.1](https://www.w3.org/TR/WCAG21/) level **AAA**"
 			} else if (cr >= 4.5) {
-				"safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **AA**"
+				"safe to print text according to the [WCAG 2.1](https://www.w3.org/TR/WCAG21/) level **AA**"
 			} else if (cr >= 3) {
-				"safe to print text according to the Web Content Accessibility Guidelines (WCAG) level **A**"
+				"safe to print text according to the [WCAG 2.1](https://www.w3.org/TR/WCAG21/) level **A**"
 			} else {
-				"not safe to print text according to the Web Content Accessibility Guidelines (WCAG)"
+				"not safe to print text according to the [WCAG 2.1](https://www.w3.org/TR/WCAG21/)"
 			}
 
 			shiny::markdown(paste0("**Contrast ratio** (", sprintf("%.2f", round(cr, 1)), "): ", txt))
