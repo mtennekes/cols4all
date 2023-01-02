@@ -231,12 +231,12 @@ c4a_load = function(data) {
 
 
 	if (!is.null(z2)) {
-		z2bib = NULL
+		z2$bib = NULL
 		z2$cit = NULL
 		if (any(fnms %in% z2$fullname)) stop("Fulnames already exist: ", paste(intersect(fnms, z2$fullname), collapse = ", "))
 
-		z = rbind(.z, z)
-		s = abind::abind(.s, s, along=1)
+		z = rbind(z2, z)
+		s = abind::abind(s2, s, along=1)
 	}
 
 	zbib = do.call(c, c(list(zbib2), zbib))

@@ -66,6 +66,8 @@ show_attach_scores = function(z) {
 
 	z2$float = z2$Blues >= .C4A$Blues
 
+	z2$H[z2$Hwidth >= 180] = 360
+
 	z2
 }
 

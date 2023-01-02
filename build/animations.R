@@ -6,13 +6,13 @@ library(gifski)
 # download.file("http://simonsoftware.se/other/xkcd.ttf", dest="xkcd.ttf", mode="wb")
 # font_add("xkcd", "~/xkcd.ttf")
 
-#options(shiny.launch.browser = .rs.invokeShinyWindowExternal)
+options(shiny.launch.browser = .rs.invokeShinyWindowExternal)
 
 
-grid.t = function(text, x, y, scale = 1, bg = TRUE) {
+grid.t = function(text, x, y, scale = 1, bg = TRUE, r = 0.5, just = "center") {
 	nlines = length(strsplit(text, "\n", fixed = TRUE)[[1]])
-	if (bg) grid.roundrect(x = x, y = y, width = scale * (convertWidth(stringWidth(text), unitTo = "npc") + unit(3, "lines")), height = scale * (unit(nlines+max(0,(nlines-1)*0.5),"lines")), r = unit(0.5, "npc"), gp=gpar(col=NA, fill = "white"))
-	grid.text(text, x = x, y = y, gp = gpar(cex = 1.2 * scale, fontfamily = "xkcd", fontface = "bold"))
+	if (bg) grid.roundrect(x = x, y = y, just = just, width = scale * (convertWidth(stringWidth(text), unitTo = "npc") + unit(3, "lines")), height = scale * (unit(nlines+max(0,(nlines-1)*0.5),"lines")), r = unit(r, "npc"), gp=gpar(col=NA, fill = "white"))
+	grid.text(text, x = x, y = y, just = just, gp = gpar(cex = 1.2 * scale, fontfamily = "xkcd", fontface = "bold"))
 
 }
 
@@ -139,7 +139,7 @@ for (scale in 1:2) {
 			grid.curve(x1 = 0.8, x2 = 0.94, y1 = 0.4, y2 = 0.7, gp = gpar(lwd = 3 * scale), arrow = arrow(length = unit(0.02, "npc")))
 		}
 		if (i >= 4) {
-			grid.t("No symbol = not similar,\ntherefore each to distinguish", 0.7, 0.3, scale)
+			grid.t("No symbol = not similar,\ntherefore easy to distinguish", 0.7, 0.3, scale)
 		}
 		if (i >= 5) {
 			grid.t("At least, for people with normal color vision !", 0.55, 0.14, scale)
@@ -251,3 +251,81 @@ for (scale in 1:2) {
 	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 600*scale, height = 600*scale, delay = 1.5, gif_file = paste0("inst/img/cl_plot", scale, "x.gif"), loop = FALSE)
 }
 
+################################
+#### CR table #################
+################################
+
+for (scale in 1:2) {
+	unlink("temp", recursive = T, force = T)
+	dir.create("temp")
+	for (i in 1:5) {
+		png(paste0("temp/table", i, ".png"), width = 400 * scale, height = 300 * scale, bg = "transparent")
+		#grid.rect(x = 0.50, y = 0.4, width = 0.7, height = 0.8, gp = gpar(fill = "orange"))
+		#c4a_plot_CR_matrix(c4a("brewer.accent", 7))
+		if (i >= 1) {
+			grid.t("Color 1", x = 0.05, y = 0.97, scale, bg = FALSE)
+			grid.t("Color 2", x = 0.2, y = 0.97, scale, bg = FALSE)
+			grid.lines(x = c(0.05, 0.05), y = c(0.92, 0.82), arrow = arrow(length = unit(0.015, "npc")), gp = gpar(lwd = 2 * scale))
+			grid.lines(x = c(0.28, 0.35), y = c(0.97, 0.97), arrow = arrow(length = unit(0.015, "npc")), gp = gpar(lwd = 2 * scale))
+		}
+		if (i >= 2) {
+			grid.rect(x = 0.45, y = 0.45, width = 0.6, height = 0.8, gp = gpar(col = NA, fill = "white"))
+			grid.t("The contract ratio between these two colors\nindicates how distinguishable they are\n- click to select other colors-", 0.5, 0.35, scale, r = 0.1, bg = FALSE)
+			grid.circle(x = 0.31, y = 0.55, r = 0.06, gp = gpar(fill = "#FFFFFF", lwd = 3 * scale))
+			grid.t("?", 0.31, 0.55, scale * 1.5, bg = FALSE)
+			grid.lines(x = c(0.16, 0.25), y = c(0.55, 0.55), gp = gpar(lwd = 3 * scale))
+			grid.lines(x = c(0.31, 0.31), y = c(0.64, 0.82), gp = gpar(lwd = 3 * scale))
+			#grid.lines(x = c(0.56, 0.355), y = c(0.88, 0.49), gp = gpar(lwd = 3, lty = "dotted"))
+		}
+
+		if (i >= 3) {
+			grid.t("Hard to distinguigh\n- borders recommended -", 0.56, 0.76, scale, bg = FALSE)
+			grid.curve(x1 = 0.74, x2 = 0.815, y1 = 0.71, y2 = 0.76, gp = gpar(lwd = 3 * scale), arrow = arrow(length = unit(0.02, "npc")))
+		}
+		if (i >= 4) {
+			grid.t("Easy to distinguigh\n- suitable for text -", 0.57, 0.56, scale, bg = FALSE)
+			grid.curve(x1 = 0.74, x2 = 0.815, y1 = 0.51, y2 = 0.56, gp = gpar(lwd = 3 * scale), arrow = arrow(length = unit(0.02, "npc")))
+		}
+		if (i >= 5) {
+			grid.t("White and black added to analyse\nstandard text readability", 0.4, 0.15, scale, bg = FALSE)
+		}
+
+		dev.off()
+	}
+	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 400 * scale, height = 300 * scale, delay = 1.5, gif_file = paste0("inst/img/table", scale, "x.gif"), loop = FALSE)
+
+}
+
+#Do you see a 3D effect? If not check 'Use original colors' below. Chromostereopsis is a visual illusion that happens when a blue color is shown next to a red color with a dark background.
+
+
+
+################################
+#### 3D Blues ##################
+################################
+
+for (scale in 1:2) {
+	unlink("temp", recursive = T, force = T)
+	dir.create("temp")
+	for (i in 1:4) {
+		png(paste0("temp/blues", i, ".png"), width = 550 * scale, height = 550 * scale, bg = "transparent")
+		#grid.rect(x = 0.50, y = 0.4, width = 0.7, height = 0.8, gp = gpar(fill = "orange"))
+		#c4a_plot_CR_matrix(c4a("brewer.accent", 7))
+		if (i >= 1) {
+			grid.t(" Do you see a 3D effect?", x = 0.05, y = 0.95, scale, bg = TRUE, just = "left")
+		}
+		if (i >= 2) {
+			grid.t(" If not check 'Use optical illusion's original colors' below    ", 0.35, 0.95, scale, bg = TRUE, just = "left")
+		}
+		if (i >= 3) {
+			grid.t(" Chromostereopsis is a visual illusion\n that happens when a blue color is shown\n next to a red color with a dark background", 0.05, 0.1, scale, bg = TRUE, r = 0.1, just = "left")
+		}
+		if (i >= 4) {
+			grid.t(" Check out if the palette may suffer from this illusion   ", 0.05, 0.02, scale, bg = TRUE, r = 0.1, just = "left")
+		}
+
+		dev.off()
+	}
+	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 550 * scale, height = 550 * scale, delay = 1.5, gif_file = paste0("inst/img/blues", scale, "x.gif"), loop = FALSE)
+
+}

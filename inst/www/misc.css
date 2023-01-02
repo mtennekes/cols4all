@@ -91,6 +91,19 @@
 	right: 0px;
 }
 
+
+#table {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
+#blues {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
 .hide {
 	display: none;
 }

@@ -233,8 +233,17 @@ get_hue_width = function(hs) {
 		}
 		w = round(360 - gap_max)
 	}
-	attr(w, "hueR") = (h_max + w) %% 360
-	attr(w, "hueL") = (h_max + 1) %% 360
+	HR = (h_max + w) %% 360
+	HL = (h_max + 1) %% 360
+
+	if (HR < HL) HR = HR + 360
+
+	H = (HL + HR) / 2
+	if (H > 360) H = H - 360
+
+	attr(w, "hueR") = HR
+	attr(w, "hueL") = HL
+	attr(w, "hue") = H
 
 	w
 }
@@ -310,6 +319,12 @@ hcl_prop = function(p) {
 	HwidthL = get_hue_width(hL)
 	HwidthR = get_hue_width(hR)
 
+	H = round(attr(Hwidth, "hue"))
+	HL = round(attr(HwidthL, "hue"))
+	HR = round(attr(HwidthR, "hue"))
+
+	Lmid = unname(round({if (!is_even) m[nh+1, 3] else mean(m[c(nh, nh+1), 3])}))
+
 	Cmax = round(max(m[,2]))
 	Lrange = round(max(m[,3]) - min(m[,3]))
 	Crange = round(max(m[,2]) - min(m[,2]))
@@ -319,7 +334,7 @@ hcl_prop = function(p) {
 	CRwt = round(get_CRbg(p, bg = "#ffffff") * 100)
 	CRbk = round(get_CRbg(p, bg = "#000000") * 100)
 
-	as(c(Cmax = Cmax, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, CRmin = CRmin, CRwt = CRwt, CRbk = CRbk), "integer") #LCrange = LCrange,
+	as(c(Cmax = Cmax, H = H, HL = HL, HR = HR, Lmid = Lmid, Hwidth = Hwidth, HwidthL = HwidthL, HwidthR = HwidthR, Lrange = Lrange, Crange = Crange, CRmin = CRmin, CRwt = CRwt, CRbk = CRbk), "integer") #LCrange = LCrange,
 }
 #
 # encode = function(x, digits = 0, id1 = 0L, id2 = 0L) {

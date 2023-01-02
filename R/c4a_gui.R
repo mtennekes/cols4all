@@ -320,12 +320,11 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 							value = "tab_cont",
 							shiny::fluidRow(
 								shiny::column(width = 12,
-											  shiny::markdown("<br/><br/>
-					  #### **Contrast Ratio**"),
 											  shiny::selectizeInput("contrastPal", "Palette", choices = init_pal_list))),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 6,
-				 					  shiny::plotOutput("table", height = "300px", width = "400px", click = "table_click")),
+				 					  infoBoxUI("infoCR", "Contrast ratio"),
+				 					  plotOverlay("table", width = "400px", height = "300px", "aniTable", click = "table_click")),
 				 		shiny::column(width = 6,
 	 					  shiny::markdown("<br></br>
 #### **Text readability**
@@ -366,15 +365,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 							value = "tab_floating",
 							shiny::fluidRow(
 								shiny::column(width = 12,
-											  shiny::selectizeInput("floatPal", "Palette", choices = init_pal_list),
-											  shiny::markdown("<br/><br/>
-					  #### **Chromostereopsis**
-
-							Do you see a 3D effect? If not check 'Use original colors' below. Chromostereopsis is a visual illusion that happens when a blue color is shown next to a red color with a dark background."))),
+											  shiny::selectizeInput("floatPal", "Palette", choices = init_pal_list))),
 
 							shiny::fluidRow(
 								shiny::column(width = 8,
-											  shiny::plotOutput("floating_rings", height = 550, width = 550),
+											  infoBoxUI("infoBlues", "Chromostereopsis"),
+											  plotOverlay("blues", width = "550px", height = "550px", "aniBlues"),
 											  shiny::markdown("<br/><br/>[_Visual illusion by Michael Bach_](https://michaelbach.de/ot/col-chromostereopsis/)"),
 											  shiny::checkboxInput("float_original", "Use optical illusion's original colors", value = FALSE),
 											  shiny::checkboxInput("float_rev", "Reverse colors", value = FALSE)),
@@ -446,7 +442,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 		})
 
-		anno = shiny::reactiveValues(simu = FALSE, hue_lines = FALSE, cvd = FALSE, simi = FALSE, psimi = FALSE, conf_lines = FALSE, hue_neck = FALSE, cl_plot = FALSE)
+		anno = shiny::reactiveValues(simu = FALSE, hue_lines = FALSE, cvd = FALSE, simi = FALSE, psimi = FALSE, conf_lines = FALSE, hue_neck = FALSE, cl_plot = FALSE, cr = FALSE, blues = FALSE)
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
 										 na = FALSE,
@@ -554,9 +550,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		get_cols = shiny::reactive({
 			type = get_type12()
 			res = table_columns(type, input$advanced)
-			anyD = duplicated(res$ql)
 
-			structure(c("name", res$qn[!anyD]), names = c("Name", res$ql[!anyD]))
+
+			xl = c(res$ql, res$sl)
+			xn = c(res$qn, res$sn)
+
+			anyD = duplicated(xl)
+			structure(c("name", xn[!anyD]), names = c("Name", xl[!anyD]))
 		})
 
 
@@ -1173,13 +1173,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			#br = get_blue_red()
 
 			if (max(b) > .C4A$Blues && max(r) > 1) {
-				btext = paste0("Color ", c(LETTERS, letters)[ids[1]], " is very blue, so a 3D effect will likely occur (at least, with a dark background). We will plot it next to a red color in the palette, color ", c(LETTERS, letters)[ids[2]])
+				btext = paste0("This illusion will likely occur with blue color ", c(LETTERS, letters)[ids[1]], " and a red color (e.g. ", c(LETTERS, letters)[ids[2]], "), at least with a dark background")
 			} else if (max(b) > 1 && max(r) > 1) {
-				btext = paste0("Color ", c(LETTERS, letters)[ids[1]], " is blue, so a 3D effect might  occur (at least with a dark background).  We will plot it next to a red color in the palette, color ", c(LETTERS, letters)[ids[2]])
+				btext = paste0("This illusion could occur with blue color ", c(LETTERS, letters)[ids[1]], " and a red color (e.g. ", c(LETTERS, letters)[ids[2]], "), at least with a dark background")
 			} else if (max(b) > 1 && max(r) <= 1) {
-				btext = paste0("The palette contains blue color(s), e.g. color ", c(LETTERS, letters)[ids[1]]," but no red(dish) color, so a 3D effect will probably not occur.")
+				btext = paste0("This illusion will probably not occur, because the palette does not contain a red(dish) color")
 			} else {
-				btext = "This palette does not contain any blue color, so a 3D effect does not happen."
+				btext = paste0("This illusion will probably not occur, because the palette does not contain any blue color")
 			}
 
 			shiny::tagList(
@@ -1210,7 +1210,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 		})
 
-		output$floating_rings = shiny::renderPlot({
+		output$blues = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 			if (!input$float_original) {
 				pal = tab_vals$pal
@@ -1331,6 +1331,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		oE("infoSimu", "simu", "aniSimu", "simu")
 		oE("infoHUE", "hue_neck", "aniHUE", "hue_neck")
 		oE("infoCL", "cl_plot", "aniCL", "cl_plot")
+
+		oE("infoCR", "cr", "aniTable", "table")
+		oE("infoBlues", "blues", "aniBlues", "blues")
 
 	}
 	shiny::shinyApp(ui = ui, server = server)

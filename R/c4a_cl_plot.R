@@ -65,11 +65,12 @@ c4a_plot_CL = function(cols, Lrange = FALSE, dark = FALSE) {
 								id = c(1, 1, 2, 2, 3, 3), gp = grid::gpar(col = dc))
 
 			ltext = paste0("L range: ", round(diff(lr)), {
-				if (diff(lr) <= .C4A$LrangeHarm) {
-					" (low)"
-				} else if (diff(lr) >= .C4A$LrangeHarm) {
-					" (high)"
-				} else " (medium)"
+				""
+				# if (diff(lr) <= .C4A$LrangeHarm) {
+				# 	" (low)"
+				# } else if (diff(lr) >= .C4A$LrangeHarm) {
+				# 	" (high)"
+				# } else " (medium)"
 			})
 			grid::grid.text(ltext, x = grid::unit(cr2[2] + marg * 2.5 * 1.8, "native"), y = grid::unit(mean(lr2), "native"), rot = 90, gp = grid::gpar(col = fc, cex = 0.8))
 		}

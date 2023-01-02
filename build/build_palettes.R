@@ -30,7 +30,7 @@ devtools::session_info(pkgs = "attached")
 
 
 
-c4a_palettes_remove(are.you.sure = TRUE)
+c4a_sysdata_remove(are.you.sure = TRUE)
 
 ###################################
 ### package grDevices: cat
@@ -41,7 +41,7 @@ local({
 	p1 = pals[c("R3", "R4", "ggplot2", "Okabe-Ito")]
 	names(p1) = c("R3", "R4", "ggplot2", "okabe")
 
-	c4a_palettes_add(p1, types = "cat", series = "misc")
+	c4a_load(c4a_data(p1, types = "cat", series = "misc"))
 })
 
 ###################################
@@ -71,8 +71,8 @@ local({
 
 	type = c(rep("seq", length(spals)), rep("div", length(dpals)))
 
-	c4a_palettes_add(c(spals, dpals), types = type, series = "hcl", space = "Lab")
-	c4a_palettes_add_as_is(tpals, types = "seq", series = "hcl", space = "Lab")
+	c4a_load(c4a_data(c(spals, dpals), types = type, series = "hcl", space = "Lab"))
+	c4a_load(c4a_data_as_is(tpals, types = "seq", series = "hcl", space = "Lab"))
 })
 
 
@@ -104,7 +104,7 @@ local({
 	names(pals) = rownames(inf)
 	types = ifelse(inf$category == "qual", "cat", inf$category)
 
-	c4a_palettes_add(pals, types = types, series = "brewer")
+	c4a_load(c4a_data(pals, types = types, series = "brewer"))
 })
 
 
@@ -187,9 +187,9 @@ local({
 
 	p3_types = ifelse(names(p3) %in% c("bu_rd", "pu_gn", "sunset"), "div", "seq")
 
-	c4a_palettes_add(p1, types = "cat", series = "tol")
-	c4a_palettes_add(p2, types = "cat", series = "tol", take.gray.for.NA = FALSE, remove.other.grays = FALSE, remove.blacks = FALSE)
-	c4a_palettes_add(p3, types = p3_types, xNA = p3_na, series = "tol")
+	c4a_load(c4a_data(p1, types = "cat", series = "tol"))
+	c4a_load(c4a_data(p2, types = "cat", series = "tol", take.gray.for.NA = FALSE, remove.other.grays = FALSE, remove.blacks = FALSE))
+	c4a_load(c4a_data(p3, types = p3_types, xNA = p3_na, series = "tol"))
 })
 
 
@@ -210,7 +210,7 @@ local({
 	})
 	names(pals) = nms
 
-	c4a_palettes_add(pals, types = types, series = "viridis")
+	c4a_load(c4a_data(pals, types = types, series = "viridis"))
 })
 
 
@@ -320,10 +320,10 @@ local({
 	names(pals5) = new_div
 
 
-	c4a_palettes_add(pals, types = "cat", series = series)
-	c4a_palettes_add(pals4_sel, types = pals4_type_sel, series = "kovesi", format.palette.name = FALSE)
-	c4a_palettes_add_as_is(pals_ter, types = "seq", series = "kovesi", format.palette.name = FALSE)
-	c4a_palettes_add(pals5, types = pals5_type, series = "kovesi", format.palette.name = FALSE)
+	c4a_load(c4a_data(pals, types = "cat", series = series))
+	c4a_load(c4a_data(pals4_sel, types = pals4_type_sel, series = "kovesi", format.palette.name = FALSE))
+	c4a_load(c4a_data_as_is(pals_ter, types = "seq", series = "kovesi", format.palette.name = FALSE))
+	c4a_load(c4a_data(pals5, types = pals5_type, series = "kovesi", format.palette.name = FALSE))
 
 })
 
@@ -341,7 +341,7 @@ local({
 
 	type = ifelse(names(pals) == "Zissou1", "div", "cat")
 
-	c4a_palettes_add(pals, types = type, series = "wes")
+	c4a_load(c4a_data(pals, types = type, series = "wes"))
 
 })
 
@@ -379,9 +379,9 @@ local({
 	names(pals3) = tolower(cartoAgg$Name)
 	names(pals3)[2] = "ag_grn_yl"
 
-	c4a_palettes_add(pals, types = "cat", series = "carto")
-	c4a_palettes_add(pals2rev, types = type, series = "carto")
-	c4a_palettes_add(pals3, types = "seq", series = "carto", format.palette.name = FALSE)
+	c4a_load(c4a_data(pals, types = "cat", series = "carto"))
+	c4a_load(c4a_data(pals2rev, types = type, series = "carto"))
+	c4a_load(c4a_data(pals3, types = "seq", series = "carto", format.palette.name = FALSE))
 
 })
 
@@ -405,7 +405,7 @@ local({
 		structure(pal, index = indices)
 	}), names = hclnames)
 
-	c4a_palettes_add(pals, types = "cat", series = "hcl")
+	c4a_load(c4a_data(pals, types = "cat", series = "hcl"))
 })
 
 ###################################
@@ -439,9 +439,9 @@ local({
 
 	names(pals_seq)[match(c("batlowK", "batlowW"), names(pals_seq))] = c("k_batlow", "w_batlow") # reverse names (because palettes will be reversed)
 
-	c4a_palettes_add(pals_div, types = "div", series = "scico")
-	c4a_palettes_add(pals_seq, types = "seq", series = "scico")
-	c4a_palettes_add(pals_biv, types = c("bivc", "bivc", "bivg"), series = "scico", biv.method = "bycol2")
+	c4a_load(c4a_data(pals_div, types = "div", series = "scico"))
+	c4a_load(c4a_data(pals_seq, types = "seq", series = "scico"))
+	c4a_load(c4a_data(pals_biv, types = c("bivc", "bivc", "bivg"), series = "scico", biv.method = "bycol2"))
 })
 
 ###################################
@@ -490,9 +490,9 @@ local({
 		pal$value
 	})
 
-	c4a_palettes_add(tab_cat, types = "cat", series = "tableau")
-	c4a_palettes_add(tab_seq, types = "seq", series = "tableau")
-	c4a_palettes_add(tab_div, types = "div", series = "tableau")
+	c4a_load(c4a_data(tab_cat, types = "cat", series = "tableau"))
+	c4a_load(c4a_data(tab_seq, types = "seq", series = "tableau"))
+	c4a_load(c4a_data(tab_div, types = "div", series = "tableau"))
 })
 
 
@@ -523,9 +523,9 @@ local({
 	})
 	names(sb_div) = sb_div_names
 
-	c4a_palettes_add(sb_cat, types = "cat", series = "seaborn")
-	c4a_palettes_add(sb_seq, types = "seq", series = "seaborn")
-	c4a_palettes_add(sb_div, types = "div", series = "seaborn")
+	c4a_load(c4a_data(sb_cat, types = "cat", series = "seaborn"))
+	c4a_load(c4a_data(sb_seq, types = "seq", series = "seaborn"))
+	c4a_load(c4a_data(sb_div, types = "div", series = "seaborn"))
 })
 
 local({
@@ -538,7 +538,7 @@ local({
 			 dark24 = Polychrome::dark.colors(n = 24),
 			 sky24 = Polychrome::sky.colors(n = 24),
 			 wright25 = pals::cols25())
-	c4a_palettes_add(p, types = "cat", series = "poly", remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE)
+	c4a_load(c4a_data(p, types = "cat", series = "poly", remove.blacks = FALSE, take.gray.for.NA = FALSE, remove.other.grays = FALSE))
 })
 
 
@@ -631,10 +631,10 @@ local({
 	pals_bivg = list(bu_bivg = bu2, yl_rd_bivg = yl_rd, br_bivg = bu_br_biv[8:10], pu_bivg = pu_gn_biv[4:2], gn_bivg = pu_gn_biv[8:10])
 
 
-	c4a_palettes_add(pals_div, types = "div", series = "c4a", space = "rgb")
-	c4a_palettes_add(pals_bivs, types = "bivs", series = "c4a", biv.method = "div2seqseq", space = "rgb")
-	c4a_palettes_add(pals_bivd, types = "bivd", series = "c4a", biv.method = "div2catseq", space = "rgb")
-	c4a_palettes_add(pals_bivg, types = "bivg", series = "c4a", biv.method = "seq2uncseq", space = "rgb")
+	c4a_load(c4a_data(pals_div, types = "div", series = "c4a", space = "rgb"))
+	c4a_load(c4a_data(pals_bivs, types = "bivs", series = "c4a", biv.method = "div2seqseq", space = "rgb"))
+	c4a_load(c4a_data(pals_bivd, types = "bivd", series = "c4a", biv.method = "div2catseq", space = "rgb"))
+	c4a_load(c4a_data(pals_bivg, types = "bivg", series = "c4a", biv.method = "seq2uncseq", space = "rgb"))
 
 	pals2 = list(pinkgreen = pals::stevens.pinkgreen(n = 9),
 				 bluered = pals::stevens.bluered(n = 9),
@@ -644,20 +644,20 @@ local({
 
 
 
-	c4a_palettes_add(pals2, types = "bivs", series = "stevens", biv.method = "byrow")
+	c4a_load(c4a_data(pals2, types = "bivs", series = "stevens", biv.method = "byrow"))
 
 	pals3 = list(divseq = brewer.divseq(n = 9),
 				 qualseq = brewer.qualseq(n = 9),
 				 seqseq1 = brewer.seqseq1(n = 9),
 				 seqseq2 = brewer.seqseq2(n = 9))
-	c4a_palettes_add(pals3, types = c("bivd", "bivc", "bivs", "bivs"), series = "brewer", biv.method = "byrow")
+	c4a_load(c4a_data(pals3, types = c("bivd", "bivc", "bivs", "bivs"), series = "brewer", biv.method = "byrow"))
 
 
 	pals4 = list(stepped = do.call(c, lapply(1:6, function(i) pals::stepped()[(i*4):(i*4-3)])),
 				 stepped2 = do.call(c, lapply(1:5, function(i) pals::stepped2()[(i*4):(i*4-3)])),
 				 stepped3 = do.call(c, lapply(1:5, function(i) pals::stepped3()[(i*4):(i*4-3)])))
-	c4a_palettes_add(pals4[1], types = "bivc", series = "misc", biv.method = "bycol6")
-	c4a_palettes_add(pals4[2:3], types = "bivc", series = "misc", biv.method = "bycol5")
+	c4a_load(c4a_data(pals4[1], types = "bivc", series = "misc", biv.method = "bycol6"))
+	c4a_load(c4a_data(pals4[2:3], types = "bivc", series = "misc", biv.method = "bycol5"))
 })
 
 
@@ -676,7 +676,7 @@ local({
 	#pals_cbf = pals[cbf]
 	#types_cbf = types[cbf]
 
-	c4a_palettes_add(pals, types = types, series = "met", biv.method = "bycol3")
+	c4a_load(c4a_data(pals, types = types, series = "met", biv.method = "bycol3"))
 })
 
 local({
@@ -690,7 +690,7 @@ local({
 
 	types = ifelse(names(pals) %in% seq, "seq", ifelse(names(pals) %in% div, "div", "cat"))
 
-	c4a_palettes_add(pals, types = types, series = "parks")
+	c4a_load(c4a_data(pals, types = types, series = "parks"))
 
 })
 

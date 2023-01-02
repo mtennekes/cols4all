@@ -1,30 +1,39 @@
 table_columns = function(type, show.scores) {
 	if (type %in% c("seq", "div")) {
 		qn = character(0)
-		srt = character(0)
+		qs = character(0)
 	} else {
 		qn = "nmax"
-		srt = "nmax"
+		qs = "nmax"
 	}
 
 	qn = c(qn, "cbfriendly", "chroma", "fair")
-	srt = c(srt, "cbfriendly", "Cmax", "fairRank")
+	qs = c(qs, "cbfriendly", "Cmax", "fairRank")
 
-	if (type %in% c("seq", "div", "bivs", "bivd", "bivg")) {
+	if (type == "seq") {
 		qn = c(qn, "hueType", "contrastWT", "contrastBK", "float")
-		srt = c(srt, {if (type %in% c("div", "bivs", "bivd", "bivg")) "HwidthLR" else "Hwidth"}, "CRwt", "CRbk", "Blues")
+		qs = c(qs, "Hwidth", "CRwt", "CRbk", "Blues")
+		sn = "H"
+	} else if (type %in% c("div", "bivs", "bivd", "bivg")) {
+		qn = c(qn, "hueType", "contrastWT", "contrastBK", "float")
+		qs = c(qs,  "HwidthLR", "CRwt", "CRbk", "Blues")
+		sn = c("HL", "HR", "Lmid")
 	} else {
 		qn = c(qn, "contrast", "contrastWT", "contrastBK", "float")
-		srt = c(srt, "CRmin", "CRwt", "CRbk", "Blues")
+		qs = c(qs, "CRmin", "CRwt", "CRbk", "Blues")
+		sn = character(0)
 	}
+
 
 	if (show.scores) {
 		qn = c(qn, .C4A$indicators[[type]], .C4A$hcl, .C4A$rgb)
-		srt = c(srt, .C4A$indicators[[type]], .C4A$hcl, .C4A$rgb)
+		qs = c(qs, .C4A$indicators[[type]], .C4A$hcl, .C4A$rgb)
 	}
 	ql = gsub("&nbsp;", "", .C4A$labels[qn])
 
-	list(qn = qn, ql = ql, srt = srt)
+	sl = .C4A$labels[sn]
+
+	list(qn = qn, ql = ql, qs = qs, sn = sn, sl = sl)
 }
 
 
@@ -116,13 +125,22 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	res = table_columns(type, show.scores)
 	qn = res$qn
 	ql = res$ql
-	srt = res$srt
+	qs = res$qs
+	sn = res$sn
+	sl = res$sl
+
+	#xn = c(qn, sn)
+	#xl = c(ql, sl)
 
 	isrev = (substr(sort, 1, 1) == "-")
 	if (isrev) sort = substr(sort, 2, nchar(sort))
 
 
-	sortCol = if (sort == "name") "fullname" else srt[which(sort == qn)]
+	sortCol = if (sort == "name") {
+		"fullname"
+	} else if (sort %in% c("H", "HL", "HR", "Lmid")) {
+		sort
+	} else qs[which(sort == qn)]
 	decreasing = xor(isrev, sortCol %in% .C4A$sortRev)
 	zn = zn[order(zn[[sortCol]], decreasing = decreasing), ]
 

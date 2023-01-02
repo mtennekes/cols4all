@@ -183,9 +183,9 @@ c4a_options = function(...) {
 						  bivd = c("inter_wing_dist", "min_step"),
 						  bivg = c("inter_wing_dist", "min_step"))
 		rgb = c("Blues")
-		hcl = c("Cmax", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
+		hcl = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
 
-		sortRev = c("cbfriendly", "harmonyRank", "Cmax", "min_dist", "Hwidth", "HwidthL", "HwidthR", "nmax", "Blues")
+		sortRev = c("cbfriendly", "harmonyRank", "Cmax", "min_dist", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "Blues")
 
 		labels = c(min_dist = "Minimum distance",
 					min_step = "Minimum step",
@@ -193,6 +193,10 @@ c4a_options = function(...) {
 					inter_wing_dist = "Inter-wing-distance",
 					Crel = "Chroma (rel) max",
 					Cmax = "Chroma max",
+					H = "Hue mean",
+					HL = "Hue mean L",
+					HR = "Hue mean R",
+					Lmid = "Luminance mid",
 					Hwidth = "Hue width",
 					HwidthL = "Hue width L",
 					HwidthR = "Hue width R",
@@ -205,7 +209,8 @@ c4a_options = function(...) {
 					cbfriendly = "Colorblind-friendly",
 					chroma = "Vivid",
 					fair = "Fair",
-					hueType = "Hues",
+					fairRank = "Fair",
+					hueType = "Hue type",
 					contrast = "&nbsp;&nbsp;Low contrast",
 					contrastWT = "&nbsp;&nbsp;Low contrast",
 					contrastBK = "&nbsp;&nbsp;Low contrast",
@@ -221,7 +226,7 @@ c4a_options = function(...) {
 				  fair = kableExtra::cell_spec("Fair", tooltip = "Do colors stand out about equally?"),
 				  contrast = kableExtra::cell_spec("Low contrast", tooltip = "Colors with low contrast are hard to separate. Are there any?"),
 				  float = kableExtra::cell_spec("3D Blues", tooltip = "Is there a pure blue color that may cause a 3D illusion?"),
-				  hueType = kableExtra::cell_spec("Hues", tooltip = "How many different hues are used?"),
+				  hueType = kableExtra::cell_spec("Hue type", tooltip = "How many different hues are used?"),
 				  references = kableExtra::cell_spec("References", tooltip = "Click to copy the colors and references"))
 
 		tc = list(cbfriendly = list('NA' = "",
