@@ -51,7 +51,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	ani_off = shiny::icon("circle-xmark", "fa-2x fa-solid", verify_fa = FALSE)
 	ani_on = shiny::icon("circle-info", "fa-2x fa-light", verify_fa = FALSE)
 
-	if (!check_installed_packages(c("shiny", "shinyjs", "kableExtra"))) return(invisible(NULL))
+	if (!check_installed_packages(c("shiny", "shinyjs", "kableExtra", "colorblindcheck"))) return(invisible(NULL))
 
 
 	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
@@ -152,6 +152,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 	ui = shiny::fluidPage(
 		shinyjs::useShinyjs(),
+		shiny::tags$script(src = "https://kit.fontawesome.com/f175d6d133.js"),
 		shiny::tags$head(shiny::includeCSS(system.file("www/light.css", package = "cols4all"))),
 		shiny::tags$head(shiny::includeCSS(system.file("www/dark.css", package = "cols4all"))),
 		shiny::tags$head(shiny::includeCSS(system.file("www/misc.css", package = "cols4all"))),
