@@ -26,6 +26,16 @@ check_name_presence = function(name, verbose = TRUE) {
 	NULL
 }
 
+closest_match = function(x, y, tolerance = .5, max = 1.5) {
+	s = stringdist::stringdist(x, y, weight = c(d = .5, i = .7, s = 1, t = .7))
+	smin = min(s)
+	th = min(max, (smin + tolerance))
+	ids = which(s <= th)
+	list(ids = ids,
+		 stringdist = smin)
+}
+
+
 fuzzy_names = function(name) {
 	fullnames = .C4A$z$fullname
 	nnames = .C4A$z$name
@@ -36,19 +46,18 @@ fuzzy_names = function(name) {
 
 	# without "series."
 	if (length(base) == 0L) {
-		ids = which(stringdist::stringdist(name, nnames) <= 2)
-		message("\"", paste(fullnames[ids], collapse = "\", \""), "\"")
+		fullnames[closest_match(name, nnames)$ids]
 	} else {
-		ids_b = which(stringdist::stringdist(base, nnames[snames != series]) <= 1)
-		ids_ss = which(stringdist::stringdist(base, nnames[snames == series]) <= 2)
+		res1 = closest_match(base, nnames[snames != series])
+		res2 = closest_match(base, nnames[snames == series])
 
-		if (length(ids_b)) message("\"", paste(fullnames[snames == series][ids_ss], collapse = "\", \""), "\"")
-		if (length(ids_ss)) message("\"", paste(fullnames[snames != series][ids_b], collapse = "\", \""), "\"")
+		if (res2$stringdist <= res1$stringdist) {
+			fullnames[snames == series][res2$ids]
+		} else {
+			c(fullnames[snames == series][res2$ids],
+			  fullnames[snames != series][res1$ids])
+		}
 	}
-
-	which(stringdist::stringdist(name, nnames) <= 3)
-	stringdist::stringdist(name, fullnames)
-
 }
 
 #' Converts a name to a known palette name, if it exists.
@@ -70,9 +79,12 @@ c4a_name_convert = function(name, no.match = c("message", "error", "null"), verb
 		if (no.match == "error") {
 			stop("Unknown palette name. See c4a_palettes() for all palette names", call. = FALSE)
 		} else if (no.match == "message") {
-			message("Unknown palette name. Do you mean one of the following alternatives:")
-			fuzzy_names(name)
-			message("See c4a_palettes() for all palette names")
+			fuzzy = fuzzy_names(name)
+			if (length(fuzzy) == 0) {
+				message("Unknown palette name. See c4a_palettes() for all palette names")
+			} else {
+				message("Unknown palette name. Close alternatives are: \"", paste(fuzzy, collapse = "\", \""), "\". See c4a_palettes() for all palette names")
+			}
 			return(NULL)
 		} else {
 			return(NULL)

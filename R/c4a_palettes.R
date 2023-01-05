@@ -14,10 +14,10 @@
 c4a_palettes = function(type = c("all", "cat", "seq", "div"), series = NULL, full.names = TRUE) {
 	type = match.arg(type)
 	z = .C4A$z
-	fnames = z$fullname
+	nms = if (full.names) z$fullname else z$name
 	sel_type = if (type != "all") z$type == type else TRUE
 	sel_series = if (is.null(series)) TRUE else (z$series %in% series)
-	fnames[sel_type & sel_series]
+	nms[sel_type & sel_series]
 }
 
 #' @rdname c4a_palettes

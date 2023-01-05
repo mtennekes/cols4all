@@ -6,7 +6,7 @@
 \alias{cols4all}
 \title{cols4all overview}
 \description{
-cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by series and type and have been scored on several properties such as color-blind-friendliness and fairness. By default 436 palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types categorical, sequential, and diverging it also includes bivariate color palettes. ggplot2 scales are included.
+cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by type and have been scored on several properties such as color-blind-friendliness and fairness (i.e. do colors stand out equally?). 436 color palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types (categorical, sequential, and diverging) it also includes bivariate color palettes. ggplot2 scales are included.
 }
 \details{
 This page provides a brief overview of all package functions.
@@ -14,8 +14,8 @@ This page provides a brief overview of all package functions.
 \section{Main functions}{
 
 \tabular{ll}{
-\code{\link{c4a_gui}}\tab Dashboard to analyse the palettes \cr
-\code{\link{c4a}}\tab Get the colors of a palette \cr
+\code{\link{c4a_gui}}\tab Dashboard for analyzing the palettes \cr
+\code{\link{c4a}}\tab Get the colors from a palette \cr
 }
 }
 
@@ -24,8 +24,8 @@ This page provides a brief overview of all package functions.
 \tabular{ll}{
 \code{\link{c4a_palettes}}\tab Get available palette names \cr
 \code{\link{c4a_series}}\tab Get available series names\cr
-\code{\link{c4a_info}}\tab Get palette information from a specific palette (such as type and maximum number of colors) \cr
 \code{\link{c4a_citation}}\tab Show how to cites palettes (with bibtex code) \cr
+\code{\link{c4a_info}}\tab Get information from a palette, such as type and maximum number of colors) \cr
 \code{\link{.P}}\tab Environment via which palette names can be browsed with auto-completion (using \code{$}) \cr
 }
 }

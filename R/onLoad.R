@@ -1,22 +1,23 @@
 #' cols4all overview
 #'
-#' cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by series and type and have been scored on several properties such as color-blind-friendliness and fairness. By default 436 palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types categorical, sequential, and diverging it also includes bivariate color palettes. ggplot2 scales are included.
+#' cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by type and have been scored on several properties such as color-blind-friendliness and fairness (i.e. do colors stand out equally?). 436 color palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types (categorical, sequential, and diverging) it also includes bivariate color palettes. ggplot2 scales are included.
 #'
 #' This page provides a brief overview of all package functions.
 #'
 #' @section Main functions:
 #' \tabular{ll}{
-#' \code{\link{c4a_gui}}\tab Dashboard to analyse the palettes \cr
-#' \code{\link{c4a}}\tab Get the colors of a palette \cr
+#' \code{\link{c4a_gui}}\tab Dashboard for analyzing the palettes \cr
+#' \code{\link{c4a}}\tab Get the colors from a palette \cr
 #' }
 #'
 #' @section Palette names and properties:
 #' \tabular{ll}{
 #' \code{\link{c4a_palettes}}\tab Get available palette names \cr
 #' \code{\link{c4a_series}}\tab Get available series names\cr
-#' \code{\link{c4a_info}}\tab Get palette information from a specific palette (such as type and maximum number of colors) \cr
 #' \code{\link{c4a_citation}}\tab Show how to cites palettes (with bibtex code) \cr
+#' \code{\link{c4a_info}}\tab Get information from a palette, such as type and maximum number of colors) \cr
 #' \code{\link{.P}}\tab Environment via which palette names can be browsed with auto-completion (using `$`) \cr
+
 #' }
 #'
 #' @section Importing and exporting palettes:
@@ -193,9 +194,9 @@ c4a_options = function(...) {
 					inter_wing_dist = "Inter-wing-distance",
 					Crel = "Chroma (rel) max",
 					Cmax = "Chroma max",
-					H = "Hue mean",
-					HL = "Hue mean L",
-					HR = "Hue mean R",
+					H = "Hue middle",
+					HL = "Hue middle L",
+					HR = "Hue middle R",
 					Lmid = "Luminance mid",
 					Hwidth = "Hue width",
 					HwidthL = "Hue width L",
