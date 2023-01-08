@@ -49,9 +49,9 @@ c4a_plot_CL = function(cols, Lrange = FALSE, dark = FALSE) {
 
 		ctext = paste0("C range: ", round(diff(cr)), {
 			""
-			# if (diff(cr) <= .C4A$CrangeHarm) {
+			# if (diff(cr) <= .C4A$CrangeFair) {
 			# 	" (low)"
-			# } else if (diff(cr) >= .C4A$CrangeDisH) {
+			# } else if (diff(cr) >= .C4A$CrangeUnfair) {
 			# 	" (high)"
 			# } else " (medium)"
 		})
@@ -66,9 +66,9 @@ c4a_plot_CL = function(cols, Lrange = FALSE, dark = FALSE) {
 
 			ltext = paste0("L range: ", round(diff(lr)), {
 				""
-				# if (diff(lr) <= .C4A$LrangeHarm) {
+				# if (diff(lr) <= .C4A$LrangeFair) {
 				# 	" (low)"
-				# } else if (diff(lr) >= .C4A$LrangeHarm) {
+				# } else if (diff(lr) >= .C4A$LrangeFair) {
 				# 	" (high)"
 				# } else " (medium)"
 			})

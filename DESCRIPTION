@@ -11,7 +11,7 @@ Authors@R: c(
 	person("Robin", "Lovelace", email = "rob00x@gmail.com", role = "ctb"),
 	person("Helgasoft", email = "contact@helgasoft.com", role = "ctb")
 	)
-Description: Color palettes for all people, including those with color vision deficiency. Palettes, organized by source and type, are scored on several properties such as color-blind-friendliness and harmony. Furthermore each palette is assigned a distinct color for missing values. Own palettes can be loaded as well. ggplot2 scales are included.
+Description: cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by type and have been scored on several properties such as color-blind-friendliness and fairness (i.e. do colors stand out equally?). 436 color palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types (categorical, sequential, and diverging) it also includes bivariate color palettes. ggplot2 scales are included.
 Version: 0.4
 Date: 2022-11-17
 Encoding: UTF-8

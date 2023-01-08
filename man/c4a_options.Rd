@@ -13,18 +13,20 @@ c4a_options(...)
 Get or set global options for c4a. Works similar as the base function \code{options}
 }
 \details{
-| ------------- |:------------- |
-| defaults		|  Default palettes |
-| CBF_th		|  Parameters that label a palette as color blind friendly  |
-| CBU_th		| Parameters that label a palette as color blind unfriendly |
-| CrangeHarm		| Maximum chroma range for which a palette is considered harmonic |
-| CrangeDisH		| Minimum chroma range for which a palette is considered disharmonic  |
-| LrangeHarm		| Maximum luminance range for which a palette is considered harmonic |
-| LrangeDisH		| Minimum luminance range for which a palette is considered disharmonic |
-| Cintense		| Chroma of colors that are considered intense |
-| Cpastel		| Chroma of colors that are considered 'pastel' |
-| HwidthDivRainbow		| A diverging palette is labeled as 'rainbow hue' if HwidthL or HwidthR are at least \code{HwidthDivRainbow} |
-| HwidthDivSingle		| A diverging palette is labeled as 'single hue' if HwidthL and HwidthR are at most \code{HwidthDivSingle} |
-| HwidthSeqRainbow | A sequential palette is labeled as 'rainbow hue' if Hwidth is at least \code{HwidthSeqRainbow} |
-| HwidthSeqSingle | A sequential palette is labeled as 'single hue' if Hwidth is at most \code{HwidthSeqSingle} |
+\tabular{ll}{
+   \strong{Option} \tab \strong{Description} \cr
+   defaults \tab Default palettes per type \cr
+   CBF_th \tab Parameters that label a palette as color blind friendly \cr
+   CBU_th \tab Parameters that label a palette as color blind unfriendly \cr
+   CrangeFair \tab Maximum chroma range for which a palette is considered harmonic \cr
+   CrangeUnfair \tab Minimum chroma range for which a palette is considered disharmonic \cr
+   LrangeFair \tab Maximum luminance range for which a palette is considered harmonic \cr
+   LrangeUnfair \tab Minimum luminance range for which a palette is considered disharmonic \cr
+   Cintense \tab Chroma of colors that are considered intense \cr
+   Cpastel \tab Chroma of colors that are considered 'pastel' \cr
+   HwidthDivRainbow \tab A diverging palette is labeled as 'rainbow hue' if HwidthL or HwidthR are at least \code{HwidthDivRainbow} \cr
+   HwidthDivSingle \tab A diverging palette is labeled as 'single hue' if HwidthL and HwidthR are at most \code{HwidthDivSingle} \cr
+   HwidthSeqRainbow \tab A sequential palette is labeled as 'rainbow hue' if Hwidth is at least \code{HwidthSeqRainbow} \cr
+   HwidthSeqSingle \tab A sequential palette is labeled as 'single hue' if Hwidth is at most \code{HwidthSeqSingle} \cr
+}
 }

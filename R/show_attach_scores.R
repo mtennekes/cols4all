@@ -38,12 +38,12 @@ show_attach_scores = function(z) {
 	#z2$highC = z2$Cmax >= .C4A$Cintense
 
 	if (type %in% c("cat", "bivc")) {
-		z2$fair = ifelse(z2$Crange < .C4A$CrangeHarm & z2$Lrange < .C4A$LrangeHarm, "H",
-							ifelse(z2$Crange > .C4A$CrangeDisH | z2$Lrange > .C4A$LrangeDisH, "L", "M"))
+		z2$fair = ifelse(z2$Crange < .C4A$CrangeFair & z2$Lrange < .C4A$LrangeFair, "H",
+							ifelse(z2$Crange > .C4A$CrangeUnfair | z2$Lrange > .C4A$LrangeUnfair, "L", "M"))
 		z2$fairRank = rank(c("H" = 2000000, "M" = 1000000, "L" = 0)[z2$fair] + (999000 - z2$Crange * 1000) + (999 - z2$Lrange))
 	} else {
-		z2$fair = ifelse(z2$Crange < .C4A$CrangeHarm, "H",
-					 ifelse(z2$Crange > .C4A$CrangeDisH, "L", "M"))
+		z2$fair = ifelse(z2$Crange < .C4A$CrangeFair, "H",
+					 ifelse(z2$Crange > .C4A$CrangeUnfair, "L", "M"))
 		z2$fairRank = rank(z2$Crange)
 	}
 

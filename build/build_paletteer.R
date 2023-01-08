@@ -1,4 +1,4 @@
-reprex::reprex({
+#reprex::reprex({
 sessionInfo(package = "paletteer")
 library(paletteer)
 
@@ -16,7 +16,7 @@ palettes_d$ggthemes$stata_economist
 pals_d = do.call(c, palettes_d)
 setdiff(names(pals_d), paste0(palettes_d_names$package, ".", palettes_d_names$palette))
 setdiff(paste0(palettes_d_names$package, ".", palettes_d_names$palette), names(pals_d))
-})
+#})
 
 
 # discrete (fw)		discrete (dyn)			continuous

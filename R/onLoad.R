@@ -45,27 +45,31 @@ NULL
 #' @param ... Use character values to retrieve options. To set options, either use named arguments (where the names refer to the options), a list that consists of those options.
 #'
 #' @details
-#' | ------------- |:------------- |
-#' | defaults		|  Default palettes |
+#'
+#' | **Option**        | **Description**   |
+#' | ------------- | ------------- |
+#' | defaults		|  Default palettes per type |
 #' | CBF_th		|  Parameters that label a palette as color blind friendly  |
 #' | CBU_th		| Parameters that label a palette as color blind unfriendly |
-#' | CrangeHarm		| Maximum chroma range for which a palette is considered harmonic |
-#' | CrangeDisH		| Minimum chroma range for which a palette is considered disharmonic  |
-#' | LrangeHarm		| Maximum luminance range for which a palette is considered harmonic |
-#' | LrangeDisH		| Minimum luminance range for which a palette is considered disharmonic |
+#' | CrangeFair		| Maximum chroma range for which a palette is considered harmonic |
+#' | CrangeUnfair		| Minimum chroma range for which a palette is considered disharmonic  |
+#' | LrangeFair		| Maximum luminance range for which a palette is considered harmonic |
+#' | LrangeUnfair		| Minimum luminance range for which a palette is considered disharmonic |
 #' | Cintense		| Chroma of colors that are considered intense |
 #' | Cpastel		| Chroma of colors that are considered 'pastel' |
 #' | HwidthDivRainbow		| A diverging palette is labeled as 'rainbow hue' if HwidthL or HwidthR are at least `HwidthDivRainbow` |
 #' | HwidthDivSingle		| A diverging palette is labeled as 'single hue' if HwidthL and HwidthR are at most `HwidthDivSingle` |
 #' | HwidthSeqRainbow | A sequential palette is labeled as 'rainbow hue' if Hwidth is at least `HwidthSeqRainbow` |
 #' | HwidthSeqSingle | A sequential palette is labeled as 'single hue' if Hwidth is at most `HwidthSeqSingle` |
+#'
+#' @md
 #' @name c4a_options
 #' @rdname c4a_options
 #' @export
 c4a_options = function(...) {
 	lst = list(...)
 	e1 = parent.frame()
-	nms = c("defaults", "CBF_th", "CBU_th", "CrangeHarm", "CrangeDisH", "LrangeHarm", "LrangeDisH", "Cintense", "Cpastel", "HwidthDivRainbow", "HwidthDivSingle", "HwidthSeqRainbow", "HwidthSeqSingle")
+	nms = c("defaults", "CBF_th", "CBU_th", "CrangeFair", "CrangeUnfair", "LrangeFair", "LrangeUnfair", "Cintense", "Cpastel", "HwidthDivRainbow", "HwidthDivSingle", "HwidthSeqRainbow", "HwidthSeqSingle")
 
 	o = as.list(.C4A)[nms]
 
@@ -130,10 +134,10 @@ c4a_options = function(...) {
 
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
 
-		CrangeHarm = 50
-		CrangeDisH = 80
-		LrangeHarm = 30
-		LrangeDisH = 50
+		CrangeFair = 50
+		CrangeUnfair = 80
+		LrangeFair = 30
+		LrangeUnfair = 50
 
 		Blues = 3
 
