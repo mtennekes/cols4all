@@ -35,6 +35,10 @@ support several types: *categorical* (qualitative) palettes,
 (2023). Until then it can be installed using:
 
 ``` r
+# colorspace 2.1 required:
+install.packages("colorspace", repos = "https://R-Forge.R-project.org")
+
+# development (github) version of cols4all
 install.packages("remotes")
 remotes::install_github("mtennekes/cols4all", dependencies = TRUE)
 ```

@@ -46,7 +46,7 @@ Color palettes are well organized and made consistent with each other. Moreover,
 
 ```{r, eval=FALSE}
 # colorspace 2.1 required:
-install.packages(https://rdrr.io/r/utils/install.packages.html)("colorspace", repos = "https://R-Forge.R-project.org")
+install.packages("colorspace", repos = "https://R-Forge.R-project.org")
 
 # development (github) version of cols4all
 install.packages("remotes")
