@@ -31,8 +31,8 @@ c4a_series = function(type = c("all", "cat", "seq", "div")) {
 }
 
 c4a_default_palette = function(type) {
-	type = match.arg(type)
-	.C4A$defaults[type]
+	if (!(type %in% .C4A$types)) stop("Unknown palette type. These are supported: ", paste(.C4A$types, collapse = ", "))
+	unname(.C4A$defaults[type])
 }
 
 

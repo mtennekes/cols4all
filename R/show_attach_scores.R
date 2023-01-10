@@ -60,9 +60,9 @@ show_attach_scores = function(z) {
 					 ifelse(z2$HwidthL < .C4A$HwidthDivSingle & z2$HwidthR < .C4A$HwidthDivSingle, "SH", "MH"))
 		z2$HwidthLR = pmax(z2$HwidthL, z2$HwidthR)
 	}
-	z2$contrast = z2$CRmin <= 120
-	z2$contrastWT = z2$CRwt <= 120
-	z2$contrastBK = z2$CRbk <= 120
+	z2$contrast = z2$CRmin <= .C4A$contrastTH
+	z2$contrastWT = z2$CRwt <= .C4A$contrastTH
+	z2$contrastBK = z2$CRbk <= .C4A$contrastTH
 
 	z2$float = z2$Blues >= .C4A$Blues
 

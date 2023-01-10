@@ -124,7 +124,7 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 
 				cellplot(i+1,j+1, {
 					grid::grid.points(x = 0.5, y = 0.5, pch = pchs[s], size = grid::unit(sizes[s], units = "lines"), gp = grid::gpar(col = fc))
-					if (!is.null(id1) && !is.null(id2) && id1 == i && id2 == j) {
+					if (!is.null(id1) && !is.null(id2) && id1[1] == i && id2[1] == j) {
 						grid::grid.circle(r = 0.4, gp = grid::gpar(fill = NA, col = fc, lwd = 1.5, lty = "dotted"))
 					}
 				})

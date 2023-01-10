@@ -26,8 +26,8 @@ table_columns = function(type, show.scores) {
 
 
 	if (show.scores) {
-		qn = c(qn, .C4A$indicators[[type]], .C4A$hcl, .C4A$rgb)
-		qs = c(qs, .C4A$indicators[[type]], .C4A$hcl, .C4A$rgb)
+		qn = c(qn, names(.C4A$CB_ranges[[type]]), .C4A$hcl, .C4A$rgb)
+		qs = c(qs, names(.C4A$CB_ranges[[type]]), .C4A$hcl, .C4A$rgb)
 	}
 	ql = gsub("&nbsp;", "", .C4A$labels[qn])
 

@@ -45,6 +45,10 @@ Color palettes are well organized and made consistent with each other. Moreover,
 **cols4all** will be available on CRAN in January or February this year (2023). Until then it can be installed using:
 
 ```{r, eval=FALSE}
+# colorspace 2.1 required:
+install.packages(https://rdrr.io/r/utils/install.packages.html)("colorspace", repos = "https://R-Forge.R-project.org")
+
+# development (github) version of cols4all
 install.packages("remotes")
 remotes::install_github("mtennekes/cols4all", dependencies = TRUE)
 ```

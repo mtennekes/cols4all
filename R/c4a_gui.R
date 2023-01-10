@@ -668,10 +668,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				tab_vals$colB1 = cols[1]
 				tab_vals$colB2 = cols[2]
 				tab_vals$CR = colorspace::contrast_ratio(cols[1], cols[2])
-				tab_vals$colC1 = cols[1]
-				tab_vals$colC2 = cols[2]
 				tab_vals$b = approx_blues(cols)
 				tab_vals$r = approx_reds(cols)
+				tab_vals$colC1 = cols[which.max(tab_vals$b)]
+				tab_vals$colC2 = cols[which.max(tab_vals$r)]
 
 			} else {
 				tab_vals$pal = character(0)
@@ -1170,7 +1170,6 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			ids = c(which.max(b)[1], which.max(r)[1])
 
-
 			#br = get_blue_red()
 
 			if (max(b) > .C4A$Blues && max(r) > 1) {
@@ -1203,6 +1202,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(pal)) return(NULL)
 
 			cols = c(tab_vals$colC1, tab_vals$colC2)
+
 
 			lL = c(LETTERS,letters)[c(which(pal == cols[1]),
 					which(pal == cols[2]))]

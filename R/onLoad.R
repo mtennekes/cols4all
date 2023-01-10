@@ -112,7 +112,7 @@ c4a_options = function(...) {
 	attach_bib()
 
 	with(.C4A,{
-		defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green", bivs = "c4a.bu_br_bivs", bivc = "misc	stepped3", bivd = "c4a.bu_br_bivd", bivg = "c4a.bu_bivg")
+		defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green", bivs = "c4a.bu_br_bivs", bivc = "met_monet", bivd = "c4a.pu_gn_bivd", bivg = "c4a.br_bivg")
 
 		#color-blind-friendly thresholds
 		CBF_th = list(cat = c(min_dist = 10),
@@ -140,6 +140,7 @@ c4a_options = function(...) {
 		LrangeUnfair = 50
 
 		Blues = 3
+		contrastTH = 120 # 1.2 * 100
 
 		Cintense = 100 # chroma of colors that are considered intense
 		Cpastel = 70 # chroma of 'pastel' colors
@@ -180,13 +181,21 @@ c4a_options = function(...) {
 		ndef = c(cat = Inf, seq = 7, div = 9, bivc = Inf, bivs = 3, bivd = 3, bivg  = 3) # Inf meaning maximum available colors
 		mdef = c(cat = 1, seq = 1, div = 1, bivc = 3, bivs = NA, bivd = 3, bivg  = 3) # NA meaning same as ndef
 
-		indicators = list(cat = c("min_dist"),
-						  seq = c("min_step", "max_step"),
-						  div = c("inter_wing_dist", "min_step"),
-						  bivs = c("inter_wing_dist", "min_step"),
-						  bivc = c("min_dist"),
-						  bivd = c("inter_wing_dist", "min_step"),
-						  bivg = c("inter_wing_dist", "min_step"))
+		CB_ranges = list(cat = list(min_dist = c(0, 20)),
+						  seq = list(min_step = c(0, 20), max_step = c(0, 20)),
+						  div = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)),
+						  bivs = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)),
+						  bivc = list(min_dist = c(0, 20)),
+						  bivd = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)),
+						  bivg = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)))
+
+		Ohter_ranges = list(C = c(0, 180, 5),
+							L = c(0, 100, 5),
+							H = c(0, 360, 5),
+							Blues = c(1, 5, 0.1),
+							contrastTH = c(1, 2, 0.1))
+
+
 		rgb = c("Blues")
 		hcl = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
 
