@@ -30,7 +30,6 @@ Suggests:
     kableExtra,
     knitr,
     shiny,
-    shinydashboard,
     shinyjs,
     ggplot2,
     scales,
