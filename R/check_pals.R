@@ -362,7 +362,7 @@ get_CRmin = function(p, show.which = FALSE) {
 	if (show.which) {
 		message("id:", names(CRs)[id])
 		ids = as.integer(strsplit(names(CRs)[id], split = "_", fixed = TRUE)[[1]])
-		plus_rev(p[ids[1]], p[ids[2]])
+		c4a_plot_Plus_Reversed(p[ids[1]], p[ids[2]])
 	}
 	unname(CRs[id])
 	#structure(CRs[id], ids = strsplit(names(CRs[id]), split = "_", fixed = TRUE))

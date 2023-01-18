@@ -54,10 +54,12 @@ table_columns = function(type, show.scores) {
 #' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette
 #' @param verbose should messages and warnings be printed?
 #' @import colorspace abind
-#' @importFrom grDevices hcl
+#' @importFrom grDevices hcl dev.size
 #' @importFrom stats lm predict
-#' @importFrom utils tail
+#' @importFrom utils tail head install.packages menu
 #' @importFrom png readPNG
+#' @importFrom stats rnorm runif
+#' @importFrom graphics barplot lines par
 #' @example ./examples/c4a_table.R
 #' @seealso References of the palettes: \code{\link{cols4all-package}}.
 #' @export
@@ -358,6 +360,3 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	k
 
 }
-
-
-

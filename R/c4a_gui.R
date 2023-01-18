@@ -1091,7 +1091,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			list(x = x_id, y = y_id)
 		}
 
-		observeEvent(input$cbfSimi_click, {
+		shiny::observeEvent(input$cbfSimi_click, {
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 
@@ -1101,7 +1101,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
 		})
 
-		observeEvent(input$cbfPSimi1_click, {
+		shiny::observeEvent(input$cbfPSimi1_click, {
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 
@@ -1112,7 +1112,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		})
 
-		observeEvent(input$cbfPSimi2_click, {
+		shiny::observeEvent(input$cbfPSimi2_click, {
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 
@@ -1122,7 +1122,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
 		})
 
-		observeEvent(input$cbfPSimi3_click, {
+		shiny::observeEvent(input$cbfPSimi3_click, {
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 
@@ -1133,7 +1133,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		})
 
 
-		observeEvent(input$table_click, {
+		shiny::observeEvent(input$table_click, {
 			pal = tab_vals$palBW
 			if (!length(pal)) return(NULL)
 
@@ -1142,7 +1142,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!is.na(ids$x)) tab_vals$colB2 = pal[ids$x]
 			if (!is.na(ids$y)) tab_vals$colB1 = pal[ids$y]
 
-			if (!is.na(ids$x) || !is.na(id$y)) tab_vals$CR = colorspace::contrast_ratio(tab_vals$colB1, tab_vals$colB2)
+			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$CR = colorspace::contrast_ratio(tab_vals$colB1, tab_vals$colB2)
 		})
 
 
@@ -1238,7 +1238,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		output$MAPplot = shiny::renderPlot({
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
-			pal2 = cols4all:::sim_cvd(pal, input$APPcvd)
+			pal2 = sim_cvd(pal, input$APPcvd)
 
 			c4a_plot_map(pal2, borders = input$MAPborders, lwd = input$MAPlwd, include.na = tab_vals$na, dark = input$dark, dist = input$MAPdist)
 		})
@@ -1246,7 +1246,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		output$DOTplot = shiny::renderPlot({
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
-			pal2 = cols4all:::sim_cvd(pal, input$APPcvd)
+			pal2 = sim_cvd(pal, input$APPcvd)
 
 			c4a_plot_scatter(pal2,  borders = input$DOTborders, lwd = input$DOTlwd, dark = input$dark, dist = input$DOTdist)
 		})
@@ -1254,7 +1254,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		output$TXTplot1 = shiny::renderPlot({
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
-			pal2 = cols4all:::sim_cvd(pal, input$APPcvd)
+			pal2 = sim_cvd(pal, input$APPcvd)
 
 			c4a_plot_text(pal2, dark = input$dark)
 		})
@@ -1262,7 +1262,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		output$TXTplot2 = shiny::renderPlot({
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
-			pal2 = cols4all:::sim_cvd(pal, input$APPcvd)
+			pal2 = sim_cvd(pal, input$APPcvd)
 			c4a_plot_text(pal2, dark = input$dark, frame = TRUE)
 		})
 
@@ -1272,18 +1272,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		##############################
 
 
-		infoBoxDialog = function(title, mdfile) {
-			shiny::showModal(shiny::modalDialog(title = title,
-											shiny::includeMarkdown(system.file(mdfile, package = "cols4all")),
-											footer = shiny::modalButton("Close"),
-											easyClose = TRUE,
-											style = "color: #000000;"))
-		}
-
 		#observeEvent(input$infoHueLines, infoBoxDialog("Hue Lines", "markdown/infoHueLines.md"))
 
 		oE = function(i, a, id, gif) {
-			observeEvent(input[[i]], {
+			shiny::observeEvent(input[[i]], {
 				anno[[a]] = !anno[[a]]
 				if (anno[[a]]) {
 
@@ -1308,7 +1300,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 						"))
 					}
 
-					updateActionButton(session, i, icon = ani_off)
+					shiny::updateActionButton(session, i, icon = ani_off)
 				} else {
 					for (d in id) {
 						shinyjs::addClass(id = d, class = "hide")
@@ -1319,7 +1311,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					"))
 					}
 					shinyjs::addClass(id = id, class = "hide")
-					updateActionButton(session, i, icon = ani_on)
+					shiny::updateActionButton(session, i, icon = ani_on)
 				}
 
 			})

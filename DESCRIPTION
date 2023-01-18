@@ -9,7 +9,8 @@ Authors@R: c(
 	person("Achim", "Zeileis", email = "Achim.Zeileis@R-project.org", role = "ctb"),
 	person("Jakub", "Nowosad", email = "nowosad.jakub@gmail.com", role = "ctb"),
 	person("Robin", "Lovelace", email = "rob00x@gmail.com", role = "ctb"),
-	person("Helgasoft", email = "contact@helgasoft.com", role = "ctb")
+	person("Helgasoft", email = "contact@helgasoft.com", role = "ctb"),
+	person("Matthew", "Petroff", email = "matthew@mpetroff.net", role = "ctb")
 	)
 Description: cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by type and have been scored on several properties such as color-blind-friendliness and fairness (i.e. do colors stand out equally?). 436 color palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types (categorical, sequential, and diverging) it also includes bivariate color palettes. ggplot2 scales are included.
 Version: 0.5

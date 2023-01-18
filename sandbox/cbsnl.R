@@ -39,5 +39,5 @@ dat = readRDS("sandbox/cbsnl.rds")
 c4a_load(dat)
 
 \dontrun{
-c4a_gui(series = "cbsnl")
+c4a_gui(series = "cbsnl", n = 8)
 }

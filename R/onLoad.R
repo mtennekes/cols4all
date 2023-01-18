@@ -78,7 +78,7 @@ c4a_options = function(...) {
 		if (is.list(arg)) {
 			## case 1: option list is given
 			args = arg
-			if (length(lst) > 1 && show.warnings) warning("Only the first argument is used; the other arguments are ignored.")
+			if (length(lst) > 1) warning("Only the first argument is used; the other arguments are ignored.")
 		} else {
 			## case 2: option name is given
 			args = sapply(lst, "[", 1)

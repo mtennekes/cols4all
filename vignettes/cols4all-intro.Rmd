@@ -33,7 +33,7 @@ Color palettes also are important in areas other than data visualization, such a
 The `cols4all` package is available on github, and soon also on CRAN:
 
 ```{r}
-remotes::install_github("mtennekes/cols4all")
+#remotes::install_github("mtennekes/cols4all")
 library(cols4all)
 ```
 
