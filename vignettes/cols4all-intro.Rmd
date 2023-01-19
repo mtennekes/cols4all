@@ -87,7 +87,7 @@ install.packages("remotes")
 remotes::install_github("mtennekes/cols4all", dependencies = TRUE)
 ```
 
-```{r, echo=FALSE, message=FALSE}
+```{r, eval=FALSE, echo=FALSE, message=FALSE}
 devtools::load_all(".")
 ```
 
@@ -96,7 +96,7 @@ devtools::load_all(".")
 
 Load the package:
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 library(cols4all)
 ```
 
