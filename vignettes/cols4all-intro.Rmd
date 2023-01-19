@@ -1,5 +1,5 @@
 ---
-title: "cols4all-intro"
+title: "cols4all: introduction"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{cols4all-intro}
@@ -12,23 +12,57 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+hook_output <- knitr::knit_hooks$get("output")
+knitr::knit_hooks$set(output = function(x, options) {
+   lines <- options$output.lines
+   if (is.null(lines)) {
+     return(hook_output(x, options))  # pass to default hook
+   }
+   x <- unlist(strsplit(x, "\n"))
+   more <- "..."
+   if (length(lines)==1) {        # first n lines
+     if (length(x) > lines) {
+       # truncate the output, but add ....
+       x <- c(head(x, lines), more)
+     }
+   } else {
+     x <- c(more, x[lines], more)
+   }
+   # paste these lines together
+   x <- paste(c(x, ""), collapse = "\n")
+   hook_output(x, options)
+ })
+
 ```
 
 ```{r setup}
 library(cols4all)
 ```
 
-### Introduction
 
-Many charts and thematic maps use color palettes to visualize certain data. There are a lot of palettes to choose from: most visualization software tools have their own palettes and there are many other stand-alone sets of color palettes. To make life easy for R users, there are a couple of packages that have a collection of a large number of palettes, most notably `paletteer` with 2569 (!) palettes. However, people often cannot see the trees through the forest so therefore stick with default palettes or palettes from the popular collections, such as ColorBrewer.
 
-The `cols4all` also contains a collection of palettes, but with the central question: which palettes are good and why? There is no simple answer, since there are many aspects to take into account. In `cols4all` we examine three main aspects:
+# Introduction
 
-- First and most importantly, is a palette suitable for colorblind people? About 5% of all humans have a color vision deficiency, and we want to include them; hence the package name "colors for all".
-- Secondly, does a palette consist of colors that go well with each other, or as we call it, is a palette "harmonic"? Often, you would like the colors to stand out about equally, or to put it the other way round: a palette that contains both vivid and dull (grayish) colors is considered 'disharmonic' since some colors stand out more than others.
-- Thirdly, does a palette potentially suffer from visual illusions, and if so how to solve those?
 
-Color palettes also are important in areas other than data visualization, such as arts, web design, and fashion. The same aspects apply as well here, but obviously different criteria apply: the colors of a dress don't have to be distinguished by colorblind people, websites often contain colors that stand out more than others, and there are paintings that purposely use visual illusions.
+Many charts and thematic maps use color palettes to visualize certain data. There are a lot of palettes to choose from: most visualization software tools have their own palettes and there are many other series of color palettes, such as ColorBrewer (Harrower and Brewer, 2003). To make life easier for R users, there are a couple of packages that contain a large collection of palettes, most notably `pals` (Wright, 2021) with 139 and `paletteer` (Hvitfeldt, 2021) with 2569 (!) palettes. However, people often cannot see the trees through the forest, so therefore they tend to stick with the color palettes they know, or the most popular ones.
+
+The `cols4all` package also contains a large collection of palettes (to be precise 436 at the time of writing), but with the central question: which palettes are good and why? There is no simple answer, since there are many aspects to take into account, which may have opposite effects. In `cols4all` we examine the following aspects:
+
+* **Color Blind Friendliness** First and most importantly, is a palette suitable for colorblind people? About 5% of all humans have a color vision deficiency, and we want to include them; hence the package name "colors for all".
+
+* **HCL Analysis** Does a palette work well for statistical purposes? We analyse this with the HCL (hue-chroma-luminance) color space.
+
+<!--First of all, we check how vivid (chroma) the colors are: vivid colors are preferable for coloring small objects (dots) while pastel colors are preferable for large areas such as maps. Secondly, we also check whether the palette is fair, by which we mean that no colors stand out more than others. Finally, we check the hues of the palettes:-->
+
+* **Contrast** What is the contrast between the colors in the palette? We focus on two questions: how well is text readable (also for people with a visual impairment)? And: are border lines needed to separate colors?
+
+* **3D Blues** Does the palette contain blue colors that could result in a floating effect?
+
+Currently, **cols4all** contains palettes from several popular and lesser known color palette series: [Color Brewer](https://colorbrewer2.org), [Viridis](http://bids.github.io/colormap/), [Kovesi](https://colorcet.com/), [Paul Tol](https://personal.sron.nl/~pault/), [Scico](https://www.fabiocrameri.ch/colourmaps/), [Carto](https://carto.com/carto-colors/), [Tableau](https://www.tableau.com/about/blog/2016/7/colors-upgrade-tableau-10-56782), [Wes Anderson](https://github.com/karthik/wesanderson), and [Seaborn](https://seaborn.pydata.org/tutorial/color_palettes.html). Own palettes series can be added as well.
+
+Color palettes are organized and made consistent with each other. For instance, black have been removed and sequential palettes go from light to dark. Furthermore, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, and *bivariate* palettes (divided into four subtypes).
+
+Color palettes also are important in areas other than data visualization, such as arts, web design, and fashion. The same aspects apply as well here, but obviously different criteria apply: the colors of a dress don't have to be distinguished by colorblind people, websites often contain colors that purposely stand out more than others, and there are paintings that purposely use visual illusions.
 
 The `cols4all` package is available on github, and soon also on CRAN:
 
@@ -37,18 +71,139 @@ The `cols4all` package is available on github, and soon also on CRAN:
 library(cols4all)
 ```
 
-### RGB and HCL
 
-The human eye has three types of cones, which are sensitive to light of different wavelengths: long, medium, and short. Their peak sensitivities (of 565, 540, and 440 nm respectively) correspond to the primary colors red, green, and blue. In computer graphics, a color is usually defined as RGB, which is a mixture of those three primary colors. RGB colors are often represented in hex-format (e.g. #FF00FF), where the first two characters specify red (in hex, so FF means 255), the third and fourth green (00 means 0) and the last two blue. So #FF00FF is purple. Formally, the color space is known as _sRGB_.
+# Using cols4all
+ 
+## Installation
 
-To analyse color palettes, we also use the polarLUV color space, which is a transformation of the CIELUV space. In this space, a color is defined by three variables: 
+**cols4all** will be available on CRAN in January or February this year (2023). Until then it can be installed using:
 
-* **Hue** The 'color'. e.g. blue, green, yellow, etc. It is defined as a polar coordinate, so takes values from 0 to 360 degrees.
-* **Chroma** The vividness or intensity of the color. The higher, the more colorful. The maximum chroma depends on the hue. Grayscale colors have 0 chroma.
-* **Luminance** The amount of light emitted from an object (e.g. a computer screen). It is similar to _brightness_, although the latter is a relative measure.
+```{r, eval=FALSE}
+# colorspace 2.1 required:
+install.packages("colorspace", repos = "https://R-Forge.R-project.org")
+
+# development (github) version of cols4all
+install.packages("remotes")
+remotes::install_github("mtennekes/cols4all", dependencies = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE}
+devtools::load_all(".")
+```
 
 
-### Colorblind friendliness
+### Getting started
+
+Load the package:
+
+```{r, eval=FALSE}
+library(cols4all)
+```
+
+The main tool is a dashboard, which is started with:
+
+```{r, eval=FALSE}
+c4a_gui()
+```
+
+What palettes are available?
+
+```{r, output.lines = 10}
+# All loaded palettes
+c4a_palettes()
+```
+
+```{r}
+# Diverging palettes from the 'hcl' series
+c4a_palettes(type = "div", series = "hcl")
+```
+
+Give me the colors!
+
+```{r}
+# Select the palette "kelly" with 7 colors
+c4a("kelly", 7)
+
+# select purple green palette from the hcl series:
+c4a("hcl.purple_green", 11)
+
+# get the associated color for missing values
+c4a_na("hcl.purple_green")
+```
+
+# Overview of functions
+
+Main functions:
+
+*   `c4a_gui` Dashboard for analyzing the palettes
+*   `c4a` Get the colors from a palette
+
+Palette names and properties:
+
+*   `c4a_palettes` Get available palette names
+*   `c4a_series` Get available series names
+*   `c4a_citation` Show how to cite palettes (with bibtex code).
+*   `c4a_info` Get information from a palette, such as type and maximum number
+    of colors
+*   `.P` Environment via which palette names can be browsed with
+    auto-completion (using `$`)
+
+Importing and exporting palettes:
+
+*   `c4a_data` Build color palette data
+*   `c4a_load` Load color palette data
+*   `c4a_sysdata_import` Import system data
+*   `c4a_sysdata_export` Export system data
+
+ggplot2
+
+* 	`scale_<aesthetic>_<mapping>_c4a_<type>` e.g. `scale_color_continuous_c4a_div` Add scale to ggplot2. 
+
+
+# Related R packages
+
+The foundation of this package is another R package: [**colorspace**](https://colorspace.r-forge.r-project.org/). We use this package to analyse colors. For this purpose and specifically for color blind friendliness checks, we also use [**colorblindcheck**](https://github.com/Nowosad/colorblindcheck).
+
+There are a few other pacakges with a large collection of color palettes, in particular [**pals**](https://kwstat.github.io/pals/) and [**paletteer**](https://github.com/EmilHvitfeldt/paletteer). There are a few features that distinguishes **cols4all** from those packages:
+
+*	Color palettes are characterized and analysed. Properties such as color blindness, fairness (whether colors stand out about equally), and contrast are determined for each palette.
+
+*	Bivariate color palettes are available (besides the three main palette types: categorical, sequential, and diverging).
+
+*	Own color palettes can be loaded and analysed.
+
+*	Color for missing values are made explicit.
+
+*   Palettes are made consistent with each other to enable comparison. For instance, black and white are (by default) removed from categorical palettes. Another standard that we adapt to is that all sequential palettes go from light to dark and not the other way round.
+
+*   There is native support for **ggplot2** and **tmap** (as of the
+    upcoming version 4).
+    
+*	There are a couple of exporting options, including (bibtex) citation.
+
+
+
+# Color spaces
+
+Visual perception, in particular colors, is complex. For the purpose of information visualization it is explained in an accessible way by Ware (2019). In this vignette, we briefly describe the color spaces that are needed to understand the functionality of **cols4all**.
+
+The human eye has three types of cones (specific photoreceptor cells in the retina), which are sensitive to light of different wavelengths: long, medium, and short. Their peak sensitivities (of 565, 540, and 440nm respectively) correspond to the primary colors red, green, and blue respectively. In computer graphics, a color is usually defined as RGB, which is a mixture of those three primary colors. RGB colors are often represented in hex-format (e.g. #FF00FF), where the first two characters specify red, the third and fourth green and the last two blue. Therefore #FF00FF is purple. A standard RGB space in computer graphics is _sRGB_ (which exactly defines the primary colors, the white point, and a so-called gamma correction which is needed to perceive a grayscale linearly).
+
+To analyse color palettes, we also use the polarLUV color space, which is a transformation of the CIELUV space. In this space, known as _HCL_, a color is defined by three variables: 
+
+* **Hue** The hue of a color is how we call casually name colors: e.g. yellow, purple, blue, orange, etc. It is defined as a polar coordinate, so takes values from 0 to 360 degrees.
+* **Chroma** The vividness or intensity of the color. The higher, the more colorful. The maximum chroma depends on the hue. Grayscale colors have 0 chroma. The maximum value depends the hue and luminance. 
+* **Luminance** The amount of light emitted from an object (e.g. a computer screen). It is similar to _brightness_, although the latter is a relative measure. It takes values from 0 to 100.
+
+
+
+
+
+
+
+# Indicators
+
+## Colorblind friendliness
 
 First of all, we use the distance measure between two colors A and B from CIE as defined in 2000 (see Lindbloom, Bruce Justin. Delta E (CIE 2000).).
 
@@ -59,22 +214,25 @@ Our definition of these labels depend on the palette type:
 * (**categorical**) The minimum distance metric (`min_dist`) is the minimum distance between any two colors for any color vision deficiency type. 
   - <font size="4">&#9786;</font> (colorblind friendly): `min_dist >= 10`
   - <font size="4">&#128064;</font> (colorblind unfriendly): `min_dist <= 2`
+  
+    These numbers are parameters that can be changed via `c4a_options`.
 * (**sequential**) The minimum step metric (`min_step`) is used, which is the smallest distance between any two adjacent colors (for any color vision deficiency type).
   - <font size="4">&#9786;</font> (colorblind friendly): `min_step >= 5`
   - <font size="4">&#128064;</font> (colorblind unfriendly): `min_dist <= 1`
-Note that this metric is not very useful when a continuous scale is used. In that case, it is recommended to analyse the palette with say 7 or 9 colors.
+  
+    Again, these numbers are parameters that can be changed via `c4a_options`.
+    Note that this metric is not very useful when a continuous scale is used. In that case, it is recommended to analyse the palette with say 7 or 9 colors.
 * (**diverging**) The `min_step` metric used in a similar way as for sequential palettes. In addition, the inter wing distance metric (`inter_wing_dist`) is used, which is the minimum color distance between any color in the left wing to any color in the right wing of the palette (for any color vision deficiency type). 
   - <font size="4">&#9786;</font> (colorblind friendly): `min_step >= 5` and `inter_wing_dist >= 10`
   - <font size="4">&#128064;</font> (colorblind unfriendly): `min_dist <= 1` or `inter_wing_dist <= 4`
+  
+    These parameters can be changed via `c4a_options`.
 * (**bivariate (seq x seq)**) Three sequential palettes are extracted: a) the first column, b) the bottom row, and c) the diagonal. These are combined to form three diverging palettes: ab, ac, and bc. For each of these diverging palette, the same checks are applied as described above for regular diverging palettes.
 * (**bivariate (seq x cat)**) For each row, the same checks apply as for a categorical palette
 * (**bivariate (seq x div)**) Three sequential palettes are extracted: a) the first column, b) the middle column column, and c) the last column. These are combined to form three diverging palettes: ab, ac, and bc. For each of these diverging palette, the same checks are applied as described above for regular diverging palettes.
 * (**bivariate (seq x desaturated)**) A diverging palette is formed from the first and the last column. The same checks are applied as described above for regular diverging palettes.
 
-The threshold numbers can be configured via options (to do).
-
-### HCL analysis
-
+## HCL analysis
 
 Regarding the used **hues**, there is no simple good and bad. However, for quantitative palettes we distinguish 
 
@@ -99,14 +257,14 @@ We also use the **chroma** and **luminance** values of palette colors to find ou
 
 Let us define the luminance range (`Lrange`) as the maximum minus the minimum luminance value of the palette and the chroma range (`Crange`) as the maximum chroma value minus the minimum chroma value.
 
-Regarding **Harmony** we consider two metrics: the luminance range (`Lrange`) and the chroma range (`Crange`). We call a palette:
+Regarding **Fairness** we consider two metrics: the luminance range (`Lrange`) and the chroma range (`Crange`). We call a palette:
 
-- **harmonic** (<font size="4">🎵</font>) if `Crange <= 50` and (for categorical palettes only) `Lrange <= 30`
-- **disharmonic** (<font size="4">&#92601;</font>) if `Crange <= 80` or (for categorical palettes only) `Lrange >= 50`
+- **fair** (<font size="4">🎵</font>) if `Crange <= 50` and (for categorical palettes only) `Lrange <= 30`
+- **unfair** (<font size="4">&#92601;</font>) if `Crange <= 80` or (for categorical palettes only) `Lrange >= 50`
 
 Note that harmonic color palettes are usually not color blind friendly. Furthermore, when the luminance values of the colors are about equal, the contrast of those colors is low, which requires the use of border lines (see below).
 
-### Contrast
+## Contrast
 
 The border between two colored shapes appears **wobbly** when the colors are equally luminant (bright), no matter what hue (red, blue, etc.) they have. This visual illusion is called **equiluminance**.
 
@@ -123,9 +281,24 @@ The go-to solution to prevent wobbly borders is by using black or white (dependi
 
 
 
-### 3D Blues
+## 3D Blues
 
 Pure blue colors, by which we mean a 0 or very low number for the R (red) and G (green) channels and a high number for the B (blue) channel may cause a visual illusion called **chromostereopsis**. This effect is especially prominent when blue objects are shown next to red objects against a black background.
 
 The table column "3D Blues" indicates when a palette contains a pure blue color. The used symbol is B7#9 (which refers to a music chord used in blues music). 
 
+
+# References
+
+Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for Selecting Colour Schemes for Maps.” _The Cartographic Journal_,
+*40*(1), 27-37. doi:10.1179/000870403235002042 <https://doi.org/10.1179/000870403235002042>,
+<http://dx.doi.org/10.1179/000870403235002042>.
+
+Hvitfeldt E. (2021). paletteer: Comprehensive Collection of Color Palettes. version 1.3.0. https://github.com/EmilHvitfeldt/paletteer
+
+Ware, C (2019). Information Visualization - Perception for Design - 4th Edition. Elsevier
+
+Wright K (2021). _pals: Color Palettes, Colormaps, and Tools to Evaluate Them_. R package version 1.7,
+  <https://CRAN.R-project.org/package=pals>.
+  
+  
