@@ -111,6 +111,8 @@ Palette names and properties:
 
 *   `c4a_palettes` Get available palette names
 *   `c4a_series` Get available series names
+*   `c4a_types` Get implemented types
+* 	`c4a_overview` Get an overview of palettes per series x type.
 *   `c4a_citation` Show how to cite palettes (with bibtex code).
 *   `c4a_info` Get information from a palette, such as type and maximum number
     of colors

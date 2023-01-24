@@ -3,8 +3,10 @@ title: "cols4all: introduction"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{cols4all-intro}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -35,64 +37,57 @@ knitr::knit_hooks$set(output = function(x, options) {
 
 ```
 
-```{r setup}
+```{r setup, include=FALSE}
 library(cols4all)
 ```
 
 
 
-# Introduction
+## Introduction
 
+Color is essential in many charts and maps. There are a lot of color palettes to choose from: most visualization software tools have their own palettes and there are many other series of color palettes, such as ColorBrewer (Harrower and Brewer, 2003). To make life easier for R users, there are a couple of packages that contain a large collection of palettes, most notably `pals` (Wright, 2021) with 139 and `paletteer` (Hvitfeldt, 2021) with 2569 (!) palettes. However, people often cannot see the trees through the forest, so therefore they tend to stick with the color palettes they know, or with the most popular ones.
 
-Many charts and thematic maps use color palettes to visualize certain data. There are a lot of palettes to choose from: most visualization software tools have their own palettes and there are many other series of color palettes, such as ColorBrewer (Harrower and Brewer, 2003). To make life easier for R users, there are a couple of packages that contain a large collection of palettes, most notably `pals` (Wright, 2021) with 139 and `paletteer` (Hvitfeldt, 2021) with 2569 (!) palettes. However, people often cannot see the trees through the forest, so therefore they tend to stick with the color palettes they know, or the most popular ones.
-
-The `cols4all` package also contains a large collection of palettes (to be precise 436 at the time of writing), but with the central question: which palettes are good and why? There is no simple answer, since there are many aspects to take into account, which may have opposite effects. In `cols4all` we examine the following aspects:
+The `cols4all` package also contains a large collection of palettes (to be precise `r length(c4a_palettes())` at the time of writing), but with the central question: which palettes are good and why? There is no simple answer, since there are many aspects to take into account, which may have opposite effects. In `cols4all` we examine the following aspects:
 
 * **Color Blind Friendliness** First and most importantly, is a palette suitable for colorblind people? About 5% of all humans have a color vision deficiency, and we want to include them; hence the package name "colors for all".
 
-* **HCL Analysis** Does a palette work well for statistical purposes? We analyse this with the HCL (hue-chroma-luminance) color space.
+* **HCL Analysis** Does a palette work well for statistical purposes? We analyse this with the HCL (hue-chroma-luminance) color space. Concrete questions for these analysis are the following. How vivid are colors? Do the colors stand out about equally (which we call "fairness")? What hue ranges are used for quantitative color palettes?
 
 <!--First of all, we check how vivid (chroma) the colors are: vivid colors are preferable for coloring small objects (dots) while pastel colors are preferable for large areas such as maps. Secondly, we also check whether the palette is fair, by which we mean that no colors stand out more than others. Finally, we check the hues of the palettes:-->
 
-* **Contrast** What is the contrast between the colors in the palette? We focus on two questions: how well is text readable (also for people with a visual impairment)? And: are border lines needed to separate colors?
+* **Contrast** What is the contrast between the colors in the palette? We focus on two specific questions: 1) How well is text readable (also for people with a visual impairment)? 2) Are border lines needed to separate colors?
 
 * **3D Blues** Does the palette contain blue colors that could result in a floating effect?
 
-Currently, **cols4all** contains palettes from several popular and lesser known color palette series: [Color Brewer](https://colorbrewer2.org), [Viridis](http://bids.github.io/colormap/), [Kovesi](https://colorcet.com/), [Paul Tol](https://personal.sron.nl/~pault/), [Scico](https://www.fabiocrameri.ch/colourmaps/), [Carto](https://carto.com/carto-colors/), [Tableau](https://www.tableau.com/about/blog/2016/7/colors-upgrade-tableau-10-56782), [Wes Anderson](https://github.com/karthik/wesanderson), and [Seaborn](https://seaborn.pydata.org/tutorial/color_palettes.html). Own palettes series can be added as well.
+Currently, **cols4all** contains palettes from several popular and lesser known color palette series: `r paste0("\"", paste(setdiff(head(c4a_series(), -1), "misc"), collapse = "\", \""), "\"")` , and `r paste0("\"", tail(c4a_series(), 1), "\"")`. Stand-alone palettes that are included have been put in the series "misc" (miscellaneous). Own palettes series can be added as well.
 
-Color palettes are organized and made consistent with each other. For instance, black have been removed and sequential palettes go from light to dark. Furthermore, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, and *bivariate* palettes (divided into four subtypes).
+Color palettes are organized and made consistent with each other. For instance, all sequential palettes go from light to dark. Furthermore, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, and *bivariate* palettes (divided into four subtypes).
+
+[<img src="https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png" width="650"/>](https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png)
+
+The figure above shows the main tool of this package, a dashboard. The first tab page contains an overview table of all palettes (given the input selection criteria). The other tab pages are for further palette-wise analyses.
 
 Color palettes also are important in areas other than data visualization, such as arts, web design, and fashion. The same aspects apply as well here, but obviously different criteria apply: the colors of a dress don't have to be distinguished by colorblind people, websites often contain colors that purposely stand out more than others, and there are paintings that purposely use visual illusions.
 
-The `cols4all` package is available on github, and soon also on CRAN:
 
-```{r}
-#remotes::install_github("mtennekes/cols4all")
-library(cols4all)
-```
-
-
-# Using cols4all
+## Using cols4all
  
-## Installation
+### Installation
 
-**cols4all** will be available on CRAN in January or February this year (2023). Until then it can be installed using:
+The `cols4all` is available on CRAN and can be installed as follows
 
 ```{r, eval=FALSE}
-# colorspace 2.1 required:
-install.packages("colorspace", repos = "https://R-Forge.R-project.org")
+install.packages("cols4all", dependencies = TRUE)
+```
 
-# development (github) version of cols4all
-install.packages("remotes")
+The latest development version can be installed as follows:
+
+```{r, eval=FALSE}
 remotes::install_github("mtennekes/cols4all", dependencies = TRUE)
 ```
 
-```{r, eval=FALSE, echo=FALSE, message=FALSE}
-devtools::load_all(".")
-```
 
-
-### Getting started
+#### Getting started
 
 Load the package:
 
@@ -100,38 +95,56 @@ Load the package:
 library(cols4all)
 ```
 
-The main tool is a dashboard, which is started with:
+The main tool is a dashboard (shown), which is started with:
 
 ```{r, eval=FALSE}
 c4a_gui()
 ```
 
+
 What palettes are available?
 
 ```{r, output.lines = 10}
-# All loaded palettes
 c4a_palettes()
 ```
 
+Palettes are categorized by type and series.
+See an overview of available palettes per series and type:
+
 ```{r}
-# Diverging palettes from the 'hcl' series
+c4a_overview()
+```
+
+Get all diverging palette names from the 'hcl' series:
+
+
+```{r}
 c4a_palettes(type = "div", series = "hcl")
 ```
 
-Give me the colors!
+Give me the colors! E.g. the purple green palette from hcl series:
 
 ```{r}
-# Select the palette "kelly" with 7 colors
-c4a("kelly", 7)
-
-# select purple green palette from the hcl series:
 c4a("hcl.purple_green", 11)
+```
 
-# get the associated color for missing values
+
+There is a special color for missing values assigned to each palette:
+
+```{r}
 c4a_na("hcl.purple_green")
 ```
 
-# Overview of functions
+
+For those who want to cite palettes (or series) in publications:
+
+```{r}
+c4a_citation("hcl")
+```
+
+
+
+## Overview of functions
 
 Main functions:
 
@@ -142,6 +155,8 @@ Palette names and properties:
 
 *   `c4a_palettes` Get available palette names
 *   `c4a_series` Get available series names
+*   `c4a_types` Get implemented types
+* 	`c4a_overview` Get an overview of palettes per series x type.
 *   `c4a_citation` Show how to cite palettes (with bibtex code).
 *   `c4a_info` Get information from a palette, such as type and maximum number
     of colors
@@ -160,7 +175,7 @@ ggplot2
 * 	`scale_<aesthetic>_<mapping>_c4a_<type>` e.g. `scale_color_continuous_c4a_div` Add scale to ggplot2. 
 
 
-# Related R packages
+## Related R packages
 
 The foundation of this package is another R package: [**colorspace**](https://colorspace.r-forge.r-project.org/). We use this package to analyse colors. For this purpose and specifically for color blind friendliness checks, we also use [**colorblindcheck**](https://github.com/Nowosad/colorblindcheck).
 
@@ -183,7 +198,7 @@ There are a few other pacakges with a large collection of color palettes, in par
 
 
 
-# Color spaces
+## Color spaces
 
 Visual perception, in particular colors, is complex. For the purpose of information visualization it is explained in an accessible way by Ware (2019). In this vignette, we briefly describe the color spaces that are needed to understand the functionality of **cols4all**.
 
@@ -201,9 +216,9 @@ To analyse color palettes, we also use the polarLUV color space, which is a tran
 
 
 
-# Indicators
+## Indicators
 
-## Colorblind friendliness
+### Colorblind friendliness
 
 First of all, we use the distance measure between two colors A and B from CIE as defined in 2000 (see Lindbloom, Bruce Justin. Delta E (CIE 2000).).
 
@@ -232,7 +247,7 @@ Our definition of these labels depend on the palette type:
 * (**bivariate (seq x div)**) Three sequential palettes are extracted: a) the first column, b) the middle column column, and c) the last column. These are combined to form three diverging palettes: ab, ac, and bc. For each of these diverging palette, the same checks are applied as described above for regular diverging palettes.
 * (**bivariate (seq x desaturated)**) A diverging palette is formed from the first and the last column. The same checks are applied as described above for regular diverging palettes.
 
-## HCL analysis
+### HCL analysis
 
 Regarding the used **hues**, there is no simple good and bad. However, for quantitative palettes we distinguish 
 
@@ -264,7 +279,7 @@ Regarding **Fairness** we consider two metrics: the luminance range (`Lrange`) a
 
 Note that harmonic color palettes are usually not color blind friendly. Furthermore, when the luminance values of the colors are about equal, the contrast of those colors is low, which requires the use of border lines (see below).
 
-## Contrast
+### Contrast
 
 The border between two colored shapes appears **wobbly** when the colors are equally luminant (bright), no matter what hue (red, blue, etc.) they have. This visual illusion is called **equiluminance**.
 
@@ -281,14 +296,14 @@ The go-to solution to prevent wobbly borders is by using black or white (dependi
 
 
 
-## 3D Blues
+### 3D Blues
 
 Pure blue colors, by which we mean a 0 or very low number for the R (red) and G (green) channels and a high number for the B (blue) channel may cause a visual illusion called **chromostereopsis**. This effect is especially prominent when blue objects are shown next to red objects against a black background.
 
 The table column "3D Blues" indicates when a palette contains a pure blue color. The used symbol is B7#9 (which refers to a music chord used in blues music). 
 
 
-# References
+## References
 
 Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for Selecting Colour Schemes for Maps.” _The Cartographic Journal_,
 *40*(1), 27-37. doi:10.1179/000870403235002042 <https://doi.org/10.1179/000870403235002042>,
