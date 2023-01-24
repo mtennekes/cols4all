@@ -14,7 +14,7 @@ Authors@R: c(
 	)
 Description: cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by type and have been scored on several properties such as color-blind-friendliness and fairness (i.e. do colors stand out equally?). 436 color palettes from 16 series are included, but own palettes can also be loaded and analysed. Besides the common palette types (categorical, sequential, and diverging) it also includes bivariate color palettes. ggplot2 scales are included.
 Version: 0.5
-Date: 2023-01-10
+Date: 2023-01-24
 Encoding: UTF-8
 Depends:
     R (>= 3.5.0),
@@ -34,7 +34,6 @@ Suggests:
     shinyjs,
     ggplot2,
     scales,
-    tmap,
     rmarkdown
 URL: https://github.com/mtennekes/cols4all
 BugReports: https://github.com/mtennekes/cols4all/issues
