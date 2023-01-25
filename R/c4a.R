@@ -104,6 +104,9 @@ c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bi
 #' @return list with the following items: name, series, fullname, type, palette (colors), na (color), nmax, and reverse. The latter is `TRUE` when there is a `"-"` prefix before the palette name.
 #' @export
 c4a_info = function(palette, no.match = c("message", "error", "null"), verbose = TRUE) {
+	if (!is.character(palette)) stop("palette should be a character value", call. = FALSE)
+	if (length(palette) != 1L) stop("palette should be a character value (so length 1)", call. = FALSE)
+
 	no.match = match.arg(no.match)
 	isrev = (substr(palette, 1, 1) == "-")
 	if (isrev) palette = substr(palette, 2, nchar(palette))

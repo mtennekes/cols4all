@@ -1,4 +1,4 @@
-c4a_plot_cvd = function(cols, dark = FALSE, annotation = FALSE) {
+c4a_plot_cvd = function(cols, dark = FALSE, annotation = FALSE, include.na = FALSE) {
 	grid::grid.newpage()
 
 	fc = ifelse(dark, "#FFFFFF", "#000000")
@@ -17,7 +17,8 @@ c4a_plot_cvd = function(cols, dark = FALSE, annotation = FALSE) {
 
 	for (i in 2:(n+1)) {
 		cellplot(1, i, {
-			grid::grid.text(i-1, gp = grid::gpar(col = fc))
+			txt = if (i == (n+1) && include.na) "Missing" else (i - 1)
+			grid::grid.text(txt, gp = grid::gpar(col = fc))
 		})
 		for (j in 2:5) cellplot(j, i, {
 			grid::grid.rect(height = 0.8, gp=grid::gpar(fill = cols_lst[[j-1]][i-1], col = bc, lwd = 2))

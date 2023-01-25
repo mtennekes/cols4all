@@ -5,9 +5,16 @@ col2hex <- function(x) {
 }
 
 
-validate_colors <- function(x) {
-	if (!is.character(x)) stop("items of x found that are not a character vector", call. = FALSE)
-	if (any(is.na(x))) stop("items of x found that contain NAs", call. = FALSE)
+validate_colors <- function(x, name = "x", from_list = FALSE) {
+
+	if (from_list) {
+		pre = paste("not every item in ", name)
+	} else {
+		pre = name
+	}
+
+	if (!is.character(x)) stop(pre, " is not a character vector", call. = FALSE)
+	if (any(is.na(x))) stop(pre, "contain NAs", call. = FALSE)
 
 	w = which(x %in% colors())
 

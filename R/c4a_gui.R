@@ -89,6 +89,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 	stopifnot(length(types_available) > 0L)
 	if (!(type %in% types_available)) {
+		warning("type \"", type, "\" is not available/known")
 		type = types_available[1]
 	}
 
@@ -838,7 +839,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			c4a_plot_cvd(pal, dark = input$dark)
+			c4a_plot_cvd(pal, dark = input$dark, include.na = tab_vals$na)
 		})
 
 		output$cbfHL = shiny::renderPlot({

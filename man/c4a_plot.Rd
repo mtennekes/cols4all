@@ -4,12 +4,14 @@
 \alias{c4a_plot}
 \title{Plot a color palette}
 \usage{
-c4a_plot(palette, ...)
+c4a_plot(palette, ..., include.na = FALSE)
 }
 \arguments{
 \item{palette}{Palette name (see \code{\link{c4a}}) or a color vector}
 
 \item{...}{arguments passed on to \code{\link{c4a}}}
+
+\item{include.na}{should a color for missing values be included?}
 }
 \description{
 Plot a color palette, either a cols4all palette, or a color vector.

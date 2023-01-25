@@ -314,7 +314,12 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2th, escape = F)
 
 	for (cN in colNames) {
-		k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "6em", width_max = "6em")
+		if (cN == " ") {
+			# column between colors and NA-color
+			k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "1em", width_max = "1em")
+		} else {
+			k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "6em", width_max = "6em")
+		}
 	}
 	for (i in which(substr(e2cols, 1, 4) == "Copy")) {
 		k = kableExtra::column_spec(k, i, width = "1em", extra_css = "padding-left: 10px; padding-right: 0px; text-align: right") #width_min = "1em", width_max = "1em")

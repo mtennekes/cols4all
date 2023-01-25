@@ -51,7 +51,7 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 	# check color list
 	if (!is.list(x)) stop("x is not a list")
 	nms = names(x)
-	x = lapply(x, validate_colors)
+	x = lapply(x, validate_colors, name = "x", from_list = TRUE)
 
 	# number of palettes
 	k = length(x)
@@ -69,7 +69,7 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 	for (arg in args) assign(arg, rep(get(arg), length.out = k), envir = environment())
 
 	# validate na colors
-	if (any(!is.na(xNA))) xNA[!is.na(xNA)] = validate_colors(xNA[!is.na(xNA)])
+	if (any(!is.na(xNA))) xNA[!is.na(xNA)] = validate_colors(xNA[!is.na(xNA)], name = "xNA")
 
 	# check types
 	types_supported = unname(.C4A$types)
