@@ -44,7 +44,7 @@
 #' @rdname c4a_data
 #' @name c4a_data
 #' @export
-c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = NA, ndef = NA, mmin = NA, mmax = NA, mdef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL), bib = NA) {
+c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = NA, ndef = NA, mmin = NA, mmax = NA, mdef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL), bib = NA, description = NA) {
 
 	if (!requireNamespace("colorblindcheck")) stop("Please install colorblindcheck")
 
@@ -188,9 +188,10 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 	s = series_add_get_scores(z)
 
 
-	.z = .C4A$z
-	.s = .C4A$s
-	.zbib = .C4A$zbib
+	# .z = .C4A$z
+	# .s = .C4A$s
+	# .zbib = .C4A$zbib
+	# .zdes = .C4A$zdes
 
 	# add citations
 	if (nbib == 1) {
@@ -199,7 +200,7 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 			if (any(z$series != z$series[1])) stop("One bib item defined, while multiple series: bib items are organized by series and optionally palettes")
 			zb[[1]]$name = z$series[1]
 			names(zb) = z$series[1]
-			if (z$series[1] %in% names(.zbib)) stop("Citation for series ", z$series[1], " already defined")
+			#if (z$series[1] %in% names(.zbib)) stop("Citation for series ", z$series[1], " already defined")
 		} else {
 			zb = NULL
 		}
@@ -211,7 +212,16 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 		names(zb) = z$fullname
 	}
 
-	structure(list(data = z, scores = s, citation = zb), class = "c4a_data")
+	# add series info
+	ids = !duplicated(z$series)
+	if (is.na(description[1])) {
+		zdes = NULL
+	} else {
+		zdes = structure(description[ids], names = z$series[ids])
+	}
+
+
+	structure(list(data = z, scores = s, citation = zb, description = zdes), class = "c4a_data")
 }
 
 #' @rdname c4a_data
@@ -222,12 +232,14 @@ c4a_load = function(data) {
 	z = data$data
 	s = data$scores
 	zbib = data$citation
+	zdes = data$description
 
 	fnms = z$fullname
 
 	z2 = .C4A$z
 	s2 = .C4A$s
 	zbib2 = .C4A$zbib
+	zdes2 = .C4A$zdes
 
 
 	if (!is.null(z2)) {
@@ -239,11 +251,14 @@ c4a_load = function(data) {
 		s = abind::abind(s2, s, along=1)
 	}
 
-	zbib = do.call(c, c(list(zbib2), zbib))
+	zbib = do.call(c, c(list(zbib2), zbib)) # to do: check for duplicates
+	zdes = c(zdes2, zdes) # to do: check
+
 
 	.C4A$z = z
-	.C4A$zbib = zbib
 	.C4A$s = s
+	.C4A$zbib = zbib
+	.C4A$zdes = zdes
 	attach_bib()
 	fill_P()
 	invisible(NULL)

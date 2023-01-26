@@ -16,5 +16,6 @@ c4a_plot = function(palette, ..., include.na = FALSE) {
 		pal = validate_colors(palette, name = "palette")
 	}
 
+	if (is.null(pal)) return(invisible(NULL))
 	c4a_plot_cvd(as.vector(pal), include.na = include.na)
 }

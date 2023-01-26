@@ -12,7 +12,7 @@ format_ids = function(x) {
 	}), collapse = ", ")
 }
 
-c4a_plot_hues = function(pal, dark = FALSE, C_grey = 5, width = c("none", "total", "halves"), annotation = FALSE) {
+c4a_plot_hues = function(pal, dark = FALSE, C_grey = 5, width = c("none", "total", "halves")) {
 	width = match.arg(width)
 
 	n = length(pal)

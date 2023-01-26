@@ -88,7 +88,7 @@ rgb_data = local({
 # keep only step 10 luminance
 rgb_data$cols_list = rgb_data$cols_list[paste0("L", seq(10, 100, by = 10))]
 
-save(.z, .s, .zbib, shp, shp_c, bbx, rgb_data, file = "R/sysdata.rda", compress = "xz")
+save(.z, .s, .zbib, .zdes, shp, shp_c, bbx, rgb_data, file = "R/sysdata.rda", compress = "xz")
 
 
 

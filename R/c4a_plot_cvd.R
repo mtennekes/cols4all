@@ -1,4 +1,4 @@
-c4a_plot_cvd = function(cols, dark = FALSE, annotation = FALSE, include.na = FALSE) {
+c4a_plot_cvd = function(cols, dark = FALSE, include.na = FALSE) {
 	grid::grid.newpage()
 
 	fc = ifelse(dark, "#FFFFFF", "#000000")
@@ -32,14 +32,5 @@ c4a_plot_cvd = function(cols, dark = FALSE, annotation = FALSE, include.na = FAL
 	}
 	grid::upViewport()
 
-	if (annotation) {
-		p = png::readPNG(system.file("img/cvd.png", package = "cols4all"))
-		if (dark) {
-			p[,,1:3] = 1 - p[,,1:3]
-		}
-		r = grDevices::as.raster(p)
-
-		grid::grid.raster(r)
-	}
 
 }

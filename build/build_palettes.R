@@ -703,7 +703,11 @@ local({
 .z$bib = NULL
 
 .zbib = bibtex::read.bib("build/references.bib")
+.zdes = local({
+	df = read.csv("build/description.csv")
+	structure(df$description, names = df$series)
+})
 
-save(.z, .s, .zbib, file="R/sysdata.rda", compress="xz")
+save(.z, .s, .zbib, .zdes, file="R/sysdata.rda", compress="xz")
 source("build/build_data.R")
 

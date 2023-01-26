@@ -310,6 +310,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 		}
 	}
 
+	e2$series = kableExtra::cell_spec(e2$series, tooltip = unname(.C4A$zdes[e2$series]))
 
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2th, escape = F)
 

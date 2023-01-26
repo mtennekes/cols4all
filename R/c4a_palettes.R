@@ -14,6 +14,11 @@
 c4a_palettes = function(type = c("all", "cat", "seq", "div"), series = NULL, full.names = TRUE) {
 	type = match.arg(type)
 	z = .C4A$z
+	if (is.null(z)) {
+		message("No palettes loaded")
+		return(invisible(NULL))
+	}
+
 	nms = if (full.names) z$fullname else z$name
 	sel_type = if (type != "all") z$type == type else TRUE
 	sel_series = if (is.null(series)) TRUE else (z$series %in% series)
@@ -23,11 +28,21 @@ c4a_palettes = function(type = c("all", "cat", "seq", "div"), series = NULL, ful
 #' @rdname c4a_palettes
 #' @name c4a_series
 #' @export
-c4a_series = function(type = c("all", "cat", "seq", "div")) {
+c4a_series = function(type = c("all", "cat", "seq", "div"), as.data.frame = TRUE) {
 	type = match.arg(type)
 	z = .C4A$z
+	if (is.null(z)) {
+		message("No palettes loaded")
+		return(invisible(NULL))
+	}
 	series = z$series
-	unique({if (type != "all") series[z$type == type] else series})
+	x = unique({if (type != "all") series[z$type == type] else series})
+
+	if (as.data.frame) {
+		data.frame(series = x, description = unname(.C4A$zdes[x]))
+	} else {
+		x
+	}
 }
 
 c4a_default_palette = function(type) {
@@ -38,17 +53,28 @@ c4a_default_palette = function(type) {
 #' @rdname c4a_palettes
 #' @name c4a_series
 #' @export
-c4a_types = function(series = NULL) {
+c4a_types = function(series = NULL, as.data.frame = TRUE) {
 
 	tps = unname(.C4A$types)
 
 	z = .C4A$z
+	if (is.null(z)) {
+		message("No palettes loaded")
+		return(invisible(NULL))
+	}
 
-	if (!is.null(series)) {
+	x = if (!is.null(series)) {
 		intersect(tps, z$type[z$series %in% series])
 	} else {
 		tps
 	}
+
+	if (as.data.frame) {
+		.C4A$type_info[match(x, .C4A$type_info$type),]
+	} else {
+		x
+	}
+
 }
 
 #' @rdname c4a_palettes
@@ -56,14 +82,17 @@ c4a_types = function(series = NULL) {
 #' @export
 c4a_overview = function() {
 	z = .C4A$z
+
+	if (is.null(z)) {
+		message("No palettes loaded")
+		return(invisible(NULL))
+	}
+
 	z = z[order(z$fullname), ]
 
 	tps = unname(.C4A$types)
 
-	tab_k = as.data.frame(tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = length))
-	tab_k$series = rownames(tab_k)
-	rownames(tab_k) = NULL
-	tab_k[, c("series", tps)]
+	tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = length)
 }
 
 

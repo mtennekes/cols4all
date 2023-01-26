@@ -108,6 +108,7 @@ c4a_options = function(...) {
 	assign("z", .z, envir = .C4A)
 	assign("s", .s, envir = .C4A)
 	assign("zbib", .zbib, envir = .C4A)
+	assign("zdes", .zdes, envir = .C4A)
 
 	attach_bib()
 
