@@ -59,23 +59,63 @@ c4a_gui()
 
 ![<https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png>](https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png)
 
-What palettes are available?
+What types and series are available?
 
 ``` r
-# All loaded palettes
-c4a_palettes()
-#>   [1] "misc.r3"                                
-#>   [2] "misc.r4"                                
-#>   [3] "misc.ggplot2"                           
-#>   [4] "misc.okabe"                             
-#>   [5] "hcl.grays"                              
-#>   [6] "hcl.light_grays"                        
-#>   [7] "hcl.blues2"                             
-#>   [8] "hcl.blues3"                             
-#>   [9] "hcl.purples2"                           
-#>  [10] "hcl.purples3"                           
-...
+c4a_types()
+#>   type                          description
+#> 1  cat                          categorical
+#> 2  seq                           sequential
+#> 3  div                            diverging
+#> 4 bivs  bivariate (sequential x sequential)
+#> 5 bivc bivariate (sequential x categorical)
+#> 6 bivd   bivariate (sequential x diverging)
+#> 7 bivg bivariate (sequential x desaturated)
+
+c4a_series()
+#>     series                                         description
+#> 1   brewer                                ColorBrewer palettes
+#> 2      c4a                  cols4all palettes (in development)
+#> 3    carto                          Palettes designed by CARTO
+#> 4      hcl  Palettes from the Hue Chroma Luminance color space
+#> 5   kovesi                   Palettes designed by Peter Kovesi
+#> 6      met Palettes inspired by The Metropolitan Museum of Art
+#> 7     misc                              Miscellaneous palettes
+#> 8    parks                 Palettes inspired by National Parks
+#> 9     poly               Qualitative palettes with many colors
+#> 10   scico     Scientific colour map palettes by Fabio Crameri
+#> 11 seaborn            Palettes from the Python library Seaborn
+#> 12 stevens                Bivariate palettes by Joshua Stevens
+#> 13 tableau                        Palettes designed by Tableau
+#> 14     tol                       Palettes designed by Paul Tol
+#> 15 viridis          Palettes fom the Python library matplotlib
+#> 16     wes                   Palettes from Wes Anderson movies
 ```
+
+How many palettes per type x series?
+
+``` r
+c4a_overview()
+#>         cat seq div bivs bivc bivd bivg
+#> brewer    8  18   9    2    1    1   NA
+#> c4a      NA  NA   2    2   NA    2    5
+#> carto     6  21   7   NA   NA   NA   NA
+#> hcl       9  23  11   NA   NA   NA   NA
+#> kovesi   NA  17  13   NA   NA   NA   NA
+#> met      33   8  14   NA    1   NA   NA
+#> misc      5  NA  NA   NA    3   NA   NA
+#> parks    22   5   3   NA   NA   NA   NA
+#> poly      9  NA  NA   NA   NA   NA   NA
+#> scico    NA  18  14   NA    2   NA    1
+#> seaborn   6   4   2   NA   NA   NA   NA
+#> stevens  NA  NA  NA    5   NA   NA   NA
+#> tableau  29  23  28   NA   NA   NA   NA
+#> tol       7   7   3   NA   NA   NA   NA
+#> viridis  NA   7   1   NA   NA   NA   NA
+#> wes      18  NA   1   NA   NA   NA   NA
+```
+
+What palettes are available, e.g diverging from the hcl series?
 
 ``` r
 # Diverging palettes from the 'hcl' series
@@ -88,10 +128,6 @@ c4a_palettes(type = "div", series = "hcl")
 Give me the colors!
 
 ``` r
-# Select the palette "kelly" with 7 colors
-c4a("kelly", 7)
-#> [1] "#F2F3F4" "#222222" "#F3C300" "#875692" "#F38400" "#A1CAF1" "#BE0032"
-
 # select purple green palette from the hcl series:
 c4a("hcl.purple_green", 11)
 #>  [1] "#492050" "#82498C" "#B574C2" "#D2A9DB" "#E8D4ED" "#F1F1F1" "#C8E1C9"
@@ -102,17 +138,56 @@ c4a_na("hcl.purple_green")
 #> [1] "#868686"
 ```
 
+Plot these colors:
+
+``` r
+c4a_plot("hcl.purple_green", 11, include.na = TRUE)
+```
+
+![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+
+## Using cols4all palettes in ggplot2
+
+``` r
+library(ggplot2)
+data("diamonds")
+diam_exp = diamonds[diamonds$price >= 15000, ]
+
+# discrete categorical scale
+ggplot(diam_exp, aes(x = carat, y = price, color = color)) +
+    geom_point(size = 2) +
+    scale_color_discrete_c4a_cat("carto.safe") +
+    theme_light()
+```
+
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
+
+``` r
+
+# continuous diverging scale
+ggplot(diam_exp, aes(x = carat, y = depth, color = price)) +
+    geom_point(size = 2) +
+    scale_color_continuous_c4a_div("wes.zissou1", mid = mean(diam_exp$price)) +
+    theme_light()
+```
+
+![](man/figures/README-unnamed-chunk-10-2.png)<!-- -->
+
 ## Overview of functions
 
 Main functions:
 
 - `c4a_gui` Dashboard for analyzing the palettes
-- `c4a` Get the colors from a palette
+- `c4a` Get the colors from a palette (`c4a_na` for the associated color
+  for missing values)
+- `c4a_plot` Plot a color palette
 
 Palette names and properties:
 
 - `c4a_palettes` Get available palette names
 - `c4a_series` Get available series names
+- `c4a_types` Get implemented types
+- `c4a_overview` Get an overview of palettes per series x type.
 - `c4a_citation` Show how to cite palettes (with bibtex code).
 - `c4a_info` Get information from a palette, such as type and maximum
   number of colors

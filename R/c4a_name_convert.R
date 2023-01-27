@@ -60,13 +60,13 @@ fuzzy_names = function(name) {
 	}
 }
 
-#' Converts a name to a known palette name, if it exists.
-#'
-#' Converts a name to a known palette name, if it exists. Otherwise, either an error is thrown or `NULL` is returned
-#'
-#' @param name palette name to be converted
-#' @param no.match what happens is no match is found? Options: `"message"`: a message is thrown with suggestions, `"error"`: an error is thrown, `"null"`: `NULL` is returned
-#' @param verbose should messages be printed?
+# Converts a name to a known palette name, if it exists.
+#
+# Converts a name to a known palette name, if it exists. Otherwise, either an error is thrown or `NULL` is returned
+#
+# @param name palette name to be converted
+# @param no.match what happens is no match is found? Options: `"message"`: a message is thrown with suggestions, `"error"`: an error is thrown, `"null"`: `NULL` is returned
+# @param verbose should messages be printed?
 c4a_name_convert = function(name, no.match = c("message", "error", "null"), verbose = TRUE) {
 	no.match = match.arg(no.match)
 	name2 = check_name_presence(name, verbose)

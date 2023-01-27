@@ -5,6 +5,7 @@
 #' @param type type of color palette: one of `"all"` (all palettes), `"cat"` (categorical/qualitative palettes), `"seq"` (sequential palettes) and `"div"` (diverging palettes).
 #' @param series series to list the palettes from. Run `c4a_series` to see the options.
 #' @param full.names should full names, i.e. with the prefix "series."? By default `TRUE`.
+#' @param as.data.frame should `c4a_series` and `c4a_types` return the result as a data.frame, with description included as a column?
 #' @return names of the loaded color palettes
 #' @example ./examples/c4a_palettes.R
 #' @seealso References of the palettes: \code{\link{cols4all-package}}.
@@ -36,7 +37,7 @@ c4a_series = function(type = c("all", "cat", "seq", "div"), as.data.frame = TRUE
 		return(invisible(NULL))
 	}
 	series = z$series
-	x = unique({if (type != "all") series[z$type == type] else series})
+	x = sort(unique({if (type != "all") series[z$type == type] else series}))
 
 	if (as.data.frame) {
 		data.frame(series = x, description = unname(.C4A$zdes[x]))

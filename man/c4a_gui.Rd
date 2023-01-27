@@ -24,7 +24,7 @@ c4a_table(
 )
 }
 \arguments{
-\item{type}{type of palette: \code{"cat"} for categorical (aka qualitative), \code{"seq"} for sequential, \code{"div"} for diverging, and \code{"bivs"}/\code{"bivc"}/\code{"bivd"}/\code{"bivg"} for bivariate (seq-seq, seq-cat, seq-div, and uncertainty-seq). For \code{c4a_gui} it only determines which type is shown initially.}
+\item{type}{type of palette. Run \code{\link{c4a_types}} to see the implemented types and their description. For \code{c4a_gui} it only determines which type is shown initially.}
 
 \item{n, m}{\code{n} is the number of displayed colors. For bivariate palettes \code{"biv"}, \code{n} and \code{m} are the number of columns and rows respectively. If omitted: for \code{"cat"} the full palette is displayed, for \code{"seq"} and \code{"div"}, 9 colors, and for \code{"bivs"}/\code{"bivc"}/\code{"bivd"}/\code{"bivg"} 4 columns and rows. For \code{c4a_gui} it only determines which number of colors initially.}
 
@@ -32,7 +32,7 @@ c4a_table(
 
 \item{cvd.sim}{color vision deficiency simulation: one of \code{"none"}, \code{"deutan"}, \code{"protan"}, \code{"tritan"}}
 
-\item{sort}{column name to sort the data. For column names, see details. Use a \code{"-"} prefix to reverse the order.}
+\item{sort}{column name to sort the data. The available column names depend on the arguments \code{type} and \code{show.scores}. They are listed in the warning message. Use a \code{"-"} prefix to reverse the order.}
 
 \item{text.format}{The format of the text of the colors. One of \code{"hex"}, \code{"RGB"} or \code{"HCL"}.}
 
@@ -44,7 +44,7 @@ c4a_table(
 
 \item{show.scores}{should scores of the quality indicators be printed? See details for a description of those indicators.}
 
-\item{columns}{number of columns. By default equal to \code{n} or, if not specified, 12. Cannot be higher than the palette}
+\item{columns}{number of columns. By default equal to \code{n} or, if not specified, 12. Cannot be higher than the palette lengths.}
 
 \item{verbose}{should messages and warnings be printed?}
 }
@@ -52,19 +52,22 @@ c4a_table(
 Graphical user interface to analyse palettes. \code{c4a_table} shows a table that can be opened in the browser. \code{c4a_gui} is a graphical user interface (shiny app) around this table.
 }
 \examples{
-if (requireNamespace("shiny") && requireNamespace("kableExtra") && interactive()) {
+if (requireNamespace("shiny") &&
+  requireNamespace("shinyjs") &&
+  requireNamespace("kableExtra") &&
+  requireNamespace("colorblindcheck") &&
+  interactive()) {
 
 c4a_gui()
 
 # categorical palettes with maximum number of colors
 c4a_table(type = "cat")
 
-# sort sequential palettes by rank (based on color blind-friendliness, and color balance)
-c4a_table(type = "seq", n = 7, sort = "rank")
+# sort sequential palettes by hue
+c4a_table(type = "seq", n = 7, sort = "H")
 
-# sort by hue type, which is indication how many hues are used.
+# sort sequential palettes by hue type (how many hues are used)
 c4a_table(type = "seq", n = 5, sort = "hueType")
-
 }
 }
 \seealso{

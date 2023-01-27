@@ -89,7 +89,7 @@ remotes::install_github("mtennekes/cols4all", dependencies = TRUE)
 ```
 
 
-#### Getting started
+### Getting started
 
 Load the package:
 
@@ -97,61 +97,81 @@ Load the package:
 library(cols4all)
 ```
 
-The main tool is a dashboard (shown), which is started with:
+The main tool is a dashboard, which is started with:
 
 ```{r, eval=FALSE}
 c4a_gui()
 ```
 
+![https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png](https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png)
 
-What palettes are available?
 
-```{r, output.lines = 10}
-c4a_palettes()
+What types and series are available?
+
+```{r}
+c4a_types()
+
+c4a_series()
 ```
 
-Palettes are categorized by type and series.
-See an overview of available palettes per series and type:
+How many palettes per type x series?
 
 ```{r}
 c4a_overview()
 ```
 
-Get all diverging palette names from the 'hcl' series:
-
+What palettes are available, e.g diverging from the hcl series?
 
 ```{r}
+# Diverging palettes from the 'hcl' series
 c4a_palettes(type = "div", series = "hcl")
 ```
 
-Give me the colors! E.g. the purple green palette from hcl series:
+Give me the colors!
 
 ```{r}
+# select purple green palette from the hcl series:
 c4a("hcl.purple_green", 11)
-```
 
-
-There is a special color for missing values assigned to each palette:
-
-```{r}
+# get the associated color for missing values
 c4a_na("hcl.purple_green")
 ```
 
+Plot these colors:
 
-For those who want to cite palettes (or series) in publications:
-
-```{r}
-c4a_citation("hcl")
+```{r, fig.height = 2}
+c4a_plot("hcl.purple_green", 11, include.na = TRUE)
 ```
 
 
 
-## Overview of functions
+### Using cols4all palettes in ggplot2
+
+```{r}
+library(ggplot2)
+data("diamonds")
+diam_exp = diamonds[diamonds$price >= 15000, ]
+
+# discrete categorical scale
+ggplot(diam_exp, aes(x = carat, y = price, color = color)) +
+	geom_point(size = 2) +
+	scale_color_discrete_c4a_cat("carto.safe") +
+	theme_light()
+
+# continuous diverging scale
+ggplot(diam_exp, aes(x = carat, y = depth, color = price)) +
+	geom_point(size = 2) +
+	scale_color_continuous_c4a_div("wes.zissou1", mid = mean(diam_exp$price)) +
+	theme_light()
+```		
+
+### Overview of functions
 
 Main functions:
 
 *   `c4a_gui` Dashboard for analyzing the palettes
-*   `c4a` Get the colors from a palette
+*   `c4a` Get the colors from a palette (`c4a_na` for the associated color for missing values)
+*	`c4a_plot` Plot a color palette
 
 Palette names and properties:
 
@@ -175,6 +195,7 @@ Importing and exporting palettes:
 ggplot2
 
 * 	`scale_<aesthetic>_<mapping>_c4a_<type>` e.g. `scale_color_continuous_c4a_div` Add scale to ggplot2. 
+
 
 
 ## Related R packages
@@ -308,8 +329,7 @@ The table column "3D Blues" indicates when a palette contains a pure blue color.
 ## References
 
 Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for Selecting Colour Schemes for Maps.” _The Cartographic Journal_,
-*40*(1), 27-37. doi:10.1179/000870403235002042 <https://doi.org/10.1179/000870403235002042>,
-<http://dx.doi.org/10.1179/000870403235002042>.
+*40*(1), 27-37.
 
 Hvitfeldt E. (2021). paletteer: Comprehensive Collection of Color Palettes. version 1.3.0. https://github.com/EmilHvitfeldt/paletteer
 

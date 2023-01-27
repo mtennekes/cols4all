@@ -1,16 +1,8 @@
 #' Build and load palette data
 #'
-#' Build palette data. Both `c4a_data` and `c4a_data_as_is` build data palette. The difference is that the former processes the palettes (see below) whereas the latter takes the palette data as is. Data can subsequently be loaded into cols4all via `c4a_load`.
+#' Build palette data. Both `c4a_data` and `c4a_data_as_is` build data palette. The difference is that the former may restructure the palette colors (see details) whereas the latter takes the palette colors as they are. Data can subsequently be loaded into cols4all via \code{\link{c4a_load}}.
 #'
-#' In cols4all, palettes are organized by series and by type. The **series** or 'family' specifies where the palettes belong to. For instance `"brewer"` stands for the color palettes from ColorBrewer. In cols4all we distinguish 7 **types**:
-#'
-#' **`"cat"`** categorical
-#' **`"seq"`** sequential
-#' **`"div"`** diverging
-#' **`"bivs`** bivariate (sequential x sequential)
-#' **`"bivc`** bivariate (sequential x categorical)
-#' **`"bivd`** bivariate (sequential x diverging)
-#' **`"bivg`** bivariate (sequential x desaturated (grayscale))
+#' In cols4all, palettes are organized by series and by type. The **series** or 'family' specifies where the palettes belong to. For instance `"brewer"` stands for the color palettes from ColorBrewer. Run \code{\link{c4a_series}} to get an overview of loaded series. The **type** specifies what kind of palette it is; see \code{\link{c4a_types}} for a description of the implemented ones.
 #'
 #' This function structures the palette data, such that it is consistent with the other palette data. This includes:
 #'
@@ -39,6 +31,7 @@
 #' @param space color space in which interpolated colors are determined. Options: `"rgb"` (RGB) and `"Lab"` (CIE Lab).
 #' @param range_matrix_args list of lists, one for each palette. Each such list specifies the range of sequential and diverging palettes, in case they are not indexed. See details.
 #' @param bib bibtex reference in the form of a `utils::bibentry` object.
+#' @param description description of the series. If `series` contains multiple series (rather than one value), please specify a vector of the same length as `series`. See \code{\link{c4a_series}} for the descriptions of the currently loaded series.
 #' @param ... passed on to `c4a_data`
 #' @example ./examples/c4a_data.R
 #' @rdname c4a_data

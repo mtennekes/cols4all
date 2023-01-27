@@ -18,9 +18,9 @@ c4a_palettes(
   full.names = TRUE
 )
 
-c4a_series(type = c("all", "cat", "seq", "div"))
+c4a_series(type = c("all", "cat", "seq", "div"), as.data.frame = TRUE)
 
-c4a_types(series = NULL)
+c4a_types(series = NULL, as.data.frame = TRUE)
 
 c4a_overview()
 
@@ -32,6 +32,8 @@ c4a_overview()
 \item{series}{series to list the palettes from. Run \code{c4a_series} to see the options.}
 
 \item{full.names}{should full names, i.e. with the prefix "series."? By default \code{TRUE}.}
+
+\item{as.data.frame}{should \code{c4a_series} and \code{c4a_types} return the result as a data.frame, with description included as a column?}
 }
 \value{
 names of the loaded color palettes
@@ -40,9 +42,9 @@ names of the loaded color palettes
 \code{c4a_palettes} lists all available cols4all color palettes. Palettes are organized by series. The available series are listed with \code{c4a_series}. Palettes are also organized per functional type, where we currently support: categorical \code{"cat"}, sequential \code{"seq"}, and diverging \code{"div"}" palette types. The function \code{c4a_types} lists all available types. The function \code{c4a_overview} gives an overview table of the number of palette per series and type. In an IDE with auto-completion (such as RStudio) it is possible to browse through the palette names with \code{.P} (using \code{$} like in lists).
 }
 \examples{
-c4a_palettes()
-
 c4a_series()
+
+c4a_types()
 
 c4a_overview()
 
@@ -50,6 +52,7 @@ c4a_palettes(type = "cat", series = "tol")
 
 c4a_palettes(type = "seq", series = "kovesi")
 
+# handy when auto-completion is available:
 .P$kovesi$seq$linear_terrain
 }
 \seealso{

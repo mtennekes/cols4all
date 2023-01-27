@@ -9,7 +9,7 @@
 #' @name c4a_sysdata_import
 #' @export
 c4a_sysdata_import = function(data) {
-	if (!is.list(data) || !setequal(c("data", "scores", "citation"), names(data))) stop("data should be a list of three: data, scores, citation", call. = FALSE)
+	if (!is.list(data) || !setequal(c("data", "scores", "citation", "description"), names(data))) stop("data should be a list of four: data, scores, citation, and description", call. = FALSE)
 
 	z = check_z(data$data)
 	s = check_s(data$scores, nrow(z))

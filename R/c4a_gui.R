@@ -70,7 +70,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	tab_nmax = tapply(z$nmax, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = max)
 	tab_k = as.data.frame(tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = length))
 	tab_k$series = rownames(tab_k)
-	tab_k = tab_k[, c("series", tps)]
+	tab_k$description = unname(.C4A$zdes[tab_k$series])
+	tab_k = tab_k[, c("series", "description", tps)]
 
 
 	allseries = sort(unique(z$series))
@@ -546,7 +547,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 												shiny::renderTable(tab_k, na = "", striped = TRUE, hover = TRUE, bordered = TRUE),
 												shiny::div(style="font-size: 75%;", shiny::renderTable(.C4A$type_info)),
 												footer = shiny::modalButton("Close"),
-												style = "color: #000000;"))
+												style = "color: #000000;",
+												size = "l"))
 		})
 
 		get_cols = shiny::reactive({

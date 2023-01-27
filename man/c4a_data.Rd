@@ -26,7 +26,8 @@ c4a_data(
   biv.method = "byrow",
   space = "rgb",
   range_matrix_args = list(NULL),
-  bib = NA
+  bib = NA,
+  description = NA
 )
 
 c4a_load(data)
@@ -70,23 +71,17 @@ c4a_data_as_is(
 
 \item{bib}{bibtex reference in the form of a \code{utils::bibentry} object.}
 
+\item{description}{description of the series. If \code{series} contains multiple series (rather than one value), please specify a vector of the same length as \code{series}. See \code{\link{c4a_series}} for the descriptions of the currently loaded series.}
+
 \item{data}{cols4all data created with \code{c4a_data}}
 
 \item{...}{passed on to \code{c4a_data}}
 }
 \description{
-Build palette data. Both \code{c4a_data} and \code{c4a_data_as_is} build data palette. The difference is that the former processes the palettes (see below) whereas the latter takes the palette data as is. Data can subsequently be loaded into cols4all via \code{c4a_load}.
+Build palette data. Both \code{c4a_data} and \code{c4a_data_as_is} build data palette. The difference is that the former may restructure the palette colors (see details) whereas the latter takes the palette colors as they are. Data can subsequently be loaded into cols4all via \code{\link{c4a_load}}.
 }
 \details{
-In cols4all, palettes are organized by series and by type. The \strong{series} or 'family' specifies where the palettes belong to. For instance \code{"brewer"} stands for the color palettes from ColorBrewer. In cols4all we distinguish 7 \strong{types}:
-
-\strong{\code{"cat"}} categorical
-\strong{\code{"seq"}} sequential
-\strong{\code{"div"}} diverging
-\strong{\verb{"bivs}} bivariate (sequential x sequential)
-\strong{\verb{"bivc}} bivariate (sequential x categorical)
-\strong{\verb{"bivd}} bivariate (sequential x diverging)
-\strong{\verb{"bivg}} bivariate (sequential x desaturated (grayscale))
+In cols4all, palettes are organized by series and by type. The \strong{series} or 'family' specifies where the palettes belong to. For instance \code{"brewer"} stands for the color palettes from ColorBrewer. Run \code{\link{c4a_series}} to get an overview of loaded series. The \strong{type} specifies what kind of palette it is; see \code{\link{c4a_types}} for a description of the implemented ones.
 
 This function structures the palette data, such that it is consistent with the other palette data. This includes:
 \itemize{
@@ -103,46 +98,48 @@ The range is automatically set for sequential and diverging palettes that have n
 It may take some time to process, especially large categorical palettes, because of calculations of the color blind checks.
 }
 \examples{
-#######################################
-# Palettes from Statistics Netherlands
-#######################################
+# palettes extracted Pink Floyd albums
+pf = list(piper = c("#391C1C", "#C6C6AA", "#713939", "#C6391C",
+    "#C6E3C6", "#AA7155", "#AA8E71", "#C68E71"),
+		  saucerful = c("#000000", "#1C1C1C", "#393939", "#FFFFFF",
+    "#555555", "#8E8E71", "#E3C6AA", "#715539"),
+		  atom = c("#C6E3FF", "#397139", "#557139", "#E3E3C6",
+    "#1C1C1C", "#1C551C", "#AAAA8E", "#8EC6E3"),
+		  meddle = c("#715539", "#553939", "#8E7155", "#71AAAA",
+    "#8E8E71", "#1CAAE3", "#55C6E3", "#AA7155"),
+		  obscured = c("#000000", "#1C1C1C", "#393939", "#717155",
+    "#8E8E71", "#715539", "#C6AA8E", "#E3C6AA"),
+		  moon = c("#000000", "#FF0000", "#FF9224", "#FFFF00",
+    "#71C600", "#00C6FF", "#8E398E", "#FFFFFF"),
+		  wish = c("#FFFFFF", "#AAC6E3", "#8E8E8E", "#717155",
+    "#555539", "#8E8E71", "#555555", "#8E7155"),
+		  animals = c("#391C39", "#393955", "#E3C671", "#718E8E",
+    "#AAAA8E", "#C67139", "#AA5539", "#E3AA39"),
+		  wall = c("#FFFFFF", "#E3E3E3", "#C6C6C6", "#AAAAC6",
+    "#1C1C1C", "#000000", "#8E8E8E", "#E3C6E3"),
+		  cut = c("#000000", "#E30000", "#AA0000", "#391C55",
+    "#FFE3E3", "#1C1C00", "#FFAA55", "#8E8E55"),
+		  lapse = c("#000000", "#8E8EC6", "#8E8E71", "#7171AA",
+    "#39391C", "#717171", "#AAAAAA", "#E3E3E3"),
+		  division = c("#000000", "#FFFFC6", "#00398E", "#AA8E55",
+    "#39558E", "#C6AA71", "#39391C", "#555571"),
+		  more = c("#0055AA", "#FFAA1C", "#1C71AA", "#003971",
+    "#E38E55", "#E3AAAA", "#718EAA", "#71718E"),
+		  umma = c("#AA8E71", "#555539", "#39391C", "#1C1C1C",
+    "#E3E3C6", "#715539", "#391C1C", "#8E7155"),
+		  relics = c("#3955AA", "#1C3971", "#5571C6", "#715555",
+    "#8E7155", "#E3AA71", "#8E8EAA", "#E3FFFF"),
+		  river = c("#393939", "#555555", "#39558E", "#C6C6C6",
+    "#718EAA", "#1C1C1C", "#717171", "#E3C68E"))
 
-cbsnl_cols = list(
-	charts = c("#00a1cd", "#0058b8", "#afcb05", "#53a31d", "#d9328a", "#7d4791",
-			   "#f39200", "#c90c0f", "#0581a2", "#163a72", "#899d0c", "#488225",
-			   "#af0e80", "#56217a", "#da5914", "#9c1006"),
-	map_blue = structure(c("#e1f4fd", "#c0e7ff", "#77cbe5", "#3d95d4", "#2256a0", "#143564",
-				  "#09183c"), index = list('5' = 2:6, '6' = 2:7, '7' = 1:7)),
-	map_green = structure(c("#f1f6de", "#edf0c7", "#c9de85", "#85bc22", "#348a3a", "#0f5f34",
-				   "#114625"), index = list('5' = 2:6, '6' = 2:7, '7' = 1:7)),
-	map_red = structure(c("#fedfc7", "#ffc597", "#f89e6b", "#e74d15", "#c01f26", "#82001e",
-				 "#5b0708"), index = list('5' = 2:6, '6' = 2:7, '7' = 1:7)),
-	map_purple = structure(c("#fbe2ed", "#f8c1d9", "#e38cbf", "#be3e8d", "#8b176f", "#490045",
-					"#2d002c"), index = list('5' = 2:6, '6' = 2:7, '7' = 1:7)),
-	map_purple_green = c("#490045", "#be3e8d", "#f8c1d9", "#e5e5e5", "#edf0c7", "#85bc22",
-						 "#0f5f34"),
-	map_red_blue = c("#82001e", "#e74d15", "#ffc597", "#e5e5e5", "#c0e7ff", "#3d95d4",
-					 "#143564")
-)
+pfdata = c4a_data_as_is(pf, series = "pinkfloyd",
+  description = "Palettes extracted from Pink Floyd album covers")
+c4a_load(pfdata)
 
-cbsnl_types = c("cat", rep("seq", 4), "div", "div")
-nmin = c(NA, 5, 5, 5, 5, 7, 7)
-nmax = c(NA, 7, 7, 7, 7, 7, 7)
-
-cbsnl_bib = utils::bibentry(bibtype = "Misc",
-					  author = person("Statistics Netherlands"),
-					  title = "CBS - Statistics Netherlands",
-					  url = "https://www.cbs.nl/en-gb",
-					  year = 2022)
-
-
-dat = c4a_data(cbsnl_cols, xNA = "grey88",
-			   nmin = nmin, nmax = nmax, ndef = nmin,
-			   types = cbsnl_types, series = "cbsnl", bib = cbsnl_bib)
-
-c4a_load(dat)
+c4a_series()
+c4a_overview()
 
 \dontrun{
-c4a_gui(series = "cbsnl")
+c4a_gui(series = "pinkfloyd", n = 8)
 }
 }
