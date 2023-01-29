@@ -42,3 +42,5 @@ inst/doc
 # produced vignettes
 inst/markdown/*.html
 inst/markdown/*.pdf
+/doc/
+/Meta/

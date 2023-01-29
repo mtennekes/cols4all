@@ -1,14 +1,10 @@
 ---
 title: "cols4all: introduction"
-output: 
-  rmarkdown::html_vignette:
-    keep_md: true 
-    toc: true
-self_contained: no
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{cols4all: introduction}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}

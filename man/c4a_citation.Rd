@@ -17,3 +17,8 @@ c4a_citation(name, verbose = TRUE)
 \description{
 Show how to cite palettes
 }
+\examples{
+c4a_citation("hcl")
+
+c4a_citation("poly.glasbey")
+}

@@ -5,9 +5,10 @@
 #' @param name name of a palette or series
 #' @param verbose should text be printed (if FALSE only a `utils::bibentry` object is returned)
 #' @return `utils::bibentry` object
+#' @example ./examples/c4a_citation.R
 #' @export
 c4a_citation = function(name, verbose = TRUE) {
-	is_series = name %in% c4a_series()
+	is_series = name %in% c4a_series(as.data.frame = FALSE)
 
 	if (!is_series) {
 		inf = c4a_info(name, no.match = NULL, verbose = FALSE)
