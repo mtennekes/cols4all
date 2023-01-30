@@ -273,10 +273,28 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 	}
 
+	tc = lapply(.C4A$tc, function(tci) {
+		if (any(names(tci) %in% c("seq", "cat", "div"))) {
+			lapply(tci, function(tcii) {
+				lapply(tcii, function(tciii) {
+					if (is.list(tciii)) do.call(kableExtra::cell_spec, tciii) else tciii
+				})
+			})
+		} else {
+			lapply(tci, function(tcii) {
+				if (is.list(tcii)) do.call(kableExtra::cell_spec, tcii) else tcii
+			})
+		}
+	})
+
+	th = lapply(.C4A$th, function(thi) {
+		do.call(kableExtra::cell_spec, thi)
+	})
+
 
 	rownames(e2) = NULL
 	for (var in c("cbfriendly", "chroma",  "hueType", "fair", "contrast", "contrastWT", "contrastBK", "float")) {
-		tcv = .C4A$tc[[var]]
+		tcv = tc[[var]]
 		if (any(names(tcv) %in% c("seq", "cat", "div"))) {
 			tcv = if (type %in% names(tcv)) tcv[[type]]	else tcv[["x"]]
 		}
@@ -308,11 +326,11 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	e2th = e2nms
 
 
-	for (i in 1:length(.C4A$th)) {
-		hd = names(.C4A$th)[i]
+	for (i in 1:length(th)) {
+		hd = names(th)[i]
 		id = which(names(e2nms) == hd)
 		if (length(id)) {
-			e2th[id] = .C4A$th[[i]]
+			e2th[id] = th[[i]]
 		}
 	}
 
