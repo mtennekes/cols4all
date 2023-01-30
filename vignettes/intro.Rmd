@@ -10,6 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  fig.width=6, 
+  fig.height=3,
   comment = "#>"
 )
 hook_output <- knitr::knit_hooks$get("output")
@@ -57,7 +59,7 @@ The `cols4all` package also contains a large collection of palettes (to be preci
 
 * **3D Blues** Does the palette contain blue colors that could result in a floating effect?
 
-Currently, **cols4all** contains palettes from several popular and lesser known color palette series: `r paste0("\"", paste(setdiff(head(c4a_series(), -1), "misc"), collapse = "\", \""), "\"")` , and `r paste0("\"", tail(c4a_series(), 1), "\"")`. Stand-alone palettes that are included have been put in the series "misc" (miscellaneous). Own palettes series can be added as well.
+Currently, **cols4all** contains palettes from several popular and lesser known color palette series: `r paste0("\"", paste(setdiff(head(c4a_series(as.data.frame = FALSE), -1), "misc"), collapse = "\", \""), "\"")` , and `r paste0("\"", tail(c4a_series(as.data.frame = FALSE), 1), "\"")`. Stand-alone palettes that are included have been put in the series "misc" (miscellaneous). Own palettes series can be added as well.
 
 Color palettes are organized and made consistent with each other. For instance, all sequential palettes go from light to dark. Furthermore, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, and *bivariate* palettes (divided into four subtypes).
 
@@ -66,6 +68,29 @@ Color palettes are organized and made consistent with each other. For instance, 
 The figure above shows the main tool of this package, a dashboard. The first tab page contains an overview table of all palettes (given the input selection criteria). The other tab pages are for further palette-wise analyses.
 
 Color palettes also are important in areas other than data visualization, such as arts, web design, and fashion. The same aspects apply as well here, but obviously different criteria apply: the colors of a dress don't have to be distinguished by colorblind people, websites often contain colors that purposely stand out more than others, and there are paintings that purposely use visual illusions.
+
+
+## Related R packages
+
+The foundation of this package is another R package: [**colorspace**](https://colorspace.r-forge.r-project.org/). We use this package to analyse colors. For this purpose and specifically for color blind friendliness checks, we additionally use [**colorblindcheck**](https://github.com/Nowosad/colorblindcheck).
+
+There are a few other pacakges with a large collection of color palettes, in particular [**pals**](https://kwstat.github.io/pals/) and [**paletteer**](https://github.com/EmilHvitfeldt/paletteer). There are a few features that distinguishes **cols4all** from those packages:
+
+*	Color palettes are characterized and analysed. Properties such as color blindness, fairness (whether colors stand out about equally), and contrast are determined for each palette.
+
+*	Bivariate color palettes are available (besides the three main palette types: categorical, sequential, and diverging).
+
+*	Own color palettes can be loaded and analysed.
+
+*	Color for missing values are made explicit.
+
+*   Palettes are made consistent with each other to enable comparison. For instance, black and white are (by default) removed from categorical palettes. Another standard that we adapt to is that all sequential palettes go from light to dark and not the other way round.
+
+*   There is native support for **ggplot2** and **tmap** (as of the
+    upcoming version 4).
+    
+*	There are a couple of exporting options, including (bibtex) citation.
+
 
 
 ## Using cols4all
@@ -93,13 +118,11 @@ Load the package:
 library(cols4all)
 ```
 
-The main tool is a dashboard, which is started with:
+The main tool is a dashboard (shown above), which is started with:
 
 ```{r, eval=FALSE}
 c4a_gui()
 ```
-
-![https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png](https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png)
 
 
 What types and series are available?
@@ -194,29 +217,6 @@ ggplot2
 
 
 
-## Related R packages
-
-The foundation of this package is another R package: [**colorspace**](https://colorspace.r-forge.r-project.org/). We use this package to analyse colors. For this purpose and specifically for color blind friendliness checks, we also use [**colorblindcheck**](https://github.com/Nowosad/colorblindcheck).
-
-There are a few other pacakges with a large collection of color palettes, in particular [**pals**](https://kwstat.github.io/pals/) and [**paletteer**](https://github.com/EmilHvitfeldt/paletteer). There are a few features that distinguishes **cols4all** from those packages:
-
-*	Color palettes are characterized and analysed. Properties such as color blindness, fairness (whether colors stand out about equally), and contrast are determined for each palette.
-
-*	Bivariate color palettes are available (besides the three main palette types: categorical, sequential, and diverging).
-
-*	Own color palettes can be loaded and analysed.
-
-*	Color for missing values are made explicit.
-
-*   Palettes are made consistent with each other to enable comparison. For instance, black and white are (by default) removed from categorical palettes. Another standard that we adapt to is that all sequential palettes go from light to dark and not the other way round.
-
-*   There is native support for **ggplot2** and **tmap** (as of the
-    upcoming version 4).
-    
-*	There are a couple of exporting options, including (bibtex) citation.
-
-
-
 ## Color spaces
 
 Visual perception, in particular colors, is complex. For the purpose of information visualization it is explained in an accessible way by Ware (2019). In this vignette, we briefly describe the color spaces that are needed to understand the functionality of **cols4all**.
@@ -293,8 +293,8 @@ Let us define the luminance range (`Lrange`) as the maximum minus the minimum lu
 
 Regarding **Fairness** we consider two metrics: the luminance range (`Lrange`) and the chroma range (`Crange`). We call a palette:
 
-- **fair** (<font size="4">🎵</font>) if `Crange <= 50` and (for categorical palettes only) `Lrange <= 30`
-- **unfair** (<font size="4">&#92601;</font>) if `Crange <= 80` or (for categorical palettes only) `Lrange >= 50`
+- **fair** (<font size="4">&#9825;</font>) if `Crange <= 50` and (for categorical palettes only) `Lrange <= 30`
+- **unfair** (<font size="4">&#10799;</font>) if `Crange <= 80` or (for categorical palettes only) `Lrange >= 50`
 
 Note that harmonic color palettes are usually not color blind friendly. Furthermore, when the luminance values of the colors are about equal, the contrast of those colors is low, which requires the use of border lines (see below).
 
@@ -310,7 +310,7 @@ In the overview table, there are three flags that indicate low contrast (`CR < 1
 - <font size="1">&#127987;</font>: Between one color of the palette and white
 - <font size="1">&#127988;</font>: Between one color of the palette and black
 
-The go-to solution to prevent wobbly borders is by using black or white (depending of the lightness of the colors) **border lines**."
+The go-to solution to prevent wobbly borders is by using black or white (depending of the lightness of the colors) **border lines**.
 
 
 
