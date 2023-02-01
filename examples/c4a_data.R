@@ -39,6 +39,6 @@ c4a_load(pfdata)
 c4a_series()
 c4a_overview()
 
-\dontrun{
-c4a_gui(series = "pinkfloyd", n = 8)
+if (interactive()) {
+  c4a_gui(series = "pinkfloyd", n = 8)
 }

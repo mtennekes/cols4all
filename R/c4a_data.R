@@ -34,6 +34,7 @@
 #' @param description description of the series. If `series` contains multiple series (rather than one value), please specify a vector of the same length as `series`. See \code{\link{c4a_series}} for the descriptions of the currently loaded series.
 #' @param ... passed on to `c4a_data`
 #' @example ./examples/c4a_data.R
+#' @return `c4a_data` object, which is a list of four items: `data`, `s`, `citation`, and `description`
 #' @rdname c4a_data
 #' @name c4a_data
 #' @export

@@ -8,3 +8,15 @@
 ^Meta$
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
+build/animations.R
+build/build_data.R
+build/build_paletteer.R
+build/build_palettes.R
+build/cbs_color_palette.R
+build/description.csv
+build/extra.txt
+build/paletteer.rds
+build/pinkfloyd_example.R
+build/references.bib
+build/tol_colors.py
+build/xkcd.ttf

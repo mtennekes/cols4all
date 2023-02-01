@@ -26,9 +26,8 @@ c4a_plot_Plus_Reversed = function(col1 = "#A93028", col2 = "#1F6758", borders = 
 
 	r = grDevices::as.raster(x)
 
-	grid::grid.newpage()
-
-	grid::grid.raster(r)
+	grb = grid::rasterGrob(r)
+	grid::grid.draw(grb)
 }
 
 #
@@ -64,7 +63,6 @@ c4a_plot_floating_rings = function(col1 = "red", col2 = "blue", borders = "black
 
 	r = grDevices::as.raster(x)
 
-	grid::grid.newpage()
-
-	grid::grid.raster(r)
+	grb = grid::rasterGrob(r)
+	grid::grid.draw(grb)
 }

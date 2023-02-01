@@ -77,6 +77,9 @@ c4a_data_as_is(
 
 \item{...}{passed on to \code{c4a_data}}
 }
+\value{
+\code{c4a_data} object, which is a list of four items: \code{data}, \code{s}, \code{citation}, and \code{description}
+}
 \description{
 Build palette data. Both \code{c4a_data} and \code{c4a_data_as_is} build data palette. The difference is that the former may restructure the palette colors (see details) whereas the latter takes the palette colors as they are. Data can subsequently be loaded into cols4all via \code{\link{c4a_load}}.
 }
@@ -139,7 +142,7 @@ c4a_load(pfdata)
 c4a_series()
 c4a_overview()
 
-\dontrun{
-c4a_gui(series = "pinkfloyd", n = 8)
+if (interactive()) {
+  c4a_gui(series = "pinkfloyd", n = 8)
 }
 }

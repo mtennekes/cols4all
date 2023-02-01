@@ -42,7 +42,7 @@ c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 \item{verbose}{should messages be printed?}
 }
 \value{
-A vector of colors
+A vector of colors (\code{c4a}) and a color (\code{c4a_na})
 }
 \description{
 Get a cols4all color palette: \code{c4a} returns the colors of the specified palette, and \code{c4a_na} returns the color for missing value that is associated with the specified palette. Run \code{\link{c4a_gui}} to see all available palettes, which are also listed with \code{\link{c4a_palettes}}.

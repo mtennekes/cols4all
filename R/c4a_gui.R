@@ -26,18 +26,18 @@ check_installed_packages = function(packages) {
 	r = packages[!x]
 
 	if (any(!x)) {
-		if (menu(c("Yes", "No"),
-				 title = paste0("The package", ifelse(sum(!x) > 1, "s ", " "), paste(r, collapse = ", "), ifelse(sum(!x) > 1, " are", " is"), " required. Would you like to install ", ifelse(sum(!x) > 1, "them?", "it?"))) == "1") {
-			install.packages(r)
-			x2 = vapply(packages, requireNamespace, FUN.VALUE = logical(1), quietly = TRUE)
-			if (any(!x2)) {
-				stop(paste0("The required package(s) ", paste(packages[!x2], collapse = ", "), " could not be installed. Please check the installation manually."), call. = FALSE)
-			}
+		message(paste0("The package",
+		   ifelse(sum(!x) > 1, "s ", " "),
+		   paste(r, collapse = ", "),
+		   ifelse(sum(!x) > 1, " are", " is"),
+		   " required. Please install ",
+		   ifelse(sum(!x) > 1, "them", "it"),
+		   " with:\ninstall.packages(",
+		   ifelse(sum(!x) > 1,
+		   	   paste0("c(\"", paste(r, collapse = "\", \""), "\"))"),
+		   	   paste0("\"", paste(r, collapse = "\", \""), "\")"))))
 
-			TRUE
-		} else {
-			FALSE
-		}
+		FALSE
 	} else {
 		TRUE
 	}

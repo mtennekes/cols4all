@@ -67,6 +67,7 @@ NULL
 #' @md
 #' @name c4a_options
 #' @rdname c4a_options
+#' @return A list of options
 #' @export
 c4a_options = function(...) {
 	lst = list(...)
@@ -349,6 +350,15 @@ do_cellspec = function(lst) {
 		matrix_sizes = list(CR = c(1, 0.6, 0.3, 0, 0.3, 0.6, 1), dist = c(1, 0.6, 0.3, 0))
 		matrix_interval_labels = list(CR = c("1.0 - 1.2", "1.2 - 1.5", "1.5 - 2.0", "", "3.0 - 4.5", "4.5 - 7.0", "7.0 +"), dist = c("Extremely similar", "Very similar", "Similar"))
 		matrix_breaks_digits = c(CR = 1, dist = 0)
+
+		rdata.scatter.x = stats::rnorm(100, mean = 0, sd = .5)
+		rdata.scatter.y = stats::rnorm(100, mean = 0, sd = .5)
+		rdata.bars.x = stats::rnorm(5, mean = 40, sd = 10)
+		rdata.necklace.h = stats::runif(5000, min = 0, max = 360)
+		rdata.necklace.c = stats::runif(5000, min = .3, max = 1)
+		rdata.necklace.l = stats::runif(5000, min = 30, max = 90)
+		rdata.necklace.d = stats::runif(5000)
+
 	})
 	fill_P()
 }

@@ -4,7 +4,7 @@
 #'
 #' @param data cols4all data (see `c4a_data`)
 #' @example ./examples/c4a_sysdata_import.R
-#' @return `c4a_sysdata_export` returns the system data
+#' @return `c4a_sysdata_export` returns the system data (a list)
 #' @rdname c4a_sysdata_import
 #' @name c4a_sysdata_import
 #' @export

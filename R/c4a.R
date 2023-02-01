@@ -12,7 +12,7 @@
 #' @param format format of the colors. One of: `"hex"` character vector of hex color values, `"RGB"` 3 column matrix of RGB values, or `"HCL"` 3-column matrix of HCL values
 #' @param nm_invalid what should be done in case `n` or `m` is larger than the maximum number of colors or smaller than the minimum number? Options are `"error"` (an error is returned), `"repeat"`, the palette is repeated, `"interpolate"` colors are interpolated. For categorical `"cat"` palettes only.
 #' @param verbose should messages be printed?
-#' @return A vector of colors
+#' @return A vector of colors (`c4a`) and a color (`c4a_na`)
 #' @importFrom grDevices col2rgb colorRampPalette colors gray.colors rgb
 #' @importFrom methods as
 #' @importFrom stats na.omit

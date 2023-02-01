@@ -22,7 +22,7 @@ c4a_sysdata_remove(fullnames = NULL, series = NULL, are.you.sure = NA)
 \item{are.you.sure}{are you sure you want to remove series?}
 }
 \value{
-\code{c4a_sysdata_export} returns the system data
+\code{c4a_sysdata_export} returns the system data (a list)
 }
 \description{
 Import and export system data. \code{c4a_sysdata_import} will import system data and overwrite the current system data, \code{c4a_sysdata_export} will export the current system data, and \code{c4a_sysdata_remove} (partly) removes system data.

@@ -63,6 +63,7 @@ table_columns = function(type, show.scores) {
 #' @example ./examples/c4a_table.R
 #' @seealso References of the palettes: \code{\link{cols4all-package}}.
 #' @export
+#' @return An HMTL table (`kableExtra` object)
 #' @rdname c4a_gui
 #' @name c4a_gui
 c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
@@ -82,7 +83,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 	#if (length(series) == 2) browser()
 
-	if (!requireNamespace("kableExtra")) stop("Please install kableExtra")
+	check_installed_packages("kableExtra")
 
 	.labels = .C4A$labels
 

@@ -9,6 +9,9 @@ c4a_options(...)
 \arguments{
 \item{...}{Use character values to retrieve options. To set options, either use named arguments (where the names refer to the options), a list that consists of those options.}
 }
+\value{
+A list of options
+}
 \description{
 Get or set global options for c4a. Works similar as the base function \code{options}
 }

@@ -9,6 +9,7 @@
 #' @example ./examples/scales_ggplot2.R
 #' @rdname scales_ggplot2
 #' @name scale_color_discrete_c4a_cat
+#' @return A ggplot2 component that defines the scale
 #' @export
 scale_color_discrete_c4a_cat = function (palette = NULL, reverse = FALSE, order = NULL, ...) {
 	scale_discrete(aes = "color", type = "cat", palette = palette, reverse = reverse, order = order, ...)

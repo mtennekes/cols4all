@@ -1,18 +1,15 @@
 c4a_plot_scatter = function(cols = NULL, col1 = "blue", col2 = "red", borders = "black", lwd = 0, dark = FALSE, dist = c("random", "concentric")) {
 	dist = match.arg(dist)
 
-	set.seed(1234)
-
-	x = rnorm(100, mean = 0, sd = .5)
-	y = rnorm(100, mean = 0, sd = .5)
-
-
 	if (is.null(cols)) {
 		cols = c(col1, col2)
 	}
 
 	n = length(cols)
 	k = 100
+
+	x = .C4A$rdata.scatter.x
+	y = .C4A$rdata.scatter.y
 
 	if (dist == "concentric") {
 		d = order(x^2 + y^2)

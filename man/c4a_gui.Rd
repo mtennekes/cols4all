@@ -48,6 +48,9 @@ c4a_table(
 
 \item{verbose}{should messages and warnings be printed?}
 }
+\value{
+An HMTL table (\code{kableExtra} object)
+}
 \description{
 Graphical user interface to analyse palettes. \code{c4a_table} shows a table that can be opened in the browser. \code{c4a_gui} is a graphical user interface (shiny app) around this table.
 }
