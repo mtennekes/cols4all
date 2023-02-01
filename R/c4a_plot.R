@@ -5,7 +5,7 @@
 #' @param palette Palette name (see \code{\link{c4a}}) or a color vector
 #' @param ... arguments passed on to \code{\link{c4a}}
 #' @param include.na should a color for missing values be included?
-#' @return besides the plot, a \code{\link[grid:gTree]{gTree}} is returned silently
+#' @return Besides the plot, a \code{\link[grid:gTree]{gTree}} is returned silently
 #' @export
 c4a_plot = function(palette, ..., include.na = FALSE) {
 	args = list(...)

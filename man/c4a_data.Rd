@@ -142,7 +142,11 @@ c4a_load(pfdata)
 c4a_series()
 c4a_overview()
 
-if (interactive()) {
+if (requireNamespace("shiny") &&
+	requireNamespace("shinyjs") &&
+	requireNamespace("kableExtra") &&
+	requireNamespace("colorblindcheck") &&
+	interactive()) {
   c4a_gui(series = "pinkfloyd", n = 8)
 }
 }

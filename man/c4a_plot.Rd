@@ -14,7 +14,7 @@ c4a_plot(palette, ..., include.na = FALSE)
 \item{include.na}{should a color for missing values be included?}
 }
 \value{
-besides the plot, a \code{\link[grid:gTree]{gTree}} is returned silently
+Besides the plot, a \code{\link[grid:gTree]{gTree}} is returned silently
 }
 \description{
 Plot a color palette, either a cols4all palette, or a color vector.

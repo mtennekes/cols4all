@@ -94,10 +94,14 @@ saveRDS(dat, file = "build/paletteer.rds")
 c4a_sysdata_remove(are.you.sure = T)
 
 dat = readRDS("build/paletteer.rds")
+
+series = sort(unique(dat$data$series))
+description = structure(paste0("Palettes from the R package ", series), names = series)
+dat$description = description
+
+saveRDS(dat, file = "build/paletteer.rds")
+
 c4a_sysdata_import(dat)
-
-
-c4a_load(dat)
 
 # https://github.com/EmilHvitfeldt/r-color-palettes
 

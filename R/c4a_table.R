@@ -56,7 +56,7 @@ table_columns = function(type, show.scores) {
 #' @import colorspace abind
 #' @importFrom grDevices hcl dev.size
 #' @importFrom stats lm predict
-#' @importFrom utils tail head install.packages menu
+#' @importFrom utils tail head
 #' @importFrom png readPNG
 #' @importFrom stats rnorm runif
 #' @importFrom graphics barplot lines par
