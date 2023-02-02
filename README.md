@@ -347,3 +347,5 @@ c4a_gui()
 ```
 
 ![<https://user-images.githubusercontent.com/2444081/216455415-de676d12-8e94-4917-8adc-8ca1e6ac4df7.png>](https://user-images.githubusercontent.com/2444081/216455415-de676d12-8e94-4917-8adc-8ca1e6ac4df7.png)
+
+Note that this dashboard is not particularly fast (so grab a coffee:-))
