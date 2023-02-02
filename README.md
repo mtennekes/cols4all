@@ -1,4 +1,9 @@
 
+[![CRAN](http://www.r-pkg.org/badges/version/cols4all)](https://cran.r-project.org/package=cols4all)
+[![cran
+checks](https://cranchecks.info/badges/worst/cols4all)](https://cran.r-project.org/web/checks/check_results_cols4all.html)
+[![Downloads](http://cranlogs.r-pkg.org/badges/cols4all?color=brightgreen)](http://www.r-pkg.org/pkg/cols4all)
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # Colors for all! <img src='inst/img/cols4all_logo.png' align="right" height="139" />
@@ -7,17 +12,8 @@ The **cols4all** is a new R package for selecting color palettes. “Color
 for all” refers to our mission that colors should be usable for not just
 people with normal color vision, but also for people with color vision
 deficiency. Currently, this package contains palettes from several
-popular and lesser known color palette series: [Color
-Brewer](https://colorbrewer2.org),
-[Viridis](http://bids.github.io/colormap/),
-[Kovesi](https://colorcet.com/), [Paul
-Tol](https://personal.sron.nl/~pault/),
-[Scico](https://www.fabiocrameri.ch/colourmaps/),
-[Carto](https://carto.com/carto-colors/),
-[Tableau](https://www.tableau.com/about/blog/2016/7/colors-upgrade-tableau-10-56782),
-[Wes Anderson](https://github.com/karthik/wesanderson), and
-[Seaborn](https://seaborn.pydata.org/tutorial/color_palettes.html). Own
-palettes series can be added as well.
+popular and lesser known color palette series. Own palettes series can
+be added as well.
 
 Color palettes are well organized and made consistent with each other.
 Moreover, they are scored on several aspects: color-blind-friendliness,
