@@ -140,6 +140,7 @@ ggplot(diam_exp, aes(x = carat, y = depth, color = price)) +
 	theme_light()
 ```		
 
+
 ## Overview of functions
 
 Main functions:
@@ -202,3 +203,30 @@ There are a few other pacakges with a large collection of color palettes, in par
 * Do you have ideas for improvement how to measure palette properties?
 
 Let us know! (via github issues)
+
+
+## Bonus: 2568 palettes from **paletteer**
+
+The R package [**paletteer**](https://github.com/EmilHvitfeldt/paletteer) contains 2568 from 70 other R packages. These have been converted to data for **cols4all** [(script)](https://github.com/mtennekes/cols4all/blob/main/build/build_paletteer.R)
+
+These can be loaded and analysed as follows:
+
+```{r}
+paletteer_data = readRDS(url("https://github.com/mtennekes/cols4all/releases/download/v0.6/paletteer.rds","rb"))
+c4a_sysdata_import(paletteer_data)
+```
+
+Note that we use `c4a_sysdata_import` rather than `c4a_load` because we want to replace all the palette data to avoid overlap and conflicts with the palettes already included in **cols4all**.
+
+
+```{r}
+c4a_overview()
+```
+
+```{r, eval=FALSE}
+c4a_gui()
+```
+
+![https://user-images.githubusercontent.com/2444081/216455415-de676d12-8e94-4917-8adc-8ca1e6ac4df7.png](https://user-images.githubusercontent.com/2444081/216455415-de676d12-8e94-4917-8adc-8ca1e6ac4df7.png)
+
+Note that this dashboard is not particularly fast (so grab a coffee:-))

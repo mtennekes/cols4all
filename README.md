@@ -1,12 +1,12 @@
 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# Colors for all! <img src='inst/img/cols4all_logo.png' align="right" height="139" />
+
 [![CRAN](http://www.r-pkg.org/badges/version/cols4all)](https://cran.r-project.org/package=cols4all)
 [![cran
 checks](https://cranchecks.info/badges/worst/cols4all)](https://cran.r-project.org/web/checks/check_results_cols4all.html)
 [![Downloads](http://cranlogs.r-pkg.org/badges/cols4all?color=brightgreen)](http://www.r-pkg.org/pkg/cols4all)
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# Colors for all! <img src='inst/img/cols4all_logo.png' align="right" height="139" />
 
 The **cols4all** is a new R package for selecting color palettes. “Color
 for all” refers to our mission that colors should be usable for not just
@@ -27,14 +27,15 @@ support several types: *categorical* (qualitative) palettes,
 
 ## Installation
 
-**cols4all** will be available on CRAN in January or February this year
-(2023). Until then it can be installed using:
+**cols4all** is available on CRAN:
 
 ``` r
-# colorspace 2.1 required:
-install.packages("colorspace", repos = "https://R-Forge.R-project.org")
+install.packages("cols4all", dependencies = TRUE)
+```
 
-# development (github) version of cols4all
+The development version can be installed as follows:
+
+``` r
 install.packages("remotes")
 remotes::install_github("mtennekes/cols4all", dependencies = TRUE)
 ```
@@ -140,7 +141,7 @@ Plot these colors:
 c4a_plot("hcl.purple_green", 11, include.na = TRUE)
 ```
 
-![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
 
 ## Using cols4all palettes in ggplot2
 
@@ -156,7 +157,7 @@ ggplot(diam_exp, aes(x = carat, y = price, color = color)) +
     theme_light()
 ```
 
-![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
 
@@ -167,7 +168,7 @@ ggplot(diam_exp, aes(x = carat, y = depth, color = price)) +
     theme_light()
 ```
 
-![](man/figures/README-unnamed-chunk-10-2.png)<!-- -->
+![](man/figures/README-unnamed-chunk-11-2.png)<!-- -->
 
 ## Overview of functions
 
@@ -245,3 +246,104 @@ few features that distinguishes **cols4all** from those packages:
 - Do you have ideas for improvement how to measure palette properties?
 
 Let us know! (via github issues)
+
+## Bonus: 2568 palettes from **paletteer**
+
+The R package
+[**paletteer**](https://github.com/EmilHvitfeldt/paletteer) contains
+2568 from 70 other R packages. These have been converted to data for
+**cols4all**
+[(script)](https://github.com/mtennekes/cols4all/blob/main/build/build_paletteer.R)
+
+These can be loaded and analysed as follows:
+
+``` r
+paletteer_data = readRDS(url("https://github.com/mtennekes/cols4all/releases/download/v0.6/paletteer.rds","rb"))
+c4a_sysdata_import(paletteer_data)
+#> cols4all system data imported successfully
+```
+
+Note that we use `c4a_sysdata_import` rather than `c4a_load` because we
+want to replace all the palette data to avoid overlap and conflicts with
+the palettes already included in **cols4all**.
+
+``` r
+c4a_overview()
+#>                      cat seq div bivs bivc bivd bivg
+#> awtools                4   2  NA   NA   NA   NA   NA
+#> basetheme              8  NA  NA   NA   NA   NA   NA
+#> beyonce              100  21   9   NA   NA   NA   NA
+#> calecopal             40   4   1   NA   NA   NA   NA
+#> cartography            2  14  NA   NA   NA   NA   NA
+#> colorBlindness         3   2  14   NA   NA   NA   NA
+#> colorblindr            2  NA  NA   NA   NA   NA   NA
+#> colRoz                50   3   1   NA   NA   NA   NA
+#> dichromat              2   2  13   NA   NA   NA   NA
+#> DresdenColor          18  NA  NA   NA   NA   NA   NA
+#> dutchmasters           6  NA  NA   NA   NA   NA   NA
+#> feathers              11  NA  NA   NA   NA   NA   NA
+#> fishualize           162  12  NA   NA   NA   NA   NA
+#> futurevisions         14   5   1   NA   NA   NA   NA
+#> ggpomological          2  NA  NA   NA   NA   NA   NA
+#> ggprism               61   4  NA   NA   NA   NA   NA
+#> ggsci                 25  19   1   NA   NA   NA   NA
+#> ggthemes             100  24  28   NA   NA   NA   NA
+#> ggthemes_ptol          1  NA  NA   NA   NA   NA   NA
+#> ggthemes_solarized     8  NA  NA   NA   NA   NA   NA
+#> ggthemr               18  NA  NA   NA   NA   NA   NA
+#> ghibli                27  NA  NA   NA   NA   NA   NA
+#> grDevices              5  80  36   NA   NA   NA   NA
+#> harrypotter           NA  16  NA   NA   NA   NA   NA
+#> impressionist.colors  24  NA  NA   NA   NA   NA   NA
+#> IslamicArt            16  NA  NA   NA   NA   NA   NA
+#> jcolors               10   3  NA   NA   NA   NA   NA
+#> khroma                11  21  20   NA   NA   NA   NA
+#> LaCroixColoR          13  NA   8   NA   NA   NA   NA
+#> lisa                 121   4   3   NA   NA   NA   NA
+#> Manu                  19  NA  NA   NA   NA   NA   NA
+#> MapPalettes           NA   2   4   NA   NA   NA   NA
+#> MetBrewer             56  NA  NA   NA   NA   NA   NA
+#> miscpalettes          16   1  NA   NA   NA   NA   NA
+#> musculusColors         7  NA  NA   NA   NA   NA   NA
+#> nationalparkcolors    25  NA  NA   NA   NA   NA   NA
+#> NatParksPalettes      30  NA  NA   NA   NA   NA   NA
+#> nbapalettes          128   1  NA   NA   NA   NA   NA
+#> NineteenEightyR        7   3   2   NA   NA   NA   NA
+#> nord                  11   3   2   NA   NA   NA   NA
+#> ochRe                 15  NA   1   NA   NA   NA   NA
+#> oompaBase             NA   5   3   NA   NA   NA   NA
+#> palettesForR          42   4   2   NA   NA   NA   NA
+#> palettetown          389  NA  NA   NA   NA   NA   NA
+#> palr                  NA   4  NA   NA   NA   NA   NA
+#> pals                   8  59  18   NA   NA   NA   NA
+#> peRReo                21  NA  NA   NA   NA   NA   NA
+#> PNWColors              4   7   3   NA   NA   NA   NA
+#> Polychrome             8  NA  NA   NA   NA   NA   NA
+#> rcartocolor            6  21   7   NA   NA   NA   NA
+#> RColorBrewer           8  19   8   NA   NA   NA   NA
+#> Redmonder             24  10   7   NA   NA   NA   NA
+#> rockthemes            21  NA  NA   NA   NA   NA   NA
+#> RSkittleBrewer         5  NA  NA   NA   NA   NA   NA
+#> rtist                 15  NA  NA   NA   NA   NA   NA
+#> scico                 NA  21  14   NA   NA   NA   NA
+#> severance              7  NA  NA   NA   NA   NA   NA
+#> soilpalettes           7   7  NA   NA   NA   NA   NA
+#> suffrager              6  NA  NA   NA   NA   NA   NA
+#> tayloRswift            9   1  NA   NA   NA   NA   NA
+#> tidyquant              3  NA  NA   NA   NA   NA   NA
+#> trekcolors            23   8   4   NA   NA   NA   NA
+#> tvthemes              58  NA  NA   NA   NA   NA   NA
+#> unikn                  5   8   3   NA   NA   NA   NA
+#> vapeplot               8  NA  NA   NA   NA   NA   NA
+#> vapoRwave             11   2   1   NA   NA   NA   NA
+#> viridis               NA   8  NA   NA   NA   NA   NA
+#> werpals               17   1  NA   NA   NA   NA   NA
+#> wesanderson           19  NA  NA   NA   NA   NA   NA
+#> yarrr                 21  NA  NA   NA   NA   NA   NA
+```
+
+``` r
+c4a_gui()
+```
+
+![<https://user-images.githubusercontent.com/2444081/216455415-de676d12-8e94-4917-8adc-8ca1e6ac4df7.png>](https://user-images.githubusercontent.com/2444081/216455415-de676d12-8e94-4917-8adc-8ca1e6ac4df7.png)
