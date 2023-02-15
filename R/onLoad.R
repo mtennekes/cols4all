@@ -123,7 +123,7 @@ do_cellspec = function(lst) {
 	attach_bib()
 
 	with(.C4A,{
-		defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple-green", bivs = "c4a.bu_br_bivs", bivc = "met_monet", bivd = "c4a.pu_gn_bivd", bivg = "c4a.br_bivg")
+		defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple_green", bivs = "c4a.bu_br_bivs", bivc = "met_monet", bivd = "c4a.pu_gn_bivd", bivg = "c4a.br_bivg")
 
 		#color-blind-friendly thresholds
 		CBF_th = list(cat = c(min_dist = 10),

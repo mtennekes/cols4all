@@ -42,7 +42,7 @@ c4a_plot_cvd = function(cols, dark = FALSE, include.na = FALSE) {
 		}
 		c(list(cp1), cp2s, cp3s)
 	}))
-	grb = do.call(grid::grobTree, c(cps, list(vp = vp)))
+	grb = grid::grobTree(bg, do.call(grid::grobTree, c(cps, list(vp = vp))))
 	grid::grid.draw(grb)
 	invisible(grb)
 }

@@ -22,4 +22,7 @@ slist = mapply(function(x,y) {
 x = data.table::rbindlist(c(ilist, slist))
 x
 
+
+cat(paste(paste0("  - name: ", sort(unique(x$package))), collapse = "\n"))
+
 View(x)
