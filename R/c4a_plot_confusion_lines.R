@@ -60,6 +60,7 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 	x0 = rescale(w[,1], from = rgb_data$xrange, to = c(0, 1))
 	y0 = rescale(w[,2], from = rgb_data$yrange, to = c(0, 1))
 
+
 	if (confusion_lines) {
 		a0 = head(seq(0, 2 * pi, length.out = 30), -1)
 		a1 = head(seq(0, 2 * pi, length.out = 100), -1)
@@ -68,9 +69,13 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 		#ind = (rbind(rep(1, 3), diag(3)) == TRUE)[match(cvd, c("none", "deutan", "protan", "tritan")), ]
 		ind = match(cvd, c("none", "deutan", "protan", "tritan"))
 
-		co = list(w[,1:2], c(0.747, 0.253), c(1.4, -0.4), c(0.171, 0))[[ind]]
+		# https://www.researchgate.net/figure/Confusion-lines-and-types-of-dichromatism-Dichromatic-confusion-lines-represented-for_fig1_322712348
+		co = list(w[,1:2], c(1.4, -0.400), c(0.747, 0.253), c(0.171, 0))[[ind]]
 
-		a = list(a0, a1, a2, a1)[[ind]]
+		# https://www.color-blindness.com/2009/01/19/colorblind-colors-of-confusion/
+		#co = list(w[,1:2], c(1.080, -0.800), c(0.747, 0.253), c(0.171, 0))[[ind]]
+
+		a = list(a0, a2, a1, a1)[[ind]]
 
 		co2 = c(rescale(co[1], from = rgb_data$xrange, to = c(0, 1)),
 					 rescale(co[2], from = rgb_data$yrange, to = c(0, 1)))
