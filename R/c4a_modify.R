@@ -8,6 +8,7 @@
 #' @rdname c4a_modify
 #' @name c4a_modify
 #' @seealso [c4a_data()]
+#' @example ./examples/c4a_modify.R
 #' @export
 c4a_modify = function(palette, x = NULL, xNA = NULL) {
 	info = c4a_info(palette)
@@ -45,16 +46,23 @@ c4a_modify = function(palette, x = NULL, xNA = NULL) {
 	.C4A$s = s
 }
 
+#' @param name name of new palette
 #' @rdname c4a_modify
 #' @name c4a_duplicate
 #' @export
-c4a_duplicate = function(palette) {
+c4a_duplicate = function(palette, name = NA) {
 	x = c4a_info(palette)
 
 	if (is.null(x)) return(invisible(NULL))
-	nms = c4a_palettes(full.names = FALSE)
 
-	newname = make.names(c(nms, x$name), unique = TRUE)[length(nms) + 1L]
+	nms = c4a_palettes(series = x$series, full.names = FALSE)
+	if (is.na(name)) {
+		newname = make.names(c(nms, x$name), unique = TRUE)[length(nms) + 1L]
+		newname = gsub(".", "_", newname, fixed = TRUE)
+	} else {
+		if (name %in% nms) stop(name, " already exists")
+		newname = name
+	}
 
 	x$name = newname
 	x$fullname = paste(x$series, newname, sep = ".")
@@ -62,5 +70,8 @@ c4a_duplicate = function(palette) {
 	x$bib = NULL
 	y = c4a_data(x)
 	c4a_load(y)
+
+	if (is.na(name)) message("New palette created: ", x$fullname)
+
 	invisible(NULL)
 }
