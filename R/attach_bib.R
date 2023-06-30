@@ -24,6 +24,10 @@ attach_bib = function() {
 			any(fn %in% nm | s %in% nm)
 		}))
 		if (!length(id)) id = 0
+		if (length(id) > 1L) {
+			warning("Overlapping references: ", paste(nms[id], collapse = ", "), " First one is used")
+			id = id[1]
+		}
 		id
 	}, z$fullname, z$series, SIMPLIFY = TRUE, USE.NAMES = FALSE)
 

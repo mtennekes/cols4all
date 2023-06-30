@@ -30,7 +30,7 @@ c4a_data(
   description = NA
 )
 
-c4a_load(data)
+c4a_load(data, overwrite = FALSE)
 
 c4a_data_as_is(
   ...,
@@ -43,7 +43,7 @@ c4a_data_as_is(
 )
 }
 \arguments{
-\item{x}{named list of color palettes. See details for indexing.}
+\item{x}{either a named list of color palettes or a \code{\link{c4a_info}} object. For the first case: see details for indexing. The second case will bypass the other arguments.}
 
 \item{xNA}{colors for missing values. Vector of the same length as x (or length 1). For \code{NA} values, the color for missing values is automatically determined (preferable a light grayscale color, but if it is indistinguishable by color blind people, a light color with a low chroma value is selected)}
 
@@ -75,13 +75,15 @@ c4a_data_as_is(
 
 \item{data}{cols4all data created with \code{c4a_data}}
 
+\item{overwrite}{in case the palettes already exist (i.e. the full names), should the old names be overwritten?}
+
 \item{...}{passed on to \code{c4a_data}}
 }
 \value{
 \code{c4a_data} object, which is a list of four items: \code{data}, \code{s}, \code{citation}, and \code{description}
 }
 \description{
-Build palette data. Both \code{c4a_data} and \code{c4a_data_as_is} build data palette. The difference is that the former may restructure the palette colors (see details) whereas the latter takes the palette colors as they are. Data can subsequently be loaded into cols4all via \code{\link{c4a_load}}.
+Build palette data. Both \code{c4a_data} and \code{c4a_data_as_is} build data palette. The difference is that the former may restructure the palette colors (see details) whereas the latter takes the palette colors as they are. Data can subsequently be loaded into cols4all via \code{\link{c4a_load}}. The \code{c4a_data} function can also be used to read \code{c4a_info} objects, which contain data for a single palette.
 }
 \details{
 In cols4all, palettes are organized by series and by type. The \strong{series} or 'family' specifies where the palettes belong to. For instance \code{"brewer"} stands for the color palettes from ColorBrewer. Run \code{\link{c4a_series}} to get an overview of loaded series. The \strong{type} specifies what kind of palette it is; see \code{\link{c4a_types}} for a description of the implemented ones.

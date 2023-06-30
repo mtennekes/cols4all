@@ -123,7 +123,7 @@ c4a_info = function(palette, no.match = c("message", "error", "null"), verbose =
 	x$reverse = isrev
 	x$palette = x$palette[[1]]
 
-	x
+	structure(x, class = c("c4a_info", "list"))
 }
 
 

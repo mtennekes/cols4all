@@ -210,7 +210,7 @@ do_cellspec = function(lst) {
 		rgb = c("Blues")
 		hcl = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
 
-		sortRev = c("cbfriendly", "harmonyRank", "Cmax", "min_dist", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "Blues")
+		sortRev = c("cbfriendly", "harmonyRank", "fairRank", "Cmax", "min_dist", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "Blues")
 
 		labels = c(min_dist = "Minimum distance",
 				   min_step = "Minimum step",

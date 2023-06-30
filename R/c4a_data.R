@@ -1,6 +1,6 @@
 #' Build and load palette data
 #'
-#' Build palette data. Both `c4a_data` and `c4a_data_as_is` build data palette. The difference is that the former may restructure the palette colors (see details) whereas the latter takes the palette colors as they are. Data can subsequently be loaded into cols4all via \code{\link{c4a_load}}.
+#' Build palette data. Both `c4a_data` and `c4a_data_as_is` build data palette. The difference is that the former may restructure the palette colors (see details) whereas the latter takes the palette colors as they are. Data can subsequently be loaded into cols4all via \code{\link{c4a_load}}. The `c4a_data` function can also be used to read `c4a_info` objects, which contain data for a single palette.
 #'
 #' In cols4all, palettes are organized by series and by type. The **series** or 'family' specifies where the palettes belong to. For instance `"brewer"` stands for the color palettes from ColorBrewer. Run \code{\link{c4a_series}} to get an overview of loaded series. The **type** specifies what kind of palette it is; see \code{\link{c4a_types}} for a description of the implemented ones.
 #'
@@ -17,7 +17,7 @@
 #'
 #' It may take some time to process, especially large categorical palettes, because of calculations of the color blind checks.
 #'
-#' @param x named list of color palettes. See details for indexing.
+#' @param x either a named list of color palettes or a \code{\link{c4a_info}} object. For the first case: see details for indexing. The second case will bypass the other arguments.
 #' @param xNA colors for missing values. Vector of the same length as x (or length 1). For `NA` values, the color for missing values is automatically determined (preferable a light grayscale color, but if it is indistinguishable by color blind people, a light color with a low chroma value is selected)
 #' @param types character vector of the same length as x (or length 1), which determines the type of palette: `"cat"`, `"seq"`, `"div"`, `"bivs"`, `"bivc"`, `"bivd"`, or `"bivg"`. See details.
 #' @param series a character vector of the same length as x (or length 1), which determines the series.
@@ -42,93 +42,112 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 
 	if (!requireNamespace("colorblindcheck")) stop("Please install colorblindcheck")
 
-	# check color list
-	if (!is.list(x)) stop("x is not a list")
-	nms = names(x)
-	x = lapply(x, validate_colors, name = "x", from_list = TRUE)
-
-	# number of palettes
-	k = length(x)
-
-	# make everything length k (number of palettes)
-	args = setdiff(ls(), c("x", "k"))
-	length(range_matrix_args)
-
-	# manual preprocessing
-	if (!is.list(range_matrix_args[[1]])) range_matrix_args = list(range_matrix_args)
-
-	nbib = if (is.na(bib) || inherits(bib, "bibentry")) 1 else k
-	if (nbib == 1) bib = list(bib)
-
-	for (arg in args) assign(arg, rep(get(arg), length.out = k), envir = environment())
-
-	# validate na colors
-	if (any(!is.na(xNA))) xNA[!is.na(xNA)] = validate_colors(xNA[!is.na(xNA)], name = "xNA")
-
-	# check types
-	types_supported = unname(.C4A$types)
-	if (!all(types %in% types_supported)) stop("Unknown types found. Currently only", paste(types_supported, collapse = ","), "are supported")
-
-
-
-	lst = list(pal = x,
-			   type = types,
-			   colNA = xNA,
-			   take.gray.for.NA = take.gray.for.NA,
-			   remove.other.grays = remove.other.grays,
-			   remove.blacks = remove.blacks,
-			   light.to.dark = light.to.dark,
-			   remove.names = remove.names,
-			   biv.method = biv.method,
-			   space = space,
-			   range_matrix_args = range_matrix_args)
-
-
-	res = do.call(mapply, c(list(FUN = process_palette, SIMPLIFY = FALSE), lst))
-	x = lapply(res, "[[", "pal")
-	xNA = sapply(res, "[[", "colNA", USE.NAMES = FALSE)
-	reversed = sapply(res, "[[", "reversed")
-
-
-
-	if (format.palette.name[1]) {
-		nms = format_name(nms)
-		if (any(reversed)) {
-			nms2 = nms[reversed]
-			ss = strsplit(nms2, "_", fixed = TRUE)
-			ss2 = sapply(ss, function(s) {
-				s2 = if (length(s) == 2 && !(s[1] %in% c("light", "dark"))) rev(s) else s
-				paste(s2, collapse = "_")
-			}, USE.NAMES = FALSE)
-			isdiff = (ss2 != nms2)
-			if (any(isdiff)) {
-				message("Some palettes have been reversed (because of the cols4all convention that seq palettes are arranged from light to dark). Therefore they may have automatically be renamed. Please check and if needed change the argument settings of tm_series_add.\nOld names: ", paste(nms2[isdiff], collapse = ", "), "\nNew names: ", paste(ss2[isdiff], collapse = ", "))
-			}
-			if (any(!isdiff)) {
-				message("Some palettes have been reversed (because of the cols4all convention that seq palettes are arranged from light to dark), but the names have not been changed. Please check and if needed change names manually.\nThe palettes are: ", paste(nms2[!isdiff], collapse = ", "), ".")
-			}
-			nms[reversed] = ss2
+	if (inherits(x, "c4a_info")) {
+		if (is.null(x$bib)) {
+			bib = NA
+			nbib = 1
+		} else {
+			bib = character2bibentry(x$bib)
+			nbib = -1
+			names(bib) = NULL
 		}
+		x$cit = NULL
+		x$bib = NULL
+		x$reverse = NULL
+		x$palette = I(list(x$palette))
+		z = as.data.frame(x)
+		rownames(z) = NULL
 	} else {
-		if (any(reversed)) {
-			nms2 = nms[reversed]
-			message("Some palettes have been reversed, but the names have not been changed. Please check and if needed change names manually or try with format.palette.name.\nThe palettes are: ", paste(nms2, collapse = ", "), ".")
+		# check color list
+		if (!is.list(x)) stop("x is not a list")
+		nms = names(x)
+		x = lapply(x, validate_colors, name = "x", from_list = TRUE)
+
+		# number of palettes
+		k = length(x)
+
+		# make everything length k (number of palettes)
+		args = setdiff(ls(), c("x", "k"))
+		length(range_matrix_args)
+
+		# manual preprocessing
+		if (!is.list(range_matrix_args[[1]])) range_matrix_args = list(range_matrix_args)
+
+		nbib = if (is.na(bib) || inherits(bib, "bibentry")) 1 else k
+		if (nbib == 1) bib = list(bib)
+
+		for (arg in args) assign(arg, rep(get(arg), length.out = k), envir = environment())
+
+		# validate na colors
+		if (any(!is.na(xNA))) xNA[!is.na(xNA)] = validate_colors(xNA[!is.na(xNA)], name = "xNA")
+
+		# check types
+		types_supported = unname(.C4A$types)
+		if (!all(types %in% types_supported)) stop("Unknown types found. Currently only", paste(types_supported, collapse = ","), "are supported")
+
+
+
+		lst = list(pal = x,
+				   type = types,
+				   colNA = xNA,
+				   take.gray.for.NA = take.gray.for.NA,
+				   remove.other.grays = remove.other.grays,
+				   remove.blacks = remove.blacks,
+				   light.to.dark = light.to.dark,
+				   remove.names = remove.names,
+				   biv.method = biv.method,
+				   space = space,
+				   range_matrix_args = range_matrix_args)
+
+
+		res = do.call(mapply, c(list(FUN = process_palette, SIMPLIFY = FALSE), lst))
+		x = lapply(res, "[[", "pal")
+		xNA = sapply(res, "[[", "colNA", USE.NAMES = FALSE)
+		reversed = sapply(res, "[[", "reversed")
+
+
+
+		if (format.palette.name[1]) {
+			nms = format_name(nms)
+			if (any(reversed)) {
+				nms2 = nms[reversed]
+				ss = strsplit(nms2, "_", fixed = TRUE)
+				ss2 = sapply(ss, function(s) {
+					s2 = if (length(s) == 2 && !(s[1] %in% c("light", "dark"))) rev(s) else s
+					paste(s2, collapse = "_")
+				}, USE.NAMES = FALSE)
+				isdiff = (ss2 != nms2)
+				if (any(isdiff)) {
+					message("Some palettes have been reversed (because of the cols4all convention that seq palettes are arranged from light to dark). Therefore they may have automatically be renamed. Please check and if needed change the argument settings of tm_series_add.\nOld names: ", paste(nms2[isdiff], collapse = ", "), "\nNew names: ", paste(ss2[isdiff], collapse = ", "))
+				}
+				if (any(!isdiff)) {
+					message("Some palettes have been reversed (because of the cols4all convention that seq palettes are arranged from light to dark), but the names have not been changed. Please check and if needed change names manually.\nThe palettes are: ", paste(nms2[!isdiff], collapse = ", "), ".")
+				}
+				nms[reversed] = ss2
+			}
+		} else {
+			if (any(reversed)) {
+				nms2 = nms[reversed]
+				message("Some palettes have been reversed, but the names have not been changed. Please check and if needed change names manually or try with format.palette.name.\nThe palettes are: ", paste(nms2, collapse = ", "), ".")
+			}
 		}
+
+
+		seriesID = which(series != "")
+		fnms = nms
+		if (length(seriesID)) fnms[seriesID] = paste0(series[seriesID], ".", fnms[seriesID])
+
+
+		if (anyDuplicated(fnms)) stop("Duplicated names found")
+
+
+		names(x) = nms
+
+		z = data.frame(name = nms, series = series, fullname = fnms, type = types, palette = I(x), na = xNA, nmin = nmin, nmax = nmax, ndef = ndef, mmin = mmin, mmax = mmax, mdef = mdef)
+		rownames(z) = NULL
+
 	}
 
-
-	seriesID = which(series != "")
-	fnms = nms
-	if (length(seriesID)) fnms[seriesID] = paste0(series[seriesID], ".", fnms[seriesID])
-
-
-	if (anyDuplicated(fnms)) stop("Duplicated names found")
-
-
-	names(x) = nms
-
-	z = data.frame(name = nms, series = series, fullname = fnms, type = types, palette = I(x), na = xNA, nmin = nmin, nmax = nmax, ndef = ndef, mmin = mmin, mmax = mmax, mdef = mdef)
-	rownames(z) = NULL
 
 	z$nmax = mapply(function(pal, type, nmax) {
 		index = attr(pal, "index")
@@ -188,7 +207,12 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 	# .zdes = .C4A$zdes
 
 	# add citations
-	if (nbib == 1) {
+	if (nbib == -1) {
+		# bypass in case x is c4a_info object
+		zb = bib
+		zb = list(zb)
+		names(zb) = z$fullname
+	} else if (nbib == 1) {
 		if (!is.na(bib[[1]])) {
 			zb = bib[1]
 			if (any(z$series != z$series[1])) stop("One bib item defined, while multiple series: bib items are organized by series and optionally palettes")
@@ -221,8 +245,9 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 #' @rdname c4a_data
 #' @name c4a_load
 #' @param data cols4all data created with `c4a_data`
+#' @param overwrite in case the palettes already exist (i.e. the full names), should the old names be overwritten?
 #' @export
-c4a_load = function(data) {
+c4a_load = function(data, overwrite = FALSE) {
 	z = data$data
 	s = data$scores
 	zbib = data$citation
@@ -239,7 +264,17 @@ c4a_load = function(data) {
 	if (!is.null(z2)) {
 		z2$bib = NULL
 		z2$cit = NULL
-		if (any(fnms %in% z2$fullname)) stop("Fulnames already exist: ", paste(intersect(fnms, z2$fullname), collapse = ", "))
+		if (any(fnms %in% z2$fullname)) {
+			if (overwrite) {
+				dupl = (z2$fullname %in% fnms)
+				z2 = z2[!dupl,]
+				s2 = s2[!dupl,,]
+				zbib2 = zbib2[!(names(zbib2) %in% fnms)]
+				zdes2 = zdes2[!(names(zdes2) %in% fnms)]
+			} else {
+				stop("Fulnames already exist: ", paste(intersect(fnms, z2$fullname), collapse = ", "))
+			}
+		}
 
 		z = rbind(z2, z)
 		s = abind::abind(s2, s, along=1)
@@ -305,3 +340,11 @@ check_s = function(s, n) {
 	if (d[3] != max(.C4A$nmax)) stop("Third dimension of x$scores should be", d[3], call. = FALSE)
 	s
 }
+
+character2bibentry = function(x) {
+	if (!requireNamespace("bibtex")) stop("bibtex package required", call. = FALSE)
+	bibfile = tempfile(fileext = "bib")
+	writeLines(con = bibfile, x)
+	bibtex::read.bib(bibfile)
+}
+
