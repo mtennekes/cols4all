@@ -19,8 +19,8 @@ table_columns = function(type, show.scores) {
 		qs = c(qs,  "HwidthLR", "CRwt", "CRbk", "Blues")
 		sn = c("HL", "HR", "Lmid")
 	} else {
-		qn = c(qn, "contrast", "contrastWT", "contrastBK", "float")
-		qs = c(qs, "CRmin", "CRwt", "CRbk", "Blues")
+		qn = c(qn, "nameable", "contrast", "contrastWT", "contrastBK", "float")
+		qs = c(qs, "nameability", "CRmin", "CRwt", "CRbk", "Blues")
 		sn = character(0)
 	}
 
@@ -274,6 +274,7 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 	}
 
+	# make icons (cannot do that in onLoad due to dependency of suggested kableExtra)
 	tc = lapply(.C4A$tc, function(tci) {
 		if (any(names(tci) %in% c("seq", "cat", "div"))) {
 			lapply(tci, function(tcii) {
@@ -294,13 +295,18 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 
 	rownames(e2) = NULL
-	for (var in c("cbfriendly", "chroma",  "hueType", "fair", "contrast", "contrastWT", "contrastBK", "float")) {
+	for (var in c("cbfriendly", "chroma",  "hueType", "fair", "nameable", "contrast", "contrastWT", "contrastBK", "float")) {
 		tcv = tc[[var]]
 		if (any(names(tcv) %in% c("seq", "cat", "div"))) {
 			tcv = if (type %in% names(tcv)) tcv[[type]]	else tcv[["x"]]
 		}
 		if (var %in% qn) {
-			chr = as.character(e2[[var]])
+			if (var == "cbfriendly") {
+				# because sorting order is encoded in the color blind friendly column (see get_friendlyness)
+				chr = as.character(round(e2[[var]]))
+			} else {
+				chr = as.character(e2[[var]])
+			}
 			chr[is.na(chr)] = "NA"
 			e2[[var]] = tcv[chr]
 		}

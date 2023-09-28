@@ -68,26 +68,40 @@ show_attach_scores = function(z) {
 
 	z2$H[z2$Hwidth >= 180] = 360
 
+	z2$nameable = as.logical(z2$nameability)
+
+
 	z2
 }
 
 
 get_friendlyness = function(zn) {
 	with(zn, {
-		ifelse(type == "cat", ifelse(min_dist >= .C4A$CBF_th$cat["min_dist"], 1,
+		ifelse(type == "cat", (min_dist / 1000) + ifelse(min_dist >= .C4A$CBF_th$cat["min_dist"], 1,
 							  ifelse(min_dist <= .C4A$CBU_th$cat["min_dist"], -1, 0)),
-		ifelse(type == "seq", ifelse(min_step >= .C4A$CBF_th$seq["min_step"], 1,
+
+
+		ifelse(type == "seq", (min_step / 1000) + ifelse(min_step >= .C4A$CBF_th$seq["min_step"], 1,
 							  ifelse(min_step <= .C4A$CBU_th$seq["min_step"], -1, 0)),
-		ifelse(type == "div", ifelse(inter_wing_dist >= .C4A$CBF_th$div["inter_wing_dist"] & min_step >= .C4A$CBF_th$div["min_step"], 1,
+
+
+		ifelse(type == "div", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$div["inter_wing_dist"] & min_step >= .C4A$CBF_th$div["min_step"], 1,
 							  ifelse(inter_wing_dist <= .C4A$CBU_th$div["inter_wing_dist"] | min_step <= .C4A$CBU_th$div["min_step"], -1, 0)),
 
-		ifelse(type == "bivs", ifelse(inter_wing_dist >= .C4A$CBF_th$bivs["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivs["min_step"], 1,
+
+		ifelse(type == "bivs", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$bivs["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivs["min_step"], 1,
 							   ifelse(inter_wing_dist <= .C4A$CBU_th$bivs["inter_wing_dist"] | min_step <= .C4A$CBU_th$bivs["min_step"], -1, 0)),
-	   ifelse(type == "bivc", ifelse(min_dist >= .C4A$CBF_th$cat["min_dist"], 1,
+
+
+	   ifelse(type == "bivc", (min_dist / 1000) + ifelse(min_dist >= .C4A$CBF_th$cat["min_dist"], 1,
 	   							 ifelse(min_dist <= .C4A$CBU_th$cat["min_dist"], -1, 0)),
-			   	   ifelse(type == "bivd", ifelse(inter_wing_dist >= .C4A$CBF_th$bivd["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivd["min_step"], 1,
+
+
+		ifelse(type == "bivd", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$bivd["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivd["min_step"], 1,
    							  ifelse(inter_wing_dist <= .C4A$CBU_th$bivd["inter_wing_dist"] | min_step <= .C4A$CBU_th$bivd["min_step"], -1, 0)),
-	   ifelse(type == "bivg", ifelse(inter_wing_dist >= .C4A$CBF_th$bivg["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivg["min_step"], 1,
+
+
+	   ifelse(type == "bivg", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$bivg["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivg["min_step"], 1,
 							   ifelse(inter_wing_dist <= .C4A$CBU_th$bivg["inter_wing_dist"] | min_step <= .C4A$CBU_th$bivg["min_step"], -1, 0)), 0)))))))
 	})
 }

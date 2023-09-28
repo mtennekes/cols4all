@@ -15,18 +15,17 @@ library(MetBrewer)
 
 devtools::session_info(pkgs = "attached")
 # ! package         * version date (UTC) lib source
-# colorspace      * 2.0-3   2022-02-21 [1] CRAN (R 4.1.2)
-# ggthemes        * 4.2.4   2021-01-20 [1] CRAN (R 4.1.2)
-# pals            * 1.7     2021-04-17 [1] CRAN (R 4.1.0)
-# Polychrome      * 1.3.1   2021-07-16 [1] CRAN (R 4.1.2)
-# rcartocolor     * 2.0.0   2019-05-03 [1] CRAN (R 4.1.0)
-# RColorBrewer    * 1.1-2   2014-12-07 [1] CRAN (R 4.1.0)
-# reticulate      * 1.24    2022-01-26 [1] CRAN (R 4.1.2)
-# scico           * 1.3.0   2021-12-08 [1] CRAN (R 4.1.2)
-# shiny           * 1.7.1   2021-10-02 [1] CRAN (R 4.1.2)
-# viridisLite     * 0.4.0   2021-04-13 [1] CRAN (R 4.1.0)
-
-
+# colorblindcheck * 1.0.2   2023-05-13 [1] CRAN (R 4.3.0)
+# colorspace      * 2.1-0   2023-01-23 [1] CRAN (R 4.3.0)
+# ggthemes        * 4.2.4   2021-01-20 [1] CRAN (R 4.3.0)
+# khroma          * 1.11.0  2023-08-21 [1] CRAN (R 4.3.0)
+# MetBrewer       * 0.2.0   2022-03-21 [1] CRAN (R 4.3.0)
+# pals            * 1.8     2023-08-23 [1] CRAN (R 4.3.0)
+# Polychrome      * 1.5.1   2022-05-03 [1] CRAN (R 4.3.0)
+# rcartocolor     * 2.1.1   2023-05-13 [1] CRAN (R 4.3.0)
+# RColorBrewer    * 1.1-3   2022-04-03 [1] CRAN (R 4.3.0)
+# reticulate      * 1.32.0  2023-09-11 [1] CRAN (R 4.3.0)
+# viridisLite     * 0.4.2   2023-05-02 [1] CRAN (R 4.3.0)
 
 
 
@@ -416,9 +415,13 @@ local({
 	ids = seq(1,256, length.out=16)
 	d = scico:::palettes
 
-	div = c("broc", "brocO", "cork", "corkO", "vik", "vikO", "lisbon", "tofino", "berlin", "roma", "romaO", "bam", "bamO", "vanimo")
-	mseq = c("oleron", "bukavu", "fes")
+	d$.categorical = NULL
 
+	div = c("broc","cork", "vik", "lisbon", "tofino", "berlin", "bam", "roma", "vanimo", "managua")
+	mseq = c("oleron", "bukavu", "fes")
+	cyc = c( "brocO", "corkO",  "vikO", "romaO", "bamO")
+
+	sq = setdiff(names(d), c(div, mseq, cyc))
 
 	pals = mapply(function(x, nm) {
 		if (nm %in% mseq) {
@@ -429,16 +432,20 @@ local({
 		}
 	}, d, names(d))
 
+	pals_cat = lapply(scico:::palettes$.categorical, head, 10)
+	names(pals_cat) = paste0(names(pals_cat), "_cat")
+
 	pals_div = pals[div]
-	pals_seq = pals[setdiff(names(pals), c(div, mseq))]
+	pals_seq = pals[sq]
 	pals_biv = pals[mseq]
 	pals_biv = lapply(pals_biv, function(p) {
 		matrix(p[c(1:7,8:14)], ncol = 2)
 	})
 	pals_biv[["fes"]] = pals_biv[["fes"]][,2:1]
 
-	names(pals_seq)[match(c("batlowK", "batlowW"), names(pals_seq))] = c("k_batlow", "w_batlow") # reverse names (because palettes will be reversed)
+	names(pals_seq)[match(c("batlowK", "batlowW", "grayC"), names(pals_seq))] = c("k_batlow", "w_batlow", "c_gray") # reverse names (because palettes will be reversed)
 
+	c4a_load(c4a_data_as_is(pals_cat, types = "cat", series = "scico"), overwrite = T)
 	c4a_load(c4a_data(pals_div, types = "div", series = "scico"))
 	c4a_load(c4a_data(pals_seq, types = "seq", series = "scico"))
 	c4a_load(c4a_data(pals_biv, types = c("bivc", "bivc", "bivg"), series = "scico", biv.method = "bycol2"))
@@ -498,6 +505,8 @@ local({
 
 
 local({
+	library(reticulate)
+
 	sns = import("seaborn")
 	mpc = import("matplotlib.colors")
 
@@ -508,7 +517,7 @@ local({
 	sb_seq_names = c("rocket", "mako", "flare", "crest")
 	sb_seq = lapply(sb_seq_names, function(nm) {
 		pal = sns$color_palette(nm)
-		m = as.data.frame(t(sapply(0:(length(pal)-1), function(i) pal[[i]])))
+		m = as.data.frame(t(sapply(1:(length(pal)), function(i) pal[[i]])))
 		names(m) = c("red", "green", "blue")
 		do.call(rgb, as.list(m))
 	})
@@ -517,7 +526,7 @@ local({
 	sb_div_names = c("vlag", "icefire")
 	sb_div = lapply(sb_div_names, function(nm) {
 		pal = sns$color_palette(nm)
-		m = as.data.frame(t(sapply(0:(length(pal)-1), function(i) pal[[i]])))
+		m = as.data.frame(t(sapply(1:(length(pal)), function(i) pal[[i]])))
 		names(m) = c("red", "green", "blue")
 		do.call(rgb, as.list(m))
 	})

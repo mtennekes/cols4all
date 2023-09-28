@@ -161,6 +161,7 @@ do_cellspec = function(lst) {
 		HwidthSeqSingle = 15 # a sequential palette is labeled as 'single hue' if Hwidth is at most HwidthSeqSingle
 
 		sc = c("min_dist",
+			   "nameability",
 			   "min_step",
 			   "max_step",
 			   "inter_wing_dist")
@@ -210,9 +211,10 @@ do_cellspec = function(lst) {
 		rgb = c("Blues")
 		hcl = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
 
-		sortRev = c("cbfriendly", "harmonyRank", "fairRank", "Cmax", "min_dist", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "Blues")
+		sortRev = c("cbfriendly", "harmonyRank", "fairRank", "Cmax", "min_dist", "nameability", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "Blues")
 
 		labels = c(min_dist = "Minimum distance",
+				   nameability = "Nameability",
 				   min_step = "Minimum step",
 				   max_step = "Maximum step",
 				   inter_wing_dist = "Inter-wing-distance",
@@ -234,6 +236,7 @@ do_cellspec = function(lst) {
 				   cbfriendly = "Colorblind-friendly",
 				   chroma = "Vivid",
 				   fair = "Fair",
+				   nameable = "Naming",
 				   fairRank = "Fair",
 				   hueType = "Hue type",
 				   contrast = "&nbsp;&nbsp;Low contrast",
@@ -250,6 +253,7 @@ do_cellspec = function(lst) {
 				  nmax = list("Max number", tooltip = "Maximum number of colors"),
 				  fair = list("Fair", tooltip = "Do colors stand out about equally?"),
 				  contrast = list("Low contrast", tooltip = "Colors with low contrast are hard to separate. Are there any?"),
+				  nameable = list("Naming", tooltip = "Are the colors are easy to name? If so, they are also easy to remember"),
 				  float = list("3D Blues", tooltip = "Is there a pure blue color that may cause a 3D illusion?"),
 				  hueType = list("Hue type", tooltip = "How many different hues are used?"),
 				  references = list("References", tooltip = "Click to copy the colors and references"))
@@ -319,6 +323,11 @@ do_cellspec = function(lst) {
 				  					 'H' = list("&#9825;",
 				  					 		   tooltip = "Fair: colors are equally vivid. See tab 'HCL Analysis'", escape = FALSE,
 				  					 		   extra_css = "font-size: 60%; vertical-align: 0em; line-height: 0px;"))),
+				  nameable = list('NA' = "",
+				  				  'FALSE' =  "",
+				  				  'TRUE' = list("&#10023;",
+				  				  			  tooltip = "Colors are easy to name, and therefore, easy to remember",
+				  				  			  escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px;")),
 				  contrast = list('NA' = "",
 				  				'FALSE' =  "",
 				  				'TRUE' = list("&#127937;",

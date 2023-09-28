@@ -319,6 +319,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 								shiny::column(width = 12,
 											  infoBoxUI("infoCL", "Chroma-Luminance"),
 											  plotOverlay("anaCL", width = "600px", height = "600px", "aniCL")))),
+			shiny::tabPanel("Naming",
+							value = "tab_name",
+							shiny::fluidRow(
+								shiny::column(width = 12,
+											  shiny::selectizeInput("namePal", "Palette", choices = init_pal_list)),
+								shiny::plotOutput("namePlot", height = "1000px", width = "1000px"))
+			),
 			shiny::tabPanel("Contrast",
 							value = "tab_cont",
 							shiny::fluidRow(
@@ -700,23 +707,27 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (length(tab_vals$pal)) {
 				shiny::updateSelectizeInput(session, "cbfPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
 				shiny::updateSelectizeInput(session, "CLPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
+				shiny::updateSelectizeInput(session, "namePal", choices = tab_vals$pals, selected = tab_vals$pal_name)
 				shiny::updateSelectizeInput(session, "contrastPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
 				shiny::updateSelectizeInput(session, "floatPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
 				shiny::updateSelectizeInput(session, "APPPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
 				shinyjs::enable("cbfPal")
 				shinyjs::enable("CLPal")
+				shinyjs::enable("namePal")
 				shinyjs::enable("contrastPal")
 				shinyjs::enable("floatPal")
 				shinyjs::enable("APPPal")
 			} else {
 				shiny::updateSelectizeInput(session, "cbfPal", choices = character(0))
 				shiny::updateSelectizeInput(session, "CLPal", choices = character(0))
+				shiny::updateSelectizeInput(session, "namePal", choices = character(0))
 				shiny::updateSelectizeInput(session, "contrastPal", choices = character(0))
 				shiny::updateSelectizeInput(session, "floatPal", choices = character(0))
 				shiny::updateSelectizeInput(session, "APPPal", choices = character(0))
 
 				shinyjs::disable("cbfPal")
 				shinyjs::disable("CLPal")
+				shinyjs::disable("namePal")
 				shinyjs::disable("contrastPal")
 				shinyjs::disable("floatPal")
 				shinyjs::disable("APPPal")
@@ -726,9 +737,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		shiny::observeEvent(input$cbfPal, update_reactive(input$cbfPal, 1))
 		shiny::observeEvent(input$CLPal, update_reactive(input$CLPal, 2))
-		shiny::observeEvent(input$contrastPal, update_reactive(input$contrastPal, 3))
-		shiny::observeEvent(input$floatPal, update_reactive(input$floatPal, 4))
-		shiny::observeEvent(input$APPPal, update_reactive(input$APPPal, 5))
+		shiny::observeEvent(input$namePal, update_reactive(input$namePal, 3))
+		shiny::observeEvent(input$contrastPal, update_reactive(input$contrastPal, 4))
+		shiny::observeEvent(input$floatPal, update_reactive(input$floatPal, 5))
+		shiny::observeEvent(input$APPPal, update_reactive(input$APPPal, 6))
 
 		update_reactive = function(pal_name, pal_nr) {
 			pal = pal_name
@@ -782,9 +794,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 			if (pal_nr != 1) shiny::updateSelectizeInput(session, "cbfPal", choices = tab_vals$pals, selected = pal)
 			if (pal_nr != 2) shiny::updateSelectizeInput(session, "CLPal", choices = tab_vals$pals, selected = pal)
-			if (pal_nr != 3) shiny::updateSelectizeInput(session, "contrastPal", choices = tab_vals$pals, selected = pal)
-			if (pal_nr != 4) shiny::updateSelectizeInput(session, "floatPal", choices = tab_vals$pals, selected = pal)
-			if (pal_nr != 5) shiny::updateSelectizeInput(session, "APPPal", choices = tab_vals$pals, selected = pal)
+			if (pal_nr != 3) shiny::updateSelectizeInput(session, "namePal", choices = tab_vals$pals, selected = pal)
+			if (pal_nr != 4) shiny::updateSelectizeInput(session, "contrastPal", choices = tab_vals$pals, selected = pal)
+			if (pal_nr != 5) shiny::updateSelectizeInput(session, "floatPal", choices = tab_vals$pals, selected = pal)
+			if (pal_nr != 6) shiny::updateSelectizeInput(session, "APPPal", choices = tab_vals$pals, selected = pal)
 
 		}
 
@@ -1036,6 +1049,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 			c4a_plot_CR_matrix(pal, id1 = id1, id2 = id2, dark = input$dark)
+		})
+
+		output$namePlot = shiny::renderPlot({
+			pal = tab_vals$pal
+
+			c4a_plot_names(pal)
 		})
 
 		output$textCR = shiny::renderUI({

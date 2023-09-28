@@ -181,13 +181,36 @@ check_cat_pal = function(p) {
 		get_dist_matrix(p, cvd = cvd)
 	})
 
-	sc = c(min_dist = as.integer(round(min(scores, na.rm = TRUE))))
+	sc = c(min_dist = as.integer(round(min(scores, na.rm = TRUE))), nameability = as.integer(nameability(p)))
 	prop = hcl_prop(p)
 	rgb = rgb_prop(p)
 
 	c(sc, prop, rgb)
 }
 
+boynton = c(Green = "#859F68", Blue = "#5792A4", Purple = "#7E6A89", Pink = "#C7848F",
+			Yellow = "#E7B352", Brown = "#8F5F49", Orange = "#D97447", Red = "#9D4149",
+			White = "#D8CEBA", Gray = "#868782", Black = "#394245")
+
+softmax = function(x, a = 1) {
+	e = exp(1)
+	ex = e^(-a*x)
+	ex / sum(ex)
+}
+
+diff_matrix = function(x, y) {
+	colorblindcheck::palette_dist(c(x, y))[1:length(x), (length(x) + 1):(length(x) + length(y))]
+}
+
+nameability = function(pal) {
+
+
+	m = diff_matrix(pal, boynton)
+	s = t(apply(m, MARGIN = 1, softmax, simplify = T))
+
+	ids = apply(s, MARGIN = 1, which.max)
+	!anyDuplicated(ids)
+}
 
 
 # get hcl coordinates

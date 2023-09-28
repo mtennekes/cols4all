@@ -13,8 +13,8 @@ Authors@R: c(
 	person("Matthew", "Petroff", email = "matthew@mpetroff.net", role = "ctb")
 	)
 Description: Color palettes for all people, including those with color vision deficiency. Popular color palette series have been organized by type and have been scored on several properties such as color-blind-friendliness and fairness (i.e. do colors stand out equally?). Own palettes can also be loaded and analysed. Besides the common palette types (categorical, sequential, and diverging) it also includes bivariate color palettes. Furthermore, a color for missing values is assigned to each palette.
-Version: 0.6-1
-Date: 2023-02-14
+Version: 0.7
+Date: 2023-09-28
 Encoding: UTF-8
 Depends:
     R (>= 3.5.0),

@@ -29,8 +29,11 @@ cellplot = function (r, c, e, ...) {
 }
 
 
-plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lines = TRUE, colors = NULL, white = TRUE, dark = FALSE, L = "L100") {
-	grid::grid.newpage()
+plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lines = TRUE, colors = NULL, white = TRUE, dark = FALSE, L = "L100", newpage = TRUE) {
+
+	if (newpage) {
+		grid::grid.newpage()
+	}
 
 	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc"), clip = TRUE))
 
@@ -42,8 +45,6 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 
 	cvd = match.arg(cvd)
 
-	fc = ifelse(dark, "#FFFFFF", "#000000")
-	bc = ifelse(dark, "#000000", "#FFFFFF")
 
 	toM = function(x, nr) {
 		m = matrix(x, nrow = nr, byrow = TRUE)
@@ -51,6 +52,9 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 	}
 
 	#rgb_data$cols[rgb_data$cols == "#FFFFFF"] = NA
+
+	tc = ifelse(L %in% c("L0", "L20", "L30", "L40", "L50"), "#FFFFFF", "#000000")
+
 	cols = rgb_data$cols_list[[L]]
 	colsM = toM(sim_cvd(cols, cvd), rgb_data$res[1])
 
@@ -92,18 +96,24 @@ plot_rgb = function(cvd = c("none", "deutan", "protan", "tritan"), confusion_lin
 	}
 
 	if (!is.null(colors)) {
+		nms = names(colors)
+		if (is.null(nms)) nms = seq_along(colors)
+
 		co = hex2xyY(colors)
 		x = rescale(co[,1], from = rgb_data$xrange, to = c(0, 1))
 		y = rescale(co[,2], from = rgb_data$yrange, to = c(0, 1))
-		grid::grid.points(x, y, size = grid::unit(.5, "lines"))
-		grid::grid.text(label = 1:length(colors), x = grid::unit(x, "npc") - grid::unit(0.6, "lines"), y = grid::unit(y, "npc") + grid::unit(0.6, "lines"))
+
+		#col =
+
+		grid::grid.points(x, y, size = grid::unit(.5, "lines"), gp = grid::gpar(col = tc))
+		grid::grid.text(label = nms, x = grid::unit(x, "npc") - grid::unit(0.6, "lines"), y = grid::unit(y, "npc") + grid::unit(0.6, "lines"), gp = grid::gpar(col = tc))
 	}
 
 	if (white) {
-		grid::grid.points(x0, y0, size = grid::unit(.5, "lines"), pch = 3)
-
+		grid::grid.points(x0, y0, size = grid::unit(.5, "lines"), pch = 3, gp = grid::gpar(col = tc))
 
 	}
+	grid::upViewport()
 }
 
 c4a_plot_rgb_space = function(cols = NULL, cvd = "none", dark = FALSE, L = "L100") {
