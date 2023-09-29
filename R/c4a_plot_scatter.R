@@ -8,8 +8,8 @@ c4a_plot_scatter = function(cols = NULL, col1 = "blue", col2 = "red", borders = 
 	n = length(cols)
 	k = 100
 
-	x = .C4A$rdata.scatter.x
-	y = .C4A$rdata.scatter.y
+	x = rdata$scatter.x
+	y = rdata$scatter.y
 
 	if (dist == "concentric") {
 		d = order(x^2 + y^2)

@@ -198,19 +198,56 @@ softmax = function(x, a = 1) {
 	ex / sum(ex)
 }
 
+
+hex2LAB = function(x) {
+	methods::as(colorspace::hex2RGB(x), "LAB")@coords
+}
+
+
+
+
 diff_matrix = function(x, y) {
-	colorblindcheck::palette_dist(c(x, y))[1:length(x), (length(x) + 1):(length(x) + length(y))]
+	xLAB = hex2LAB(x)
+	yLAB = hex2LAB(y)
+
+	t(apply(xLAB, MARGIN = 1, FUN = function(col) {
+		spacesXYZ::DeltaE(col, yLAB, metric = "2000")
+	}))
 }
 
-nameability = function(pal) {
+softmax_matrix = function(x, y, a = 2) {
+	m = diff_matrix(x, y)
+	t(apply(m, MARGIN = 1, softmax, a = a, simplify = T))
+}
 
+match_colors = function(pal, a = 2, th = .1) {
+	s = softmax_matrix(pal, boynton, a = a)
+	s[s<th] = 0
 
+	apply(s, MARGIN = 2, function(a) {
+		ids = which(a>0)
+		ids[order(a[ids], decreasing = TRUE)]
+	}, simplify = FALSE)
+}
+
+nameability = function(pal, a = 2, th = .1) {
+	s = softmax_matrix(pal, boynton, a = a)
+	s[s<th] = 0
+	s[s>0] = 1
+
+	max(colSums(s)) <= 1
+}
+
+is_light <- function(col) {
+	colrgb <- col2rgb(col)
+	apply(colrgb * c(.299, .587, .114), MARGIN=2, sum) >= 128
+}
+
+name_max = function(pal) {
 	m = diff_matrix(pal, boynton)
-	s = t(apply(m, MARGIN = 1, softmax, simplify = T))
-
-	ids = apply(s, MARGIN = 1, which.max)
-	!anyDuplicated(ids)
+	apply(m, which.min, MARGIN = 1)
 }
+
 
 
 # get hcl coordinates

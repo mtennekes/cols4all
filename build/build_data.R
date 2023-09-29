@@ -88,7 +88,45 @@ rgb_data = local({
 # keep only step 10 luminance
 rgb_data$cols_list = rgb_data$cols_list[paste0("L", seq(10, 100, by = 10))]
 
-save(.z, .s, .zbib, .zdes, shp, shp_c, bbx, rgb_data, file = "R/sysdata.rda", compress = "xz")
+rdata = list(
+	scatter.x = stats::rnorm(100, mean = 0, sd = .5),
+	scatter.y = stats::rnorm(100, mean = 0, sd = .5),
+	bars.x = stats::rnorm(5, mean = 40, sd = 10),
+	necklace.h = stats::runif(5000, min = 0, max = 360),
+	necklace.c = stats::runif(5000, min = .3, max = 1),
+	necklace.l = stats::runif(5000, min = 30, max = 90),
+	necklace.d = stats::runif(5000)
+)
+
+# plot necklace
+
+rdata$name_data = local({
+	necklace = data.frame(h = rdata$necklace.h,
+						  c = rdata$necklace.c,
+						  l = rdata$necklace.l)
+
+	necklace$max_c = colorspace::max_chroma(h = necklace$h, l = necklace$l)
+	necklace$c = necklace$c * necklace$max_c
+	allcols = hcl(necklace$h, necklace$c, necklace$l)
+
+	ids = name_max(allcols)
+
+	n = length(allcols)
+	m = 10000
+
+	rads = sample(seq(0, .5, length.out = m), size = n, replace = TRUE, prob = 1:m)
+	alphs = sample(seq(0, 360, length.out = m), size = n, replace = TRUE)
+
+	df = data.frame(hex = allcols, ids = ids, rad = rads, alph = alphs)
+	df$x = 0.5 + df$rad * sin(df$alph * 2 * pi)
+	df$y = 0.5 + df$rad * cos(df$alph * 2 * pi)
+	df
+})
+
+
+
+
+save(.z, .s, .zbib, .zdes, shp, shp_c, bbx, rgb_data, rdata, file = "R/sysdata.rda", compress = "xz")
 
 
 

@@ -58,16 +58,16 @@ c4a_plot_hues = function(pal, dark = FALSE, C_grey = 5, width = c("none", "total
 		necklace_width = 0.02
 
 		# plot necklace
-		necklace = data.frame(h = .C4A$rdata.necklace.h,
-							  c = .C4A$rdata.necklace.c,
-							  l = .C4A$rdata.necklace.l)
+		necklace = data.frame(h = rdata$necklace.h,
+							  c = rdata$necklace.c,
+							  l = rdata$necklace.l)
 
 		necklace$max_c = colorspace::max_chroma(h = necklace$h, l = necklace$l)
 		necklace$c = necklace$c * necklace$max_c
 
 		cols = hcl(necklace$h, necklace$c, necklace$l)
 
-		d = rd + (.C4A$rdata.necklace.d - 0.5) * necklace_width
+		d = rd + (rdata$necklace.d - 0.5) * necklace_width
 		x = sin(necklace$h / 180 * pi) * d + cx
 		y = cos(necklace$h / 180 * pi) * d + cy
 

@@ -256,7 +256,8 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 			cols_cvd
 		} else if (text.col == "auto") {
 			tmp = cols_cvd
-			if (any(sel)) tmp[sel] = ifelse(get_hcl_matrix(cols_cvd[sel])[,3]>=50, "#000000", "#FFFFFF")
+			#if (any(sel)) tmp[sel] = ifelse(get_hcl_matrix(cols_cvd[sel])[,3]>=50, "#000000", "#FFFFFF")
+			if (any(sel)) tmp[sel] = ifelse(is_light(cols_cvd[sel]), "#000000", "#FFFFFF")
 			tmp
 		} else {
 			text.col

@@ -323,8 +323,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 							value = "tab_name",
 							shiny::fluidRow(
 								shiny::column(width = 12,
-											  shiny::selectizeInput("namePal", "Palette", choices = init_pal_list)),
-								shiny::plotOutput("namePlot", height = "1000px", width = "1000px"))
+									shiny::selectizeInput("namePal", "Palette", choices = init_pal_list),
+									shiny::sliderInput("nameAlpha", "Softmax alpha", min = .25, max = 3, step = .25, value = 2),
+									shiny::plotOutput("namePlot", height = "800px", width = "1200px")))
 			),
 			shiny::tabPanel("Contrast",
 							value = "tab_cont",
@@ -1054,7 +1055,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		output$namePlot = shiny::renderPlot({
 			pal = tab_vals$pal
 
-			c4a_plot_names(pal)
+			c4a_plot_names2(pal, a = input$nameAlpha)
 		})
 
 		output$textCR = shiny::renderUI({
