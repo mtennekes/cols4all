@@ -188,65 +188,12 @@ check_cat_pal = function(p) {
 	c(sc, prop, rgb)
 }
 
-boynton = c(Green = "#859F68", Blue = "#5792A4", Purple = "#7E6A89", Pink = "#C7848F",
-			Yellow = "#E7B352", Brown = "#8F5F49", Orange = "#D97447", Red = "#9D4149",
-			White = "#D8CEBA", Gray = "#868782", Black = "#394245")
-
-softmax = function(x, a = 1) {
-	e = exp(1)
-	ex = e^(-a*x)
-	ex / sum(ex)
-}
-
-
-hex2LAB = function(x) {
-	methods::as(colorspace::hex2RGB(x), "LAB")@coords
-}
-
-
-
-
-diff_matrix = function(x, y) {
-	xLAB = hex2LAB(x)
-	yLAB = hex2LAB(y)
-
-	t(apply(xLAB, MARGIN = 1, FUN = function(col) {
-		spacesXYZ::DeltaE(col, yLAB, metric = "2000")
-	}))
-}
-
-softmax_matrix = function(x, y, a = 2) {
-	m = diff_matrix(x, y)
-	t(apply(m, MARGIN = 1, softmax, a = a, simplify = T))
-}
-
-match_colors = function(pal, a = 2, th = .1) {
-	s = softmax_matrix(pal, boynton, a = a)
-	s[s<th] = 0
-
-	apply(s, MARGIN = 2, function(a) {
-		ids = which(a>0)
-		ids[order(a[ids], decreasing = TRUE)]
-	}, simplify = FALSE)
-}
-
-nameability = function(pal, a = 2, th = .1) {
-	s = softmax_matrix(pal, boynton, a = a)
-	s[s<th] = 0
-	s[s>0] = 1
-
-	max(colSums(s)) <= 1
-}
 
 is_light <- function(col) {
 	colrgb <- col2rgb(col)
 	apply(colrgb * c(.299, .587, .114), MARGIN=2, sum) >= 128
 }
 
-name_max = function(pal) {
-	m = diff_matrix(pal, boynton)
-	apply(m, which.min, MARGIN = 1)
-}
 
 
 

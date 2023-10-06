@@ -72,7 +72,7 @@ NULL
 c4a_options = function(...) {
 	lst = list(...)
 	e1 = parent.frame()
-	nms = c("defaults", "CBF_th", "CBU_th", "CrangeFair", "CrangeUnfair", "LrangeFair", "LrangeUnfair", "Cintense", "Cpastel", "HwidthDivRainbow", "HwidthDivSingle", "HwidthSeqRainbow", "HwidthSeqSingle")
+	nms = c("defaults", "CBF_th", "CBU_th", "CrangeFair", "CrangeUnfair", "LrangeFair", "LrangeUnfair", "Cintense", "Cpastel", "HwidthDivRainbow", "HwidthDivSingle", "HwidthSeqRainbow", "HwidthSeqSingle", "boynton_weights")
 
 	o = as.list(.C4A)[nms]
 
@@ -103,6 +103,11 @@ c4a_options = function(...) {
 		o[names(args)] = args # check_named_items(args, backup)
 
 		list2env(args, envir = .C4A)
+
+		if ("boynton_weights" %in% names(args)) {
+			.C4A$name_data = create_name_data()
+		}
+
 		invisible(backup)
 	}
 }
@@ -212,6 +217,11 @@ do_cellspec = function(lst) {
 		hcl = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
 
 		sortRev = c("cbfriendly", "harmonyRank", "fairRank", "Cmax", "min_dist", "nameability", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "Blues")
+
+		boynton_weights = c(Green = 1, Blue = 1, Purple = 1, Pink = 1,
+					Yellow = 1, Brown = 1, Orange = 0.95, Red = 1,
+					White = 0.6, Gray = 0.6, Black = 0.6)
+
 
 		labels = c(min_dist = "Minimum distance",
 				   nameability = "Nameability",
@@ -359,7 +369,7 @@ do_cellspec = function(lst) {
 		matrix_sizes = list(CR = c(1, 0.6, 0.3, 0, 0.3, 0.6, 1), dist = c(1, 0.6, 0.3, 0))
 		matrix_interval_labels = list(CR = c("1.0 - 1.2", "1.2 - 1.5", "1.5 - 2.0", "", "3.0 - 4.5", "4.5 - 7.0", "7.0 +"), dist = c("Extremely similar", "Very similar", "Similar"))
 		matrix_breaks_digits = c(CR = 1, dist = 0)
-
+		name_data = rdata$name_data
 
 	})
 	fill_P()
