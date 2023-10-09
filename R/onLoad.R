@@ -125,6 +125,10 @@ do_cellspec = function(lst) {
 	assign("zbib", .zbib, envir = .C4A)
 	assign("zdes", .zdes, envir = .C4A)
 
+	name_data = rdata$name_data
+	assign("name_data", name_data, envir = .C4A)
+
+
 	attach_bib()
 
 	with(.C4A,{
@@ -219,8 +223,8 @@ do_cellspec = function(lst) {
 		sortRev = c("cbfriendly", "harmonyRank", "fairRank", "Cmax", "min_dist", "nameability", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "Blues")
 
 		boynton_weights = c(Green = 1, Blue = 1, Purple = 1, Pink = 1,
-					Yellow = 1, Brown = 1, Orange = 0.95, Red = 1,
-					White = 0.6, Gray = 0.6, Black = 0.6)
+					Yellow = 1, Brown = 1, Orange = 1, Red = 1,
+					White = 1, Gray = 1, Black = 1)
 
 
 		labels = c(min_dist = "Minimum distance",
@@ -369,7 +373,6 @@ do_cellspec = function(lst) {
 		matrix_sizes = list(CR = c(1, 0.6, 0.3, 0, 0.3, 0.6, 1), dist = c(1, 0.6, 0.3, 0))
 		matrix_interval_labels = list(CR = c("1.0 - 1.2", "1.2 - 1.5", "1.5 - 2.0", "", "3.0 - 4.5", "4.5 - 7.0", "7.0 +"), dist = c("Extremely similar", "Very similar", "Similar"))
 		matrix_breaks_digits = c(CR = 1, dist = 0)
-		name_data = rdata$name_data
 
 	})
 	fill_P()

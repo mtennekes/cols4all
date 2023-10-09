@@ -21,7 +21,7 @@ vars = load("R/sysdata.rda")
 
 Ls = seq(10,100,by=1)
 LCH = colorspace::polarLUV(Ls, 50, 50)
-Ys = coords(as(LCH, "XYZ"))[,2]
+Ys = colorspace::coords(as(LCH, "XYZ"))[,2]
 
 rgb_data = local({
 	library(colorspace)
