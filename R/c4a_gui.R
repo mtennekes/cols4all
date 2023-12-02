@@ -780,6 +780,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			} else {
 				x = c4a_info(pal)
 
+				if (tab_vals$n > x$nmax || tab_vals$n < x$nmin) return(NULL)
+
 				cols = as.vector(c4a(x$fullname, n = tab_vals$n))
 				if (tab_vals$na) cols = c(cols, c4a_na(tab_vals$pal_name))
 
