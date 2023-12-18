@@ -90,6 +90,13 @@ create_name_data = function() {
 
 	x = split(allcols, ids)
 	x = lapply(x, head, 200)
+	x = lapply(x, function(xi) {
+		if (length(xi) != 200) {
+			xi = sample(xi, size = 200, replace = TRUE)
+		} else {
+			xi
+		}
+	})
 
 	names(x) = names(boynton)
 

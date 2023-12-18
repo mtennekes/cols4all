@@ -329,3 +329,44 @@ for (scale in 1:2) {
 	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 550 * scale, height = 550 * scale, delay = 1.5, gif_file = paste0("inst/img/blues", scale, "x.gif"), loop = FALSE)
 
 }
+
+
+################################
+#### Naming ##################
+################################
+
+for (scale in 1:2) {
+	unlink("temp", recursive = T, force = T)
+	dir.create("temp")
+	for (i in 1:5) {
+		png(paste0("temp/naming", i, ".png"), width = 1000 * scale, height = 600 * scale, bg = "transparent")
+		#grid.rect(x = 0.50, y = 0.4, width = 0.7, height = 0.8, gp = gpar(fill = "orange"))
+		#c4a_plot_names2(c4a("brewer.accent"))
+		if (i >= 1) {
+			grid.lines(x = c(0.35, 0.75), y = c(0.68, 0.68), arrow = arrow(length = unit(0.02, "npc"), ends = "both"), gp = gpar(lwd = 2 * scale))
+			grid.t("Most common color names", 0.55, 0.66, scale)
+		}
+		if (i >= 2) {
+			grid.rect(x = 0.29, y = 0.835, width = 0.08, height = 0.325, gp = gpar(fill = NA, col = "#000000", lwd = 3 * scale))
+			grid.t(" Multitude of colors named after\neach color - in this example \"purple\" -", 0.245, 0.8, scale, bg = TRUE, just = "right")
+		}
+		if (i >= 3) {
+			grid.t(" How likeliy is it that this palette color is named \"yellow\"?", 0.48, 0.435, scale, bg = TRUE, r = 0.1, just = "left")
+			#grid.circle(x = 0.45, y = 0.50, r = 0.06, gp = gpar(fill = NA, col = "#FFFFFF", lwd = 3 * scale))
+			grid.circle(x = 0.455, y = 0.435, r = 0.03, gp = gpar(fill = NA, col = "#000000", lwd = 3 * scale, lty = "dotted"))
+			#grid.circle(x = 0.55, y = 0.40, r = 0.06, gp = gpar(fill = NA, col = "#FFFFFF", lwd = 3 * scale))
+		}
+		if (i >= 4) {
+			grid.lines(x = c(0.1, 0.95), y = c(0.15, 0.15), gp = gpar(lwd = 3 * scale, lty = "dotted"))
+			grid.t(" A horizontal line is a warning: the palette color does not have a unique name ", 0.5, 0.13, scale, bg = TRUE, r = 0.1, just = "left")
+		}
+		if (i >= 5) {
+			grid.lines(x = c(0.37, 0.37), y = c(0.05, 0.65), gp = gpar(lwd = 3 * scale, lty = "dotted"))
+			grid.t(" A vertical line is also a warning: multiple palette colors can be called \"pink\" ", 0.38, 0.25, scale, bg = TRUE, r = 0.1, just = "left")
+		}
+
+		dev.off()
+	}
+	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 1000 * scale, height = 600 * scale, delay = 1.5, gif_file = paste0("inst/img/naming", scale, "x.gif"), loop = FALSE)
+
+}

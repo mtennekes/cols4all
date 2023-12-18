@@ -3,6 +3,8 @@
 #######################################
 
 cbsnl_cols = list(
+	cbs8 = c("#00a1cd", "#0058b8", "#afcb05", "#53a31d", "#d9328a", "#7d4791",
+			   "#f39200", "#c90c0f"),
 	charts = c("#00a1cd", "#0058b8", "#afcb05", "#53a31d", "#d9328a", "#7d4791",
 			   "#f39200", "#c90c0f", "#0581a2", "#163a72", "#899d0c", "#488225",
 			   "#af0e80", "#56217a", "#da5914", "#9c1006"),
@@ -41,3 +43,12 @@ c4a_load(dat)
 \dontrun{
 c4a_gui(series = "cbsnl", n = 8)
 }
+
+w = c(Green = 1, Blue = 1.12, Purple = 1.1, Pink = 1.1, Yellow = 1, Brown = 1,
+  Orange = 1.05, Red = 1.05, White = 1, Gray = 1, Black = 0.1)
+
+c4a_options(boynton_weights = w)
+
+c4a_gui()
+
+

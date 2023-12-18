@@ -33,11 +33,11 @@ input[type="checkbox"], input[type="radio"] {
 
 .btn-default {
     background-color: #FFFFFF;
-    color: #777777;
+    color: #333333;
 }
 .btn-default:hover {
     background: #FFFFFF;
-    color: #999999;
+    color: #666666;
 }
 
 .selectize-control {

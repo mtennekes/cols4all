@@ -324,24 +324,37 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 							shiny::fluidRow(
 								shiny::column(width = 12,
 									shiny::selectizeInput("namePal", "Palette", choices = init_pal_list),
-									shiny::sliderInput("nameAlpha", "Softmax alpha", min = .25, max = 3, step = .25, value = 2),
-									shiny::plotOutput("namePlot", height = "600px", width = "1000px"))),
+									infoBoxUI("infoName", "Naming table"),
+									plotOverlay("anaName", width = "1000px", height = "600px", "aniName"))),
+									#shiny::plotOutput("namePlot", height = "600px", width = "1000px"))),
 							shiny::fluidRow(
-								shiny::column(width = 3,
-								shiny::sliderInput("w_1", "Green", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[1])),
-								shiny::sliderInput("w_2", "Blue", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[2])),
-								shiny::sliderInput("w_3", "Purple", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[3])),
-								shiny::sliderInput("w_4", "Pink", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[4]))),
-								shiny::column(width = 3,
-							    shiny::sliderInput("w_5", "Yellow", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[5])),
-							    shiny::sliderInput("w_6", "Brown", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[6])),
-							    shiny::sliderInput("w_7", "Orange", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[7])),
-							    shiny::sliderInput("w_8", "Red", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[8]))),
-								shiny::column(width = 3,
-							    shiny::sliderInput("w_9", "Whiet", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[9])),
-							    shiny::sliderInput("w_10", "Gray", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[10])),
-							    shiny::sliderInput("w_11", "Black", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[11])),
-							    shiny::actionButton("w_do", "Update naming data")))
+								shiny::column(width = 12,
+											  shiny::sliderInput("nameAlpha", "Clarity level", min = .5, max = 3, step = .5, value = 2),
+											  shiny::actionButton("showWeights", "Show weight calibration"))),
+							shiny::conditionalPanel(
+								condition = "input.showWeights % 2 == 1",
+								shiny::fluidRow(
+									shiny::column(width = 3,
+											  shiny::sliderInput("w_1", "Green", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[1])),
+											  shiny::sliderInput("w_2", "Blue", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[2])),
+											  shiny::sliderInput("w_3", "Purple", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[3])),
+											  shiny::sliderInput("w_4", "Pink", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[4]))
+									),
+									shiny::column(width = 3,
+												  shiny::sliderInput("w_5", "Yellow", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[5])),
+												  shiny::sliderInput("w_6", "Brown", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[6])),
+												  shiny::sliderInput("w_7", "Orange", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[7])),
+												  shiny::sliderInput("w_8", "Red", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[8]))
+									),
+									shiny::column(width = 3,
+												  shiny::sliderInput("w_9", "White", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[9])),
+												  shiny::sliderInput("w_10", "Gray", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[10])),
+												  shiny::sliderInput("w_11", "Black", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[11])),
+												  shiny::actionButton("w_do", "Update naming data")
+									)
+								)
+							)
+
 			),
 			shiny::tabPanel("Contrast",
 							value = "tab_cont",
@@ -434,6 +447,20 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				shiny::fluidRow(
 					shiny::column(width = 12, shiny::plotOutput("TXTplot2", "Text", width = 800, height = 120)))
 		)
+	),
+	shiny::tags$script(
+		shiny::HTML('
+      $(document).on("shiny:connected", function() {
+        $("#showWeights").on("click", function() {
+          var currentLabel = $(this).text();
+          if (currentLabel === "Show weight calibration") {
+            $(this).text("Hide weight calibration");
+          } else {
+            $(this).text("Show weight calibration");
+          }
+        });
+      });
+    ')
 	))
 
 
@@ -469,7 +496,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 		})
 
-		anno = shiny::reactiveValues(simu = FALSE, hue_lines = FALSE, cvd = FALSE, simi = FALSE, psimi = FALSE, conf_lines = FALSE, hue_neck = FALSE, cl_plot = FALSE, cr = FALSE, blues = FALSE)
+		anno = shiny::reactiveValues(simu = FALSE, hue_lines = FALSE, cvd = FALSE, simi = FALSE, psimi = FALSE, conf_lines = FALSE, hue_neck = FALSE, cl_plot = FALSE, naming = FALSE, cr = FALSE, blues = FALSE)
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
 										 na = FALSE,
@@ -1087,13 +1114,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		})
 
-		output$namePlot = shiny::renderPlot({
+		output$anaName = shiny::renderPlot({
 			pal = tab_vals$pal
 			c4a_plot_names2(pal, dark = input$dark, a = input$nameAlpha)
 		})
 
 		updatePlot <- function(result) {
-			output$namePlot = shiny::renderPlot({
+			output$anaName = shiny::renderPlot({
 				pal = tab_vals$pal
 				c4a_plot_names2(pal, dark = input$dark, a = input$nameAlpha)
 			})
@@ -1388,6 +1415,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		oE("infoSimu", "simu", "aniSimu", "simu")
 		oE("infoHUE", "hue_neck", "aniHUE", "hue_neck")
 		oE("infoCL", "cl_plot", "aniCL", "cl_plot")
+		oE("infoName", "naming", "aniName", "naming")
 
 		oE("infoCR", "cr", "aniTable", "table")
 		oE("infoBlues", "blues", "aniBlues", "blues")

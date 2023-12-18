@@ -5,9 +5,10 @@
 #' @param palette Palette name (see \code{\link{c4a}}) or a color vector
 #' @param ... arguments passed on to \code{\link{c4a}}
 #' @param include.na should a color for missing values be included?
+#' @param include.cvd should color deviciency simulated colors be included?
 #' @return Besides the plot, a \code{\link[grid:gTree]{gTree}} is returned silently
 #' @export
-c4a_plot = function(palette, ..., include.na = FALSE) {
+c4a_plot = function(palette, ..., include.na = FALSE, include.cvd = TRUE) {
 	args = list(...)
 
 	if (length(palette) == 1L) {
@@ -18,5 +19,10 @@ c4a_plot = function(palette, ..., include.na = FALSE) {
 	}
 
 	if (is.null(pal)) return(invisible(NULL))
-	invisible(c4a_plot_cvd(as.vector(pal), include.na = include.na))
+
+	if (include.cvd) {
+		invisible(c4a_plot_cvd(as.vector(pal), include.na = include.na))
+	} else {
+		invisible(c4a_plot_palette(as.vector(pal), include.na = include.na))
+	}
 }

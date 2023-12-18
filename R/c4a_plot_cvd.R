@@ -3,6 +3,38 @@ gridCell = function(rows, cols, e, ...) {
 	grid::grobTree(e, vp = vp)
 }
 
+c4a_plot_palette = function(cols, dark = FALSE, include.na = FALSE) {
+	grid::grid.newpage()
+
+	fc = ifelse(dark, "#FFFFFF", "#000000")
+	bc = ifelse(dark, "#000000", "#FFFFFF")
+
+	bg = grid::rectGrob(gp=grid::gpar(fill = bc, col = NA))
+	n = length(cols)
+
+
+
+	vp = grid::viewport(layout = grid::grid.layout(nrow = 4, ncol = n,
+												   widths = grid::unit(rep(1/n, n), rep("null", n)),
+												   heights = grid::unit(c(1,1, 1, 1), c("lines", "lines", "null", "lines"))))
+
+	cps = do.call(c, lapply(1:n, function(i) {
+		cp1 = gridCell(2, i, {
+			txt = if (i == n && include.na) "Missing" else (i)
+			grid::textGrob(txt, gp = grid::gpar(col = fc))
+		})
+		cp2s = gridCell(3, i, {
+			grid::rectGrob(height = 1, gp=grid::gpar(fill = cols[i], col = bc, lwd = 2))
+		})
+
+		c(list(cp1), list(cp2s))
+	}))
+	grb = grid::grobTree(bg, do.call(grid::grobTree, c(cps, list(vp = vp))))
+	grid::grid.draw(grb)
+	invisible(grb)
+}
+
+
 c4a_plot_cvd = function(cols, dark = FALSE, include.na = FALSE) {
 	grid::grid.newpage()
 
