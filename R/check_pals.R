@@ -28,7 +28,7 @@ check_div_pal = function(p) {
 			step_sizes = mapply(function(i,j) dm[i,j], 1:(n-1), 2:n)
 			min(step_sizes)
 		})
-		c(inter_wing_dist = round(inter_wing_dist), min_step = round(min_step_size))
+		c(inter_wing_dist = round(inter_wing_dist * 100), min_step = round(min_step_size * 100))
 	}))
 	inter_wing_dist = min(scores[,1])
 	min_step = min(scores[,2])
@@ -140,7 +140,7 @@ check_seq_pal = function(p) {
 		#mean_step_size = mean(step_sizes)
 		#step_indicator = max(abs(step_sizes - mean_step_size)) / mean_step_size
 
-		c(min_step = round(min_step_size), max_step = round(max_step_size))
+		c(min_step = round(min_step_size * 100), max_step = round(max_step_size * 100))
 	}))
 
 	sc = as(c(min_step = min(scores[,1]), max_step = min(scores[,2])), "integer")
@@ -181,7 +181,7 @@ check_cat_pal = function(p) {
 		get_dist_matrix(p, cvd = cvd)
 	})
 
-	sc = c(min_dist = as.integer(round(min(scores, na.rm = TRUE))), nameability = as.integer(nameability(p)))
+	sc = c(min_dist = as.integer(round(min(scores, na.rm = TRUE) * 100)), nameability = as.integer(nameability(p)))
 	prop = hcl_prop(p)
 	rgb = rgb_prop(p)
 
@@ -286,14 +286,14 @@ get_hue_width = function(hs) {
 approx_blues = function(p) {
 	co = unname(t(col2rgb(p)))
 	co[rowSums(co) == 0, ] = 1
-	round(co[,3] / apply(co[,1:2], MARGIN = 1, max), 2)
+	round(co[,3] / apply(co[,1:2], MARGIN = 1, max) * 100)
 }
 
 
 approx_reds = function(p) {
 	co = unname(t(col2rgb(p)))
 	co[rowSums(co) == 0, ] = 1
-	round(co[,1] / apply(co[,2:3], MARGIN = 1, max), 2)
+	round(co[,1] / apply(co[,2:3], MARGIN = 1, max) * 100)
 }
 
 

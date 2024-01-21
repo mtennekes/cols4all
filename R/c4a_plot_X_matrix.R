@@ -33,15 +33,15 @@ sim_cvd = function(pal, cvd = c("none", "deutan", "protan", "tritan")) {
 		   tritan = colorspace::tritan)(pal)
 }
 
-c4a_plot_dist_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, title = "Similarity") {
-	plot_matrix(p = p, id1 = id1, id2 = id2, type = "dist", cvd = cvd, dark = dark, title = title)
+c4a_plot_dist_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, title = "Similarity", advanced = FALSE) {
+	plot_matrix(p = p, id1 = id1, id2 = id2, type = "dist", cvd = cvd, dark = dark, title = title, advanced = advanced)
 }
 
-c4a_plot_CR_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, title = "Contrast ratio") {
-	plot_matrix(p = p, id1 = id1, id2 = id2, type = "CR", cvd = cvd, dark = dark, title = title)
+c4a_plot_CR_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, title = "Contrast ratio", advanced = FALSE) {
+	plot_matrix(p = p, id1 = id1, id2 = id2, type = "CR", cvd = cvd, dark = dark, title = title, advanced = advanced)
 }
 
-plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = "none", dark = FALSE, title = "Contrast ratio") {
+plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = "none", dark = FALSE, title = "Contrast ratio", advanced = FALSE) {
 	n = length(p)
 	type = match.arg(type)
 
@@ -63,6 +63,7 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 
 
 	cex = min(1, 12 / n)
+	cex2 = min(1, 8 / n)
 
 	cellplot = function(rw, cl, e) {
 		grid::pushViewport(grid::viewport(layout.pos.row = rw, layout.pos.col = cl))
@@ -118,14 +119,25 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 			})
 			for (j in 1:n) {
 				v = m[i,j]
+				gry = if (i==j) 0 else min(1, (v/100) ^ (0.25))
+
 				if (is.na(v)) next
 #if (v>2 && v < 4.5) browser()
 				s = symbol_size(v, type)
 
 				cellplot(i+1,j+1, {
-					grid::grid.points(x = 0.5, y = 0.5, pch = pchs[s], size = grid::unit(sizes[s], units = "lines"), gp = grid::gpar(col = fc))
-					if (!is.null(id1) && !is.null(id2) && id1[1] == i && id2[1] == j) {
-						grid::grid.circle(r = 0.4, gp = grid::gpar(fill = NA, col = fc, lwd = 1.5, lty = "dotted"))
+					if (advanced) {
+						grid::grid.rect(x = 0.5, y = 0.75, width = 0.95, height = 0.45, gp = grid::gpar(fill = grey(gry), col = NA))
+						grid::grid.text(sprintf("%.2f", v), x = 0.5, y = 0.25, gp = grid::gpar(col = fc, cex = cex2))
+						if (!is.null(id1) && !is.null(id2) && id1[1] == i && id2[1] == j) {
+							grid::grid.rect(height = 1, width = 1, gp = grid::gpar(fill = NA, col = fc, lwd = 2.5, lty = "dashed"))
+						}
+					} else {
+						grid::grid.points(x = 0.5, y = 0.5, pch = pchs[s], size = grid::unit(sizes[s], units = "lines"), gp = grid::gpar(col = fc))
+						if (!is.null(id1) && !is.null(id2) && id1[1] == i && id2[1] == j) {
+							grid::grid.circle(r = 0.4, gp = grid::gpar(fill = NA, col = fc, lwd = 1.5, lty = "dotted"))
+						}
+
 					}
 				})
 

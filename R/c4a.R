@@ -148,3 +148,33 @@ c4a_na = function(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 
 	x$na
 }
+
+
+
+#' Get information from a cols4all palette
+#'
+#' Get information from a cols4all palette
+#'
+#' @param palette name of the palette
+#' @param no.match what happens is no match is found? Options: `"message"`: a message is thrown with suggestions, `"error"`: an error is thrown, `"null"`: `NULL` is returned
+#' @param verbose should messages be printed?
+#' @return list with the following items: name, series, fullname, type, palette (colors), na (color), nmax, and reverse. The latter is `TRUE` when there is a `"-"` prefix before the palette name.
+#' @export
+c4a_scores = function(palette, n = NA, no.match = c("message", "error", "null"), verbose = TRUE) {
+	x = c4a_info(palette, no.match, verbose)
+	if (is.na(n)) {
+		n = x$ndef
+
+	}
+	s = .C4A$s
+	rowid = which(x$fullname == dimnames(s)[[1]])[1]
+	if (is.na(rowid)) stop("No scores have been found")
+
+	si = s[rowid, , n]
+	si[.C4A$score_x100] = si[.C4A$score_x100] / 100
+	si
+}
+
+
+
+

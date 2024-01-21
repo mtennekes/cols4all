@@ -124,7 +124,6 @@ do_cellspec = function(lst) {
 	assign("s", .s, envir = .C4A)
 	assign("zbib", .zbib, envir = .C4A)
 	assign("zdes", .zdes, envir = .C4A)
-
 	name_data = rdata$name_data
 	assign("name_data", name_data, envir = .C4A)
 
@@ -133,6 +132,8 @@ do_cellspec = function(lst) {
 
 	with(.C4A,{
 		defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple_green", bivs = "c4a.bu_br_bivs", bivc = "met_monet", bivd = "c4a.pu_gn_bivd", bivg = "c4a.br_bivg")
+
+		score_x100 = c("min_dist", "min_step", "max_step", "inter_wing_dist", "CRmin", "CRwt", "CRbk", "Blues")
 
 		#color-blind-friendly thresholds
 		CBF_th = list(cat = c(min_dist = 10),
@@ -371,7 +372,7 @@ do_cellspec = function(lst) {
 		matrix_breaks = list(CR = c(1, 1.2, 1.5, 2, 3, 4.5, 7), dist = c(0, 2, 5, 10))
 		matrix_pchs = list(CR = c(15, 17, 16, 1, 1, 2, 0), dist = c(15, 17, 16, 1))
 		matrix_sizes = list(CR = c(1, 0.6, 0.3, 0, 0.3, 0.6, 1), dist = c(1, 0.6, 0.3, 0))
-		matrix_interval_labels = list(CR = c("1.0 - 1.2", "1.2 - 1.5", "1.5 - 2.0", "", "3.0 - 4.5", "4.5 - 7.0", "7.0 +"), dist = c("Extremely similar", "Very similar", "Similar"))
+		matrix_interval_labels = list(CR = c("1.0 - 1.2", "1.2 - 1.5", "1.5 - 2.0", "", "3.0 - 4.5", "4.5 - 7.0", "7.0 +"), dist = c("ΔE < 2", "2 < ΔE < 5", "5 < ΔE < 10"))
 		matrix_breaks_digits = c(CR = 1, dist = 0)
 
 	})

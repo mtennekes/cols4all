@@ -6,6 +6,10 @@ show_attach_scores = function(z) {
 	k = nrow(z)
 
 	s = .C4A$s
+
+	s[,.C4A$score_x100,] = s[,.C4A$score_x100,] / 100
+
+
 	s2 = s[match(z$fullname, dimnames(s)[[1]]), , , drop = FALSE]
 	s3 = do.call(rbind, lapply(1:k, function(i) {
 		# maximum n to take scores from (cat: dim max, seq/div, the scores for the largest palettes)

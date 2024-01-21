@@ -70,7 +70,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	tab_nmax = tapply(z$nmax, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = max)
 	tab_k = as.data.frame(tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = length))
 	tab_k$series = rownames(tab_k)
-	tab_k$description = unname(.C4A$zdes[tab_k$series])
+	tab_k$description = ""
+
+	if (!is.null(.C4A$zdes)) {
+		mtch = intersect(tab_k$series, names(.C4A$zdes))
+		tab_k$description[match(mtch, tab_k$series)] = unname(.C4A$zdes[mtch])
+	}
+
 	tab_k = tab_k[, c("series", "description", tps)]
 
 
@@ -264,7 +270,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 											  shiny::br(),
 											  shiny::br(),
 											  infoBoxUI("infoSimi", "Similarity matrix"))),
-							shiny::fluidRow(shiny::column(width = 12, shiny::markdown("Normal color vision"))),
+							shiny::fluidRow(shiny::column(width = 4, shiny::markdown("Normal color vision")),
+											shiny::column(width = 6, shiny::radioButtons("cbfScore", NULL, choices = c("Symbols", "Scores"), inline = TRUE)),
+											shiny::column(width = 2, shiny::radioButtons("cbfType", NULL, choices = c("Map", "Lines"), inline = TRUE))),
 							shiny::fluidRow(shiny::column(width = 4, plotOverlay("cbfHL", width = "375px", height = "375px", "aniHL")),
 											shiny::column(width = 6, plotOverlay("cbfSimi", width = "500px", height = "375px", "aniSimi", click = "cbfSimi_click")),
 											shiny::column(width = 2, shiny::plotOutput("cbf_ex1", height = "375px", width = "150px"))),
@@ -940,7 +948,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "none", id1 = id1, id2 = id2, dark = input$dark)
+			c4a_plot_dist_matrix(pal, cvd = "none", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Scores"))
 		})
 
 		output$cbfPSimi1 = shiny::renderPlot({
@@ -952,7 +960,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "deutan", id1 = id1, id2 = id2, dark = input$dark)
+			c4a_plot_dist_matrix(pal, cvd = "deutan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Scores"))
 		})
 
 		output$cbfPSimi2 = shiny::renderPlot({
@@ -964,7 +972,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "protan", id1 = id1, id2 = id2, dark = input$dark)
+			c4a_plot_dist_matrix(pal, cvd = "protan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Scores"))
 		})
 
 		output$cbfPSimi3 = shiny::renderPlot({
@@ -976,10 +984,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "tritan", id1 = id1, id2 = id2, dark = input$dark)
+			c4a_plot_dist_matrix(pal, cvd = "tritan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Scores"))
 		})
 
-		cfb_map = function(cols, cvd) {
+		cbf_map = function(cols, cvd) {
 			if (!length(cols)) return(NULL)
 
 			hcl = get_hcl_matrix(cols)
@@ -991,22 +999,36 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			c4a_plot_map(col1 = cols_cvd[1], col2 = cols_cvd[2], borders = borders, lwd = 1, crop = TRUE, dark = input$dark)
 		}
 
+		cbf_lines = function(cols, cvd) {
+			if (!length(cols)) return(NULL)
+
+			hcl = get_hcl_matrix(cols)
+
+			cols_cvd = sim_cvd(cols, cvd)
+			c4a_plot_lines(col1 = cols_cvd[1], col2 = cols_cvd[2], lwd = 3, asp = .9)
+		}
+
+
 
 		output$cbf_ex1 = shiny::renderPlot({
 			if (!length(tab_vals$colA1)) return(NULL)
-			cfb_map(c(tab_vals$colA1, tab_vals$colA2), "none")
+			fun = paste0("cbf_", tolower(input$cbfType))
+			do.call(fun, list(cols = c(tab_vals$colA1, tab_vals$colA2), cvd = "none"))
 		})
 		output$cbf_ex2 = shiny::renderPlot({
 			if (!length(tab_vals$colA1)) return(NULL)
-			cfb_map(c(tab_vals$colA1, tab_vals$colA2), "deutan")
+			fun = paste0("cbf_", tolower(input$cbfType))
+			do.call(fun, list(cols = c(tab_vals$colA1, tab_vals$colA2), cvd = "deutan"))
 		})
 		output$cbf_ex3 = shiny::renderPlot({
 			if (!length(tab_vals$colA1)) return(NULL)
-			cfb_map(c(tab_vals$colA1, tab_vals$colA2), "protan")
+			fun = paste0("cbf_", tolower(input$cbfType))
+			do.call(fun, list(cols = c(tab_vals$colA1, tab_vals$colA2), cvd = "protan"))
 		})
 		output$cbf_ex4 = shiny::renderPlot({
 			if (!length(tab_vals$colA1)) return(NULL)
-			cfb_map(c(tab_vals$colA1, tab_vals$colA2), "tritan")
+			fun = paste0("cbf_", tolower(input$cbfType))
+			do.call(fun, list(cols = c(tab_vals$colA1, tab_vals$colA2), cvd = "tritan"))
 		})
 
 
@@ -1263,11 +1285,11 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			#br = get_blue_red()
 
-			if (max(b) > .C4A$Blues && max(r) > 1) {
+			if (max(b) > .C4A$Blues && max(r) > 100) {
 				btext = paste0("This illusion will likely occur with blue color ", c(LETTERS, letters)[ids[1]], " and a red color (e.g. ", c(LETTERS, letters)[ids[2]], "), at least with a dark background")
-			} else if (max(b) > 1 && max(r) > 1) {
+			} else if (max(b) > 100 && max(r) > 100) {
 				btext = paste0("This illusion could occur with blue color ", c(LETTERS, letters)[ids[1]], " and a red color (e.g. ", c(LETTERS, letters)[ids[2]], "), at least with a dark background")
-			} else if (max(b) > 1 && max(r) <= 1) {
+			} else if (max(b) > 100 && max(r) <= 100) {
 				btext = paste0("This illusion will probably not occur, because the palette does not contain a red(dish) color")
 			} else {
 				btext = paste0("This illusion will probably not occur, because the palette does not contain any blue color")

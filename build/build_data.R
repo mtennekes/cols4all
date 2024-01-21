@@ -102,6 +102,27 @@ rdata = list(
 
 rdata$name_data = create_name_data()
 
+rdata = c(rdata, local({
+	set.seed(13)
+	x = 1:100
+	s1 = cumsum(rnorm(length(x)))
+	s2 = cumsum(rnorm(length(x)))
+
+
+
+	r = range(c(s1, s2))
+	s1 = s1 - r[1]
+	s2 = s2 - r[1]
+	s1 = s1 / diff(r)
+	s2 = s2 / diff(r)
+	list(lines.x = x,
+		 lines.s1 = s1,
+		 lines.s2 = s2)
+}))
+
+
+
+
 save(.z, .s, .zbib, .zdes, shp, shp_c, bbx, rgb_data, rdata, file = "R/sysdata.rda", compress = "xz")
 
 

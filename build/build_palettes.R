@@ -14,19 +14,18 @@ library(Polychrome)
 library(MetBrewer)
 
 devtools::session_info(pkgs = "attached")
-# ! package         * version date (UTC) lib source
+# package         * version date (UTC) lib source
 # colorblindcheck * 1.0.2   2023-05-13 [1] CRAN (R 4.3.0)
 # colorspace      * 2.1-0   2023-01-23 [1] CRAN (R 4.3.0)
-# ggthemes        * 4.2.4   2021-01-20 [1] CRAN (R 4.3.0)
-# khroma          * 1.11.0  2023-08-21 [1] CRAN (R 4.3.0)
+# ggthemes        * 5.0.0   2023-11-21 [1] CRAN (R 4.3.1)
+# khroma          * 1.12.0  2024-01-08 [1] CRAN (R 4.3.1)
 # MetBrewer       * 0.2.0   2022-03-21 [1] CRAN (R 4.3.0)
 # pals            * 1.8     2023-08-23 [1] CRAN (R 4.3.0)
 # Polychrome      * 1.5.1   2022-05-03 [1] CRAN (R 4.3.0)
 # rcartocolor     * 2.1.1   2023-05-13 [1] CRAN (R 4.3.0)
 # RColorBrewer    * 1.1-3   2022-04-03 [1] CRAN (R 4.3.0)
-# reticulate      * 1.32.0  2023-09-11 [1] CRAN (R 4.3.0)
+# reticulate      * 1.34.0  2023-10-12 [1] CRAN (R 4.3.1)
 # viridisLite     * 0.4.2   2023-05-02 [1] CRAN (R 4.3.0)
-
 
 
 c4a_sysdata_remove(are.you.sure = TRUE)
@@ -40,7 +39,7 @@ local({
 	p1 = pals[c("R3", "R4", "ggplot2", "Okabe-Ito")]
 	names(p1) = c("R3", "R4", "ggplot2", "okabe")
 
-	c4a_load(c4a_data(p1, types = "cat", series = "misc"))
+	c4a_load(c4a_data(p1, types = "cat", series = "miscs"))
 })
 
 ###################################
@@ -109,10 +108,10 @@ local({
 
 
 
+
 ###################################
 ### Tol: from python script (https://personal.sron.nl/~pault/) 2022-02-10
 ###################################
-
 
 local({
 	# Method:
@@ -124,12 +123,14 @@ local({
 	#     dput(l2)
 	rainbow_ids = list(`1` = 10, `2` = c(10, 26), `3` = c(10, 18, 26), `4` = c(10, 15, 18, 26), `5` = c(10, 14, 15, 18, 26), `6` = c(10, 14, 15, 17, 18, 26), `7` = c(9, 10, 14, 15, 17, 18, 26), `8` = c(9, 10, 14, 15, 17, 18, 23, 26), `9` = c(9, 10, 14, 15, 17, 18, 23, 26, 28), `10` = c(9, 10, 14, 15, 17, 18, 21, 24, 26, 28), `11` = c(9, 10, 12, 14, 15, 17, 18, 21, 24, 26, 28), `12` = c(3, 6, 9, 10, 12, 14, 15, 17, 18, 21, 24, 26), `13` = c(3, 6, 9, 10, 12, 14, 15, 16, 17, 18, 21, 24, 26), `14` = c(3, 6, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26), `15` = c(3, 6, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 28), `16` = c(3, 5, 7, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 28), `17` = c(3, 5, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 28), `18` = c(3, 5, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 27, 28), `19` = c(2, 4, 5, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 20, 22, 24, 26, 27, 28), `20` = c(2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 20, 22, 24, 26, 27, 28), `21` = c(2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26, 27, 28), `22` = c(2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26, 27, 28, 29), `23` = c(1, 2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26, 27, 28, 29))
 	# from https://personal.sron.nl/~pault/data/tol_colors.py
-	p1 = list(bright = c('#4477AA', '#EE6677', '#228833', '#CCBB44', '#66CCEE', '#AA3377', '#BBBBBB', '#000000'),
-		 contrast = c('#004488', '#DDAA33', '#BB5566', '#000000'),
-		 vibrant = c('#EE7733', '#0077BB', '#33BBEE', '#EE3377', '#CC3311', '#009988', '#BBBBBB', '#000000'),
-		 muted = c('#CC6677', '#332288', '#DDCC77', '#117733', '#88CCEE', '#882255', '#44AA99', '#999933', '#AA4499', '#DDDDDD','#000000'),
-		 medium = c('#6699CC', '#004488', '#EECC66', '#994455', '#997700','#EE99AA', '#000000'),
-		 light = c('#77AADD', '#EE8866', '#EEDD88', '#FFAABB', '#99DDFF','#44BB99', '#BBCC33', '#AAAA00', '#DDDDDD', '#000000'))
+	p1 = list(bright = c('#4477AA', '#EE6677', '#228833', '#CCBB44', '#66CCEE', '#AA3377', '#BBBBBB'),
+		 contrast = c('#004488', '#DDAA33', '#BB5566'),
+		 vibrant = c('#EE7733', '#0077BB', '#33BBEE', '#EE3377', '#CC3311', '#009988', '#BBBBBB'),
+		 muted = c('#CC6677', '#332288', '#DDCC77', '#117733', '#88CCEE', '#882255', '#44AA99', '#999933', '#AA4499', '#DDDDDD'),
+		 medium = c('#6699CC', '#004488', '#EECC66', '#994455', '#997700','#EE99AA'),
+		 light = c('#77AADD', '#EE8866', '#EEDD88', '#FFAABB', '#99DDFF','#44BB99', '#BBCC33', '#AAAA00', '#DDDDDD'),
+		 dark = c("#222255", "#225555", "#225522", "#666633", "#663333", "#555555"
+		 ))
 
 	p2 = list(rainbow = structure(c('#E8ECFB', '#D9CCE3', '#D1BBD7', '#CAACCB', '#BA8DB4',
 										 '#AE76A3', '#AA6F9E', '#994F88', '#882E72', '#1965B0',
@@ -144,6 +145,10 @@ local({
 		sunset = c('#364B9A', '#4A7BB7', '#6EA6CD', '#98CAE1', '#C2E4EF',
 					   '#EAECCC', '#FEDA8B', '#FDB366', '#F67E4B', '#DD3D2D',
 					   '#A50026'),
+		nightfall = c("#125A56", "#00767B", "#238F9D", "#42A7C6", "#60BCE9",
+					  "#9DCCEF", "#C6DBED", "#DEE6E7", "#ECEADA", "#F0E6B2", "#F9D576",
+					  "#FFB954", "#FD9A44", "#F57634", "#E94C1F", "#D11807", "#A01813"
+		),
 		bu_rd = c('#2166AC', '#4393C3', '#92C5DE', '#D1E5F0', '#F7F7F7',
 					  '#FDDBC7', '#F4A582', '#D6604D', '#B2182B'),
 		pu_gn = c('#762A83', '#9970AB', '#C2A5CF', '#E7D4E8', '#F7F7F7',
@@ -157,6 +162,9 @@ local({
 						   '#8DCBE4', '#81C4E7', '#7BBCE7', '#7EB2E4', '#88A5DD',
 						   '#9398D2', '#9B8AC4', '#9D7DB2', '#9A709E', '#906388',
 						   '#805770', '#684957', '#46353A'),
+		incandescent = c("#CEFFFF", "#C6F7D6", "#A2F49B", "#BBE453", "#D5CE04",
+		  "#E7B503", "#F19903", "#F6790B", "#F94902", "#E40515", "#A80003"
+		),
 		rainbow_pu_rd = c('#6F4C9B', '#6059A9', '#5568B8', '#4E79C5', '#4D8AC6',
 							  '#4E96BC', '#549EB3', '#59A5A9', '#60AB9E', '#69B190',
 							  '#77B77D', '#8CBC68', '#A6BE54', '#BEBC48', '#D1B541',
@@ -182,19 +190,107 @@ local({
 							  '#E78C35', '#E67932', '#E4632D', '#DF4828', '#DA2222',
 							  '#B8221E', '#95211B', '#721E17', '#521A13'))
 
-	p3_na = c("#FFFFFF", "#FFEE99", "#FFEE99", "#888888", "#888888", "#999999", "#FFFFFF", "#FFFFFF", "#666666", "#666666")
+	p3_na = c("#FFFFFF", "#FFEE99", "#FFEE99", "#888888", "#888888", "#999999", "#888888", "#FFFFFF", "#FFFFFF", "#666666", "#666666")
 
-	p3_types = ifelse(names(p3) %in% c("bu_rd", "pu_gn", "sunset"), "div", "seq")
+	p3_types = ifelse(names(p3) %in% c("bu_rd", "pu_gn", "sunset", "nightfall"), "div", "seq")
 
 	c4a_load(c4a_data(p1, types = "cat", series = "tol"))
-	c4a_load(c4a_data(p2, types = "cat", series = "tol", take.gray.for.NA = FALSE, remove.other.grays = FALSE, remove.blacks = FALSE))
+	c4a_load(c4a_data(p2, types = "cat", series = "tol", xNA = "#777777", take.gray.for.NA = FALSE, remove.other.grays = FALSE, remove.blacks = FALSE))
 	c4a_load(c4a_data(p3, types = p3_types, xNA = p3_na, series = "tol"))
 })
 
 
+###################################
+### Just checking: tol via khroma
+###################################
+
+if (FALSE) {
+local({
+	library(khroma)
+	tol_cat = c("bright", "high contrast", "vibrant", "muted", "medium contrast", "pale", "dark", "light")
+	tol_cat2 = c("bright", "contrast", "vibrant", "muted", "medium", "pale", "dark", "light")
+	tol_cat_n = c(7, 3, 7, 9, 6, 6, 6, 9)
+
+	c1 = mapply(function(m, n) {
+		unname(khroma::color(m)(n))
+	}, tol_cat, tol_cat_n, SIMPLIFY = FALSE)
+	names(c1) = tol_cat2
+
+	p1 = lapply(c1, function(ci) {
+		v = unclass(ci)
+		attributes(v) = NULL
+		v
+	})
+	na1 = lapply(c1, function(ci) {
+		attr(ci, "missing")
+	})
+
+	rainbow = lapply(1:23, function(i) {
+		x = khroma::color("discreterainbow")(i)
+		v = unclass(x)
+		attributes(v) = NULL
+		v
+	})
+
+	rainbow2 = lapply(1:34, function(i) {
+		x = khroma::color("smoothrainbow")(i)
+		v = unclass(x)
+		attributes(v) = NULL
+		v
+	})
+
+	generate_indices = function(palette_to_n) {
+		k = length(palette_to_n)
+		ks = sapply(palette_to_n, length)
+		pal = unique(unlist(rev(palette_to_n)))
+		indices = structure(lapply(1:k, function(i) {
+			match(palette_to_n[[i]], pal)
+		}), names = as.character(ks))
+		structure(pal, index = indices)
+
+	}
+
+	rainbowI = generate_indices(rainbow)
+	rainbowI2 = generate_indices(rainbow2)
+
+	div = list(sunset = khroma::colour("sunset")(11),
+			   nightfall = khroma::colour("nightfall")(17),
+			   bu_rd = khroma::colour("BuRd")(9),
+			   pu_gn = khroma::colour("PRGn")(9))
+
+	div_na = sapply(div, function(x) {
+		attr(x, "missing")
+	})
+
+	div_lst = lapply(div, function(d) {
+		v = unclass(d)
+		attributes(v) = NULL
+		v
+	})
+
+	seq = list(yl_or_br = khroma::colour("YlOrBr")(9),
+			   iridescent = khroma::colour("iridescent")(23),
+			   incandescent = khroma::colour("incandescent")(11)
+	)
+
+	seq_na = sapply(seq, function(x) {
+		attr(x, "missing")
+	})
+
+	seq_lst = lapply(seq, function(d) {
+		v = unclass(d)
+		attributes(v) = NULL
+		v
+	})
 
 
 
+	c4a_load(c4a_data(p1, types = "cat", series = "tol2", xNA = unlist(na1)))
+	c4a_load(c4a_data(list(rainbow = rainbowI, rainbow_smooth = rainbowI2), types = c("cat", "seq"), series = "tol2", xNA = c("#777777", "#666666")))
+	c4a_load(c4a_data(seq_lst, types = "seq", series = "tol2", xNA = seq_na))
+	c4a_load(c4a_data(div_lst, types = "div", series = "tol2", xNA = div_na))
+})
+}
 
 ###################################
 ### package viridisLite
