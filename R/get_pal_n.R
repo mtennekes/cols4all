@@ -3,6 +3,8 @@ rampPal = function(palette, n, space = c("rgb", "Lab")) {
 	if (length(palette) == n) {
 		attributes(palette) = NULL
 		palette
+	} else if (n == 1) {
+		colorRampPalette(palette, space = space, interpolate = "linear")(3)[2]
 	} else {
 		colorRampPalette(palette, space = space, interpolate = "linear")(n)
 	}

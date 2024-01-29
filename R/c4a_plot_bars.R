@@ -17,7 +17,9 @@ c4a_plot_bars = function(col1 = "blue", col2 = "red", borders = "black", lwd = 0
 
 }
 
-c4a_plot_lines = function(col1 = "blue", col2 = "red", borders = "black", lwd = 1, asp = 1) {
+c4a_plot_lines = function(col1 = "blue", col2 = "red", lwd = 1, asp = 1, dark = FALSE, bc = ifelse(dark, "#000000", "#FFFFFF")) {
+
+	par(bg = bc)
 
 	x = rdata$lines.x
 	s1 = rdata$lines.s1

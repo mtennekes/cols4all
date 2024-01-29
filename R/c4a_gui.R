@@ -1005,7 +1005,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			hcl = get_hcl_matrix(cols)
 
 			cols_cvd = sim_cvd(cols, cvd)
-			c4a_plot_lines(col1 = cols_cvd[1], col2 = cols_cvd[2], lwd = 3, asp = .9)
+			c4a_plot_lines(col1 = cols_cvd[1], col2 = cols_cvd[2], lwd = 3, asp = .9, dark = input$dark)
 		}
 
 
