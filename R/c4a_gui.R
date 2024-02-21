@@ -271,7 +271,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 											  shiny::br(),
 											  infoBoxUI("infoSimi", "Similarity matrix"))),
 							shiny::fluidRow(shiny::column(width = 4, shiny::markdown("Normal color vision")),
-											shiny::column(width = 6, shiny::radioButtons("cbfScore", NULL, choices = c("Symbols", "Scores"), inline = TRUE)),
+											shiny::column(width = 3, shiny::radioButtons("cbfScore", NULL, choices = c("Symbols", "Gradient"), inline = TRUE)),
+											shiny::column(width = 3, shiny::checkboxInput("cbfBcAdj", "Background Adjustment", value = FALSE)),
 											shiny::column(width = 2, shiny::radioButtons("cbfType", NULL, choices = c("Map", "Lines"), inline = TRUE))),
 							shiny::fluidRow(shiny::column(width = 4, plotOverlay("cbfHL", width = "375px", height = "375px", "aniHL")),
 											shiny::column(width = 6, plotOverlay("cbfSimi", width = "500px", height = "375px", "aniSimi", click = "cbfSimi_click")),
@@ -948,7 +949,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "none", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Scores"))
+			c4a_plot_dist_matrix(pal, cvd = "none", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Gradient"), bc_adj = input$cbfBcAdj)
 		})
 
 		output$cbfPSimi1 = shiny::renderPlot({
@@ -960,7 +961,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "deutan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Scores"))
+			c4a_plot_dist_matrix(pal, cvd = "deutan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Gradient"), bc_adj = input$cbfBcAdj)
 		})
 
 		output$cbfPSimi2 = shiny::renderPlot({
@@ -972,7 +973,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "protan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Scores"))
+			c4a_plot_dist_matrix(pal, cvd = "protan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Gradient"), bc_adj = input$cbfBcAdj)
 		})
 
 		output$cbfPSimi3 = shiny::renderPlot({
@@ -984,7 +985,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id1 = which(col1 == pal)
 			id2 = which(col2 == pal)
 
-			c4a_plot_dist_matrix(pal, cvd = "tritan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Scores"))
+			c4a_plot_dist_matrix(pal, cvd = "tritan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Gradient"), bc_adj = input$cbfBcAdj)
 		})
 
 		cbf_map = function(cols, cvd) {

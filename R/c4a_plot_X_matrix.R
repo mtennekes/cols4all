@@ -9,12 +9,12 @@ get_CR_matrix = function(p) {
 	m
 }
 
-get_dist_matrix = function(p, cvd = c("none", "deutan", "protan", "tritan"), whole_matrix = FALSE) {
+get_dist_matrix = function(p, cvd = c("none", "deutan", "protan", "tritan"), whole_matrix = FALSE, bgcol = NULL) {
 	cvd = match.arg(cvd)
 	m = if (cvd == "none") {
-		colorblindcheck::palette_dist(p)
+		palette_dist_bg(p, bgcol = bgcol)
 	} else {
-		colorblindcheck::palette_dist(p, cvd = substr(cvd, 1, 3))
+		palette_dist_bg(p, cvd = substr(cvd, 1, 3), bgcol = bgcol)
 	}
 	if (whole_matrix) {
 		m[lower.tri(m)] = t(m)[lower.tri(m)]
@@ -33,15 +33,17 @@ sim_cvd = function(pal, cvd = c("none", "deutan", "protan", "tritan")) {
 		   tritan = colorspace::tritan)(pal)
 }
 
-c4a_plot_dist_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, title = "Similarity", advanced = FALSE) {
-	plot_matrix(p = p, id1 = id1, id2 = id2, type = "dist", cvd = cvd, dark = dark, title = title, advanced = advanced)
+c4a_plot_dist_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, title = "Delta E", advanced = FALSE, bc_adj = FALSE) {
+	plot_matrix(p = p, id1 = id1, id2 = id2, type = "dist", cvd = cvd, dark = dark, title = title, advanced = advanced, bc_adj = bc_adj)
 }
 
 c4a_plot_CR_matrix = function(p, id1 = NULL, id2 = NULL, cvd = "none", dark = FALSE, title = "Contrast ratio", advanced = FALSE) {
 	plot_matrix(p = p, id1 = id1, id2 = id2, type = "CR", cvd = cvd, dark = dark, title = title, advanced = advanced)
 }
 
-plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = "none", dark = FALSE, title = "Contrast ratio", advanced = FALSE) {
+get_gradient = function(v) pmin(1, (v/100) ^ (0.25))
+
+plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = "none", dark = FALSE, title = "Contrast ratio", advanced = FALSE, bc_adj = FALSE) {
 	n = length(p)
 	type = match.arg(type)
 
@@ -53,7 +55,12 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 	m = if (type == "CR") {
 		get_CR_matrix(p)
 	} else {
-		get_dist_matrix(p, cvd = cvd, whole_matrix = TRUE)
+		bgcol = if (!bc_adj) {
+			NULL
+		} else if (dark) {
+			"#000000"
+		} else "#FFFFFF"
+		get_dist_matrix(p, cvd = cvd, whole_matrix = TRUE, bgcol = bgcol)
 	}
 
 	p = sim_cvd(p, cvd)
@@ -78,6 +85,9 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 
 	grid::grid.rect(gp=grid::gpar(fill = bc, col = NA))
 
+	grey_dark = function(level, dark) {
+		grey(if (dark) {1 - level} else level)
+	}
 
 	#grid::grid.rect(gp=grid::gpar(fill="grey80"))
 	din = par("din")
@@ -119,7 +129,7 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 			})
 			for (j in 1:n) {
 				v = m[i,j]
-				gry = if (i==j) 0 else min(1, (v/100) ^ (0.25))
+				gry = if (i==j) 0 else get_gradient(v)
 
 				if (is.na(v)) next
 #if (v>2 && v < 4.5) browser()
@@ -127,7 +137,8 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 
 				cellplot(i+1,j+1, {
 					if (advanced) {
-						grid::grid.rect(x = 0.5, y = 0.75, width = 0.95, height = 0.45, gp = grid::gpar(fill = grey(gry), col = NA))
+						if (any(gry < 0)) browser()
+						grid::grid.rect(x = 0.5, y = 0.75, width = 0.95, height = 0.45, gp = grid::gpar(fill = grey_dark(gry, dark), col = NA))
 						grid::grid.text(sprintf("%.2f", v), x = 0.5, y = 0.25, gp = grid::gpar(col = fc, cex = cex2))
 						if (!is.null(id1) && !is.null(id2) && id1[1] == i && id2[1] == j) {
 							grid::grid.rect(height = 1, width = 1, gp = grid::gpar(fill = NA, col = fc, lwd = 2.5, lty = "dashed"))
@@ -146,26 +157,50 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 		grid::upViewport(2)
 	})
 	cellplot(1, 2, {
-		#grid::grid.rect(gp=grid::gpar(fill="gold", lwd =4))
-		grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = length(texts) + 3L,
-																	 ncol = 5,
-																	 widths = grid::unit(c(0.25, 1, 0.25, 1, 1), units = c("lines", "lines", "lines", "null", "lines")),
-																	 heights = grid::unit(rep(1, length(texts)+2L), units = c(rep("lines", length(texts)+2L), "null")))))
+		if (advanced) {
+			texts = c(5, 10, 20, 30, 50)
+			grs = get_gradient(texts)
+
+			grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = length(texts) + 3L,
+																		 ncol = 5,
+																		 widths = grid::unit(c(0.25, 2, 0.25, 1, 1), units = c("lines", "lines", "lines", "null", "lines")),
+																		 heights = grid::unit(rep(1.25, length(texts)+2L), units = c(rep("lines", length(texts)+2L), "null")))))
 
 
-		cellplot(2, 2, {
-			grid::grid.text(title, x = 0, just = "left")
-		})
-		for (i in 1:length(texts)) {
-			cellplot(2 + i, 2, {
-				grid::grid.points(x = 0.5, y = 0.5, pch = pchs[i], size = grid::unit(sizes[i], units = "lines"), gp = grid::gpar(col = fc))
+			cellplot(2, 2, {
+				grid::grid.text(title, x = 0, just = "left")
 			})
-			cellplot(2 + i, 4, {
-				grid::grid.text(texts[i], x = 0, just = "left", gp = grid::gpar(col = fc, cex = 0.9))
+			for (i in 1:length(texts)) {
+				cellplot(2 + i, 2, {
+					grid::grid.rect(height = 0.8, gp = grid::gpar(fill = grey_dark(grs[i], dark), col = NA))
+				})
+				cellplot(2 + i, 4, {
+					grid::grid.text(texts[i], x = 0, just = "left", gp = grid::gpar(col = fc, cex = 0.9))
+				})
+			}
+			grid::upViewport()
+
+		} else {
+			grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow = length(texts) + 3L,
+																		 ncol = 5,
+																		 widths = grid::unit(c(0.25, 1, 0.25, 1, 1), units = c("lines", "lines", "lines", "null", "lines")),
+																		 heights = grid::unit(rep(1.25, length(texts)+2L), units = c(rep("lines", length(texts)+2L), "null")))))
+
+
+			cellplot(2, 2, {
+				grid::grid.text(title, x = 0, just = "left")
 			})
+			for (i in 1:length(texts)) {
+				cellplot(2 + i, 2, {
+					grid::grid.points(x = 0.5, y = 0.5, pch = pchs[i], size = grid::unit(sizes[i], units = "lines"), gp = grid::gpar(col = fc))
+				})
+				cellplot(2 + i, 4, {
+					grid::grid.text(texts[i], x = 0, just = "left", gp = grid::gpar(col = fc, cex = 0.9))
+				})
+			}
+			grid::upViewport()
+
 		}
-		grid::upViewport()
-		# #grid::grid.rect(gp=grid::gpar(fill="yellow"))
 
 	})
 	grid::upViewport(2)

@@ -12,6 +12,7 @@ c4a_plot_palette = function(cols, dark = FALSE, include.na = FALSE) {
 	bg = grid::rectGrob(gp=grid::gpar(fill = bc, col = NA))
 	n = length(cols)
 
+	nms = if (is.null(names(cols))) 1L:n else names(cols)
 
 
 	vp = grid::viewport(layout = grid::grid.layout(nrow = 4, ncol = n,
@@ -20,7 +21,7 @@ c4a_plot_palette = function(cols, dark = FALSE, include.na = FALSE) {
 
 	cps = do.call(c, lapply(1:n, function(i) {
 		cp1 = gridCell(2, i, {
-			txt = if (i == n && include.na) "Missing" else (i)
+			txt = if (i == n && include.na) "Missing" else nms[i]
 			grid::textGrob(txt, gp = grid::gpar(col = fc))
 		})
 		cp2s = gridCell(3, i, {
@@ -44,6 +45,8 @@ c4a_plot_cvd = function(cols, dark = FALSE, include.na = FALSE) {
 	bg = grid::rectGrob(gp=grid::gpar(fill = bc, col = NA))
 	n = length(cols)
 
+	nms = if (is.null(names(cols))) 1L:n else names(cols)
+
 	cols_lst = c(list(cols), lapply(c("deutan", "protan", "tritan"), FUN = function(cvd) {
 		do.call(eval(parse(text=paste0('colorspace::', cvd))), list(cols))
 	}))
@@ -54,7 +57,7 @@ c4a_plot_cvd = function(cols, dark = FALSE, include.na = FALSE) {
 
 	cps = do.call(c, lapply(2:(n+1), function(i) {
 		cp1 = gridCell(1, i, {
-			txt = if (i == (n+1) && include.na) "Missing" else (i - 1)
+			txt = if (i == (n+1) && include.na) "Missing" else nms[(i - 1)]
 			grid::textGrob(txt, gp = grid::gpar(col = fc))
 		})
 		cp2s = lapply(2:5, function(j) {

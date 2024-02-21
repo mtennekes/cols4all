@@ -11,6 +11,8 @@
 c4a_plot = function(palette, ..., include.na = FALSE, include.cvd = TRUE) {
 	args = list(...)
 
+	nms = names(palette)
+
 	if (length(palette) == 1L) {
 		pal = do.call(c4a, c(list(palette = palette), args))
 		if (include.na) pal = c(pal, c4a_na(palette))
@@ -20,9 +22,14 @@ c4a_plot = function(palette, ..., include.na = FALSE, include.cvd = TRUE) {
 
 	if (is.null(pal)) return(invisible(NULL))
 
+	pal = as.vector(pal)
+	if (!is.null(nms)) {
+		names(pal) = nms
+	}
+
 	if (include.cvd) {
-		invisible(c4a_plot_cvd(as.vector(pal), include.na = include.na))
+		invisible(c4a_plot_cvd(pal, include.na = include.na))
 	} else {
-		invisible(c4a_plot_palette(as.vector(pal), include.na = include.na))
+		invisible(c4a_plot_palette(pal, include.na = include.na))
 	}
 }
