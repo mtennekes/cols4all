@@ -14,6 +14,7 @@ plot_palette = function(cols, dark = FALSE, include.na = FALSE, nrows = NA, ncol
 		casp = n / (1:n)^2
 
 		nrows = tail(which(casp-dasp > 0), 1)
+		if (!length(nrows)) nrows = 1
 
 		ncols = ceiling(n / nrows)
 	} else if (!is.na(nrows) && is.na(ncols)) {
