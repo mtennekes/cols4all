@@ -20,3 +20,7 @@ build/pinkfloyd_example.R
 build/references.bib
 build/tol_colors.py
 build/xkcd.ttf
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$

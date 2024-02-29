@@ -37,7 +37,7 @@ Suggests:
     scales,
     rmarkdown,
     bibtex
-URL: https://github.com/mtennekes/cols4all
+URL: https://github.com/mtennekes/cols4all, https://mtennekes.github.io/cols4all/
 BugReports: https://github.com/mtennekes/cols4all/issues
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr

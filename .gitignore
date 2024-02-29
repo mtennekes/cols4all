@@ -44,3 +44,4 @@ inst/markdown/*.html
 inst/markdown/*.pdf
 /doc/
 /Meta/
+docs
