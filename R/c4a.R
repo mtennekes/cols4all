@@ -13,8 +13,9 @@
 #' @param nm_invalid what should be done in case `n` or `m` is larger than the maximum number of colors or smaller than the minimum number? Options are `"error"` (an error is returned), `"repeat"`, the palette is repeated, `"interpolate"` colors are interpolated. For categorical `"cat"` palettes only.
 #' @param verbose should messages be printed?
 #' @return A vector of colors (`c4a`) and a color (`c4a_na`)
-#' @importFrom grDevices col2rgb colorRampPalette colors gray.colors rgb
+#' @importFrom grDevices col2rgb colorRampPalette colors gray.colors rgb grey
 #' @importFrom methods as
+#' @importFrom spacesXYZ DeltaE
 #' @importFrom stats na.omit
 #' @example ./examples/c4a.R
 #' @rdname c4a
@@ -36,7 +37,7 @@ c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bi
 		mes = NULL
 	}
 
-	x = c4a_info(palette, verbose = verbose)
+	x = c4a_info(palette, verbose = verbose, no.match = {if (verbose) "message" else "null"})
 
 	if (is.null(x)) return(invisible(NULL))
 
@@ -156,6 +157,7 @@ c4a_na = function(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 #' Get information from a cols4all palette
 #'
 #' @param palette name of the palette
+#' @param n number of colors
 #' @param no.match what happens is no match is found? Options: `"message"`: a message is thrown with suggestions, `"error"`: an error is thrown, `"null"`: `NULL` is returned
 #' @param verbose should messages be printed?
 #' @return list with the following items: name, series, fullname, type, palette (colors), na (color), nmax, and reverse. The latter is `TRUE` when there is a `"-"` prefix before the palette name.

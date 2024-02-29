@@ -32,12 +32,11 @@
 #'
 #' @name cols4all-package
 #' @aliases cols4all
-#' @docType package
 #' @author Martijn Tennekes \email{mtennekes@@gmail.com}
 #' @seealso \url{https://github.com/mtennekes/cols4all}
 #' @concept color
 #' @concept visualization
-NULL
+"_PACKAGE"
 
 
 #' Set cols4all options

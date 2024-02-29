@@ -86,7 +86,7 @@ plot_matrix = function(p, id1 = NULL, id2 = NULL, type = c("CR", "dist"), cvd = 
 	grid::grid.rect(gp=grid::gpar(fill = bc, col = NA))
 
 	grey_dark = function(level, dark) {
-		grey(if (dark) {1 - level} else level)
+		grDevices::grey(if (dark) {1 - level} else level)
 	}
 
 	#grid::grid.rect(gp=grid::gpar(fill="grey80"))

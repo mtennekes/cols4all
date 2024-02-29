@@ -2,20 +2,57 @@
 % Please edit documentation in R/c4a_plot.R
 \name{c4a_plot}
 \alias{c4a_plot}
+\alias{c4a_plot_cvd}
+\alias{c4a_plot_hex}
 \title{Plot a color palette}
 \usage{
-c4a_plot(palette, ..., include.na = FALSE)
+c4a_plot(
+  palette,
+  ...,
+  dark = FALSE,
+  include.na = FALSE,
+  hex = FALSE,
+  include.cvd = FALSE,
+  nrows = NA,
+  ncols = NA
+)
+
+c4a_plot_cvd(...)
+
+c4a_plot_hex(...)
 }
 \arguments{
 \item{palette}{Palette name (see \code{\link{c4a}}) or a color vector}
 
 \item{...}{arguments passed on to \code{\link{c4a}}}
 
+\item{dark}{dark (black) background?}
+
 \item{include.na}{should a color for missing values be included?}
+
+\item{hex}{should hex codes be printed instead of color labels (or numbers)?}
+
+\item{include.cvd}{should color deficiency simulated colors be included?}
+
+\item{nrows, ncols}{Number of rows and columns. Ignored if \code{include.cvd = TRUE} (in that case, rows are used for the simulated colors). By default automatically calculated based on aspect ratio of the device.}
 }
 \value{
 Besides the plot, a \code{\link[grid:gTree]{gTree}} is returned silently
 }
 \description{
-Plot a color palette, either a cols4all palette, or a color vector.
+Plot a color palette, either a cols4all palette, or a color vector. \code{c4a_plot_cvd} is a shortcut to include color-blind simulated colors, `c4a_plot_hex is a shortcut to print hex codes instead of labels.
+}
+\examples{
+c4a_plot("brewer.set1", nrows=1)
+
+c4a_plot("greens", nrows=1)
+
+c4a_plot("tol.pu_gn", nrows=1)
+
+c4a_plot(.P$c4a$bivs$pu_gn_bivs, n = 5)
+
+c4a_plot(.P$c4a$bivd$pu_gn_bivd, n = 5)
+
+c4a_plot(.P$c4a$bivg$gn_bivg, n = 5)
+
 }

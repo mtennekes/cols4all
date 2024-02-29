@@ -14,7 +14,7 @@ Authors@R: c(
 	)
 Description: Color palettes for all people, including those with color vision deficiency. Popular color palette series have been organized by type and have been scored on several properties such as color-blind-friendliness and fairness (i.e. do colors stand out equally?). Own palettes can also be loaded and analysed. Besides the common palette types (categorical, sequential, and diverging) it also includes bivariate color palettes. Furthermore, a color for missing values is assigned to each palette.
 Version: 0.7
-Date: 2024-01-21
+Date: 2024-02-29
 Encoding: UTF-8
 Depends:
     R (>= 3.5.0),
@@ -25,7 +25,8 @@ Imports:
     abind,
     png,
     stringdist,
-    colorspace (>= 2.1)
+    colorspace (>= 2.1),
+    spacesXYZ
 Suggests:
     colorblindcheck,
     kableExtra,
@@ -40,4 +41,4 @@ URL: https://github.com/mtennekes/cols4all
 BugReports: https://github.com/mtennekes/cols4all/issues
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1

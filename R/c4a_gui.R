@@ -1124,7 +1124,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		## Naming tab
 		#############################
 
-		observeEvent(input$w_do, {
+		shiny::observeEvent(input$w_do, {
 			shinyjs::runjs("$('#container').prop('disabled', true);")
 
 			w = c4a_options("boynton_weights")[[1]]

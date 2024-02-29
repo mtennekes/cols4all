@@ -9,7 +9,7 @@
 \alias{.P}
 \title{Get available palette names and series}
 \format{
-An object of class \code{environment} of length 16.
+An object of class \code{environment} of length 17.
 }
 \usage{
 c4a_palettes(

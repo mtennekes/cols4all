@@ -3,28 +3,48 @@ gridCell = function(rows, cols, e, ...) {
 	grid::grobTree(e, vp = vp)
 }
 
-c4a_plot_palette = function(cols, dark = FALSE, include.na = FALSE) {
+plot_palette = function(cols, dark = FALSE, include.na = FALSE, nrows = NA, ncols = NA) {
+	n = length(cols)
 	grid::grid.newpage()
+
+	if (is.na(nrows) && is.na(ncols)) {
+		devsize = dev.size()
+		dasp = devsize[1] / devsize[2]
+
+		casp = n / (1:n)^2
+
+		nrows = tail(which(casp-dasp > 0), 1)
+
+		ncols = ceiling(n / nrows)
+	} else if (!is.na(nrows) && is.na(ncols)) {
+		ncols = ceiling(n / nrows)
+	} else if (is.na(nrows) && !is.na(ncols)) {
+		nrows = ceiling(n / ncols)
+	} else {
+		if (ncols * nrows < n) warning("nrows * ncols too low.", call. = FALSE)
+		ncols = ceiling(n / nrows)
+	}
+
 
 	fc = ifelse(dark, "#FFFFFF", "#000000")
 	bc = ifelse(dark, "#000000", "#FFFFFF")
 
 	bg = grid::rectGrob(gp=grid::gpar(fill = bc, col = NA))
-	n = length(cols)
 
 	nms = if (is.null(names(cols))) 1L:n else names(cols)
 
-
-	vp = grid::viewport(layout = grid::grid.layout(nrow = 4, ncol = n,
-												   widths = grid::unit(rep(1/n, n), rep("null", n)),
-												   heights = grid::unit(c(1,1, 1, 1), c("lines", "lines", "null", "lines"))))
+	vp = grid::viewport(layout = grid::grid.layout(nrow = 4 * nrows, ncol = ncols,
+												   widths = grid::unit(rep(1/ncols, ncols), rep("null", ncols)),
+												   heights = grid::unit(rep(c(.1,1, 1, .1), nrows), rep(c("lines", "lines", "null", "lines"), nrows))))
 
 	cps = do.call(c, lapply(1:n, function(i) {
-		cp1 = gridCell(2, i, {
+		rw = ((i-1) %/% ncols) + 1
+		cl = i - (rw - 1) * ncols
+		cp1 = gridCell(2 + (rw-1)*4, cl, {
 			txt = if (i == n && include.na) "Missing" else nms[i]
 			grid::textGrob(txt, gp = grid::gpar(col = fc))
 		})
-		cp2s = gridCell(3, i, {
+		cp2s = gridCell(3 + (rw-1)*4, cl, {
 			grid::rectGrob(height = 1, gp=grid::gpar(fill = cols[i], col = bc, lwd = 2))
 		})
 
@@ -36,7 +56,7 @@ c4a_plot_palette = function(cols, dark = FALSE, include.na = FALSE) {
 }
 
 
-c4a_plot_cvd = function(cols, dark = FALSE, include.na = FALSE) {
+plot_cvd = function(cols, dark = FALSE, include.na = FALSE) {
 	grid::grid.newpage()
 
 	fc = ifelse(dark, "#FFFFFF", "#000000")
