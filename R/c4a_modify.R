@@ -1,9 +1,9 @@
-#' Edit cols4all palettes
+#' Edit cols4all palettes (in development)
 #'
 #' Edit cols4all palettes. c4a_duplicate duplicates an existing cols4all palette, and c4a_modify is used to change the colors. Use c4a_data to craete palettes from scratch.
 #'
 #' @param palette name of the palette
-#' @param x vector of the new colors. It should either the same length, or a named vector, where the names correspond to the index numbers. E.g. c("3" = "#AABBCC") will replace the third color with the color "#AABBCC".
+#' @param x vector of the new colors. It should either the same length, or a named vector, where the names correspond to the index numbers. E.g. `c("3" = "#AABBCC")` will replace the third color with the color `"#AABBCC"`.
 #' @param xNA the new color for missing values.
 #' @rdname c4a_modify
 #' @name c4a_modify

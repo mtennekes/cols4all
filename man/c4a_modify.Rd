@@ -3,7 +3,7 @@
 \name{c4a_modify}
 \alias{c4a_modify}
 \alias{c4a_duplicate}
-\title{Edit cols4all palettes}
+\title{Edit cols4all palettes (in development)}
 \usage{
 c4a_modify(palette, x = NULL, xNA = NULL)
 
@@ -12,7 +12,7 @@ c4a_duplicate(palette, name = NA)
 \arguments{
 \item{palette}{name of the palette}
 
-\item{x}{vector of the new colors. It should either the same length, or a named vector, where the names correspond to the index numbers. E.g. c("3" = "#AABBCC") will replace the third color with the color "#AABBCC".}
+\item{x}{vector of the new colors. It should either the same length, or a named vector, where the names correspond to the index numbers. E.g. \code{c("3" = "#AABBCC")} will replace the third color with the color \code{"#AABBCC"}.}
 
 \item{xNA}{the new color for missing values.}
 

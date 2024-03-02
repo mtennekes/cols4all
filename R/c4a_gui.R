@@ -333,7 +333,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 							shiny::fluidRow(
 								shiny::column(width = 12,
 									shiny::selectizeInput("namePal", "Palette", choices = init_pal_list),
-									infoBoxUI("infoName", "Naming table"),
+									infoBoxUI("infoName", "Naming table (in development)"),
 									plotOverlay("anaName", width = "1000px", height = "600px", "aniName"))),
 									#shiny::plotOutput("namePlot", height = "600px", width = "1000px"))),
 							shiny::fluidRow(

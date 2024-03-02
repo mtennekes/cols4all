@@ -47,15 +47,17 @@ library(cols4all)
 
 Color is essential in many charts and maps. There are a lot of color palettes to choose from: most visualization software tools have their own palettes and there are many other series of color palettes, such as ColorBrewer (Harrower and Brewer, 2003). To make life easier for R users, there are a couple of packages that contain a large collection of palettes, most notably `pals` (Wright, 2021) with 139 and `paletteer` (Hvitfeldt, 2021) with 2569 (!) palettes. However, people often cannot see the trees through the forest, so therefore they tend to stick with the color palettes they know, or with the most popular ones.
 
-The `cols4all` package also contains a large collection of palettes (to be precise `r length(c4a_palettes())` at the time of writing), but with the central question: which palettes are good and why? There is no simple answer, since there are many aspects to take into account, which may have opposite effects. In `cols4all` we examine the following aspects:
+The `cols4all` package also contains a large collection of palettes (to be precise `r length(c4a_palettes())` at the time of writing), but with the central question: **which palettes are good and why?** There is no simple answer, since there are many aspects to take into account, which may have opposite effects. In `cols4all` we examine the following aspects:
 
-* **Color Blind Friendliness** First and most importantly, is a palette suitable for colorblind people? About 5% of all humans have a color vision deficiency, and we want to include them; hence the package name "colors for all".
+* **Color Blind Friendliness** First and most importantly, is a palette suitable for colorblind people? About 1 out of 12 humans have a color vision deficiency, and we want to include them; hence the package name "colors for all".
 
-* **HCL Analysis** Does a palette work well for statistical purposes? We analyse this with the HCL (hue-chroma-luminance) color space. Concrete questions for these analysis are the following. How vivid are colors? Do the colors stand out about equally (which we call "fairness")? What hue ranges are used for quantitative color palettes?
+* **HCL Analysis** Does a palette work well for statistical purposes? We analyse this with the HCL (hue-chroma-luminance) color space. Concrete questions for these analysis are the following. How **vivid** are colors? Do the colors stand out about equally (which we call **fairness**)? What hue ranges are used for quantitative color palettes?
 
 <!--First of all, we check how vivid (chroma) the colors are: vivid colors are preferable for coloring small objects (dots) while pastel colors are preferable for large areas such as maps. Secondly, we also check whether the palette is fair, by which we mean that no colors stand out more than others. Finally, we check the hues of the palettes:-->
 
-* **Contrast** What is the contrast between the colors in the palette? We focus on two specific questions: 1) How well is text readable (also for people with a visual impairment)? 2) Are border lines needed to separate colors?
+* **Nameability** (in development) Easy to name colors are also easy to remember. Therefore, it is beneficial to use a color palette with easy nameable colors.
+
+* **Contrast** What is the contrast between the colors in the palette? We focus on two specific questions: 1) Is there sufficient contrast with the background color (usually white or black)? This is especially needed for text but also point- and line charts. 2) Are border lines needed to separate colors?
 
 * **3D Blues** Does the palette contain blue colors that could result in a floating effect?
 
@@ -63,7 +65,7 @@ Currently, **cols4all** contains palettes from several popular and lesser known 
 
 Color palettes are organized and made consistent with each other. For instance, all sequential palettes go from light to dark. Furthermore, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, and *bivariate* palettes (divided into four subtypes).
 
-[<img src="https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png" width="650"/>](https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png)
+[<img src="cols4all_table3.png" width="650"/>](cols4all_table3.png)
 
 The figure above shows the main tool of this package, a dashboard. The first tab page contains an overview table of all palettes (given the input selection criteria). The other tab pages are for further palette-wise analyses.
 
@@ -204,12 +206,18 @@ Palette names and properties:
 *   `.P` Environment via which palette names can be browsed with
     auto-completion (using `$`)
 
+
 Importing and exporting palettes:
 
 *   `c4a_data` Build color palette data
 *   `c4a_load` Load color palette data
 *   `c4a_sysdata_import` Import system data
 *   `c4a_sysdata_export` Export system data
+
+Edit color palette data
+
+*   `c4a_duplicate` Duplicates a color palette
+*   `c4a_modify` Modifies palette colors 
 
 ggplot2
 
@@ -297,6 +305,10 @@ Regarding **Fairness** we consider two metrics: the luminance range (`Lrange`) a
 - **unfair** (<font size="4">&#10799;</font>) if `Crange <= 80` or (for categorical palettes only) `Lrange >= 50`
 
 Note that harmonic color palettes are usually not color blind friendly. Furthermore, when the luminance values of the colors are about equal, the contrast of those colors is low, which requires the use of border lines (see below).
+
+### Naming
+
+This property is still in development. Details will follow.
 
 ### Contrast
 
