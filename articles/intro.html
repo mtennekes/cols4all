@@ -95,27 +95,32 @@ therefore they tend to stick with the color palettes they know, or with
 the most popular ones.</p>
 <p>The <code>cols4all</code> package also contains a large collection of
 palettes (to be precise 464 at the time of writing), but with the
-central question: which palettes are good and why? There is no simple
-answer, since there are many aspects to take into account, which may
-have opposite effects. In <code>cols4all</code> we examine the following
-aspects:</p>
+central question: <strong>which palettes are good and why?</strong>
+There is no simple answer, since there are many aspects to take into
+account, which may have opposite effects. In <code>cols4all</code> we
+examine the following aspects:</p>
 <ul>
 <li><p><strong>Color Blind Friendliness</strong> First and most
-importantly, is a palette suitable for colorblind people? About 5% of
-all humans have a color vision deficiency, and we want to include them;
+importantly, is a palette suitable for colorblind people? About 1 out of
+12 humans have a color vision deficiency, and we want to include them;
 hence the package name “colors for all”.</p></li>
 <li><p><strong>HCL Analysis</strong> Does a palette work well for
 statistical purposes? We analyse this with the HCL
 (hue-chroma-luminance) color space. Concrete questions for these
-analysis are the following. How vivid are colors? Do the colors stand
-out about equally (which we call “fairness”)? What hue ranges are used
-for quantitative color palettes?</p></li>
+analysis are the following. How <strong>vivid</strong> are colors? Do
+the colors stand out about equally (which we call
+<strong>fairness</strong>)? What hue ranges are used for quantitative
+color palettes?</p></li>
 </ul>
 <!--First of all, we check how vivid (chroma) the colors are: vivid colors are preferable for coloring small objects (dots) while pastel colors are preferable for large areas such as maps. Secondly, we also check whether the palette is fair, by which we mean that no colors stand out more than others. Finally, we check the hues of the palettes:--><ul>
+<li><p><strong>Nameability</strong> (in development) Easy to name colors
+are also easy to remember. Therefore, it is beneficial to use a color
+palette with easy nameable colors.</p></li>
 <li><p><strong>Contrast</strong> What is the contrast between the colors
-in the palette? We focus on two specific questions: 1) How well is text
-readable (also for people with a visual impairment)? 2) Are border lines
-needed to separate colors?</p></li>
+in the palette? We focus on two specific questions: 1) Is there
+sufficient contrast with the background color (usually white or black)?
+This is especially needed for text but also point- and line charts. 2)
+Are border lines needed to separate colors?</p></li>
 <li><p><strong>3D Blues</strong> Does the palette contain blue colors
 that could result in a floating effect?</p></li>
 </ul>
@@ -132,7 +137,7 @@ especially important for spatial data visualization. Currently we
 support several types: <em>categorical</em> (qualitative) palettes,
 <em>sequential</em> palettes, <em>diverging</em> palettes, and
 <em>bivariate</em> palettes (divided into four subtypes).</p>
-<p><a href="https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png" class="external-link"><img src="https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png" width="650"></a></p>
+<p><a href="cols4all_table3.png"><img src="cols4all_table3.png" width="650"></a></p>
 <p>The figure above shows the main tool of this package, a dashboard.
 The first tab page contains an overview table of all palettes (given the
 input selection criteria). The other tab pages are for further
@@ -339,6 +344,13 @@ with auto-completion (using <code>$</code>)</li>
 <li>
 <code>c4a_sysdata_export</code> Export system data</li>
 </ul>
+<p>Edit color palette data</p>
+<ul>
+<li>
+<code>c4a_duplicate</code> Duplicates a color palette</li>
+<li>
+<code>c4a_modify</code> Modifies palette colors</li>
+</ul>
 <p>ggplot2</p>
 <ul>
 <li>
@@ -540,6 +552,11 @@ luminance range (<code>Lrange</code>) and the chroma range
 friendly. Furthermore, when the luminance values of the colors are about
 equal, the contrast of those colors is low, which requires the use of
 border lines (see below).</p>
+</div>
+<div class="section level3">
+<h3 id="naming">Naming<a class="anchor" aria-label="anchor" href="#naming"></a>
+</h3>
+<p>This property is still in development. Details will follow.</p>
 </div>
 <div class="section level3">
 <h3 id="contrast">Contrast<a class="anchor" aria-label="anchor" href="#contrast"></a>
