@@ -65,7 +65,13 @@ Currently, **cols4all** contains palettes from several popular and lesser known 
 
 Color palettes are organized and made consistent with each other. For instance, all sequential palettes go from light to dark. Furthermore, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, and *bivariate* palettes (divided into four subtypes).
 
-[<img src="cols4all_table3.png" width="650"/>](cols4all_table3.png)
+```{r}
+#| fig.alt = "Dashboard",
+#| out.width = 650,
+#| echo = FALSE
+
+knitr::include_graphics("dash-3.png")
+```
 
 The figure above shows the main tool of this package, a dashboard. The first tab page contains an overview table of all palettes (given the input selection criteria). The other tab pages are for further palette-wise analyses.
 
