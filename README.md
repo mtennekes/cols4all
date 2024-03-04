@@ -1,12 +1,16 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Colors for all! <img src='inst/img/cols4all_logo.png' align="right" height="139" />
+# Colors for all! <a href="https://mtennekes.github.io/cols4all/"><img src="man/figures/logo.png" align="right" height="138" alt="cols4all website" /></a>
 
-[![CRAN](http://www.r-pkg.org/badges/version/cols4all)](https://cran.r-project.org/package=cols4all)
+
+<!-- badges: start --->
+[![CRAN](https://www.r-pkg.org/badges/version/cols4all)](https://cran.r-project.org/package=cols4all)
 [![cran
 checks](https://cranchecks.info/badges/worst/cols4all)](https://cran.r-project.org/web/checks/check_results_cols4all.html)
-[![Downloads](http://cranlogs.r-pkg.org/badges/cols4all?color=brightgreen)](http://www.r-pkg.org/pkg/cols4all)
+[![Downloads](https://cranlogs.r-pkg.org/badges/cols4all?color=brightgreen)](https://www.r-pkg.org/pkg/cols4all)
+<!-- badges: end --->
+
 
 The **cols4all** is a new R package for selecting color palettes. “Color
 for all” refers to our mission that colors should be usable for not just
