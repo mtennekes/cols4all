@@ -40,7 +40,7 @@
 #' @export
 c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = NA, ndef = NA, mmin = NA, mmax = NA, mdef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL), bib = NA, description = NA) {
 
-	if (!requireNamespace("colorblindcheck")) stop("Please install colorblindcheck")
+	check_installed_packages("colorblindcheck")
 
 	if (inherits(x, "c4a_info")) {
 		if (is.null(x$bib)) {

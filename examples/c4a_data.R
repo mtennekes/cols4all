@@ -32,17 +32,19 @@ pf = list(piper = c("#391C1C", "#C6C6AA", "#713939", "#C6391C",
 		  river = c("#393939", "#555555", "#39558E", "#C6C6C6",
     "#718EAA", "#1C1C1C", "#717171", "#E3C68E"))
 
-pfdata = c4a_data_as_is(pf, series = "pinkfloyd",
-  description = "Palettes extracted from Pink Floyd album covers")
-c4a_load(pfdata)
+if (requireNamespace("colorblindcheck", quietly = TRUE)) {
+	pfdata = c4a_data_as_is(pf, series = "pinkfloyd",
+							description = "Palettes extracted from Pink Floyd album covers")
+	c4a_load(pfdata)
 
-c4a_series()
-c4a_overview()
+	c4a_series()
+	c4a_overview()
 
-if (requireNamespace("shiny") &&
-	requireNamespace("shinyjs") &&
-	requireNamespace("kableExtra") &&
-	requireNamespace("colorblindcheck") &&
-	interactive()) {
-  c4a_gui(series = "pinkfloyd", n = 8)
+	if (requireNamespace("shiny") &&
+		requireNamespace("shinyjs") &&
+		requireNamespace("kableExtra") &&
+		requireNamespace("colorblindcheck") &&
+		interactive()) {
+		c4a_gui(series = "pinkfloyd", n = 8)
+	}
 }
