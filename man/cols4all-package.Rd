@@ -2,8 +2,8 @@
 % Please edit documentation in R/onLoad.R
 \docType{package}
 \name{cols4all-package}
-\alias{cols4all-package}
 \alias{cols4all}
+\alias{cols4all-package}
 \title{cols4all overview}
 \description{
 cols4all stands for: color palettes for all people, including those with color vision deficiency. Popular color palette series, such as ColorBrewer, have been organized by type and have been scored on several properties such as color-blind-friendliness and fairness (i.e. do colors stand out equally?). Own palettes can also be loaded and analysed. Besides the common palette types (categorical, sequential, and diverging) it also includes bivariate color palettes. ggplot2 scales are included.
@@ -43,10 +43,27 @@ This page provides a brief overview of all package functions.
 }
 
 \seealso{
-\url{https://github.com/mtennekes/cols4all}
+Useful links:
+\itemize{
+  \item \url{https://mtennekes.github.io/cols4all/}
+  \item \url{https://github.com/mtennekes/cols4all}
+  \item Report bugs at \url{https://github.com/mtennekes/cols4all/issues}
+}
+
 }
 \author{
-Martijn Tennekes \email{mtennekes@gmail.com}
+\strong{Maintainer}: Martijn Tennekes \email{mtennekes@gmail.com}
+
+Other contributors:
+\itemize{
+  \item Marco Puts \email{mputs@acm.org} [contributor]
+  \item Achim Zeileis \email{Achim.Zeileis@R-project.org} [contributor]
+  \item Jakub Nowosad \email{nowosad.jakub@gmail.com} [contributor]
+  \item Robin Lovelace \email{rob00x@gmail.com} [contributor]
+  \item Helgasoft \email{contact@helgasoft.com} [contributor]
+  \item Matthew Petroff \email{matthew@mpetroff.net} [contributor]
+}
+
 }
 \concept{color}
 \concept{visualization}

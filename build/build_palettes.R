@@ -13,7 +13,7 @@ library(reticulate) # to get seaborn
 library(Polychrome)
 library(MetBrewer)
 
-devtools::session_info(pkgs = "attached")
+sessioninfo::session_info(pkgs = "attached")
 # package         * version date (UTC) lib source
 # colorblindcheck * 1.0.2   2023-05-13 [1] CRAN (R 4.3.0)
 # colorspace      * 2.1-0   2023-01-23 [1] CRAN (R 4.3.0)
