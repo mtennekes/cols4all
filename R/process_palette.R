@@ -17,7 +17,10 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	#specplot(hcl(h=seq(0,360,by=10), c = 15, l= 0))
 	if (remove.blacks && type == "cat") {
 		isB = (hcl[,3] + hcl[,2]) <= 15
-		if (any(isB)) {
+		if (all(isB)) {
+			message("Palette contains only (almost) blacks. Therefore remove.blacks is set to FALSE")
+			remove.blacks = FALSE
+		} else if (any(isB)) {
 			pal = pal[!isB]
 			hcl = hcl[!isB,]
 		}
@@ -27,11 +30,15 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	if (type == "cat") {
 		if (take.gray.for.NA) {
 			wG = which(hcl[,2] < .C4A$Cgray)
-			if (length(wG) && is.na(colNA)) {
+			if (length(wG) == nrow(hcl)) {
+				message("Palette contains only (almost) greys. Therefore take.gray.for.NA and remove.other.grays will be set to FALSE")
+				take.gray.for.NA = FALSE
+				remove.other.grays = FALSE
+			} else if (length(wG) && is.na(colNA)) {
 				wNA = wG[which.max(hcl[wG, 3])]
 				colNA = pal[wNA]
 				pal = pal[-wNA]
-				hcl = hcl[-wNA,]
+				hcl = hcl[-wNA,,drop=FALSE]
 			}
 		}
 

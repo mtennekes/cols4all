@@ -61,13 +61,14 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 		# check color list
 		if (!is.list(x)) stop("x is not a list")
 		nms = names(x)
+		if (is.null(nms)) stop("x must be named")
 		x = lapply(x, validate_colors, name = "x", from_list = TRUE)
 
 		# number of palettes
 		k = length(x)
 
 		# make everything length k (number of palettes)
-		args = setdiff(ls(), c("x", "k"))
+		args = setdiff(ls(), c("x", "k", "nms"))
 		length(range_matrix_args)
 
 		# manual preprocessing
@@ -138,7 +139,9 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 		if (length(seriesID)) fnms[seriesID] = paste0(series[seriesID], ".", fnms[seriesID])
 
 
-		if (anyDuplicated(fnms)) stop("Duplicated names found")
+		if (anyDuplicated(fnms)) {
+			stop("Duplicated names found: ", paste(fnms[anyDuplicated(fnms)], collapse = ", "))
+		}
 
 
 		names(x) = nms
