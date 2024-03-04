@@ -30,10 +30,6 @@
 #' \code{\link{c4a_sysdata_export}}\tab Export system data \cr
 #' }
 #'
-#' @name cols4all-package
-#' @aliases cols4all
-#' @author Martijn Tennekes \email{mtennekes@@gmail.com}
-#' @seealso \url{https://github.com/mtennekes/cols4all}
 #' @concept color
 #' @concept visualization
 "_PACKAGE"
