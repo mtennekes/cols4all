@@ -56,7 +56,6 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 
 	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("man/figures", package = "cols4all"))
-	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
 
 	#############################
 	## Catelogue tab
