@@ -1,6 +1,7 @@
 # cols4all 0.7
-- added naming column
 - improved similarity matrix plot
+- improved applications tab
+- added naming column (in development)
 - added new 'tol' palettes
 - scores shown with more precision
 - compatibility with tmap 4.0

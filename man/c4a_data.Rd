@@ -139,7 +139,7 @@ pf = list(piper = c("#391C1C", "#C6C6AA", "#713939", "#C6391C",
 
 if (requireNamespace("colorblindcheck", quietly = TRUE)) {
 	pfdata = c4a_data_as_is(pf, series = "pinkfloyd",
-							description = "Palettes extracted from Pink Floyd album covers")
+		description = "Palettes extracted from Pink Floyd album covers")
 	c4a_load(pfdata)
 
 	c4a_series()

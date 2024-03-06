@@ -24,7 +24,7 @@ c4a_plot_text2 = function(cols = c("#0000FF", "#FF0000"), dark = FALSE) {
 	})
 }
 
-c4a_plot_text = function(cols = c("#0000FF", "#FF0000"), words = NULL, size = 1, dark = TRUE, frame = FALSE) {
+c4a_plot_text = function(cols = c("#0000FF", "#FF0000"), words = NULL, size = 12, dark = TRUE, frame = FALSE, face = "plain") {
 	grid::grid.newpage()
 
 	bg = if (dark) "#000000" else "#FFFFFF"
@@ -34,7 +34,7 @@ c4a_plot_text = function(cols = c("#0000FF", "#FF0000"), words = NULL, size = 1,
 	k = length(cols)
 
 	if (is.null(words)) {
-		words = c(LETTERS, letters)[1:k]
+		words =  rep(paste0(LETTERS,letters), length.out = k)
 	} else {
 		words = rep(words, lenth.out = k)
 	}
@@ -79,9 +79,9 @@ c4a_plot_text = function(cols = c("#0000FF", "#FF0000"), words = NULL, size = 1,
 				cellplot(j, i, {
 					if (frame) {
 						grid::grid.rect(width = 0.95, height = 0.95, gp = grid::gpar(col = NA, fill = cols[z]))
-						grid::grid.text(words[z], gp = grid::gpar(col = bg, fontface = "bold", cex = u * size))
+						grid::grid.text(words[z], gp = grid::gpar(col = bg, fontface = face, fontsize = size))#cex = u * size))
 					} else {
-						grid::grid.text(words[z], gp = grid::gpar(col = cols[z], fontface = "bold", cex = u * size))
+						grid::grid.text(words[z], gp = grid::gpar(col = cols[z], fontface = face, fontsize = size))#cex = u * size))
 					}
 				})
 			}

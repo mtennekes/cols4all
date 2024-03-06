@@ -64,9 +64,9 @@ show_attach_scores = function(z) {
 					 ifelse(z2$HwidthL < .C4A$HwidthDivSingle & z2$HwidthR < .C4A$HwidthDivSingle, "SH", "MH"))
 		z2$HwidthLR = pmax(z2$HwidthL, z2$HwidthR)
 	}
-	z2$contrast = z2$CRmin <= .C4A$contrastTH
-	z2$contrastWT = z2$CRwt <= .C4A$contrastTH
-	z2$contrastBK = z2$CRbk <= .C4A$contrastTH
+	z2$contrast = z2$CRmin <= .C4A$contrastEL
+	z2$contrastWT = z2$CRwt <= .C4A$contrastTxt
+	z2$contrastBK = z2$CRbk <= .C4A$contrastTxt
 
 	z2$float = z2$Blues >= .C4A$Blues
 
@@ -81,8 +81,8 @@ show_attach_scores = function(z) {
 
 get_friendlyness = function(zn) {
 	with(zn, {
-		ifelse(type == "cat", (min_dist / 1000) + ifelse(min_dist >= .C4A$CBF_th$cat["min_dist"], 1,
-							  ifelse(min_dist <= .C4A$CBU_th$cat["min_dist"], -1, 0)),
+		ifelse(type == "cat", (min_dist / 1000) + ifelse(min_dist >= .C4A$CBVF_th$cat["min_dist"], 2, ifelse(min_dist >= .C4A$CBF_th$cat["min_dist"], 1,
+							  ifelse(min_dist <= .C4A$CBU_th$cat["min_dist"], -1, 0))),
 
 
 		ifelse(type == "seq", (min_step / 1000) + ifelse(min_step >= .C4A$CBF_th$seq["min_step"], 1,

@@ -105,19 +105,25 @@ rdata$name_data = create_name_data()
 rdata = c(rdata, local({
 	set.seed(13)
 	x = 1:100
-	s1 = cumsum(rnorm(length(x)))
-	s2 = cumsum(rnorm(length(x)))
 
+	k=36
 
+	s = lapply(1:k, function(i) {
+		cumsum(rnorm(length(x)))
+	})
 
-	r = range(c(s1, s2))
-	s1 = s1 - r[1]
-	s2 = s2 - r[1]
-	s1 = s1 / diff(r)
-	s2 = s2 / diff(r)
+	# scale per 2 lines
+	for (i in seq(1,k,by=2)) {
+		ids = c(i,i+1)
+		r = range(c(s[[ids[1]]], s[[ids[2]]]))
+		s[ids] = lapply(s[ids], function(si) {
+			si = si - r[1]
+			si / diff(r)
+		})
+	}
+
 	list(lines.x = x,
-		 lines.s1 = s1,
-		 lines.s2 = s2)
+		 lines.s = s)
 }))
 
 

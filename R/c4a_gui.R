@@ -43,6 +43,7 @@ check_installed_packages = function(packages) {
 	}
 }
 
+h4title = function(title, inline = FALSE) shiny::HTML(paste0("<h4 style='font-weight: bold;", {if (inline) "display: inline;" else ""}, "'>", title ,"</h4>"))
 
 #' @rdname c4a_gui
 #' @name c4a_gui
@@ -54,6 +55,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	if (!check_installed_packages(c("shiny", "shinyjs", "kableExtra", "colorblindcheck"))) return(invisible(NULL))
 
 
+	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("man/figures", package = "cols4all"))
 	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
 
 	#############################
@@ -147,9 +149,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	infoBoxUI = function(inp = NULL, title) {
 		if (is.null(inp)) {
 			# padding to compensate for button
-			shiny::div(style="display: inline-block; padding: 5px;", shiny::HTML(paste0("<h4 style='font-weight: bold; display: inline;'>", title ,"</h4>")))
+			shiny::div(style="display: inline-block; padding: 5px;", h4title(title, inline = TRUE))
 		} else {
-			shiny::div(style="display: inline-block", shiny::HTML(paste0("<h4 style='font-weight: bold; display: inline;'>", title ,"</h4>")), shiny::actionButton(inp, "", ani_on, style = "border: none;"))
+			shiny::div(style="display: inline-block", h4title(title, inline = TRUE), shiny::actionButton(inp, "", ani_on, style = "border: none;"))
 		}
 	}
 	plotOverlay = function(outputId, width, height, id, click = NULL) {
@@ -182,7 +184,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 							value = "tab_catel",
 					 shiny::fluidRow(
 					 	shiny::column(width = 3,
-					 				  shiny::img(src = "imgResources/cols4all_logo.png", height="200", align = "center", 'vertical-align' = "center")),
+					 				  shiny::img(src = "imgResources/logo.png", height="200", align = "center", 'vertical-align' = "center")),
 					 	shiny::column(width = 9,
 					 				  shiny::fluidRow(
 					 				  	shiny::column(width = 4,
@@ -392,8 +394,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				 		shiny::column(width = 3,
 				 					  shiny::markdown(""),
 				 					  shiny::radioButtons("chart", "Example chart", c("Choropleth", "Barchart"), "Choropleth", inline = FALSE),
-			 					  	  shiny::sliderInput("lwd", "Line Width", min = 0, max = 3, step = 1, value = 0),
-				 					  shiny::selectizeInput("borders", "Borders", choices = c("black", "white"), selected = "black")),
+			 					  	  shiny::selectizeInput("borders", "Borders", choices = c("black", "white"), selected = "black"),
+				 					  shiny::sliderInput("lwd", "", min = 0, max = 3, step = 1, value = 0)),
 				 		shiny::column(
 				 			width = 9,
 				 			shiny::plotOutput("ex", height = "300px", width = "600px")
@@ -434,27 +436,43 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			shiny::tabPanel("Application",
 							value = "tab_app",
+				shiny::wellPanel(
 				shiny::fluidRow(
 					shiny::column(width = 4,
 								  shiny::selectizeInput("APPPal", "Palette", choices = init_pal_list)),
 					shiny::column(width = 4,
-								  shiny::selectizeInput("APPcvd", "Color vision deficinecy", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"))),
-				shiny::fluidRow(
-				  	shiny::column(width = 4, shiny::sliderInput("MAPlwd", "Line Width", min = 0, max = 3, step = 1, value = 1)),
-				  	shiny::column(width = 4, shiny::selectizeInput("MAPborders", "Borders", choices = c("black", "white"), selected = "black")),
-					shiny::column(width = 4, shiny::radioButtons("MAPdist", "Color distribution", choices = c(Random = "random", Gradient = "gradient"), selected = "random"))),
-				shiny::fluidRow(
-					shiny::column(width = 12, shiny::plotOutput("MAPplot", "Map", width = 800, height = 400))),
-				shiny::fluidRow(
-					shiny::column(width = 4, shiny::sliderInput("DOTlwd", "Line Width", min = 0, max = 3, step = 1, value = 1)),
-					shiny::column(width = 4, shiny::selectizeInput("DOTborders", "Borders", choices = c("black", "white"), selected = "black")),
-					shiny::column(width = 4, shiny::radioButtons("DOTdist", "Color distribution", choices = c(Random = "random", Concentric = "concentric"), selected = "random"))),
-				shiny::fluidRow(
-					shiny::column(width = 12, shiny::plotOutput("DOTplot", "Scatter plot", width = 800, height = 400))),
-				shiny::fluidRow(
-					shiny::column(width = 12, shiny::plotOutput("TXTplot1", "Text", width = 800, height = 120))),
-				shiny::fluidRow(
-					shiny::column(width = 12, shiny::plotOutput("TXTplot2", "Text", width = 800, height = 120)))
+								  shiny::selectizeInput("APPcvd", "Color vision deficinecy", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none")))),
+
+					h4title("Points"),
+					shiny::fluidRow(
+						shiny::column(width = 8, shiny::plotOutput("DOTplot", width = 800, height = 400)),
+						shiny::column(width = 4,
+									  shiny::radioButtons("DOTdist", "Color distribution", choices = c(Random = "random", Concentric = "concentric"), selected = "random"),
+									  shiny::selectizeInput("DOTborders", "Borders", choices = c("black", "white"), selected = "black"),
+									  shiny::sliderInput("DOTlwd", "", min = 0, max = 3, step = 1, value = 0))),
+					h4title("Lines"),
+					shiny::fluidRow(
+						shiny::column(width = 8, shiny::plotOutput("LINEplot", width = 800, height = 400)),
+						shiny::column(width = 4,
+									  shiny::checkboxInput("LINEstack", "Stacked", value = FALSE),
+									  shiny::sliderInput("LINElwd", "Line width", min = 1, max = 5, step = 1, value = 1))),
+
+					h4title("Polygons"),
+					shiny::fluidRow(
+						shiny::column(width = 8, shiny::plotOutput("MAPplot", width = 800, height = 400)),
+						shiny::column(width = 4, shiny::radioButtons("MAPdist", "Color distribution", choices = c(Random = "random", Gradient = "gradient"), selected = "random"),
+									  shiny::selectizeInput("MAPborders", "Borders", choices = c("black", "white"), selected = "black"),
+									  shiny::sliderInput("MAPlwd", "", min = 0, max = 3, step = 1, value = 1)
+						)),
+					h4title("Text"),
+						shiny::fluidRow(
+							shiny::column(width = 8,
+										  shiny::plotOutput("TXTplot1", width = 800, height = 120),
+										  shiny::plotOutput("TXTplot2", "Text", width = 800, height = 120)),
+							shiny::column(width = 4,
+										  shiny::sliderInput("TXTfsize", "Font size", min = 4, max = 72, step = 1, value = 12),
+										  shiny::radioButtons("TXTfface", "Font face", choices = c(Plain = "plain", Bold = "bold", Italic = "italic")))),
+
 		)
 	),
 	shiny::tags$script(
@@ -574,8 +592,11 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				nmin = if (type == "bivd") 3 else 2
 				nstep = if (type == "bivd") 2 else 1
 
+				if (is.na(mdef)) mdef = ndef
+
 				shiny::freezeReactiveValue(input, "nbiv")
 				shiny::freezeReactiveValue(input, "mbiv")
+
 				shiny::updateSliderInput(session, "nbiv", value = ndef, min = nmin, step = nstep)
 				shiny::updateSliderInput(session, "mbiv", value = mdef, min = nmin, step = nstep)
 			}
@@ -1006,7 +1027,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			hcl = get_hcl_matrix(cols)
 
 			cols_cvd = sim_cvd(cols, cvd)
-			c4a_plot_lines(col1 = cols_cvd[1], col2 = cols_cvd[2], lwd = 3, asp = .9, dark = input$dark)
+			c4a_plot_lines(cols = c(cols_cvd[1], col2 = cols_cvd[2]), lwd = 3, asp = .9, dark = input$dark)
 		}
 
 
@@ -1370,14 +1391,22 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(pal)) return(NULL)
 			pal2 = sim_cvd(pal, input$APPcvd)
 
-			c4a_plot_text(pal2, dark = input$dark)
+			c4a_plot_text(pal2, dark = input$dark, size = input$TXTfsize, face = input$TXTfface)
 		})
 
 		output$TXTplot2 = shiny::renderPlot({
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 			pal2 = sim_cvd(pal, input$APPcvd)
-			c4a_plot_text(pal2, dark = input$dark, frame = TRUE)
+			c4a_plot_text(pal2, dark = input$dark, size = input$TXTfsize, face = input$TXTfface, frame = TRUE)
+		})
+
+		output$LINEplot = shiny::renderPlot({
+			pal = tab_vals$pal
+			if (!length(pal)) return(NULL)
+			pal2 = sim_cvd(pal, input$APPcvd)
+
+			c4a_plot_lines(pal2, dark = input$dark, lwd = input$LINElwd, stacked = input$LINEstack)
 		})
 
 

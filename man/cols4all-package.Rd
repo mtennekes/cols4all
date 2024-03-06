@@ -62,6 +62,7 @@ Other contributors:
   \item Robin Lovelace \email{rob00x@gmail.com} [contributor]
   \item Helgasoft \email{contact@helgasoft.com} [contributor]
   \item Matthew Petroff \email{matthew@mpetroff.net} [contributor]
+  \item Olivier Roy [contributor]
 }
 
 }

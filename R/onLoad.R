@@ -139,6 +139,9 @@ do_cellspec = function(lst) {
 					  bivd = c(inter_wing_dist = 7, min_step = 3),
 					  bivg = c(inter_wing_dist = 7, min_step = 3))
 
+		#color-blind-very-friendly thresholds
+		CBVF_th = list(cat = c(min_dist = 15))
+
 		# unfriendly (rolling eyes)
 		CBU_th = list(cat = c(min_dist = 2),
 					  seq = c(min_step = 1),
@@ -156,7 +159,8 @@ do_cellspec = function(lst) {
 		LrangeUnfair = 50
 
 		Blues = 3
-		contrastTH = 120 # 1.2 * 100
+		contrastEL = 1.2 # Equiluminance
+		contrastTxt = 3
 
 		Cintense = 100 # chroma of colors that are considered intense
 		Cpastel = 70 # chroma of 'pastel' colors
@@ -270,6 +274,7 @@ do_cellspec = function(lst) {
 
 		tc = list(cbfriendly = list('NA' = "",
 									'0' = "",
+									'2' = list("&#9786;&#9786;", extra_css="font-size: 80%;", tooltip = "Colorblind-friendly!", escape = FALSE),
 									'1' = list("&#9786;", extra_css="font-size: 80%;", tooltip = "Colorblind-friendly!", escape = FALSE),
 									'-1' = list("&#128064;", extra_css ="font-size: 60%;", tooltip = "Be careful! Some colors are hard to distinguish by color blind people (see tab 'Color Blind Friendliness'", escape = FALSE)),
 				  chroma = list('NA' = "",
@@ -341,17 +346,17 @@ do_cellspec = function(lst) {
 				  contrast = list('NA' = "",
 				  				'FALSE' =  "",
 				  				'TRUE' = list("&#127937;",
-				  							  tooltip = "Low contrast between some colors; use borders to separate them (see tab 'Contrast')",
+				  							  tooltip = "Very low contrast between some colors; borders are needed (see tab 'Contrast')",
 				  							  escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px; margin-right: -10px;")),
 				  contrastWT = list('NA' = "",
 				  				  'FALSE' =  "",
 				  				  'TRUE' = list("&#127987;",
-				  				  			  tooltip = "Low contrast with white (see tab 'Contrast')",
+				  				  			  tooltip = "Low contrast with white for printing text (see tab 'Contrast')",
 				  				  			  escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px; margin-right: -10px;")),
 				  contrastBK = list('NA' = "",
 				  				  'FALSE' =  "",
 				  				  'TRUE' = list("&#127988;",
-				  				  			  tooltip = "Low contrast with black (see tab 'Contrast')",
+				  				  			  tooltip = "Low contrast with black for printing text  (see tab 'Contrast')",
 				  				  			  escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px;")),
 				  float = list('NA' = "",
 				  			 'FALSE' = "",
