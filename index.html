@@ -78,7 +78,7 @@
 </div>
 <!-- badges: start --->
 
-<p>The <strong>cols4all</strong> is a new R package for selecting color palettes. “Color for all” refers to our mission that colors should be usable for not just people with normal color vision, but also for people with color vision deficiency. Currently, this package contains palettes from several popular and lesser known color palette series. Own palettes series can be added as well.</p>
+<p><strong>cols4all</strong> is an R package for selecting color palettes. “Color for all” refers to our mission that colors should be usable for not just people with normal color vision, but also for people with color vision deficiency. Currently, this package contains palettes from several popular and lesser known color palette series. Own palettes series can be added as well.</p>
 <p>Color palettes are well organized and made consistent with each other. Moreover, they are scored on several aspects: color-blind-friendliness, the presence of intense colors (which should be avoided), the overall aesthetic harmony, and how many different hues are used. Finally, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: <em>categorical</em> (qualitative) palettes, <em>sequential</em> palettes, <em>diverging</em> palettes, and <em>bivariate</em> palettes (divided into four subtypes).</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -100,9 +100,7 @@
 <p>The main tool is a dashboard, which is started with:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_gui.html">c4a_gui</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png" alt="https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png"><div class="figcaption"><a href="https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png" class="external-link uri">https://user-images.githubusercontent.com/2444081/210850914-cdb8a128-1b8a-4900-94d0-dfa6ca449585.png</a></div>
-</div>
+<p><a href="vignettes/dash-3.png"><img src="articles/dash-3.png" width="650"></a></p>
 <p>What types and series are available?</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_palettes.html">c4a_types</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -124,15 +122,16 @@
 <span><span class="co">#&gt; 5   kovesi                   Palettes designed by Peter Kovesi</span></span>
 <span><span class="co">#&gt; 6      met Palettes inspired by The Metropolitan Museum of Art</span></span>
 <span><span class="co">#&gt; 7     misc                              Miscellaneous palettes</span></span>
-<span><span class="co">#&gt; 8    parks                 Palettes inspired by National Parks</span></span>
-<span><span class="co">#&gt; 9     poly               Qualitative palettes with many colors</span></span>
-<span><span class="co">#&gt; 10   scico     Scientific colour map palettes by Fabio Crameri</span></span>
-<span><span class="co">#&gt; 11 seaborn            Palettes from the Python library Seaborn</span></span>
-<span><span class="co">#&gt; 12 stevens                Bivariate palettes by Joshua Stevens</span></span>
-<span><span class="co">#&gt; 13 tableau                        Palettes designed by Tableau</span></span>
-<span><span class="co">#&gt; 14     tol                       Palettes designed by Paul Tol</span></span>
-<span><span class="co">#&gt; 15 viridis          Palettes fom the Python library matplotlib</span></span>
-<span><span class="co">#&gt; 16     wes                   Palettes from Wes Anderson movies</span></span></code></pre></div>
+<span><span class="co">#&gt; 8    miscs                                                &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 9    parks                 Palettes inspired by National Parks</span></span>
+<span><span class="co">#&gt; 10    poly               Qualitative palettes with many colors</span></span>
+<span><span class="co">#&gt; 11   scico     Scientific colour map palettes by Fabio Crameri</span></span>
+<span><span class="co">#&gt; 12 seaborn            Palettes from the Python library Seaborn</span></span>
+<span><span class="co">#&gt; 13 stevens                Bivariate palettes by Joshua Stevens</span></span>
+<span><span class="co">#&gt; 14 tableau                        Palettes designed by Tableau</span></span>
+<span><span class="co">#&gt; 15     tol                       Palettes designed by Paul Tol</span></span>
+<span><span class="co">#&gt; 16 viridis          Palettes fom the Python library matplotlib</span></span>
+<span><span class="co">#&gt; 17     wes                   Palettes from Wes Anderson movies</span></span></code></pre></div>
 <p>How many palettes per type x series?</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_palettes.html">c4a_overview</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -143,16 +142,17 @@
 <span><span class="co">#&gt; hcl       9  23  11   NA   NA   NA   NA</span></span>
 <span><span class="co">#&gt; kovesi   NA  17  13   NA   NA   NA   NA</span></span>
 <span><span class="co">#&gt; met      33   8  14   NA    1   NA   NA</span></span>
-<span><span class="co">#&gt; misc      5  NA  NA   NA    3   NA   NA</span></span>
+<span><span class="co">#&gt; misc      1  NA  NA   NA    3   NA   NA</span></span>
+<span><span class="co">#&gt; miscs     4  NA  NA   NA   NA   NA   NA</span></span>
 <span><span class="co">#&gt; parks    22   5   3   NA   NA   NA   NA</span></span>
 <span><span class="co">#&gt; poly      9  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; scico    NA  18  14   NA    2   NA    1</span></span>
+<span><span class="co">#&gt; scico    21  21  10   NA    2   NA    1</span></span>
 <span><span class="co">#&gt; seaborn   6   4   2   NA   NA   NA   NA</span></span>
 <span><span class="co">#&gt; stevens  NA  NA  NA    5   NA   NA   NA</span></span>
 <span><span class="co">#&gt; tableau  29  23  28   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; tol       7   7   3   NA   NA   NA   NA</span></span>
+<span><span class="co">#&gt; tol       8   8   4   NA   NA   NA   NA</span></span>
 <span><span class="co">#&gt; viridis  NA   7   1   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; wes      18  NA   1   NA   NA   NA   NA</span></span></code></pre></div>
+<span><span class="co">#&gt; wes      23  NA   1   NA   NA   NA   NA</span></span></code></pre></div>
 <p>What palettes are available, e.g diverging from the hcl series?</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Diverging palettes from the 'hcl' series</span></span>
@@ -238,6 +238,13 @@
 <li>
 <code>c4a_sysdata_export</code> Export system data</li>
 </ul>
+<p>Edit color palette data</p>
+<ul>
+<li>
+<code>c4a_duplicate</code> Duplicates a color palette</li>
+<li>
+<code>c4a_modify</code> Modifies palette colors</li>
+</ul>
 <p>ggplot2</p>
 <ul>
 <li>
@@ -268,97 +275,6 @@
 <li><p>Do you have ideas for improvement how to measure palette properties?</p></li>
 </ul>
 <p>Let us know! (via github issues)</p>
-</div>
-<div class="section level2">
-<h2 id="bonus-2568-palettes-from-paletteer">Bonus: 2568 palettes from <strong>paletteer</strong>
-<a class="anchor" aria-label="anchor" href="#bonus-2568-palettes-from-paletteer"></a>
-</h2>
-<p>The R package <a href="https://github.com/EmilHvitfeldt/paletteer" class="external-link"><strong>paletteer</strong></a> contains 2568 from 70 other R packages. These have been converted to data for <strong>cols4all</strong> <a href="https://github.com/mtennekes/cols4all/blob/main/build/build_paletteer.R" class="external-link">(script)</a></p>
-<p>These can be loaded and analysed as follows:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">paletteer_data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">url</a></span><span class="op">(</span><span class="st">"https://github.com/mtennekes/cols4all/releases/download/v0.6/paletteer.rds"</span>,<span class="st">"rb"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/c4a_sysdata_import.html">c4a_sysdata_import</a></span><span class="op">(</span><span class="va">paletteer_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt; cols4all system data imported successfully</span></span></code></pre></div>
-<p>Note that we use <code>c4a_sysdata_import</code> rather than <code>c4a_load</code> because we want to replace all the palette data to avoid overlap and conflicts with the palettes already included in <strong>cols4all</strong>.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_palettes.html">c4a_overview</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                      cat seq div bivs bivc bivd bivg</span></span>
-<span><span class="co">#&gt; awtools                4   2  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; basetheme              8  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; beyonce              100  21   9   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; calecopal             40   4   1   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; cartography            2  14  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; colorBlindness         3   2  14   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; colorblindr            2  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; colRoz                50   3   1   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; dichromat              2   2  13   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; DresdenColor          18  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; dutchmasters           6  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; feathers              11  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; fishualize           162  12  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; futurevisions         14   5   1   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; ggpomological          2  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; ggprism               61   4  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; ggsci                 25  19   1   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; ggthemes             100  24  28   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; ggthemes_ptol          1  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; ggthemes_solarized     8  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; ggthemr               18  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; ghibli                27  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; grDevices              5  80  36   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; harrypotter           NA  16  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; impressionist.colors  24  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; IslamicArt            16  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; jcolors               10   3  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; khroma                11  21  20   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; LaCroixColoR          13  NA   8   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; lisa                 121   4   3   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; Manu                  19  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; MapPalettes           NA   2   4   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; MetBrewer             56  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; miscpalettes          16   1  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; musculusColors         7  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; nationalparkcolors    25  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; NatParksPalettes      30  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; nbapalettes          128   1  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; NineteenEightyR        7   3   2   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; nord                  11   3   2   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; ochRe                 15  NA   1   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; oompaBase             NA   5   3   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; palettesForR          42   4   2   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; palettetown          389  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; palr                  NA   4  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; pals                   8  59  18   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; peRReo                21  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; PNWColors              4   7   3   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; Polychrome             8  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; rcartocolor            6  21   7   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; RColorBrewer           8  19   8   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; Redmonder             24  10   7   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; rockthemes            21  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; RSkittleBrewer         5  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; rtist                 15  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; scico                 NA  21  14   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; severance              7  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; soilpalettes           7   7  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; suffrager              6  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; tayloRswift            9   1  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; tidyquant              3  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; trekcolors            23   8   4   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; tvthemes              58  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; unikn                  5   8   3   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; vapeplot               8  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; vapoRwave             11   2   1   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; viridis               NA   8  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; werpals               17   1  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; wesanderson           19  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; yarrr                 21  NA  NA   NA   NA   NA   NA</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_gui.html">c4a_gui</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="https://user-images.githubusercontent.com/2444081/216455415-de676d12-8e94-4917-8adc-8ca1e6ac4df7.png" alt="https://user-images.githubusercontent.com/2444081/216455415-de676d12-8e94-4917-8adc-8ca1e6ac4df7.png"><div class="figcaption"><a href="https://user-images.githubusercontent.com/2444081/216455415-de676d12-8e94-4917-8adc-8ca1e6ac4df7.png" class="external-link uri">https://user-images.githubusercontent.com/2444081/216455415-de676d12-8e94-4917-8adc-8ca1e6ac4df7.png</a></div>
-</div>
-<p>Note that this dashboard is not particularly fast (so grab a coffee:-))</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
