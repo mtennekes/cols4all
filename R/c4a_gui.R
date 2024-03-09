@@ -55,7 +55,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	if (!check_installed_packages(c("shiny", "shinyjs", "kableExtra", "colorblindcheck"))) return(invisible(NULL))
 
 
-	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("man/figures", package = "cols4all"))
+	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
 
 	#############################
 	## Catelogue tab
@@ -183,7 +183,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 							value = "tab_catel",
 					 shiny::fluidRow(
 					 	shiny::column(width = 3,
-					 				  shiny::img(src = "imgResources/logo.png", height="200", align = "center", 'vertical-align' = "center")),
+					 				  shiny::img(src = "imgResources/cols4all_logo.png", height="200", align = "center", 'vertical-align' = "center")),
 					 	shiny::column(width = 9,
 					 				  shiny::fluidRow(
 					 				  	shiny::column(width = 4,

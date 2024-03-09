@@ -1,3 +1,6 @@
+# cols4all 0.7-1
+- fixed bug in c4a_gui
+
 # cols4all 0.7
 - improved similarity matrix plot
 - improved applications tab
