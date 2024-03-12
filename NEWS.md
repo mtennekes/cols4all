@@ -1,5 +1,5 @@
 # cols4all 0.7-1
-- fixed bug in c4a_gui
+- fixed critical bug in c4a_gui
 
 # cols4all 0.7
 - improved similarity matrix plot
