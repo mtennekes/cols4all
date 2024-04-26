@@ -18,7 +18,7 @@ check_name_presence = function(name, verbose = TRUE) {
 	if (length(palid)) {
 		nms = fullnames[palid]
 		if (length(palid) > 1) {
-			if (verbose) message(paste0("Multiple palettes called \"", name, " found: \"", paste(nms, collapse = "\", \""), "\". The first one, \"", nms[1], "\", is returned."))
+			if (verbose) message(paste0("Multiple palettes called \"", name, "\" found: \"", paste(nms, collapse = "\", \""), "\". The first one, \"", nms[1], "\", is returned."))
 			nms = nms[1]
 		}
 		return(nms)
