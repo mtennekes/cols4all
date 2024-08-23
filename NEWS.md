@@ -1,6 +1,7 @@
 # cols4all 0.8 (devel)
 - selectinput other tabs sorted in main table
-- ...
+- added n=max filter for categorical palettes 
+- [!] added categorical palettes
 
 # cols4all 0.7-1
 - fixed critical bug in c4a_gui

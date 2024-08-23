@@ -1,12 +1,21 @@
-get_z_n = function(z, n = NA, m = NA, range = NA) {
+get_z_n = function(z, n = NA, m = NA, n.only = FALSE, range = NA) {
 	# if (!is.null(n)) {
 	if (is.na(n) && is.na(m)) {
 		sel = TRUE
 	} else if (is.na(m)) {
-		sel = n <= z$nmax & n >= z$nmin
+		if (n.only) {
+			sel = n == z$nmax
+		} else {
+			sel = n <= z$nmax & n >= z$nmin
+		}
 	} else {
-		sel = n <= z$nmax & n >= z$nmin & m <= z$mmax & m >= z$mmin
+		if (n.only) {
+			sel = n == z$nmax & m <= z$mmax & m >= z$mmin
+		} else {
+			sel = n <= z$nmax & n >= z$nmin & m <= z$mmax & m >= z$mmin
+		}
 	}
+
 
 	z2 = z[sel, ]
 	if (nrow(z2) == 0) return(NULL)

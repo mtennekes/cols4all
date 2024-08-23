@@ -195,6 +195,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					 				  				  shiny::conditionalPanel(
 					 				  				  	condition = "input.type1 != 'biv'",
 					 				  				  	shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
+					 				  				  shiny::uiOutput("checkOnly"),
 					 				  				  shiny::conditionalPanel(
 					 				  				  	condition = "input.type1 == 'biv'",
 					 				  				  	shiny::fluidRow(
@@ -447,6 +448,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 						shiny::column(width = 8, shiny::plotOutput("DOTplot", width = 800, height = 400)),
 						shiny::column(width = 4,
 									  shiny::radioButtons("DOTdist", "Color distribution", choices = c(Random = "random", Concentric = "concentric"), selected = "random"),
+									  shiny::sliderInput("DOTsize", "", min = .5, max = 5, step = .5, value = 1),
 									  shiny::selectizeInput("DOTborders", "Borders", choices = c("black", "white"), selected = "black"),
 									  shiny::sliderInput("DOTlwd", "", min = 0, max = 3, step = 1, value = 0))),
 					h4title("Lines"),
@@ -647,7 +649,6 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		get_values = shiny::reactive({
 			if (input$sort == "") return(NULL)
-
 			type = get_type12()
 			n = input$n
 			if (is.null(n)) return(NULL)
@@ -663,6 +664,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				 columns = if (n > 16) 12 else n,
 				 na = input$na,
 				 range = if (input$auto_range == "Automatic") NA else input$range,
+				 n.only = if (is.null(input$n.only)) FALSE else input$n.only,
 				 textcol = input$textcol,
 				 format = input$format)
 
@@ -681,10 +683,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					pal_names = NULL
 				} else {
 					if (substr(type, 1, 3) == "biv") {
-						prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE)
+						prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE, n.only = FALSE)
 
 					} else {
-						prep = prep_table(type = type, n = n, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE)
+						prep = prep_table(type = type, n = n, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE, n.only = n.only)
 					}
 					pal_names = prep$zn$fullname
 				}
@@ -735,6 +737,16 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		# 		shinyjs::enable("range")
 		# 	}
 		# })
+
+		output$checkOnly = shiny::renderUI({
+			values = get_values()
+			if (!is.null(values) && values$type == "cat") {
+				shiny::checkboxInput("n.only", paste("Only palettes with max = ", values$n, " colors"), value = values$n.only)
+			} else {
+				NULL
+			}
+		})
+
 
 		output$range_info = shiny::renderUI({
 			#if (input$type == "div") shiny::div(style="text-align:left;", shiny::tagList("middle", shiny::span(stype = "float:right;", "each side"))) else ""
@@ -1398,7 +1410,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(pal)) return(NULL)
 			pal2 = sim_cvd(pal, input$APPcvd)
 
-			c4a_plot_scatter(pal2,  borders = input$DOTborders, lwd = input$DOTlwd, dark = input$dark, dist = input$DOTdist)
+			c4a_plot_scatter(pal2,  borders = input$DOTborders, lwd = input$DOTlwd, size = input$DOTsize, dark = input$dark, dist = input$DOTdist)
 		})
 
 		output$TXTplot1 = shiny::renderPlot({

@@ -36,7 +36,7 @@ table_columns = function(type, show.scores) {
 	list(qn = qn, ql = ql, qs = qs, sn = sn, sl = sl)
 }
 
-prep_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, sort = "name", series = "all", range = NA, show.scores = FALSE, columns = NA, verbose = TRUE) {
+prep_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, sort = "name", series = "all", range = NA, show.scores = FALSE, columns = NA, verbose = TRUE) {
 	id = NULL
 
 	type = match.arg(type)
@@ -76,7 +76,7 @@ prep_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "biv
 		return(invisible(NULL))
 	}
 
-	zn = get_z_n(z[z$type == type, ], n = n, m = m, range = range)
+	zn = get_z_n(z[z$type == type, ], n = n, m = m, n.only = n.only, range = range)
 	if (!is.null(zn)) {
 		if (!series[1] == "all") zn = zn[zn$series %in% series, ]
 	}
@@ -387,6 +387,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #'
 #' @param type type of palette. Run \code{\link{c4a_types}} to see the implemented types and their description. For `c4a_gui` it only determines which type is shown initially.
 #' @param n,m `n` is the number of displayed colors. For bivariate palettes `"biv"`, `n` and `m` are the number of columns and rows respectively. If omitted: for `"cat"` the full palette is displayed, for `"seq"` and `"div"`, 9 colors, and for `"bivs"`/`"bivc"`/`"bivd"`/`"bivg"` 4 columns and rows. For `c4a_gui` it only determines which number of colors initially.
+#' @param n.only should only palettes be contained that have exactly `n.only` colors (`FALSE` by default)
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @param sort column name to sort the data. The available column names depend on the arguments `type` and `show.scores`. They are listed in the warning message. Use a `"-"` prefix to reverse the order.
 #' @param text.format The format of the text of the colors. One of `"hex"`, `"RGB"` or `"HCL"`.
@@ -410,8 +411,8 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #' @return An HMTL table (`kableExtra` object)
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
+c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
 	cvd.sim = match.arg(cvd.sim)
-	p = prep_table(type = type, n = n, m = m, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = verbose)
+	p = prep_table(type = type, n = n, m = m, n.only = n.only, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = verbose)
 	plot_table(p = p, text.format = text.format, text.col = text.col, include.na = include.na, cvd.sim = cvd.sim, verbose = verbose)
 }

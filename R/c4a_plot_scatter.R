@@ -1,4 +1,4 @@
-c4a_plot_scatter = function(cols = NULL, col1 = "blue", col2 = "red", borders = "black", lwd = 0, dark = FALSE, dist = c("random", "concentric")) {
+c4a_plot_scatter = function(cols = NULL, col1 = "blue", col2 = "red", borders = "black", size = 1, lwd = 0, dark = FALSE, dist = c("random", "concentric")) {
 	dist = match.arg(dist)
 
 	if (is.null(cols)) {
@@ -45,6 +45,6 @@ c4a_plot_scatter = function(cols = NULL, col1 = "blue", col2 = "red", borders = 
 
 	grid::pushViewport(grid::viewport(xscale = c(-2, 2), yscale = c(-1, 1)))
 
-	grid::grid.points(x = x, y = y, pch = 21, gp = grid::gpar(col = col, fill = fill, lwd = lwd))
+	grid::grid.points(x = x, y = y, pch = 21, size = grid::unit(size, "char"), gp = grid::gpar(col = col, fill = fill, lwd = lwd))
 
 }
