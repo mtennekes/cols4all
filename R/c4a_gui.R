@@ -672,15 +672,22 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				m = 1
 			}
 
+			if (is.null(lst$series)) return(NULL)
+
 			lst = within(lst, {
 				sort = paste0({if (sortRev) "-" else ""}, sort)
-				if (substr(type, 1, 3) == "biv") {
-					prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE)
-
+				if (is.null(series)) {
+					prep = NULL
+					pal_names = NULL
 				} else {
-					prep = prep_table(type = type, n = n, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE)
+					if (substr(type, 1, 3) == "biv") {
+						prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE)
+
+					} else {
+						prep = prep_table(type = type, n = n, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE)
+					}
+					pal_names = prep$zn$fullname
 				}
-				pal_names = prep$zn$fullname
 			})
 			#
 			#
