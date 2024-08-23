@@ -1,10 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   cols4all: cols4all.html
-last_built: 2024-04-26T11:43Z
+last_built: 2024-08-23T08:12Z
 urls:
   reference: https://mtennekes.github.io/cols4all/reference
   article: https://mtennekes.github.io/cols4all/articles
-
