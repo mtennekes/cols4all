@@ -924,7 +924,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 				#sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
 
-				tab = plot_table(p = values$prep, text.format = values$format, text.col = values$textcol, include.na = values$na, cvd.sim = values$cvd, verbose = FALSE)
+				tab = if (is.null(values$prep)) NULL
+				else plot_table(p = values$prep, text.format = values$format, text.col = values$textcol, include.na = values$na, cvd.sim = values$cvd, verbose = FALSE)
 			}
 			if (is.null(tab)) {
 				kableExtra::kbl(data.frame("No palettes found. Please change the selection."), col.names = " ")
