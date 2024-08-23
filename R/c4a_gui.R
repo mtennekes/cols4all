@@ -672,14 +672,26 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				m = 1
 			}
 
-			sel = z$type == type &
-				z$series %in% lst$series &
-				lst$n <= z$nmax
-			if (!any(sel)) {
-				lst$pal_names = character(0)
-			} else {
-				lst$pal_names = sort(z$fullname[sel])
-			}
+			lst = within(lst, {
+				sort = paste0({if (sortRev) "-" else ""}, sort)
+				if (substr(type, 1, 3) == "biv") {
+					prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE)
+
+				} else {
+					prep = prep_table(type = type, n = n, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE)
+				}
+				pal_names = prep$zn$fullname
+			})
+			#
+			#
+			# sel = z$type == type &
+			# 	z$series %in% lst$series &
+			# 	lst$n <= z$nmax
+			# if (!any(sel)) {
+			# 	lst$pal_names = character(0)
+			# } else {
+			# 	lst$pal_names = z$fullname[sel]#sort(z$fullname[sel])
+			# }
 			lst
 		})
 		#get_values_d = shiny::debounce(get_values, 300)
@@ -903,19 +915,15 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 				progress$set(message = "Colors in progress...", value = 0)
 
-				sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
+				#sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
 
-				if (substr(values$type, 1, 3) == "biv") {
-					tab = c4a_table(n = values$nbiv, m = values$mbiv, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format, verbose = FALSE)
-				} else {
-					tab = c4a_table(n = values$n, cvd.sim = values$cvd, sort = sort, columns = values$columns, type = values$type, show.scores = values$show.scores, series = values$series, range = values$range, include.na = values$na, text.col = values$textcol, text.format = values$format, verbose = FALSE)
-				}
+				tab = plot_table(p = values$prep, text.format = values$format, text.col = values$textcol, include.na = values$na, cvd.sim = values$cvd, verbose = FALSE)
 			}
-
 			if (is.null(tab)) {
 				kableExtra::kbl(data.frame("No palettes found. Please change the selection."), col.names = " ")
 			} else {
 				.C4A_HASH$vals = c(.C4A_HASH$vals, list(values))
+				#str(.C4A_HASH$vals)
 				.C4A_HASH$tables = c(.C4A_HASH$tables, tab)
 				tab
 			}

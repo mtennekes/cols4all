@@ -36,37 +36,7 @@ table_columns = function(type, show.scores) {
 	list(qn = qn, ql = ql, qs = qs, sn = sn, sl = sl)
 }
 
-
-#' Graphical user interface to analyse palettes
-#'
-#' Graphical user interface to analyse palettes. `c4a_table` shows a table that can be opened in the browser. `c4a_gui` is a graphical user interface (shiny app) around this table.
-#'
-#' @param type type of palette. Run \code{\link{c4a_types}} to see the implemented types and their description. For `c4a_gui` it only determines which type is shown initially.
-#' @param n,m `n` is the number of displayed colors. For bivariate palettes `"biv"`, `n` and `m` are the number of columns and rows respectively. If omitted: for `"cat"` the full palette is displayed, for `"seq"` and `"div"`, 9 colors, and for `"bivs"`/`"bivc"`/`"bivd"`/`"bivg"` 4 columns and rows. For `c4a_gui` it only determines which number of colors initially.
-#' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
-#' @param sort column name to sort the data. The available column names depend on the arguments `type` and `show.scores`. They are listed in the warning message. Use a `"-"` prefix to reverse the order.
-#' @param text.format The format of the text of the colors. One of `"hex"`, `"RGB"` or `"HCL"`.
-#' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection). `"auto"` means automatic: black for light colors and white for dark colors.
-#' @param series Series of palettes to show. See \code{\link{c4a_series}} for options. By default, `"all"`, which means all series. For `c4a_gui` it only determines which series are shown initially.
-#' @param range vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`.
-#' @param include.na should color for missing values be shown? `FALSE` by default
-#' @param show.scores should scores of the quality indicators be printed? See details for a description of those indicators.
-#' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette lengths.
-#' @param verbose should messages and warnings be printed?
-#' @import colorspace abind
-#' @importFrom grDevices hcl dev.size
-#' @importFrom stats lm predict
-#' @importFrom utils tail head
-#' @importFrom png readPNG
-#' @importFrom stats rnorm runif
-#' @importFrom graphics barplot lines par
-#' @example ./examples/c4a_table.R
-#' @seealso References of the palettes: \code{\link{cols4all-package}}.
-#' @export
-#' @return An HMTL table (`kableExtra` object)
-#' @rdname c4a_gui
-#' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
+prep_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, sort = "name", series = "all", range = NA, show.scores = FALSE, columns = NA, verbose = TRUE) {
 	id = NULL
 
 	type = match.arg(type)
@@ -87,7 +57,6 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 
 	.labels = .C4A$labels
 
-	cvd.sim = match.arg(cvd.sim)
 
 	if (substr(type, 1, 3) == "biv") {
 		if (is.null(n)) n = 3
@@ -158,6 +127,20 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	if (substr(type, 1, 3) == "biv") {
 		zn$palette = lapply(zn$palette, function(p) as.vector(t(p[nrow(p):1L,])))
 	}
+	list(zn = zn, n = n, m = m, columns = columns, type = type, qn = qn, ql = ql)
+}
+
+plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
+	type = p$type
+	zn = p$zn
+	qn = p$qn
+	ql = p$ql
+
+	n = p$n
+	m = p$m
+	columns = p$columns
+
+	k = nrow(zn)
 
 	#zn$Name = gsub(".*\\.", "", zn$name)
 
@@ -396,5 +379,39 @@ c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg
 	k[1] = paste(c(extra,kl), collapse="\n")
 	#k[1] = paste(kl, collapse="\n")
 	k
+}
 
+#' Graphical user interface to analyse palettes
+#'
+#' Graphical user interface to analyse palettes. `c4a_table` shows a table that can be opened in the browser. `c4a_gui` is a graphical user interface (shiny app) around this table.
+#'
+#' @param type type of palette. Run \code{\link{c4a_types}} to see the implemented types and their description. For `c4a_gui` it only determines which type is shown initially.
+#' @param n,m `n` is the number of displayed colors. For bivariate palettes `"biv"`, `n` and `m` are the number of columns and rows respectively. If omitted: for `"cat"` the full palette is displayed, for `"seq"` and `"div"`, 9 colors, and for `"bivs"`/`"bivc"`/`"bivd"`/`"bivg"` 4 columns and rows. For `c4a_gui` it only determines which number of colors initially.
+#' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
+#' @param sort column name to sort the data. The available column names depend on the arguments `type` and `show.scores`. They are listed in the warning message. Use a `"-"` prefix to reverse the order.
+#' @param text.format The format of the text of the colors. One of `"hex"`, `"RGB"` or `"HCL"`.
+#' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection). `"auto"` means automatic: black for light colors and white for dark colors.
+#' @param series Series of palettes to show. See \code{\link{c4a_series}} for options. By default, `"all"`, which means all series. For `c4a_gui` it only determines which series are shown initially.
+#' @param range vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`.
+#' @param include.na should color for missing values be shown? `FALSE` by default
+#' @param show.scores should scores of the quality indicators be printed? See details for a description of those indicators.
+#' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette lengths.
+#' @param verbose should messages and warnings be printed?
+#' @import colorspace abind
+#' @importFrom grDevices hcl dev.size
+#' @importFrom stats lm predict
+#' @importFrom utils tail head
+#' @importFrom png readPNG
+#' @importFrom stats rnorm runif
+#' @importFrom graphics barplot lines par
+#' @example ./examples/c4a_table.R
+#' @seealso References of the palettes: \code{\link{cols4all-package}}.
+#' @export
+#' @return An HMTL table (`kableExtra` object)
+#' @rdname c4a_gui
+#' @name c4a_gui
+c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
+	cvd.sim = match.arg(cvd.sim)
+	p = prep_table(type = type, n = n, m = m, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = verbose)
+	plot_table(p = p, text.format = text.format, text.col = text.col, include.na = include.na, cvd.sim = cvd.sim, verbose = verbose)
 }
