@@ -806,8 +806,8 @@ local({
 local({
 	pals =
 	list(day5 = c("#FF9D9A", "#59A14F", "#B07AA1", "#F1CE63", "#99DDFF"
-	), day7 = c("#CC6677", "#AAAA00", "#77AADD", "#FF9D9A", "#99DDFF",
-	"#B07AA1", "#F1CE63"), day9 = c("#CC6677", "#AAAA00", "#99DDFF",
+	), day7 = c("#CC6677", "#77AADD", "#F1CE63", "#B07AA1", "#FF9D9A", "#99DDFF",
+				"#AAAA00"), day9 = c("#CC6677", "#AAAA00", "#99DDFF",
 	"#B07AA1", "#FF9D9A", "#59A14F", "#FABFD2", "#DDCC77", "#77AADD"
 	), night5a = c("#997700", "#3969AC", "#E73F74", "#6195CF", "#882255"
 	), night5b = c("#999933", "#3969AC", "#D37295", "#225522", "#882255"
@@ -867,7 +867,7 @@ local({
 	), twilight13f = c("#FF9D9A", "#DDCC77", "#009988", "#4B4B8F",
 	"#E73F74", "#997700", "#225522", "#9467BD", "#8C564B", "#AAAA00",
 	"#77AADD", "#882255", "#99DDFF"))
-	c4a_load(c4a_data(pals, types = "cat", series = "c4a"))
+	c4a_load(c4a_data(pals, types = "cat", series = "c4a"), overwrite = TRUE)
 })
 
 
