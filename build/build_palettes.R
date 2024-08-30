@@ -14,18 +14,19 @@ library(Polychrome)
 library(MetBrewer)
 
 sessioninfo::session_info(pkgs = "attached")
-# package         * version date (UTC) lib source
-# colorblindcheck * 1.0.2   2023-05-13 [1] CRAN (R 4.3.0)
-# colorspace      * 2.1-0   2023-01-23 [1] CRAN (R 4.3.0)
-# ggthemes        * 5.0.0   2023-11-21 [1] CRAN (R 4.3.1)
-# khroma          * 1.12.0  2024-01-08 [1] CRAN (R 4.3.1)
-# MetBrewer       * 0.2.0   2022-03-21 [1] CRAN (R 4.3.0)
-# pals            * 1.8     2023-08-23 [1] CRAN (R 4.3.0)
-# Polychrome      * 1.5.1   2022-05-03 [1] CRAN (R 4.3.0)
-# rcartocolor     * 2.1.1   2023-05-13 [1] CRAN (R 4.3.0)
-# RColorBrewer    * 1.1-3   2022-04-03 [1] CRAN (R 4.3.0)
-# reticulate      * 1.34.0  2023-10-12 [1] CRAN (R 4.3.1)
-# viridisLite     * 0.4.2   2023-05-02 [1] CRAN (R 4.3.0)
+# colorblindcheck * 1.0.2   2023-05-13 [1] CRAN (R 4.4.0)
+# colorspace      * 2.1-1   2024-07-26 [1] CRAN (R 4.4.0)
+# P cols4all        * 0.7-2   2024-08-23 [?] load_all()
+# ggthemes        * 5.1.0   2024-02-10 [1] CRAN (R 4.4.0)
+# khroma          * 1.14.0  2024-08-26 [1] CRAN (R 4.4.1)
+# MetBrewer       * 0.2.0   2022-03-21 [1] CRAN (R 4.4.0)
+# pals            * 1.9     2024-07-16 [1] CRAN (R 4.4.0)
+# Polychrome      * 1.5.1   2022-05-03 [1] CRAN (R 4.4.0)
+# rcartocolor     * 2.1.1   2023-05-13 [1] CRAN (R 4.4.0)
+# RColorBrewer    * 1.1-3   2022-04-03 [1] CRAN (R 4.4.0)
+# reticulate      * 1.38.0  2024-06-19 [1] CRAN (R 4.4.0)
+# shiny           * 1.8.1.1 2024-04-02 [1] CRAN (R 4.4.0)
+# viridisLite     * 0.4.2   2023-05-02 [1] CRAN (R 4.4.0)
 
 
 c4a_sysdata_remove(are.you.sure = TRUE)
@@ -613,7 +614,7 @@ local({
 	sb_seq_names = c("rocket", "mako", "flare", "crest")
 	sb_seq = lapply(sb_seq_names, function(nm) {
 		pal = sns$color_palette(nm)
-		m = as.data.frame(t(sapply(1:(length(pal)), function(i) pal[[i]])))
+		m = as.data.frame(t(sapply(1:(length(pal)), function(i) pal[[i-1]])))
 		names(m) = c("red", "green", "blue")
 		do.call(rgb, as.list(m))
 	})
@@ -622,7 +623,7 @@ local({
 	sb_div_names = c("vlag", "icefire")
 	sb_div = lapply(sb_div_names, function(nm) {
 		pal = sns$color_palette(nm)
-		m = as.data.frame(t(sapply(1:(length(pal)), function(i) pal[[i]])))
+		m = as.data.frame(t(sapply(1:(length(pal)), function(i) pal[[i-1]])))
 		names(m) = c("red", "green", "blue")
 		do.call(rgb, as.list(m))
 	})
@@ -802,72 +803,17 @@ local({
 
 
 #### c4a cat
-
 local({
-	pals =
-	list(day5 = c("#FF9D9A", "#59A14F", "#B07AA1", "#F1CE63", "#99DDFF"
-	), day7 = c("#CC6677", "#77AADD", "#F1CE63", "#B07AA1", "#FF9D9A", "#99DDFF",
-				"#AAAA00"), day9 = c("#CC6677", "#AAAA00", "#99DDFF",
-	"#B07AA1", "#FF9D9A", "#59A14F", "#FABFD2", "#DDCC77", "#77AADD"
-	), night5a = c("#997700", "#3969AC", "#E73F74", "#6195CF", "#882255"
-	), night5b = c("#999933", "#3969AC", "#D37295", "#225522", "#882255"
-	), night5c = c("#E65518", "#6195CF", "#882255", "#225522", "#3969AC"
-	), night7a = c("#A5170E", "#009988", "#9467BD", "#8C564B", "#4B4B8F",
-	"#E73F74", "#999933"), night7b = c("#A5170E", "#6195CF", "#882255",
-	"#E65518", "#3969AC", "#D37295", "#9D7660"), night7c = c("#A5170E",
-	"#4B4B8F", "#882255", "#997700", "#9467BD", "#E73F74", "#009988"
-	), night7d = c("#E65518", "#6195CF", "#882255", "#9D7660", "#4B4B8F",
-	"#D37295", "#225522"), night9a = c("#A5170E", "#9D7660", "#4B4B8F",
-	"#882255", "#E65518", "#009988", "#D37295", "#8C564B", "#9467BD"
-	), night9b = c("#A5170E", "#999933", "#4B4B8F", "#882255", "#8C564B",
-	"#009988", "#D37295", "#9D7660", "#9467BD"), night9c = c("#A5170E",
-	"#009988", "#9467BD", "#D37295", "#8C564B", "#4B4B8F", "#E73F74",
-	"#997700", "#882255"), night9d = c("#A5170E", "#009988", "#9467BD",
-	"#D37295", "#8C564B", "#4B4B8F", "#E73F74", "#999933", "#882255"
-	), night9e = c("#E65518", "#225522", "#4B4B8F", "#882255", "#8C564B",
-	"#009988", "#D37295", "#9D7660", "#9467BD"), night9f = c("#8C564B",
-	"#225522", "#4B4B8F", "#882255", "#9D7660", "#009988", "#D37295",
-	"#999933", "#9467BD"), night9g = c("#8C564B", "#009988", "#9467BD",
-	"#D37295", "#997700", "#4B4B8F", "#E73F74", "#225522", "#882255"
-	), night9h = c("#8C564B", "#009988", "#9467BD", "#D37295", "#999933",
-	"#4B4B8F", "#E73F74", "#225522", "#882255"), twilight5a = c("#A5170E",
-	"#009988", "#4B4B8F", "#F1CE63", "#99DDFF"), twilight5b = c("#CC6677",
-	"#225522", "#9467BD", "#F1CE63", "#99DDFF"), twilight5c = c("#CC6677",
-	"#AAAA00", "#3969AC", "#A5170E", "#77AADD"), twilight7a = c("#DDCC77",
-	"#77AADD", "#882255", "#999933", "#3969AC", "#D37295", "#225522"
-	), twilight7b = c("#F1CE63", "#99DDFF", "#882255", "#59A14F",
-	"#9467BD", "#D37295", "#225522"), twilight7c = c("#FF9D9A", "#99DDFF",
-	"#882255", "#AAAA00", "#3969AC", "#E73F74", "#225522"), twilight7d = c("#E65518",
-	"#009988", "#9467BD", "#F1CE63", "#99DDFF", "#882255", "#225522"
-	), twilight9a = c("#FF9D9A", "#225522", "#4B4B8F", "#882255",
-	"#997700", "#77AADD", "#E73F74", "#AAAA00", "#9467BD"), twilight9b = c("#A5170E",
-	"#009988", "#9467BD", "#FABFD2", "#997700", "#4B4B8F", "#E73F74",
-	"#AAAA00", "#882255"), twilight9c = c("#F1CE63", "#009988", "#4B4B8F",
-	"#882255", "#999933", "#99DDFF", "#E73F74", "#225522", "#9467BD"
-	), twilight9d = c("#A5170E", "#009988", "#4B4B8F", "#882255",
-	"#997700", "#99DDFF", "#E73F74", "#F1CE63", "#9467BD"), twilight11a = c("#CC6677",
-	"#F1CE63", "#99DDFF", "#9467BD", "#FF9D9A", "#AAAA00", "#77AADD",
-	"#882255", "#997700", "#225522", "#4B4B8F"), twilight11b = c("#FF9D9A",
-	"#225522", "#4B4B8F", "#882255", "#F1CE63", "#99DDFF", "#9467BD",
-	"#E73F74", "#AAAA00", "#77AADD", "#B07AA1"), twilight11c = c("#A5170E",
-	"#F1CE63", "#77AADD", "#B07AA1", "#FF9D9A", "#59A14F", "#4B4B8F",
-	"#882255", "#8C564B", "#99DDFF", "#9467BD"), twilight13a = c("#A5170E",
-	"#997700", "#009988", "#4B4B8F", "#E73F74", "#8C564B", "#AAAA00",
-	"#9467BD", "#FF9D9A", "#F1CE63", "#77AADD", "#882255", "#99DDFF"
-	), twilight13b = c("#A5170E", "#997700", "#99DDFF", "#9467BD",
-	"#E73F74", "#8C564B", "#009988", "#882255", "#FF9D9A", "#AAAA00",
-	"#4B4B8F", "#FABFD2", "#77AADD"), twilight13c = c("#FF9D9A",
-	"#F1CE63", "#009988", "#4B4B8F", "#E73F74", "#997700", "#225522",
-	"#9467BD", "#8C564B", "#AAAA00", "#77AADD", "#882255", "#99DDFF"
-	), twilight13d = c("#FF9D9A", "#AAAA00", "#99DDFF", "#9467BD",
-	"#E73F74", "#997700", "#009988", "#882255", "#8C564B", "#225522",
-	"#4B4B8F", "#FABFD2", "#77AADD"), twilight13e = c("#A5170E",
-	"#997700", "#009988", "#4B4B8F", "#E73F74", "#8C564B", "#AAAA00",
-	"#9467BD", "#FF9D9A", "#DDCC77", "#77AADD", "#882255", "#99DDFF"
-	), twilight13f = c("#FF9D9A", "#DDCC77", "#009988", "#4B4B8F",
-	"#E73F74", "#997700", "#225522", "#9467BD", "#8C564B", "#AAAA00",
-	"#77AADD", "#882255", "#99DDFF"))
-	c4a_load(c4a_data(pals, types = "cat", series = "c4a"), overwrite = TRUE)
+	pals = list(area7 = c("#FF9D9A", "#77AADD", "#F1CE63", "#2CA02C", "#B07AA1", "#9EDAE5", "#CC6677"),
+				area8 = c("#CC6677", "#AEC7E8", "#44BB99", "#B07AA1", "#BBCC33", "#FFAABB", "#B6992D", "#98DF8A"),
+				area9 = c("#EE8866", "#88CCEE", "#2CA02C", "#B07AA1", "#F1CE63", "#FFAABB", "#6699CC", "#44BB99", "#CC6677"),
+				area7d = c("#72190E", "#332288", "#225555", "#997700", "#437DBF", "#994F88", "#666633"),
+				area8d = c("#663333", "#1F77B4", "#225555", "#994F88", "#997700", "#332288", "#666633", "#661100"),
+				area9d = c("#72190E", "#1965B0", "#225555", "#994F88", "#997700", "#332288", "#666633", "#663333", "#437DBF"),
+				line7 = c("#1F77B4", "#2CA02C", "#E73F74", "#6699CC", "#994F88", "#117733", "#D37295"),
+				line8 = c("#DC050C", "#1F77B4", "#117733", "#994F88", "#999933", "#D37295", "#6699CC", "#E73F74"),
+				line9 = c("#EE3377", "#1F77B4", "#117733", "#CF1C90", "#999933", "#994455", "#6699CC", "#D37295", "#DC050C"))
+	c4a_load(c4a_data(pals, types = "cat", series = "c4a"))
 })
 
 

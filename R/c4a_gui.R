@@ -63,6 +63,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 	z = .C4A$z
 
+	if (is.null(z)) stop("No palette data found. Either load data (c4a_data) or reload cols4all")
+
 	z = z[order(z$fullname), ]
 
 	tps = unname(.C4A$types)
@@ -456,7 +458,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 						shiny::column(width = 8, shiny::plotOutput("LINEplot", width = 800, height = 400)),
 						shiny::column(width = 4,
 									  shiny::checkboxInput("LINEstack", "Stacked", value = FALSE),
-									  shiny::sliderInput("LINElwd", "Line width", min = 1, max = 5, step = 1, value = 1))),
+									  shiny::sliderInput("LINElwd", "Line width", min = 1, max = 5, step = 1, value = 3))),
 
 					h4title("Polygons"),
 					shiny::fluidRow(
@@ -595,9 +597,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 				if (is.na(mdef)) mdef = ndef
 
+				if (is.infinite(ndef) || is.infinite(mdef)) return(NULL)
+
 				shiny::freezeReactiveValue(input, "nbiv")
 				shiny::freezeReactiveValue(input, "mbiv")
-
 				shiny::updateSliderInput(session, "nbiv", value = ndef, min = nmin, step = nstep)
 				shiny::updateSliderInput(session, "mbiv", value = mdef, min = nmin, step = nstep)
 			}
@@ -664,7 +667,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				 columns = if (n > 16) 12 else n,
 				 na = input$na,
 				 range = if (input$auto_range == "Automatic") NA else input$range,
-				 n.only = if (is.null(input$n.only)) FALSE else input$n.only,
+				 n.only = if (is.null(input$n.only) || type != "cat") FALSE else input$n.only,
 				 textcol = input$textcol,
 				 format = input$format)
 
@@ -683,6 +686,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					pal_names = NULL
 				} else {
 					if (substr(type, 1, 3) == "biv") {
+						#browser()
 						prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE, n.only = FALSE)
 
 					} else {
@@ -770,7 +774,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				if (!length(tab_vals$pal_name) || !(tab_vals$pal_name %in% pals)) {
 					tab_vals$pal_name = pals[1]
 				}
-				cols = as.vector(c4a(tab_vals$pal_name, n = n))
+				if (substr(values$type, 1, 3) == "biv") {
+					cols = as.vector(c4a(tab_vals$pal_name, n = values$nbiv, m = values$mbiv))
+				} else {
+					cols = as.vector(c4a(tab_vals$pal_name, n = n))
+				}
+
 				na = values$na
 				tab_vals$na = na
 				if (na) cols = c(cols, c4a_na(tab_vals$pal_name))

@@ -19,8 +19,10 @@ table_columns = function(type, show.scores) {
 		qs = c(qs,  "HwidthLR", "CRwt", "CRbk", "Blues")
 		sn = c("HL", "HR", "Lmid")
 	} else {
-		qn = c(qn, "nameable", "contrast", "contrastWT", "contrastBK", "float")
-		qs = c(qs, "nameability", "CRmin", "CRwt", "CRbk", "Blues")
+		# qn = c(qn, "nameable", "contrastWT", "contrastBK", "contrast", "float")
+		# qs = c(qs, "nameability", "CRwt", "CRbk", "CRmin", "Blues")
+		qn = c(qn, "nameable", "contrastWT", "contrastBK", "equiluminance", "float")
+		qs = c(qs, "nameability", "CRwt", "CRbk", "CRmin", "Blues")
 		sn = character(0)
 	}
 
@@ -279,7 +281,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 
 
 	rownames(e2) = NULL
-	for (var in c("cbfriendly", "chroma",  "hueType", "fair", "nameable", "contrast", "contrastWT", "contrastBK", "float")) {
+	for (var in c("cbfriendly", "chroma",  "hueType", "fair", "nameable", "equiluminance", "contrastWT", "contrastBK", "float")) {
 		tcv = tc[[var]]
 		if (any(names(tcv) %in% c("seq", "cat", "div"))) {
 			tcv = if (type %in% names(tcv)) tcv[[type]]	else tcv[["x"]]
@@ -310,7 +312,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 	e2cols = c("series", "label", qn, colNames, "Copy1", "Copy2", "Copy3", "Copy4")
 	e2nms = c(series = "Series", name = "Name", ql, colNames, references = "References", "", "", "")
 
-	dupl = e2cols[e2nms %in% e2nms[duplicated(e2nms)]]
+	dupl = e2cols[e2nms %in% e2nms[duplicated(e2nms)] | substr(e2nms, 1, 8) == "Contrast"]
 
 	e2nms[duplicated(e2nms)] = ""
 

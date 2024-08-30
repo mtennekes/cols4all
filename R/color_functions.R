@@ -1,25 +1,25 @@
 
-colors_sort = function(x, by = c("H", "C", "L", "CR")) {
+colors_sort = function(x, by = c("H", "C", "L", "CRW", "CRB")) {
 	by = match.arg(by)
-	cr = colorspace::contrast_ratio("white", x)
+	crw = colorspace::contrast_ratio("white", x)
 	hcl = get_hcl_matrix(x)
-	df = cbind(as.data.frame(hcl), CR = cr)
+	df = cbind(as.data.frame(hcl), CRW = crw, CRB = 21/crw)
 	x[order(df[[by]])]
 }
 
-colors_filter = function(x, Hmin = 0, Hmax = 360, Cmin = 0, Cmax = Inf, Lmin = 0, Lmax = 100, CRmin = 1, CRmax = 21) {
-	cr = colorspace::contrast_ratio("white", x)
+colors_filter = function(x, Hmin = 0, Hmax = 360, Cmin = 0, Cmax = Inf, Lmin = 0, Lmax = 100, CRWmin = 1, CRWmax = 21, CRBmin = 1, CRBmax = 21) {
+	crw = colorspace::contrast_ratio("white", x)
 	hcl = get_hcl_matrix(x)
-	df = cbind(as.data.frame(hcl), CR = cr)
-	ids = which(df$H >= Hmin & df$H <= Hmax & df$C >= Cmin & df$C <= Cmax & df$L >= Lmin & df$L <= Lmax & df$CR >= CRmin & df$CR <= CRmax)
+	df = cbind(as.data.frame(hcl), CRW = crw, CRB = 21/crw)
+	ids = which(df$H >= Hmin & df$H <= Hmax & df$C >= Cmin & df$C <= Cmax & df$L >= Lmin & df$L <= Lmax & df$CRW >= CRWmin & df$CRW <= CRWmax & df$CRB >= CRBmin & df$CRB <= CRBmax)
 	x[ids]
 }
 
-colors_name = function(x, label = c("H", "C", "L", "CR")) {
+colors_name = function(x, label = c("i", "H", "C", "L", "CRW", "CRB")) {
 	label = match.arg(label)
-	cr = colorspace::contrast_ratio("white", x)
+	crw = colorspace::contrast_ratio("white", x)
 	hcl = get_hcl_matrix(x)
-	df = cbind(as.data.frame(hcl), CR = cr)
+	df = cbind(as.data.frame(hcl), CRW = crw, CRB = 21/crw, i = 1L:length(x))
 	structure(x, names = round(df[[label]], 2))
 }
 
@@ -63,17 +63,83 @@ colors_cbf_set_plot = function(df, pal, columns = 2, cex = 1) {
 	}
 }
 
-colors_cbf_set = function(x, k, plot = TRUE, dE_min = 10, columns = 2, cex = 1) {
+colors_order = function(x, head = 1, weight_normal = 0) {
+	n = length(x)
+
+	m = get_dist_matrices(x)
+	mcvd = do.call(pmin, m[1:3])
+	mnorm = m$normal
+
+	m2 = mcvd * (1-weight_normal) + mnorm * weight_normal
+
+	m2[lower.tri(m2)] = t(m2)[lower.tri(t(m2))]
+	upper.tri(m2)
+
+	ids = head
+	todo = setdiff(1L:n, head)
+
+	while(length(todo) > 0) {
+		j = todo[which.max(apply(m2[ids, todo, drop = FALSE], MARGIN = 2, FUN = min))]
+		ids = c(ids, j)
+		todo = setdiff(todo, j)
+	}
+	x[ids]
+}
+
+colors_cbf_set = function(x, k, plot = TRUE, dE_min = 10, columns = 2, cex = 1, required = NULL, top = 20, parallelize = NA) {
+	if (!is.list(required) && !is.null(required)) required = list(required)
+
 	ms = get_dist_matrices(x, th = dE_min)
 	n = length(x)
+
+	ncomb = choose(n,k)
+
+	message("There are ", ncomb, " combinations to check")
+
+	if (is.na(parallelize)) {
+		parallelize = ncomb > 1e7
+	}
+
 	y = combn(1:n, k)
 
-	res = apply(y, MARGIN = 2, function(yi) {
-		mins = sapply(ms, function(m) {
-			min(m[yi,yi], na.rm = TRUE)
+	message("Starting now...")
+
+	if (parallelize) {
+		message("In parallel")
+		ncores = parallel::detectCores()
+		cl = parallel::makeCluster(ncores)
+		on.exit(parallel::stopCluster(cl))
+	}
+
+	if (!is.null(required)) {
+		sel = apply(y, MARGIN = 2, function(x) {
+			all(vapply(required, function(req) {
+				any(req %in% x)
+			}, FUN.VALUE = logical(1)))
 		})
-		which.min(mins) * 1000 + min(mins)
-	})
+		message("After filtering by required colors ", ncol(y2), " combinations are left")
+		y2 = y[, sel]
+	} else {
+		y2 = y
+	}
+
+
+	if (parallelize) {
+		res = parallel::parApply(cl = cl, X = y2, MARGIN = 2, function(yi) {
+			mins = vapply(ms, function(m) {
+				min(m[yi,yi], na.rm = TRUE)
+			}, FUN.VALUE = numeric(1))
+			which.min(mins) * 1000 + min(mins)
+		})
+	} else {
+		res = pbapply::pbapply(y2, MARGIN = 2, function(yi) {
+			mins = vapply(ms, function(m) {
+				min(m[yi,yi], na.rm = TRUE)
+			}, FUN.VALUE = numeric(1))
+			which.min(mins) * 1000 + min(mins)
+		})
+
+	}
 	whichType = res %/% 1000
 	dE = res %% 1000
 
@@ -81,16 +147,16 @@ colors_cbf_set = function(x, k, plot = TRUE, dE_min = 10, columns = 2, cex = 1) 
 
 	if (!length(ids)) {
 		message("maximum Delta E value is ", max(dE))
-		return(NULL)
+		ids = which(dE >= floor(max(dE)))
 	}
 
-	df = cbind(as.data.frame(t(y[,ids])), dist = dE[ids], type = names(ms)[whichType[ids]])
+	df = cbind(as.data.frame(t(y2[,ids])), dist = dE[ids], type = names(ms)[whichType[ids]])
 	df2 = df[order(df$dist, decreasing = TRUE), ]
 
 	if (plot) {
-		if (nrow(df2) > 20) {
-			message(nrow(df2), " palettes found. Plotting only the top 20")
-			df3 = df2[1:20,]
+		if (nrow(df2) > top) {
+			message(nrow(df2), " palettes found. Plotting only the top ", top)
+			df3 = df2[1:top,]
 		} else {
 			df3 = df2
 		}
@@ -98,11 +164,11 @@ colors_cbf_set = function(x, k, plot = TRUE, dE_min = 10, columns = 2, cex = 1) 
 	}
 	pals = get_palettes(df2, x)
 
-	y = list(pool = x,
+	z = list(pool = x,
 			 palettes = pals,
 			 dE = df2$dist,
 			 dE_type = df2$type)
-	invisible(y)
+	invisible(z)
 }
 
 get_ids = function(df, k) {
@@ -116,10 +182,10 @@ get_palettes = function(df, p) {
 	k = length(which(substr(names(df), 1, 1) == "V"))
 	ids = get_ids(df, k = k)
 	pals = lapply(ids, function(x) p[x])
-	pals = lapply(pals, function(pal) {
-		H = get_hcl_matrix(pal)
-		pal[order(H[,1])]
-	})
+	# pals = lapply(pals, function(pal) {
+	# 	H = get_hcl_matrix(pal)
+	# 	pal[order(H[,1])]
+	# })
 	#names(pals) = paste0("pal", 1:length(pals))
 	pals
 }

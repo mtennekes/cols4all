@@ -11,6 +11,7 @@ c4a_table(
   type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"),
   n = NULL,
   m = NULL,
+  n.only = FALSE,
   cvd.sim = c("none", "deutan", "protan", "tritan"),
   sort = "name",
   text.format = "hex",
@@ -29,6 +30,8 @@ c4a_table(
 \item{n, m}{\code{n} is the number of displayed colors. For bivariate palettes \code{"biv"}, \code{n} and \code{m} are the number of columns and rows respectively. If omitted: for \code{"cat"} the full palette is displayed, for \code{"seq"} and \code{"div"}, 9 colors, and for \code{"bivs"}/\code{"bivc"}/\code{"bivd"}/\code{"bivg"} 4 columns and rows. For \code{c4a_gui} it only determines which number of colors initially.}
 
 \item{series}{Series of palettes to show. See \code{\link{c4a_series}} for options. By default, \code{"all"}, which means all series. For \code{c4a_gui} it only determines which series are shown initially.}
+
+\item{n.only}{should only palettes be contained that have exactly \code{n.only} colors (\code{FALSE} by default)}
 
 \item{cvd.sim}{color vision deficiency simulation: one of \code{"none"}, \code{"deutan"}, \code{"protan"}, \code{"tritan"}}
 
