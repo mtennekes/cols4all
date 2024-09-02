@@ -376,9 +376,16 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 											  shiny::selectizeInput("contrastPal", "Palette", choices = init_pal_list))),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 6,
-				 					  infoBoxUI("infoCR", "Contrast ratio"),
+				 					  shiny::plotOutput("cr_plot")),
+				 		shiny::column(width = 6,
+				 					  shiny::markdown("**Options**"),
+				 					  shiny::checkboxGroupInput("cr_plot_opts", "", c("Sort" = "sort", "Show WCAG threshold values" = "wcag", "Show equiluminance" = "equi"), selected = ""))),
+			 		shiny::fluidRow(
+			 			shiny::column(width = 6,
+			 						  infoBoxUI("infoCR", "Contrast ratio"),
 				 					  plotOverlay("table", width = "400px", height = "300px", "aniTable", click = "table_click")),
 				 		shiny::column(width = 6,
+				 					  plotOutput("cr_plot2"),
 	 					  shiny::markdown("<br></br>
 #### **Text readability**
 "),
@@ -1176,6 +1183,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			id2 = which(col2 == pal)
 			c4a_plot_CR_matrix(pal, id1 = id1, id2 = id2, dark = input$dark)
 		})
+
+		output$cr_plot = shiny::renderPlot({
+			pal = tab_vals$pal
+			opts = input$cr_plot_opts
+			c4a_plot_CR(pal, dark = input$dark, sort =  ("sort" %in% opts), lines_WCAG = ("wcag" %in% opts), lines_equiluminance = ("equi" %in% opts))
+		})
+
 
 		#############################
 		## Naming tab
