@@ -376,16 +376,16 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 											  shiny::selectizeInput("contrastPal", "Palette", choices = init_pal_list))),
 				 	shiny::fluidRow(
 				 		shiny::column(width = 6,
+				 					  shiny::uiOutput("cr_title"),
 				 					  shiny::plotOutput("cr_plot")),
 				 		shiny::column(width = 6,
 				 					  shiny::markdown("**Options**"),
-				 					  shiny::checkboxGroupInput("cr_plot_opts", "", c("Sort" = "sort", "Show WCAG threshold values" = "wcag", "Show equiluminance" = "equi"), selected = ""))),
+				 					  shiny::checkboxGroupInput("cr_plot_opts", "", c("Sort" = "sort", "Show WCAG criteria" = "wcag", "Show equiluminant groups" = "equi"), selected = ""))),
 			 		shiny::fluidRow(
 			 			shiny::column(width = 6,
-			 						  infoBoxUI("infoCR", "Contrast ratio"),
+			 						  infoBoxUI("infoCR", "Contrast ratio between colors"),
 				 					  plotOverlay("table", width = "400px", height = "300px", "aniTable", click = "table_click")),
 				 		shiny::column(width = 6,
-				 					  plotOutput("cr_plot2"),
 	 					  shiny::markdown("<br></br>
 #### **Text readability**
 "),
@@ -1135,9 +1135,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		## Contrast tab
 		#############################
 
-
-
-
+		output$cr_title = shiny::renderUI({
+			shiny::markdown(paste0("#### Contrast ratio with ", ifelse(input$dark, "black", "white"), " (background))"))
+		})
 
 		output$ex_plus = shiny::renderPlot({
 			borders = input$borders

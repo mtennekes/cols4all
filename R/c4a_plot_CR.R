@@ -1,5 +1,5 @@
 c4a_plot_CR = function(p, dark = FALSE, title = FALSE, sort = FALSE, lines_WCAG = TRUE, lines_equiluminance = TRUE) {
-	cr = colorspace::contrast_ratio(p) - 1
+	cr = colorspace::contrast_ratio(p)
 
 	if (sort) {
 		id = order(cr)
@@ -13,10 +13,17 @@ c4a_plot_CR = function(p, dark = FALSE, title = FALSE, sort = FALSE, lines_WCAG 
 		cr = 21 / cr
 		bc = "#000000"
 		fc = "#FFFFFF"
+		lc1 = "gray70"
+		lc2 = "gray80"
 	} else {
 		bc = "#FFFFFF"
 		fc = "#000000"
+		lc1 = "gray70"
+		lc2 = "gray30"
 	}
+
+	# to plot y axis from 1 instead of 0
+	cr = cr - 1
 
 	if (lines_WCAG) {
 		crWCAG = 7.2
@@ -83,7 +90,7 @@ c4a_plot_CR = function(p, dark = FALSE, title = FALSE, sort = FALSE, lines_WCAG 
 
 	co = barplot(cr,
 			main = title,
-			col = p,
+			col = NA,#p,
 			xlab = "",
 			ylab = "",
 			ylim = ylim,
@@ -94,13 +101,32 @@ c4a_plot_CR = function(p, dark = FALSE, title = FALSE, sort = FALSE, lines_WCAG 
 
 	brks = pretty(c(0, ceiling(crmax)), n = 7)
 
-	axis(2, at = brks, labels = brks + 1)
+	if (lines_WCAG) {
+		brks = sort(c(brks, 2, 3.5, 6))
+	}
+	labs = brks + 1
 
 	if (lines_WCAG) {
-		abline(h = 2, col = "grey50", lty = "dashed", lwd = 2)
-		abline(h = 3.5, col = "grey50", lty = "dashed", lwd = 2)
-		abline(h = 6, col = "grey50", lty = "dashed", lwd = 2)
+		labs[labs == 3] = paste0("A - ", labs[labs == 3])
+		labs[labs == 4.5] = paste0("AA - ", labs[labs == 4.5])
+		labs[labs == 7] = paste0("AAA - ", labs[labs == 7])
 	}
+
+	axis(2, at = brks, labels = labs, las = 2)
+
+	if (lines_WCAG) {
+		labelX = 0#co[nrow(co), 1] + (co[nrow(co), 1] - co[nrow(co) - 1, 1]) * .5
+		buffer = 0.15
+
+		abline(h = 2, col = lc1, lty = "solid", lwd = 2)
+		abline(h = 3.5, col = lc1, lty = "solid", lwd = 2)
+		abline(h = 6, col = lc1, lty = "solid", lwd = 2)
+		#text(x = labelX, y = 2 + buffer, labels = "A", col = "black", adj = 1, cex = 0.8)
+		#text(x = labelX, y = 3.5 + buffer, labels = "AA", col = "black", adj = 1, cex = 0.8)
+		#text(x = labelX, y = 6 + buffer, labels = "AAA", col = "black", adj = 1, cex = 0.8)
+	}
+
+	barplot(cr, col = p, add = TRUE, ylab = "", xlab = "", yaxt = "n")
 
 	if (!is.null(eldf)) {
 		for (i in 1:nrow(eldf)) {
@@ -108,9 +134,9 @@ c4a_plot_CR = function(p, dark = FALSE, title = FALSE, sort = FALSE, lines_WCAG 
 			crs = c(eldf$cr1[i], eldf$cr2[i], eldf$cr3[[i]])
 			crc = eldf$cr_ceiling[i]
 
-			lines(x = co[c(cs[1], tail(cs, 1)), 1], y = c(crc, crc), lty = "dotted", lwd = 3)
+			lines(x = co[c(cs[1], tail(cs, 1)), 1], y = c(crc, crc), lty = "dotted", lwd = 3, col = lc2)
 			for (i in 1:length(cs)) {
-				lines(x = co[c(cs[i], cs[i]), 1], y = c(crs[i], crc), lty = "dotted", lwd = 3)
+				lines(x = co[c(cs[i], cs[i]), 1], y = c(crs[i], crc), lty = "dotted", lwd = 3, col = lc2)
 			}
 		}
 
