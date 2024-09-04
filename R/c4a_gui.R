@@ -329,9 +329,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 															<font size ='1'>*The maximum C depends on H and L</font>
 															"))),
 							shiny::fluidRow(
-								shiny::column(width = 12,
+								shiny::column(width = 6,
 											  infoBoxUI("infoCL", "Chroma-Luminance"),
-											  plotOverlay("anaCL", width = "600px", height = "600px", "aniCL")))),
+											  plotOverlay("anaCL", width = "600px", height = "600px", "aniCL")),
+								shiny::column(width = 6,
+											  infoBoxUI("infoFair", "Fairness"),
+											  plotOverlay("anaFair", width = "600px", height = "600px", "aniFair")))),
 			shiny::tabPanel("Naming",
 							value = "tab_name",
 							shiny::fluidRow(
@@ -533,7 +536,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}
 		})
 
-		anno = shiny::reactiveValues(simu = FALSE, hue_lines = FALSE, cvd = FALSE, simi = FALSE, psimi = FALSE, conf_lines = FALSE, hue_neck = FALSE, cl_plot = FALSE, naming = FALSE, cr = FALSE, blues = FALSE)
+		anno = shiny::reactiveValues(simu = FALSE, hue_lines = FALSE, cvd = FALSE, simi = FALSE, psimi = FALSE, conf_lines = FALSE, hue_neck = FALSE, cl_plot = FALSE, fair_plot = FALSE, naming = FALSE, cr = FALSE, blues = FALSE)
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
 										 na = FALSE,
@@ -655,7 +658,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			structure(c("name", xn[!anyD]), names = c("Name", xl[!anyD]))
 		})
 
-
+		get_trigger = shiny::reactiveVal(FALSE)
 
 		get_values = shiny::reactive({
 			if (input$sort == "") return(NULL)
@@ -665,6 +668,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			lst = list(n = n,
 				 nbiv = input$nbiv,
 				 mbiv = input$mbiv,
+				 trigger = get_trigger(),
 				 type = type,
 				 cvd = input$cvd,
 				 sort = input$sort,
@@ -926,7 +930,6 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 
 		output$show = function() {
-
 			values = get_values()#_d()
 			if (is.null(values) || is.null(values$series)) {
 				tab = NULL
@@ -1130,6 +1133,17 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			c4a_plot_CL(pal, Lrange = (type == type), dark = input$dark)
 		})
 
+		output$anaFair = shiny::renderPlot({
+			pal = tab_vals$pal
+
+			if (!length(pal)) return(NULL)
+
+			type = tab_vals$type
+
+			c4a_plot_fair(pal, dark = input$dark)
+		})
+
+
 
 		#############################
 		## Contrast tab
@@ -1204,6 +1218,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			}, FUN.VALUE = numeric(1))
 			c4a_options(boynton_weights = w)
 			updatePlot(w)
+			get_trigger(!get_trigger()) # to update table
 			shinyjs::runjs("$('#container').prop('disabled', false);")
 
 		})
@@ -1517,6 +1532,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		oE("infoSimu", "simu", "aniSimu", "simu")
 		oE("infoHUE", "hue_neck", "aniHUE", "hue_neck")
 		oE("infoCL", "cl_plot", "aniCL", "cl_plot")
+		oE("infoFair", "fair_plot", "aniFair", "fair_plot")
 		oE("infoName", "naming", "aniName", "naming")
 
 		oE("infoCR", "cr", "aniTable", "table")

@@ -8,7 +8,7 @@ table_columns = function(type, show.scores) {
 	}
 
 	qn = c(qn, "cbfriendly", "chroma", "fair")
-	qs = c(qs, "cbfriendly", "Cmax", "fairRank")
+	qs = c(qs, "cbfriendly", "Cmax", "fairness")
 
 	if (type == "seq") {
 		qn = c(qn, "hueType", "contrastWT", "contrastBK", "float")
@@ -312,7 +312,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 	e2cols = c("series", "label", qn, colNames, "Copy1", "Copy2", "Copy3", "Copy4")
 	e2nms = c(series = "Series", name = "Name", ql, colNames, references = "References", "", "", "")
 
-	dupl = e2cols[e2nms %in% e2nms[duplicated(e2nms)] | substr(e2nms, 1, 8) == "Contrast"]
+	dupl = e2cols[names(e2nms) %in% c("contrastWT", "contrastBK", "equiluminance")] #e2nms %in% e2nms[duplicated(e2nms)] |
 
 	e2nms[duplicated(e2nms)] = ""
 

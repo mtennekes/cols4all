@@ -101,6 +101,7 @@ c4a_options = function(...) {
 
 		if ("boynton_weights" %in% names(args)) {
 			.C4A$name_data = create_name_data()
+			update_nameability()
 		}
 
 		invisible(backup)
@@ -153,10 +154,19 @@ do_cellspec = function(lst) {
 
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
 
-		CrangeFair = 50
-		CrangeUnfair = 80
 		LrangeFair = 30
 		LrangeUnfair = 50
+		CrangeFair = 50
+		CrangeUnfair = 80
+
+		Lrange_mid = 50
+		Lrange_steep = 0.1
+		Crange_mid = 80
+		Crange_steep = 0.07
+
+		LC_fair = 75
+		LC_unfair = 25
+
 
 		Blues = 3
 		contrastEL = 1.2 # Equiluminance
@@ -218,14 +228,17 @@ do_cellspec = function(lst) {
 
 
 		rgb = c("Blues")
-		hcl = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "CRmin", "CRwt", "CRbk")
+		hcl = c("Cmax", "H", "H`L", "HR", "Lmid", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "fairness", "CRmin", "CRwt", "CRbk")
 
-		sortRev = c("cbfriendly", "harmonyRank", "fairRank", "Cmax", "min_dist", "nameability", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "CRmin", "CRwt", "CRbk", "Blues")
+		sortRev = c("cbfriendly", "harmonyRank", "fairness", "Cmax", "min_dist", "nameability", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "CRmin", "CRwt", "CRbk", "Blues")
 
-		boynton_weights = c(Green = 1, Blue = 1, Purple = 1, Pink = 1,
-					Yellow = 1, Brown = 1, Orange = 1, Red = 1,
-					White = 1, Gray = 1, Black = 1)
+		# boynton_weights = c(Green = 1, Blue = 1, Purple = 1, Pink = 1,
+		# 			Yellow = 1, Brown = 1, Orange = 1, Red = 1,
+		# 			White = 1, Gray = 1, Black = 1)
 
+		boynton_weights = c(Green = 1, Blue = 1, Purple = 1.1, Pink = 0.9,
+					Yellow = 1, Brown = 1, Orange = 1, Red = 1.05,
+					White = 0.7, Gray = 0.7, Black = 1.05)
 
 		labels = c(min_dist = "Minimum distance",
 				   nameability = "Nameability",
@@ -251,7 +264,7 @@ do_cellspec = function(lst) {
 				   chroma = "Vivid",
 				   fair = "Fair",
 				   nameable = "Naming",
-				   fairRank = "Fair",
+				   fairness = "Fairness",
 				   hueType = "Hue type",
 				   equiluminance = "Contrast (between)",
 				   contrastWT = "Contrast (white)",

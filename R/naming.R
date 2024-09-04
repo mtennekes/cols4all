@@ -119,5 +119,26 @@ create_name_data = function() {
 }
 
 
+update_nameability = function() {
+	s = .C4A$s
+	z = .C4A$z
+	sname = .C4A$s[,dimnames(s)[[2]] == "nameability", ]
+	pals = dimnames(sname)[[1]]
+	cats = which(z$type == "cat")
+	mins = z$nmin
+	maxs = z$nmax
+
+	m = do.call(rbind, mapply(function(pal, mn, mx) {
+		res = logical(ncol(sname))
+		res[mn:mx] = vapply(mn:mx, function(n) {
+			p = c4a(pal, n = n)
+			nameability(p)
+		}, FUN.VALUE = logical(1))
+		res
+	}, pals[cats], mins[cats], maxs[cats], SIMPLIFY = FALSE, USE.NAMES = FALSE))
+	sname[cats, ] = m
+	.C4A$s[,dimnames(s)[[2]] == "nameability", ] = sname
+
+}
 
 

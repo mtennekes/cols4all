@@ -335,6 +335,7 @@ hcl_prop = function(p) {
 	Cmax = round(max(m[,2]))
 	Lrange = round(max(m[,3]) - min(m[,3]))
 	Crange = round(max(m[,2]) - min(m[,2]))
+
 	#LCrange = round(max(Lrange * .C4A$LrangeWeight, Crange * (1-.C4A$LrangeWeight)))
 
 	CRmin = round(get_CRmin(p) * 100)
