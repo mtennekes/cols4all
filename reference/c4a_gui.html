@@ -52,6 +52,7 @@
 <span>  text.col <span class="op">=</span> <span class="st">"same"</span>,</span>
 <span>  series <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  range <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  colorsort <span class="op">=</span> <span class="st">"orig"</span>,</span>
 <span>  include.na <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  show.scores <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  columns <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -99,6 +100,10 @@
 <dd><p>vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on <code>n</code>.</p></dd>
 
 
+<dt id="arg-colorsort">colorsort<a class="anchor" aria-label="anchor" href="#arg-colorsort"></a></dt>
+<dd><p>Sort the colors (<code>"cat"</code> only). Options: <code>"orig"</code> (original order), <code>"Hx"</code> (hue, where x is a starting number from 0 to 360), <code>"C"</code> (chroma), <code>"L"</code> (luminance)</p></dd>
+
+
 <dt id="arg-include-na">include.na<a class="anchor" aria-label="anchor" href="#arg-include-na"></a></dt>
 <dd><p>should color for missing values be shown? <code>FALSE</code> by default</p></dd>
 
@@ -143,9 +148,6 @@
 <span class="r-in"><span><span class="co"># sort sequential palettes by hue type (how many hues are used)</span></span></span>
 <span class="r-in"><span><span class="fu">c4a_table</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"seq"</span>, n <span class="op">=</span> <span class="fl">5</span>, sort <span class="op">=</span> <span class="st">"hueType"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: shiny</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: shinyjs</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: kableExtra</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -47,6 +47,7 @@
 <span>  reverse <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  range <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  colorsort <span class="op">=</span> <span class="st">"orig"</span>,</span>
 <span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hex"</span>, <span class="st">"RGB"</span>, <span class="st">"HCL"</span><span class="op">)</span>,</span>
 <span>  nm_invalid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"error"</span>, <span class="st">"repeat"</span>, <span class="st">"interpolate"</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -87,6 +88,10 @@
 <dd><p>a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential <code>"seq"</code> palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging <code>"seq"</code> palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start).</p></dd>
 
 
+<dt id="arg-colorsort">colorsort<a class="anchor" aria-label="anchor" href="#arg-colorsort"></a></dt>
+<dd><p>Sort the colors (<code>"cat"</code> only). Options: <code>"orig"</code> (original order), <code>"Hx"</code> (hue, where x is a starting number from 0 to 360), <code>"C"</code> (chroma), <code>"L"</code> (luminance)</p></dd>
+
+
 <dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
 <dd><p>format of the colors. One of: <code>"hex"</code> character vector of hex color values, <code>"RGB"</code> 3 column matrix of RGB values, or <code>"HCL"</code> 3-column matrix of HCL values</p></dd>
 
@@ -107,7 +112,7 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="c4a_palettes.html">c4a_palettes</a></span><span class="op">(</span><span class="st">"div"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] "hcl.blue_red1"                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] "hcl.blue_red"                           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [2] "hcl.blue_red2"                          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [3] "hcl.blue_red3"                          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [4] "hcl.red_green"                          </span>
