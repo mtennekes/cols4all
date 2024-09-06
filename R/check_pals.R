@@ -203,6 +203,12 @@ get_hcl_matrix = function(p, rounded = FALSE) {
 	if (rounded) round(x) else x
 }
 
+get_hc_or_l = function(p, dim = c("H", "C", "L")) {
+	dim = match.arg(dim)
+	x = as(hex2RGB(p), "polarLUV")@coords[, dim]
+}
+
+
 get_hcl_triple = function(p) {
 	x = get_hcl_matrix(p, rounded = TRUE)
 	apply(x, MARGIN = 1, paste, collapse = ",")

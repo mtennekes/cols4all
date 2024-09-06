@@ -228,7 +228,7 @@ do_cellspec = function(lst) {
 
 
 		rgb = c("Blues")
-		hcl = c("Cmax", "H", "H`L", "HR", "Lmid", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "fairness", "CRmin", "CRwt", "CRbk")
+		hcl = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "fairness", "CRmin", "CRwt", "CRbk")
 
 		sortRev = c("cbfriendly", "harmonyRank", "fairness", "Cmax", "min_dist", "nameability", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "CRmin", "CRwt", "CRbk", "Blues")
 

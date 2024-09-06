@@ -9,6 +9,7 @@
 #' @param reverse should the palette be reversed?
 #' @param order order of colors. Only applicable for `"cat"` palettes
 #' @param range a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential `"seq"` palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging `"seq"` palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start).
+#' @param colorsort Sort the colors (`"cat"` only). Options: `"orig"` (original order), `"Hx"` (hue, where x is a starting number from 0 to 360), `"C"` (chroma), `"L"` (luminance)
 #' @param format format of the colors. One of: `"hex"` character vector of hex color values, `"RGB"` 3 column matrix of RGB values, or `"HCL"` 3-column matrix of HCL values
 #' @param nm_invalid what should be done in case `n` or `m` is larger than the maximum number of colors or smaller than the minimum number? Options are `"error"` (an error is returned), `"repeat"`, the palette is repeated, `"interpolate"` colors are interpolated. For categorical `"cat"` palettes only.
 #' @param verbose should messages be printed?
@@ -21,7 +22,7 @@
 #' @rdname c4a
 #' @name c4a
 #' @export
-c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), reverse = FALSE, order = NULL, range = NA, format = c("hex", "RGB", "HCL"), nm_invalid = c("error", "repeat", "interpolate"), verbose = TRUE) {
+c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), reverse = FALSE, order = NULL, range = NA, colorsort = "orig", format = c("hex", "RGB", "HCL"), nm_invalid = c("error", "repeat", "interpolate"), verbose = TRUE) {
 	calls = names(match.call(expand.dots = TRUE)[-1])
 
 	type = match.arg(type)
@@ -76,7 +77,7 @@ c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bi
 	x$nm_invalid = nm_invalid
 
 
-	pal = do.call(get_pal_n, c(list(n = n, m = m), x))
+	pal = do.call(get_pal_n, c(list(n = n, m = m, colorsort = colorsort), x))
 
 	pal = if (!is.null(order)) {
 		if (!all(order %in% 1L:n)) stop("order should consist of numbers 1 to ", n)

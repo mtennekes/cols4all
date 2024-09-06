@@ -10,7 +10,16 @@ rampPal = function(palette, n, space = c("rgb", "Lab")) {
 	}
 }
 
-get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, mmin, mmax, mdef, range = NA, nm_invalid = "error",...) {
+div_rev = function(x) {
+	h = get_hc_or_l(x, "H")
+	#prop = hcl_prop(x)
+	hL = h[round(length(x) * .25)]
+	hR = h[round(length(x) * .75)]
+	hL > hR
+}
+
+get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, mmin, mmax, mdef, range = NA, colorsort = "orig", nm_invalid = "error",...) {
+
 	if (is.na(m)) m = n
 	n_orig = n
 	m_orig = m
@@ -140,7 +149,53 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, m
 			}
 		}
 	}
-	x
+
+	if (colorsort != "orig") {
+		if (type == "cat") {
+			sby = substr(colorsort, 1, 1)
+			if (sby == "H") {
+				if (nchar(colorsort) == 1) {
+					Hstart = 0
+				} else {
+					Hstart = tryCatch({
+						as.integer(substr(colorsort, 2, nchar(colorsort)))
+					}, warning = function(e) {
+						warning("colorsort invald: number behind \"H\" should be an integer between 0 and 360", call. = FALSE)
+						0
+					})
+				}
+			}
+			v = get_hc_or_l(x, sby)
+			if (sby == "H") {
+				v = v + Hstart
+				v[v>360] = v[v>360] - 360
+			}
+			x[order(v)]
+		} else if (type == "seq") {
+			if (colorsort == "L") {
+				ls = get_hc_or_l(x, "L")
+				ls_sg = sign(ls[-1] - ls[-length(ls)])
+				if (all(ls_sg>=0)) {
+					x = rev(x)
+				}
+			} else {
+				warning("colorsort invalid: for type \"seq\", the options are \"orig\" and \"L\"", call. = FALSE)
+			}
+			x
+		} else if (type == "div") {
+			if (substr(colorsort, 1, 1) == "H") {
+				if (div_rev(x)) x = rev(x)
+			} else {
+				warning("colorsort invalid: for type \"div\", the options are \"orig\" and \"H\"", call. = FALSE)
+			}
+			x
+		} else {
+			x
+		}
+	} else {
+		x
+	}
+
 }
 
 

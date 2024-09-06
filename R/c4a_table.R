@@ -38,7 +38,7 @@ table_columns = function(type, show.scores) {
 	list(qn = qn, ql = ql, qs = qs, sn = sn, sl = sl)
 }
 
-prep_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, sort = "name", series = "all", range = NA, show.scores = FALSE, columns = NA, verbose = TRUE) {
+prep_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, sort = "name", series = "all", range = NA, colorsort = "orig", show.scores = FALSE, columns = NA, verbose = TRUE) {
 	id = NULL
 
 	type = match.arg(type)
@@ -78,7 +78,7 @@ prep_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "biv
 		return(invisible(NULL))
 	}
 
-	zn = get_z_n(z[z$type == type, ], n = n, m = m, n.only = n.only, range = range)
+	zn = get_z_n(z[z$type == type, ], n = n, m = m, n.only = n.only, range = range, colorsort = colorsort)
 	if (!is.null(zn)) {
 		if (!series[1] == "all") zn = zn[zn$series %in% series, ]
 	}
@@ -119,6 +119,17 @@ prep_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "biv
 	if (length(sortCol) == 0L) {
 		warning("unknown sort value, available options: \"name\", \"H\", \"HL\", \"HR\", \"Lmid\", \"", paste(qn, collapse = "\", \""), "\"")
 		sortCol = "fullname"
+	}
+
+	# special case: for "div" palette sorting with HL or HR depends on colorsort: in the latter is "H" swap HL and HR
+	if (type == "div" && sortCol %in% c("HL", "HR") && colorsort == "H") {
+		ps = zn$palette
+		is_rev = vapply(ps, div_rev, FUN.VALUE = logical(1), USE.NAMES = FALSE)
+		if (any(is_rev)) {
+			dummy = zn$HL[is_rev]
+			zn$HL[is_rev] = zn$HR[is_rev]
+			zn$HR[is_rev] = dummy
+		}
 	}
 
 	decreasing = xor(isrev, sortCol %in% .C4A$sortRev)
@@ -396,6 +407,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #' @param text.col The text color of the colors. By default `"same"`, which means that they are the same as the colors themselves (so invisible, but available for selection). `"auto"` means automatic: black for light colors and white for dark colors.
 #' @param series Series of palettes to show. See \code{\link{c4a_series}} for options. By default, `"all"`, which means all series. For `c4a_gui` it only determines which series are shown initially.
 #' @param range vector of two numbers that determine the range that is used for sequential and diverging palettes. Both numbers should be between 0 and 1. The first number determines where the palette begins, and the second number where it ends. For sequential palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start). By default, it is set automatically, based on `n`.
+#' @param colorsort Sort the colors (`"cat"` only). Options: `"orig"` (original order), `"Hx"` (hue, where x is a starting number from 0 to 360), `"C"` (chroma), `"L"` (luminance)
 #' @param include.na should color for missing values be shown? `FALSE` by default
 #' @param show.scores should scores of the quality indicators be printed? See details for a description of those indicators.
 #' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette lengths.
@@ -413,8 +425,8 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #' @return An HMTL table (`kableExtra` object)
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
+c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, colorsort = "orig", include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
 	cvd.sim = match.arg(cvd.sim)
-	p = prep_table(type = type, n = n, m = m, n.only = n.only, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = verbose)
+	p = prep_table(type = type, n = n, m = m, n.only = n.only, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = verbose)
 	plot_table(p = p, text.format = text.format, text.col = text.col, include.na = include.na, cvd.sim = cvd.sim, verbose = verbose)
 }

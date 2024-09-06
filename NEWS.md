@@ -2,7 +2,9 @@
 - selectinput other tabs sorted in main table
 - added n=max filter for categorical palettes 
 - [!] added categorical palettes
-- updated contrast/equiluminance colums
+- updated contrast/equiluminance columns
+- added sorting of cat and seq palettes
+- added fairness plot
 
 # cols4all 0.7-1
 - fixed critical bug in c4a_gui

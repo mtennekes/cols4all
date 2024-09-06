@@ -1,4 +1,4 @@
-get_z_n = function(z, n = NA, m = NA, n.only = FALSE, range = NA) {
+get_z_n = function(z, n = NA, m = NA, n.only = FALSE, range = NA, colorsort = "orig") {
 	# if (!is.null(n)) {
 	if (is.na(n) && is.na(m)) {
 		sel = TRUE
@@ -19,7 +19,7 @@ get_z_n = function(z, n = NA, m = NA, n.only = FALSE, range = NA) {
 
 	z2 = z[sel, ]
 	if (nrow(z2) == 0) return(NULL)
-	z2$palette = do.call(mapply, c(list(FUN = get_pal_n, MoreArgs = list(n = n, m = m, range = range), SIMPLIFY = FALSE), as.list(z2)))
+	z2$palette = do.call(mapply, c(list(FUN = get_pal_n, MoreArgs = list(n = n, m = m, range = range, colorsort = colorsort), SIMPLIFY = FALSE), as.list(z2)))
 	z2$n = n
 	z2$m = m
 

@@ -38,7 +38,7 @@
 #' @rdname c4a_data
 #' @name c4a_data
 #' @export
-c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = NA, ndef = NA, mmin = NA, mmax = NA, mdef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL), bib = NA, description = NA) {
+c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = NA, ndef = NA, mmin = NA, mmax = NA, mdef = NA, format.palette.name = TRUE, remove.blacks = TRUE, take.gray.for.NA = TRUE, remove.other.grays = FALSE, light.to.dark = FALSE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list(NULL), bib = NA, description = NA) {
 
 	check_installed_packages("colorblindcheck")
 

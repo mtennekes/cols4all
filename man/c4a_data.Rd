@@ -21,7 +21,7 @@ c4a_data(
   remove.blacks = TRUE,
   take.gray.for.NA = TRUE,
   remove.other.grays = FALSE,
-  light.to.dark = TRUE,
+  light.to.dark = FALSE,
   remove.names = TRUE,
   biv.method = "byrow",
   space = "rgb",

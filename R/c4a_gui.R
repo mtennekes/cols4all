@@ -233,17 +233,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					 					  				  shiny::actionButton("none", label = "None"),
 					 					  				  shiny::actionButton("overview", label = "Overview")))),
 					 		shiny::column(width = 4,
-					 					  shiny::fluidRow(
-					 					  	shiny::column(6,
-					 					  				  shiny::radioButtons("format", "Text format", choices = c("Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = FALSE)
-					 					  	),
-					 					  	shiny::column(6,
-					 					  				  shiny::radioButtons("textcol", "Text color", choices = c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto"), inline = FALSE)	))
-					 		),
+					 					  shiny::uiOutput("sortcolorUI")),
 					 		shiny::column(width = 4,
-					 					  shiny::selectizeInput("sort", "Sort", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "name"),
+					 					  shiny::selectizeInput("sort", "Sort palettes", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "name"),
 					 					  shiny::checkboxInput("sortRev", "Reverse sorting", value = FALSE),
-					 					  shiny::checkboxInput("advanced", "Show scores", value = FALSE)
+					 					  shiny::checkboxInput("advanced", "Show scores", value = FALSE),
+					 					  shiny::radioButtons("textformat", "Text", choices = c("None" = "none", "Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = T)
 					 		)))),
 
 					 shiny::fluidRow(
@@ -679,8 +674,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				 na = input$na,
 				 range = if (input$auto_range == "Automatic") NA else input$range,
 				 n.only = if (is.null(input$n.only) || type != "cat") FALSE else input$n.only,
-				 textcol = input$textcol,
-				 format = input$format)
+				 #c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto")
+				 textcol = if (input$textformat == "none") "same" else "auto",
+				 format = if (input$textformat == "none") "hex" else input$textformat,
+				 colorsort = if (is.null(input$sortcolor) || !(type %in% c("cat", "seq"))) "orig" else if (input$sortcolor == "H") paste0(input$sortcolor, input$Hstart) else input$sortcolor)
 
 			if (substr(type, 1, 3) == "biv") {
 				m = n
@@ -698,10 +695,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				} else {
 					if (substr(type, 1, 3) == "biv") {
 						#browser()
-						prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE, n.only = FALSE)
+						prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = FALSE, n.only = FALSE)
 
 					} else {
-						prep = prep_table(type = type, n = n, sort = sort, series = series, range = range, show.scores = show.scores, columns = columns, verbose = FALSE, n.only = n.only)
+						prep = prep_table(type = type, n = n, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = FALSE, n.only = n.only)
 					}
 					pal_names = prep$zn$fullname
 				}
@@ -753,14 +750,51 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		# 	}
 		# })
 
+		output$sortcolorUI = shiny::renderUI({
+			#values = get_values()
+			type = get_type12()
+			if (type == "cat") {
+				shiny::tagList(
+					shiny::fluidRow(
+						shiny::column(6,
+									  shiny::radioButtons("sortcolor", "Sort colors", choices = c("Orignal" = "orig", Hue = "H", Chroma = "C", Luminance = "L"), inline = FALSE)),
+						shiny::column(6,
+									  shiny::conditionalPanel(
+									  	condition = "input.sortcolor == 'H'",
+									  	shiny::sliderInput("Hstart", "Hue start", min = 0, max = 360, step = 10, value = 0, ticks = FALSE, dragRange = FALSE)
+									  )
+						))
+					# shiny::radioButtons("sortcolor", "Sort colors", choices = c("Orignal" = "orig", Hue = "H", Chroma = "C", Luminance = "L"), inline = FALSE),
+					# shiny::conditionalPanel(
+					# 	condition = "input.sortcolor == 'H'",
+					# 	shiny::sliderInput("Hstart", "Hue start", min = 0, max = 360, step = 10, value = 0, ticks = FALSE, dragRange = FALSE)
+					# )
+				)
+			} else if (type == "seq") {
+				shiny::radioButtons("sortcolor", "Sorting order", choices = c("Orignal" = "orig", "Light to dark" = "L"), inline = FALSE)
+			} else if (type == "div") {
+				# not working well: (because color sorting is based on whether H[25%] > H[75%] while palette sorting is based on HL, which is a by-product of Hwidth)
+				#shiny::radioButtons("sortcolor", "Sort colors", choices = c("Orignal" = "orig", Hue = "H"), inline = FALSE)
+				NULL
+			} else {
+				NULL
+			}
+		})
+
 		output$checkOnly = shiny::renderUI({
 			values = get_values()
-			if (!is.null(values) && values$type == "cat") {
+			if (values$type == "cat") {
 				shiny::checkboxInput("n.only", paste("Only palettes with max = ", values$n, " colors"), value = values$n.only)
 			} else {
 				NULL
 			}
 		})
+
+
+
+
+
+
 
 
 		output$range_info = shiny::renderUI({
@@ -954,7 +988,6 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				progress$set(message = "Colors in progress...", value = 0)
 
 				#sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
-
 				tab = if (is.null(values$prep)) NULL
 				else plot_table(p = values$prep, text.format = values$format, text.col = values$textcol, include.na = values$na, cvd.sim = values$cvd, verbose = FALSE)
 			}

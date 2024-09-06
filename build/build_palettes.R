@@ -63,7 +63,7 @@ local({
 	dpals = lapply(div, function(s) hcl.colors(11, s))
 	names(dpals) = div
 
-	names(dpals)[1] = "Blue-Red 1" #to prevent conflict with reversed "Red-Blue"
+	#names(dpals)[1] = "Blue-Red 1" #to prevent conflict with reversed "Red-Blue"
 
 	tpals = lapply(terrain, function(s) hcl.colors(11, s))
 	names(tpals) = c("terrain", "terrain2")
@@ -467,8 +467,8 @@ local({
 	names(pals2) = cartoNum$Name
 	type = ifelse(cartoNum$Type == "diverging", "div", "seq")
 
-	pals2rev = lapply(pals2, rev) # trick to reverse names
-	pals2rev["SunsetDark"] = rev(pals2rev["SunsetDark"]) # another reverse to undo
+	#pals2rev = lapply(pals2, rev) # trick to reverse names
+	#pals2rev["SunsetDark"] = rev(pals2rev["SunsetDark"]) # another reverse to undo
 
 	cartoAgg = cartocolors[cartocolors$Type %in% c("aggregation"), c("Name", "Type", "n7")]
 	pals3 = cartoAgg$n7
@@ -476,7 +476,7 @@ local({
 	names(pals3)[2] = "ag_grn_yl"
 
 	c4a_load(c4a_data(pals, types = "cat", series = "carto"))
-	c4a_load(c4a_data(pals2rev, types = type, series = "carto"))
+	c4a_load(c4a_data(pals2, types = type, series = "carto"))
 	c4a_load(c4a_data(pals3, types = "seq", series = "carto", format.palette.name = FALSE))
 
 })
@@ -540,7 +540,7 @@ local({
 	})
 	pals_biv[["fes"]] = pals_biv[["fes"]][,2:1]
 
-	names(pals_seq)[match(c("batlowK", "batlowW", "grayC"), names(pals_seq))] = c("k_batlow", "w_batlow", "c_gray") # reverse names (because palettes will be reversed)
+	#names(pals_seq)[match(c("batlowK", "batlowW", "grayC"), names(pals_seq))] = c("k_batlow", "w_batlow", "c_gray") # reverse names (because palettes will be reversed)
 
 	c4a_load(c4a_data_as_is(pals_cat, types = "cat", series = "scico"), overwrite = T)
 	c4a_load(c4a_data(pals_div, types = "div", series = "scico"))
@@ -675,7 +675,7 @@ local({
 #c4a_palettes_remove(series = "c4a")
 local({
 	bu2 = c4a("hcl.blues3", n = 5, range = c(0.3, 0.8))
-	yl_rd = c4a("hcl.yellow_red", n = 5, range = c(0.3, 0.8))
+	yl_rd = c4a("hcl.red_yellow", n = 5, range = c(0.3, 0.8))
 	pg = hcl.colors(11, "Purple-Green")
 	bu = hcl.colors(9, "Blues 3")[7:3]
 	gn = hcl.colors(9, "Greens 3")[7:3]

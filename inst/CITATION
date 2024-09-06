@@ -1,0 +1,11 @@
+bibentry(bibtype = "Inproceedings",
+  title        = "{cols4all}: a color palette analysis tool",
+  author       = c(person(given = "Martijn",
+                        family = "Tennekes"),
+                   person(given = c("Marco", "J.", "H."), family = "Puts")),
+  booktitle = "EuroVis (Short Papers)",
+  publisher = "Wiley",
+  doi       =  "10.2312/evs.20231040",
+  year         = "2023",
+  header       = "To cite tmap/tmaptools in publications use:"
+)
