@@ -29,6 +29,8 @@ sessioninfo::session_info(pkgs = "attached")
 # viridisLite     * 0.4.2   2023-05-02 [1] CRAN (R 4.4.0)
 
 
+source("build/build_naming_model.R")
+
 c4a_sysdata_remove(are.you.sure = TRUE)
 
 ###################################

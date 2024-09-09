@@ -1,21 +1,34 @@
+c4a_naming_matrix = function(pal) {
+	do.call(.C4A$naming_fun, c(list(pal = pal), .C4A$naming_fun_args))
+}
 
-boynton = c(Green = "#859F68", Blue = "#5792A4", Purple = "#7E6A89", Pink = "#C7848F",
-			Yellow = "#E7B352", Brown = "#8F5F49", Orange = "#D97447", Red = "#9D4149",
-			White = "#D8CEBA", Gray = "#868782", Black = "#394245")
+c4a_naming_matrix_softmax = function(pal, a = NA, th = NA) {
+	m = c4a_naming_matrix(pal)
+	if (is.na(a)) a = .C4A$naming_softmax$a
+	if (is.na(th)) th = .C4A$naming_softmax$th
+	matrix_softmax(m, a = a, th = th)
 
-softmax = function(x, a = 1) {
-	e = exp(1)
-	ex = e^(-a*x)
-	ex / sum(ex)
 }
 
 
-hex2LAB = function(x) {
-	methods::as(colorspace::hex2RGB(x), "LAB")@coords
+nameability = function(pal, a = NA, th = NA) {
+	if (is.na(a)) a = .C4A$naming_softmax$a
+	if (is.na(th)) th = .C4A$naming_softmax$th
+	s = c4a_naming_matrix_softmax(pal, a = a, th = th)
+	s[s>0] = 1
+
+	max(colSums(s)) <= 1 && max(rowSums(s)) <= 1
 }
 
+name_max = function(pal) {
+	m = c4a_naming_matrix(pal)
+	apply(m, which.min, MARGIN = 1)
+}
 
-
+## method 1: difference to color centroids (e.g. boynton colors)
+naming_dist_centroid = function(pal, weights) {
+	m = diff_matrix(pal, .C4A$naming_colors)
+}
 
 diff_matrix = function(x, y) {
 	xLAB = hex2LAB(x)
@@ -26,55 +39,57 @@ diff_matrix = function(x, y) {
 	}))
 }
 
-diff_boynton = function(pal) {
-	m = diff_matrix(pal, boynton)
-	m / rep(.C4A$boynton_weights, each = nrow(m))
+hex2LAB = function(x) {
+	methods::as(colorspace::hex2RGB(x), "LAB")@coords
 }
 
-diff_boynton_softmax = function(pal, a = 2, th = 0.1) {
-	m = diff_boynton(pal)
+
+matrix_softmax = function(m, a, th) {
 	s = t(apply(m, MARGIN = 1, softmax, a = a, simplify = T))
 	s[s<th] = 0
 	s
 }
 
-# softmax_matrix = function(x, y, a = 2) {
-# 	m = diff_matrix(x, y)
-# 	t(apply(m, MARGIN = 1, softmax, a = a, simplify = T))
-# }
-
-
-# naming_score_matrix = function(pal, a = 2, th = 0.1) {
-# 	s = softmax_matrix(pal, boynton, a = a)
-# 	s[s<th] = 0
-# 	s
-# }
-
-# match_colors = function(pal, a = 2, th = .1) {
-# 	s = diff_boynton_softmax(pal, a, th)
-# 	apply(s, MARGIN = 2, function(a) {
-# 		ids = which(a>0)
-# 		ids[order(a[ids], decreasing = TRUE)]
-# 	}, simplify = FALSE)
-# }
-
-nameability = function(pal, a = 2, th = .1) {
-	s = diff_boynton_softmax(pal, a = a, th = th)
-	s[s>0] = 1
-
-	max(colSums(s)) <= 1 && max(rowSums(s)) <= 1
+softmax = function(x, a = 1) {
+	e = exp(1)
+	ex = e^(-a*x)
+	ex / sum(ex)
 }
 
-# naming_scores = function(pal, a = 2, th = .1) {
-# 	s = softmax_matrix(pal, boynton, a = a)
-# 	s[s<th] = 0
-# 	apply(s, MARGIN = 1, function(x) min(x[x!=0]))
-# }
-name_max = function(pal) {
-	m = diff_boynton(pal)
-	apply(m, which.min, MARGIN = 1)
+
+
+
+## method 2: H C L distributions per color (fitted on annotated dataset)
+naming_sample_from_distribution = function(pal, model) {
+	hcl = get_hcl_matrix(pal)
+	nms = names(model)
+	z = sapply(1:length(pal), function(i) {
+		sapply(nms, function(nm) {
+			s = sapply(c("H", "C", "L"), function(d) {
+				r = model[[nm]][[d]]
+				v = hcl[i, d]
+				if (d == "H") {
+					vs = c((v - r$mn) / (r$mx - r$mn),
+						   ((v-360) - r$mn) / (r$mx - r$mn),
+						   ((v+360) - r$mn) / (r$mx - r$mn))
+				} else {
+					vs = (v - r$mn) / (r$mx - r$mn)
+				}
+				sum(dbeta(vs, r$fit$estimate["shape1"], r$fit$estimate["shape2"]))
+			})
+			#unname(s[1] * s[3])
+			prod(s)
+		})
+	})
+	zt = t(z)
+	zt2 = zt / rowSums(zt)
+	-zt2
 }
 
+
+
+
+###
 
 create_name_data = function() {
 	hcl_df = data.frame(h = stats::runif(20000, min = 0, max = 360),
@@ -84,7 +99,7 @@ create_name_data = function() {
 	hcl_df$max_c = colorspace::max_chroma(h = hcl_df$h, l = hcl_df$l)
 	hcl_df$c = hcl_df$c * hcl_df$max_c
 	allcols = hcl(hcl_df$h, hcl_df$c, hcl_df$l)
-	allcols[1:11] = unname(boynton) # to make sure every boynton color has matches, no matter what weights are used
+	allcols[1:length(.C4A$naming_colors)] = unname(.C4A$naming_colors) # to make sure every name color has matches, no matter what model parameters are used
 
 	ids = name_max(allcols)
 
@@ -98,7 +113,7 @@ create_name_data = function() {
 		}
 	})
 
-	names(x) = names(boynton)
+	names(x) = names(.C4A$naming_colors)
 
 	dfs = lapply(x, function(v) {
 
@@ -114,7 +129,7 @@ create_name_data = function() {
 		df$y = 0.5 + rads * cos(alphs * 2 * pi)
 		df
 	})
-	names(dfs) = names(boynton)
+	names(dfs) = names(.C4A$naming_colors)
 	dfs
 }
 

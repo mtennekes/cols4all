@@ -129,7 +129,7 @@ rdata = c(rdata, local({
 
 
 
-save(.z, .s, .zbib, .zdes, shp, shp_c, bbx, rgb_data, rdata, file = "R/sysdata.rda", compress = "xz")
+save(.z, .s, .zbib, .zdes, shp, shp_c, bbx, rgb_data, rdata, names_NL_model, names_NL_colors, file = "R/sysdata.rda", compress = "xz")
 
 
 

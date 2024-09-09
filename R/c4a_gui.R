@@ -340,31 +340,31 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 									#shiny::plotOutput("namePlot", height = "600px", width = "1000px"))),
 							shiny::fluidRow(
 								shiny::column(width = 12,
-											  shiny::sliderInput("nameAlpha", "Clarity level", min = .5, max = 3, step = .5, value = 2),
-											  shiny::actionButton("showWeights", "Show weight calibration"))),
-							shiny::conditionalPanel(
-								condition = "input.showWeights % 2 == 1",
-								shiny::fluidRow(
-									shiny::column(width = 3,
-											  shiny::sliderInput("w_1", "Green", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[1])),
-											  shiny::sliderInput("w_2", "Blue", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[2])),
-											  shiny::sliderInput("w_3", "Purple", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[3])),
-											  shiny::sliderInput("w_4", "Pink", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[4]))
-									),
-									shiny::column(width = 3,
-												  shiny::sliderInput("w_5", "Yellow", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[5])),
-												  shiny::sliderInput("w_6", "Brown", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[6])),
-												  shiny::sliderInput("w_7", "Orange", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[7])),
-												  shiny::sliderInput("w_8", "Red", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[8]))
-									),
-									shiny::column(width = 3,
-												  shiny::sliderInput("w_9", "White", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[9])),
-												  shiny::sliderInput("w_10", "Gray", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[10])),
-												  shiny::sliderInput("w_11", "Black", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[11])),
-												  shiny::actionButton("w_do", "Update naming data")
-									)
-								)
-							)
+											  shiny::sliderInput("nameAlpha", "Clarity level", min = .5, max = .C4A$naming_softmax$a + 2, step = .5, value = .C4A$naming_softmax$a))),
+											  #shiny::actionButton("showWeights", "Show weight calibration"))),
+							# shiny::conditionalPanel(
+							# 	condition = "input.showWeights % 2 == 1",
+							# 	shiny::fluidRow(
+							# 		shiny::column(width = 3,
+							# 				  shiny::sliderInput("w_1", "Green", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[1])),
+							# 				  shiny::sliderInput("w_2", "Blue", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[2])),
+							# 				  shiny::sliderInput("w_3", "Purple", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[3])),
+							# 				  shiny::sliderInput("w_4", "Pink", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[4]))
+							# 		),
+							# 		shiny::column(width = 3,
+							# 					  shiny::sliderInput("w_5", "Yellow", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[5])),
+							# 					  shiny::sliderInput("w_6", "Brown", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[6])),
+							# 					  shiny::sliderInput("w_7", "Orange", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[7])),
+							# 					  shiny::sliderInput("w_8", "Red", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[8]))
+							# 		),
+							# 		shiny::column(width = 3,
+							# 					  shiny::sliderInput("w_9", "White", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[9])),
+							# 					  shiny::sliderInput("w_10", "Gray", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[10])),
+							# 					  shiny::sliderInput("w_11", "Black", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[11])),
+							# 					  shiny::actionButton("w_do", "Update naming data")
+							# 		)
+							# 	)
+							# )
 
 			),
 			shiny::tabPanel("Contrast",
@@ -381,7 +381,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				 					  shiny::checkboxGroupInput("cr_plot_opts", "", c("Sort" = "sort", "Show WCAG criteria" = "wcag", "Show equiluminant groups" = "equi"), selected = ""))),
 			 		shiny::fluidRow(
 			 			shiny::column(width = 6,
-			 						  infoBoxUI("infoCR", "Contrast ratio between colors"),
+			 						  infoBoxUI("infoCR", "Contrast ratios between colors"),
 				 					  plotOverlay("table", width = "400px", height = "300px", "aniTable", click = "table_click")),
 				 		shiny::column(width = 6,
 	 					  shiny::markdown("<br></br>
@@ -1183,7 +1183,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		#############################
 
 		output$cr_title = shiny::renderUI({
-			shiny::markdown(paste0("#### Contrast ratio with ", ifelse(input$dark, "black", "white"), " (background))"))
+			shiny::markdown(paste0("#### Contrast ratios with ", ifelse(input$dark, "black", "white"), " (background))"))
 		})
 
 		output$ex_plus = shiny::renderPlot({
@@ -1242,29 +1242,29 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		## Naming tab
 		#############################
 
-		shiny::observeEvent(input$w_do, {
-			shinyjs::runjs("$('#container').prop('disabled', true);")
-
-			w = c4a_options("boynton_weights")[[1]]
-			w[1:11] = vapply(1:11, function(i) {
-				input[[paste0("w_", i)]]
-			}, FUN.VALUE = numeric(1))
-			c4a_options(boynton_weights = w)
-			updatePlot(w)
-			get_trigger(!get_trigger()) # to update table
-			shinyjs::runjs("$('#container').prop('disabled', false);")
-
-		})
+		# shiny::observeEvent(input$w_do, {
+		# 	shinyjs::runjs("$('#container').prop('disabled', true);")
+		#
+		# 	w = c4a_options("boynton_weights")[[1]]
+		# 	w[1:11] = vapply(1:11, function(i) {
+		# 		input[[paste0("w_", i)]]
+		# 	}, FUN.VALUE = numeric(1))
+		# 	c4a_options(boynton_weights = w)
+		# 	updatePlot(w)
+		# 	get_trigger(!get_trigger()) # to update table
+		# 	shinyjs::runjs("$('#container').prop('disabled', false);")
+		#
+		# })
 
 		output$anaName = shiny::renderPlot({
 			pal = tab_vals$pal
-			c4a_plot_names2(pal, dark = input$dark, a = input$nameAlpha)
+			c4a_plot_names(pal, dark = input$dark, a = input$nameAlpha)
 		})
 
 		updatePlot <- function(result) {
 			output$anaName = shiny::renderPlot({
 				pal = tab_vals$pal
-				c4a_plot_names2(pal, dark = input$dark, a = input$nameAlpha)
+				c4a_plot_names(pal, dark = input$dark, a = input$nameAlpha)
 			})
 		}
 

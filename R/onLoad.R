@@ -67,7 +67,7 @@
 c4a_options = function(...) {
 	lst = list(...)
 	e1 = parent.frame()
-	nms = c("defaults", "CBF_th", "CBU_th", "CrangeFair", "CrangeUnfair", "LrangeFair", "LrangeUnfair", "Cintense", "Cpastel", "HwidthDivRainbow", "HwidthDivSingle", "HwidthSeqRainbow", "HwidthSeqSingle", "boynton_weights")
+	nms = c("defaults", "CBF_th", "CBU_th", "CrangeFair", "CrangeUnfair", "LrangeFair", "LrangeUnfair", "Cintense", "Cpastel", "HwidthDivRainbow", "HwidthDivSingle", "HwidthSeqRainbow", "HwidthSeqSingle", "naming_fun", "naming_fun_args", "naming_colors", "naming_softmax")
 
 	o = as.list(.C4A)[nms]
 
@@ -99,7 +99,7 @@ c4a_options = function(...) {
 
 		list2env(args, envir = .C4A)
 
-		if ("boynton_weights" %in% names(args)) {
+		if (any(c("naming_fun", "naming_fun_args", "naming_colors", "naming_softmax") %in% names(args))) {
 			.C4A$name_data = create_name_data()
 			update_nameability()
 		}
@@ -232,13 +232,28 @@ do_cellspec = function(lst) {
 
 		sortRev = c("cbfriendly", "harmonyRank", "fairness", "Cmax", "min_dist", "nameability", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "CRmin", "CRwt", "CRbk", "Blues")
 
-		# boynton_weights = c(Green = 1, Blue = 1, Purple = 1, Pink = 1,
-		# 			Yellow = 1, Brown = 1, Orange = 1, Red = 1,
-		# 			White = 1, Gray = 1, Black = 1)
+		# naming_fun = "naming_dist_centroid"
+		# naming_colors = c(Green = "#859F68",
+		# 				  Blue = "#5792A4",
+		# 				  Purple = "#7E6A89",
+		# 				  Pink = "#C7848F",
+		# 				  Yellow = "#E7B352",
+		# 				  Brown = "#8F5F49",
+		# 				  Orange = "#D97447",
+		# 				  Red = "#9D4149",
+		# 				  White = "#D8CEBA",
+		# 				  Gray = "#868782",
+		# 				  Black = "#394245") #boynton
+		# naming_softmax = list(a = 2, th = .1)
+		# naming_fun_args = list(weights = c(Green = 1, Blue = 1, Purple = 1.1, Pink = 0.9,
+		# 								   Yellow = 1, Brown = 1, Orange = 1, Red = 1.05,
+		# 								   White = 0.7, Gray = 0.7, Black = 1.05))
+		#
 
-		boynton_weights = c(Green = 1, Blue = 1, Purple = 1.1, Pink = 0.9,
-					Yellow = 1, Brown = 1, Orange = 1, Red = 1.05,
-					White = 0.7, Gray = 0.7, Black = 1.05)
+		naming_fun = "naming_sample_from_distribution"
+		naming_fun_args = list(model = names_NL_model)
+		naming_colors = names_NL_colors
+		naming_softmax = list(a = 8, th = .1)
 
 		labels = c(min_dist = "Minimum distance",
 				   nameability = "Nameability",
