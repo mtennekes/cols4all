@@ -123,12 +123,13 @@ c4a_plot_hues = function(pal, dark = FALSE, C_grey = 5, width = c("none", "total
 
 
 		plot_Hw = function(HW) {
+			buffer = 0.15
 			HL = attr(HW, "hueL")
 			HR = attr(HW, "hueR")
-			grid::grid.lines(x = grid::unit(c(cx, cx + sin(HL / 180 * pi) * (rd-0.15)), "npc"),
-							 y = grid::unit(c(cy, cy + cos(HL / 180 * pi) * (rd-0.15)), "npc"), arrow = grid::arrow(length = grid::unit(0.02, "npc")))
-			grid::grid.lines(x = grid::unit(c(cx, cx + sin(HR / 180 * pi) * (rd-0.15)), "npc"),
-							 y = grid::unit(c(cy, cy + cos(HR / 180 * pi) * (rd-0.15)), "npc"), arrow = grid::arrow(length = grid::unit(0.02, "npc")))
+			grid::grid.lines(x = grid::unit(c(cx, cx + sin(HL / 180 * pi) * (rd-buffer)), "npc"),
+							 y = grid::unit(c(cy, cy + cos(HL / 180 * pi) * (rd-buffer)), "npc"), arrow = grid::arrow(length = grid::unit(0.02, "npc")), gp = grid::gpar(col = fc, lwd = 1.5))
+			grid::grid.lines(x = grid::unit(c(cx, cx + sin(HR / 180 * pi) * (rd-buffer)), "npc"),
+							 y = grid::unit(c(cy, cy + cos(HR / 180 * pi) * (rd-buffer)), "npc"), arrow = grid::arrow(length = grid::unit(0.02, "npc")), gp = grid::gpar(col = fc, lwd = 1.5))
 			if (HR < HL) HR = HR + 360
 			coords = t(sapply(HL:HR, function(h) {
 				c(cx + sin(h/180*pi) * 0.07,
@@ -139,19 +140,20 @@ c4a_plot_hues = function(pal, dark = FALSE, C_grey = 5, width = c("none", "total
 						cy + cos(th/180*pi) * 0.085)
 
 			grid::grid.polyline(x = grid::unit(coords[,1], "npc"),
-								y = grid::unit(coords[,2], "npc"))
-			grid::grid.text(paste0(HW, "&#176;"),
+								y = grid::unit(coords[,2], "npc"), gp = grid::gpar(col = fc, lwd = 1.5))
+			grid::grid.text(paste0(HW, "°"),
 							x = grid::unit(tcoords[1], "npc"),
 							y = grid::unit(tcoords[2], "npc"),
-							just = "right")
+							just = "right",
+							gp=grid::gpar(col = fc))
 		}
 
-		# if (width == "total") {
-		# 	plot_Hw(Hwidth)
-		# } else if (width == "halves") {
-		# 	plot_Hw(HwidthL)
-		# 	plot_Hw(HwidthR)
-		# }
+		if (width == "total") {
+			plot_Hw(Hwidth)
+		} else if (width == "halves") {
+			plot_Hw(HwidthL)
+			plot_Hw(HwidthR)
+		}
 
 
 		#grid::grid.circle(r = .4, gp = grid::gpar(fill = NA, col = "#AAAAAA", lwd = 2))

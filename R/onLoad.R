@@ -120,6 +120,8 @@ do_cellspec = function(lst) {
 	assign("s", .s, envir = .C4A)
 	assign("zbib", .zbib, envir = .C4A)
 	assign("zdes", .zdes, envir = .C4A)
+	assign("names_NL_model", names_NL_model, envir = .C4A)
+	assign("names_NL_colors", names_NL_colors, envir = .C4A)
 	name_data = rdata$name_data
 	assign("name_data", name_data, envir = .C4A)
 

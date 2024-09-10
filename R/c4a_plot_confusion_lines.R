@@ -11,7 +11,7 @@ XYZ2xyY = function(X, Y, Z) {
 }
 
 hex2xyY = function(cols) {
-	co = coords(as(hex2RGB(cols), "XYZ"))
+	co = coords(as(colorspace::hex2RGB(cols), "XYZ"))
 	x = co[,1] / rowSums(co)
 	y = co[,2] / rowSums(co)
 	Y = co[,3]

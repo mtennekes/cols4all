@@ -199,13 +199,13 @@ is_light <- function(col) {
 
 # get hcl coordinates
 get_hcl_matrix = function(p, rounded = FALSE) {
-	x = as(hex2RGB(p), "polarLUV")@coords[,c("H", "C", "L"), drop = FALSE]
+	x = as(colorspace::hex2RGB(p), "polarLUV")@coords[,c("H", "C", "L"), drop = FALSE]
 	if (rounded) round(x) else x
 }
 
 get_hc_or_l = function(p, dim = c("H", "C", "L")) {
 	dim = match.arg(dim)
-	x = as(hex2RGB(p), "polarLUV")@coords[, dim]
+	x = as(colorspace::hex2RGB(p), "polarLUV")@coords[, dim]
 }
 
 

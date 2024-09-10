@@ -4,7 +4,7 @@ aregreys = function(x) {
 
 # ensure the diagonal are pure greys
 convert2grey = function(x) {
-	greys = rowSums(attr(hex2RGB(x), "coords")) / 3
+	greys = rowSums(attr(colorspace::hex2RGB(x), "coords")) / 3
 	rgb(greys, greys, greys)
 }
 

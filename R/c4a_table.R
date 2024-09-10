@@ -264,7 +264,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 
 		#e2[[cn]] = kableExtra::cell_spec(txt, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;")
 
-		fz = switch(text.format, hex = "height: 1.5em; font-size: 80%;", "height: 1.5em; font-size: 80%;")
+		fz = switch(text.format, RGB = "height: 1.5em; font-size: 70%;", "height: 1.5em; font-size: 80%;")
 
 		e2[[cn]] = kableExtra::cell_spec(txt, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = paste0("border-radius: 0px; max-width: 18em; display:block; white-space: nowrap; overflow: auto; text-overflow: ellipsis; ", fz))
 

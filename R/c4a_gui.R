@@ -783,7 +783,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		output$checkOnly = shiny::renderUI({
 			values = get_values()
-			if (values$type == "cat") {
+			if (!is.null(values$type) && values$type == "cat") {
 				shiny::checkboxInput("n.only", paste("Only palettes with max = ", values$n, " colors"), value = values$n.only)
 			} else {
 				NULL
@@ -1144,7 +1144,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			width = switch(tab_vals$type,
 						   seq = "total",
 						   div = "halves",
-						   "none")
+						   "total")
 
 			pal = tab_vals$pal
 			c4a_plot_hues(pal, dark = input$dark, width = width)
@@ -1173,7 +1173,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			type = tab_vals$type
 
-			c4a_plot_fair(pal, dark = input$dark)
+			c4a_plot_fair(pal, dark = input$dark, type = if (type == "cat") "LC" else "C")
 		})
 
 
