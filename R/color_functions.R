@@ -171,6 +171,21 @@ colors_cbf_set = function(x, k, plot = TRUE, dE_min = 10, columns = 2, cex = 1, 
 	invisible(z)
 }
 
+colors_remove_twins = function(x, th = 2) {
+	n = length(x)
+	d = cols4all:::get_dist_matrix(x)
+	d[lower.tri(d)] = NA
+	ids = which(d < th)
+	rids = ((ids - 1) %/% n) + 1
+	cids = ((ids - 1) %% n) + 1
+	intersect(cids, rids)
+	keeps = setdiff(cids, rids)
+	rem = setdiff(c(rids,cids), keeps)
+	remain = setdiff(1L:n, rem)
+	x[remain]
+}
+
+
 get_ids = function(df, k) {
 	lapply(1:nrow(df), function(i) {
 		unlist(df[i, 1:k])

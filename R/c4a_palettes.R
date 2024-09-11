@@ -81,7 +81,7 @@ c4a_types = function(series = NULL, as.data.frame = TRUE) {
 #' @rdname c4a_palettes
 #' @name c4a_series
 #' @export
-c4a_overview = function() {
+c4a_overview = function(return.matrix = FALSE) {
 	z = .C4A$z
 
 	if (is.null(z)) {
@@ -93,7 +93,22 @@ c4a_overview = function() {
 
 	tps = unname(.C4A$types)
 
-	tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = length)
+	tab_k = tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = length)
+
+	if (return.matrix) return(tab_k)
+
+	df_k = as.data.frame(tab_k)
+
+	df_k$series = rownames(df_k)
+	df_k$description = ""
+
+	if (!is.null(.C4A$zdes)) {
+		mtch = intersect(df_k$series, names(.C4A$zdes))
+		df_k$description[match(mtch, df_k$series)] = unname(.C4A$zdes[mtch])
+	}
+	rownames(df_k) = NULL
+
+	df_k[, c("series", "description", tps)]
 }
 
 

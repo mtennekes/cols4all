@@ -71,16 +71,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 	tab_nmin = tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = min)
 	tab_nmax = tapply(z$nmax, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = max)
-	tab_k = as.data.frame(tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = length))
-	tab_k$series = rownames(tab_k)
-	tab_k$description = ""
-
-	if (!is.null(.C4A$zdes)) {
-		mtch = intersect(tab_k$series, names(.C4A$zdes))
-		tab_k$description[match(mtch, tab_k$series)] = unname(.C4A$zdes[mtch])
-	}
-
-	tab_k = tab_k[, c("series", "description", tps)]
+	tab_k = c4a_overview()
 
 
 	allseries = sort(unique(z$series))
