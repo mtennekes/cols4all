@@ -221,24 +221,42 @@ with:</p>
 <p>How many palettes per type x series?</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/c4a_palettes.html">c4a_overview</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         cat seq div bivs bivc bivd bivg</span></span>
-<span><span class="co">#&gt; brewer    8  18   9    2    1    1   NA</span></span>
-<span><span class="co">#&gt; c4a       9  NA   2    2   NA    2    5</span></span>
-<span><span class="co">#&gt; carto     6  21   7   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; hcl       9  23  11   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; kovesi   NA  17  13   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; met      33   8  14   NA    1   NA   NA</span></span>
-<span><span class="co">#&gt; misc      1  NA  NA   NA    3   NA   NA</span></span>
-<span><span class="co">#&gt; miscs     4  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; parks    22   5   3   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; poly      9  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; scico    21  21  10   NA    2   NA    1</span></span>
-<span><span class="co">#&gt; seaborn   6   4   2   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; stevens  NA  NA  NA    5   NA   NA   NA</span></span>
-<span><span class="co">#&gt; tableau  29  23  28   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; tol       8   8   4   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; viridis  NA   7   1   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; wes      23  NA   1   NA   NA   NA   NA</span></span></code></pre></div>
+<span><span class="co">#&gt;     series                                         description cat seq div bivs</span></span>
+<span><span class="co">#&gt; 1   brewer                                ColorBrewer palettes   8  18   9    2</span></span>
+<span><span class="co">#&gt; 2      c4a                  cols4all palettes (in development)   9  NA   2    2</span></span>
+<span><span class="co">#&gt; 3    carto                          Palettes designed by CARTO   6  21   7   NA</span></span>
+<span><span class="co">#&gt; 4      hcl  Palettes from the Hue Chroma Luminance color space   9  23  11   NA</span></span>
+<span><span class="co">#&gt; 5   kovesi                   Palettes designed by Peter Kovesi  NA  17  13   NA</span></span>
+<span><span class="co">#&gt; 6      met Palettes inspired by The Metropolitan Museum of Art  33   8  14   NA</span></span>
+<span><span class="co">#&gt; 7     misc                              Miscellaneous palettes   1  NA  NA   NA</span></span>
+<span><span class="co">#&gt; 8    miscs                                                       4  NA  NA   NA</span></span>
+<span><span class="co">#&gt; 9    parks                 Palettes inspired by National Parks  22   5   3   NA</span></span>
+<span><span class="co">#&gt; 10    poly               Qualitative palettes with many colors   9  NA  NA   NA</span></span>
+<span><span class="co">#&gt; 11   scico     Scientific colour map palettes by Fabio Crameri  21  21  10   NA</span></span>
+<span><span class="co">#&gt; 12 seaborn            Palettes from the Python library Seaborn   6   4   2   NA</span></span>
+<span><span class="co">#&gt; 13 stevens                Bivariate palettes by Joshua Stevens  NA  NA  NA    5</span></span>
+<span><span class="co">#&gt; 14 tableau                        Palettes designed by Tableau  29  23  28   NA</span></span>
+<span><span class="co">#&gt; 15     tol                       Palettes designed by Paul Tol   8   8   4   NA</span></span>
+<span><span class="co">#&gt; 16 viridis          Palettes fom the Python library matplotlib  NA   7   1   NA</span></span>
+<span><span class="co">#&gt; 17     wes                   Palettes from Wes Anderson movies  23  NA   1   NA</span></span>
+<span><span class="co">#&gt;    bivc bivd bivg</span></span>
+<span><span class="co">#&gt; 1     1    1   NA</span></span>
+<span><span class="co">#&gt; 2    NA    2    5</span></span>
+<span><span class="co">#&gt; 3    NA   NA   NA</span></span>
+<span><span class="co">#&gt; 4    NA   NA   NA</span></span>
+<span><span class="co">#&gt; 5    NA   NA   NA</span></span>
+<span><span class="co">#&gt; 6     1   NA   NA</span></span>
+<span><span class="co">#&gt; 7     3   NA   NA</span></span>
+<span><span class="co">#&gt; 8    NA   NA   NA</span></span>
+<span><span class="co">#&gt; 9    NA   NA   NA</span></span>
+<span><span class="co">#&gt; 10   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 11    2   NA    1</span></span>
+<span><span class="co">#&gt; 12   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 13   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 14   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 15   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 16   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 17   NA   NA   NA</span></span></code></pre></div>
 <p>What palettes are available, e.g diverging from the hcl series?</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Diverging palettes from the 'hcl' series</span></span>
