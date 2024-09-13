@@ -29,6 +29,11 @@ range_seq = function(n = 9, nmin = 3, nmax = 9, slope_min = 1/30, slope_max = 1/
 	rm
 }
 
+range_cyc = function(n = 9) {
+	# n x 2 matrix with 0 1 (full range)
+	matrix(c(0,1), nrow = n, ncol = 2, byrow = TRUE)
+}
+
 range_div = function(n = 11, nmin = 3, nmax = 11, slope = 1/20) {
 	nmax = min(nmax, n)
 

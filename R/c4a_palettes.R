@@ -12,7 +12,7 @@
 #' @rdname c4a_palettes
 #' @name c4a_palettes
 #' @export
-c4a_palettes = function(type = c("all", "cat", "seq", "div"), series = NULL, full.names = TRUE) {
+c4a_palettes = function(type = c("all", "cat", "seq", "div", "cyc"), series = NULL, full.names = TRUE) {
 	type = match.arg(type)
 	z = .C4A$z
 	if (is.null(z)) {
@@ -29,7 +29,7 @@ c4a_palettes = function(type = c("all", "cat", "seq", "div"), series = NULL, ful
 #' @rdname c4a_palettes
 #' @name c4a_series
 #' @export
-c4a_series = function(type = c("all", "cat", "seq", "div"), as.data.frame = TRUE) {
+c4a_series = function(type = c("all", "cat", "seq", "div", "cyc"), as.data.frame = TRUE) {
 	type = match.arg(type)
 	z = .C4A$z
 	if (is.null(z)) {

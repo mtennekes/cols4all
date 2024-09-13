@@ -10,8 +10,15 @@ convert2grey = function(x) {
 
 create_biv_palette = function(palette, biv.method) {
 	if (!(biv.method %in% c("div2seqseq", "div2catseq", "seq2uncseq", "byrow", "bycol"))) {
-		n = as.integer(substr(biv.method, nchar(biv.method), nchar(biv.method)))
-		biv.method = substr(biv.method, 1, nchar(biv.method) - 1)
+		# test 2 digits
+		n = suppressWarnings(as.integer(substr(biv.method, nchar(biv.method)-1, nchar(biv.method))))
+		if (is.na(n)) {
+			n = as.integer(substr(biv.method, nchar(biv.method), nchar(biv.method)))
+			biv.method = substr(biv.method, 1, nchar(biv.method) - 1)
+		} else {
+			biv.method = substr(biv.method, 1, nchar(biv.method) - 2)
+		}
+
 		if (!(biv.method %in% c("div2seqseq", "byrow", "bycol"))) stop("Invalid biv.method", call. = FALSE)
 	} else {
 		np = length(palette)

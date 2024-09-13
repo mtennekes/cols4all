@@ -41,7 +41,7 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, m
 		} else {
 			palette[index[[n]]]
 		}
-	} else if (type %in% c("seq", "div")) {
+	} else if (type %in% c("seq", "div", "cyc")) {
 		if (is.na(range[1])) {
 			if (!is.null(index)) {
 				pal = palette[index[[min(n, length(index))]]]
@@ -62,7 +62,7 @@ get_pal_n = function(n, m = NA, name, type, series, palette, nmin, nmax, ndef, m
 			rng = range
 		}
 
-		if (type == "seq") {
+		if (type %in% c("seq", "cyc")) {
 			if (rng[1] == 0 && rng[2] == 1) {
 				rampPal(pal, n, space = space)
 			} else {

@@ -63,7 +63,7 @@ show_attach_scores = function(z) {
 		z2$HwidthLR = pmax(z2$HwidthL, z2$HwidthR)
 	} else if (type == "seq") {
 		z2$hueType = ifelse(z2$Hwidth < .C4A$HwidthSeqSingle, "SH", ifelse(z2$Hwidth < .C4A$HwidthSeqRainbow, "MH", "RH"))
-	} else if (type %in% c("cat", "bivc")) {
+	} else if (type %in% c("cat", "cyc", "bivc")) {
 	} else if (type %in% c("bivs", "bivd", "bivg")) {
 		z2$hueType = ifelse(z2$HwidthL >= .C4A$HwidthDivRainbow | z2$HwidthR >= .C4A$HwidthDivRainbow, "RH",
 					 ifelse(z2$HwidthL < .C4A$HwidthDivSingle & z2$HwidthR < .C4A$HwidthDivSingle, "SH", "MH"))
@@ -90,9 +90,11 @@ get_friendlyness = function(zn) {
 							  ifelse(min_dist <= .C4A$CBU_th$cat["min_dist"], -1, 0))),
 
 
-		ifelse(type == "seq", (min_step / 1000) + ifelse(min_step >= .C4A$CBF_th$seq["min_step"], 1,
-							  ifelse(min_step <= .C4A$CBU_th$seq["min_step"], -1, 0)),
+		ifelse(type == "seq", (min_dist / 1000) + ifelse(min_dist >= .C4A$CBF_th$seq["min_dist"], 1,
+							  ifelse(min_dist <= .C4A$CBU_th$seq["min_dist"], -1, 0)),
 
+		ifelse(type == "cyc", (min_dist / 1000) + ifelse(min_dist >= .C4A$CBF_th$cyc["min_dist"], 1,
+			   												 ifelse(min_dist <= .C4A$CBU_th$cyc["min_dist"], -1, 0)),
 
 		ifelse(type == "div", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$div["inter_wing_dist"] & min_step >= .C4A$CBF_th$div["min_step"], 1,
 							  ifelse(inter_wing_dist <= .C4A$CBU_th$div["inter_wing_dist"] | min_step <= .C4A$CBU_th$div["min_step"], -1, 0)),
@@ -111,6 +113,6 @@ get_friendlyness = function(zn) {
 
 
 	   ifelse(type == "bivg", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$bivg["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivg["min_step"], 1,
-							   ifelse(inter_wing_dist <= .C4A$CBU_th$bivg["inter_wing_dist"] | min_step <= .C4A$CBU_th$bivg["min_step"], -1, 0)), 0)))))))
+							   ifelse(inter_wing_dist <= .C4A$CBU_th$bivg["inter_wing_dist"] | min_step <= .C4A$CBU_th$bivg["min_step"], -1, 0)), 0))))))))
 	})
 }

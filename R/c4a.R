@@ -22,7 +22,7 @@
 #' @rdname c4a
 #' @name c4a
 #' @export
-c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), reverse = FALSE, order = NULL, range = NA, colorsort = "orig", format = c("hex", "RGB", "HCL"), nm_invalid = c("error", "repeat", "interpolate"), verbose = TRUE) {
+c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), reverse = FALSE, order = NULL, range = NA, colorsort = "orig", format = c("hex", "RGB", "HCL"), nm_invalid = c("error", "repeat", "interpolate"), verbose = TRUE) {
 	calls = names(match.call(expand.dots = TRUE)[-1])
 
 	type = match.arg(type)
@@ -96,6 +96,23 @@ c4a = function(palette = NULL, n = NA, m = NA, type = c("cat", "seq", "div", "bi
 	}
 }
 
+#' @param space a character string; interpolation in RGB or CIE Lab color spaces
+#' @param interpolate use spline or linear interpolation
+#' @param ... passed on to `c4a`.
+#' @rdname c4a
+#' @name c4a_ramp
+#' @export
+c4a_ramp = function(..., space = c("rgb", "Lab"),
+					interpolate = c("linear", "spline")) {
+	space = match.arg(space)
+	interpolate = match.arg(interpolate)
+	args = list(...)
+	pal = do.call(c4a, args)
+	if (is.null(pal)) return(invisible(NULL))
+	colorRampPalette(pal, space = space, interpolate = interpolate)
+}
+
+
 #' Get information from a cols4all palette
 #'
 #' Get information from a cols4all palette
@@ -134,7 +151,7 @@ c4a_info = function(palette, no.match = c("message", "error", "null"), verbose =
 #' @rdname c4a
 #' @name c4a_na
 #' @export
-c4a_na = function(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE) {
+c4a_na = function(palette = NULL, type = c("cat", "seq", "div", "cyc"), verbose = TRUE) {
 	type = match.arg(type)
 	if (is.null(palette)) {
 		palette = c4a_default_palette(type)

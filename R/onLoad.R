@@ -135,7 +135,8 @@ do_cellspec = function(lst) {
 
 		#color-blind-friendly thresholds
 		CBF_th = list(cat = c(min_dist = 10),
-					  seq = c(min_step = 5),
+					  seq = c(min_dist = 5),
+					  cyc = c(min_dist = 5),
 					  div = c(inter_wing_dist = 10, min_step = 5),
 					  bivs = c(inter_wing_dist = 7, min_step = 3),
 					  bivc = c(min_dist = 10),
@@ -147,7 +148,8 @@ do_cellspec = function(lst) {
 
 		# unfriendly (rolling eyes)
 		CBU_th = list(cat = c(min_dist = 2),
-					  seq = c(min_step = 1),
+					  seq = c(min_dist = 1),
+					  cyc = c(min_dist = 1),
 					  div = c(inter_wing_dist = 4, min_step = 1),
 					  bivs = c(inter_wing_dist = 3, min_step = 1),
 					  bivc = c(min_dist = 2),
@@ -189,6 +191,7 @@ do_cellspec = function(lst) {
 
 		types = c("Categorical" = "cat",
 				  "Sequential" = "seq",
+				  "Cyclic" = "cyc",
 				  "Diverging" = "div",
 				  "Bivariate (sequential x sequential)" = "bivs",
 				  "Bivariate (sequential x categorical)" = "bivc",
@@ -197,6 +200,7 @@ do_cellspec = function(lst) {
 
 		types1 = c("Categorical" = "cat",
 				   "Sequential" = "seq",
+				   "Cyclic" = "cyc",
 				   "Diverging" = "div",
 				   "Bivariate" = "biv")
 
@@ -205,17 +209,19 @@ do_cellspec = function(lst) {
 							  "Sequential x diverging" = "bivd",
 							  "Sequential x desaturated" = "bivg"))
 
-		type_info = data.frame(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"),
+		type_info = data.frame(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"),
 							   description = c("categorical",
 							   				"sequential",
 							   				"diverging",
+							   				"cyclic",
 							   				"bivariate (sequential x sequential)", "bivariate (sequential x categorical)", "bivariate (sequential x diverging)", "bivariate (sequential x desaturated)"))
 
-		ndef = c(cat = Inf, seq = 7, div = 9, bivc = Inf, bivs = 3, bivd = 3, bivg  = 3) # Inf meaning maximum available colors
-		mdef = c(cat = 1, seq = 1, div = 1, bivc = 3, bivs = NA, bivd = 3, bivg  = 3) # NA meaning same as ndef
+		ndef = c(cat = Inf, seq = 7, cyc = 9, div = 9, bivc = Inf, bivs = 3, bivd = 3, bivg  = 3) # Inf meaning maximum available colors
+		mdef = c(cat = 1, seq = 1, cyc = 1, div = 1, bivc = 3, bivs = NA, bivd = 3, bivg  = 3) # NA meaning same as ndef
 
 		CB_ranges = list(cat = list(min_dist = c(0, 20)),
-						 seq = list(min_step = c(0, 20), max_step = c(0, 20)),
+						 seq = list(min_dist = c(0, 20)),
+						 cyc = list(min_dist = c(0, 20)),
 						 div = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)),
 						 bivs = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)),
 						 bivc = list(min_dist = c(0, 20)),
@@ -398,8 +404,8 @@ do_cellspec = function(lst) {
 		)
 
 
-		nmax = c(cat = 36, seq = 15, div = 15, bivs = 7, bivc = 7, bivd = 7, bivg = 7)
-		nmin = c(cat = 1, seq = 2, div = 3, bivs = 2, bivc = 2, bivd = 3, bivg = 2)
+		nmax = c(cat = 36, seq = 15, cyc = 15, div = 15, bivs = 7, bivc = 10, bivd = 7, bivg = 7)
+		nmin = c(cat = 1, seq = 2, cyc = 3, div = 3, bivs = 2, bivc = 2, bivd = 3, bivg = 2)
 		mdef = c(bivc = 5, bivd = 5, bivg = 5)
 		matrix_breaks = list(CR = c(1, 1.2, 1.5, 2, 3, 4.5, 7), dist = c(0, 2, 5, 10, 15))
 		matrix_pchs = list(CR = c(15, 17, 16, 1, 1, 2, 0), dist = c(15, 17, 16, 16, 1))

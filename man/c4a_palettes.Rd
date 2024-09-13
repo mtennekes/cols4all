@@ -22,7 +22,7 @@ c4a_series(type = c("all", "cat", "seq", "div"), as.data.frame = TRUE)
 
 c4a_types(series = NULL, as.data.frame = TRUE)
 
-c4a_overview()
+c4a_overview(return.matrix = FALSE)
 
 .P
 }

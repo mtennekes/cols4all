@@ -1,5 +1,5 @@
 table_columns = function(type, show.scores) {
-	if (type %in% c("seq", "div")) {
+	if (type %in% c("seq", "div", "cyc")) {
 		qn = character(0)
 		qs = character(0)
 	} else {
@@ -14,6 +14,10 @@ table_columns = function(type, show.scores) {
 		qn = c(qn, "hueType", "contrastWT", "contrastBK", "float")
 		qs = c(qs, "Hwidth", "CRwt", "CRbk", "Blues")
 		sn = "H"
+	} else if (type == "cyc") {
+		qn = c(qn, "contrastWT", "contrastBK", "float")
+		qs = c(qs, "CRwt", "CRbk", "Blues")
+		sn = character(0)
 	} else if (type %in% c("div", "bivs", "bivd", "bivg")) {
 		qn = c(qn, "hueType", "contrastWT", "contrastBK", "float")
 		qs = c(qs,  "HwidthLR", "CRwt", "CRbk", "Blues")
@@ -38,7 +42,7 @@ table_columns = function(type, show.scores) {
 	list(qn = qn, ql = ql, qs = qs, sn = sn, sl = sl)
 }
 
-prep_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, sort = "name", series = "all", range = NA, colorsort = "orig", show.scores = FALSE, columns = NA, verbose = TRUE) {
+prep_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, sort = "name", series = "all", range = NA, colorsort = "orig", show.scores = FALSE, columns = NA, verbose = TRUE) {
 	id = NULL
 
 	type = match.arg(type)
@@ -273,7 +277,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 
 	# make icons (cannot do that in onLoad due to dependency of suggested kableExtra)
 	tc = lapply(.C4A$tc, function(tci) {
-		if (any(names(tci) %in% c("seq", "cat", "div"))) {
+		if (any(names(tci) %in% c("seq", "cat", "div", "cyc"))) {
 			lapply(tci, function(tcii) {
 				lapply(tcii, function(tciii) {
 					if (is.list(tciii)) do.call(kableExtra::cell_spec, tciii) else tciii
@@ -294,7 +298,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 	rownames(e2) = NULL
 	for (var in c("cbfriendly", "chroma",  "hueType", "fair", "nameable", "equiluminance", "contrastWT", "contrastBK", "float")) {
 		tcv = tc[[var]]
-		if (any(names(tcv) %in% c("seq", "cat", "div"))) {
+		if (any(names(tcv) %in% c("seq", "cat", "div", "cyc"))) {
 			tcv = if (type %in% names(tcv)) tcv[[type]]	else tcv[["x"]]
 		}
 		if (var %in% qn) {
@@ -425,7 +429,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #' @return An HMTL table (`kableExtra` object)
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, colorsort = "orig", include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
+c4a_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, colorsort = "orig", include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
 	cvd.sim = match.arg(cvd.sim)
 	p = prep_table(type = type, n = n, m = m, n.only = n.only, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = verbose)
 	plot_table(p = p, text.format = text.format, text.col = text.col, include.na = include.na, cvd.sim = cvd.sim, verbose = verbose)

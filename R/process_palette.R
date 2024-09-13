@@ -1,4 +1,7 @@
-process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remove.other.grays = FALSE, remove.blacks = TRUE, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list()) {
+process_palette = function(pal, type, colNA = NA, take.gray.for.NA = FALSE, remove.other.grays = FALSE, remove.blacks = NA, remove.whites = NA, light.to.dark = TRUE, remove.names = TRUE, biv.method = "byrow", space = "rgb", range_matrix_args = list()) {
+
+	if (is.na(remove.blacks)) remove.blacks = (type == "cat")
+	if (is.na(remove.whites)) remove.whites = (type == "cat")
 
 	# maybe need to reindex
 	index = attr(pal, "index")
@@ -9,6 +12,13 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 		pal = create_biv_palette(pal, biv.method)
 	}
 
+	if (type == "cyc") {
+		if (pal[1] != tail(pal, 1)) {
+			pal = c(pal, pal[1])
+		}
+	}
+
+
 	hcl = get_hcl_matrix(pal)
 
 	#specplot(hcl(h=seq(0,360,by=10), c = 0, l= 15))
@@ -16,13 +26,28 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	#specplot(hcl(h=seq(0,360,by=10), c = 10, l= 5))
 	#specplot(hcl(h=seq(0,360,by=10), c = 15, l= 0))
 	if (remove.blacks && type == "cat") {
-		isB = (hcl[,3] + hcl[,2]) <= 15
+		isB = ((hcl[,3] + hcl[,2]) <= 15) | (hcl[,2] == 0)
 		if (all(isB)) {
 			message("Palette contains only (almost) blacks. Therefore remove.blacks is set to FALSE")
 			remove.blacks = FALSE
 		} else if (any(isB)) {
 			pal = pal[!isB]
 			hcl = hcl[!isB,]
+		}
+	}
+
+	#specplot(hcl(h=seq(0,360,by=10), c = 0, l= 15))
+	#specplot(hcl(h=seq(0,360,by=10), c = 5, l= 10))
+	#specplot(hcl(h=seq(0,360,by=10), c = 10, l= 5))
+	#specplot(hcl(h=seq(0,360,by=10), c = 15, l= 0))
+	if (remove.whites && type == "cat") {
+		isW = hcl[,2] <= 3 & hcl[,3] >= 99
+		if (all(isW)) {
+			message("Palette contains only (almost) whites. Therefore remove.whites is set to FALSE")
+			remove.whites = FALSE
+		} else if (any(isW)) {
+			pal = pal[!isW]
+			hcl = hcl[!isW,]
 		}
 	}
 
@@ -67,6 +92,8 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 	} else {
 		reversed = FALSE
 	}
+
+
 
 	if (is.na(colNA)) {
 		if (substr(type, 1, 3) == "biv") {
@@ -118,7 +145,7 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = TRUE, remov
 			index2[[w]]
 		})
 		attr(pal, "index") = index3
-	} else if (is.null(range_matrix) && type %in% c("seq", "div")) {
+	} else if (is.null(range_matrix) && type %in% c("seq", "div", "cyc")) {
 
 		rma = formals(get(paste0("range_", type)))
 		rma$n = NULL

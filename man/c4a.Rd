@@ -2,6 +2,7 @@
 % Please edit documentation in R/c4a.R
 \name{c4a}
 \alias{c4a}
+\alias{c4a_ramp}
 \alias{c4a_na}
 \title{Get a cols4all color palette}
 \usage{
@@ -18,6 +19,8 @@ c4a(
   nm_invalid = c("error", "repeat", "interpolate"),
   verbose = TRUE
 )
+
+c4a_ramp(..., space = c("rgb", "Lab"), interpolate = c("linear", "spline"))
 
 c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 }
@@ -43,6 +46,12 @@ c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
 \item{nm_invalid}{what should be done in case \code{n} or \code{m} is larger than the maximum number of colors or smaller than the minimum number? Options are \code{"error"} (an error is returned), \code{"repeat"}, the palette is repeated, \code{"interpolate"} colors are interpolated. For categorical \code{"cat"} palettes only.}
 
 \item{verbose}{should messages be printed?}
+
+\item{...}{passed on to \code{c4a}.}
+
+\item{space}{a character string; interpolation in RGB or CIE Lab color spaces}
+
+\item{interpolate}{use spline or linear interpolation}
 }
 \value{
 A vector of colors (\code{c4a}) and a color (\code{c4a_na})

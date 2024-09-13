@@ -123,7 +123,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	x = c4a_info(palette)
 
 	n_init = x$ndef
-	pal_init = c(c4a(palette, n = n_init), "#ffffff", "#000000")
+	pal_init = unique(c(c4a(palette, n = n_init), "#ffffff", "#000000"))
 
 
 	getNames = function(p) {
@@ -193,7 +193,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					 				  				  	condition = "input.type1 == 'biv'",
 					 				  				  	shiny::fluidRow(
 					 				  				  		shiny::column(6,
-					 				  				  					  shiny::sliderInput("nbiv", "Number of columns", min = 3, max = 7, value = 3, ticks = FALSE)),
+					 				  				  					  shiny::uiOutput("nbivUI")),
 					 				  				  		shiny::column(6,
 					 				  				  					  shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 7, value = 3, ticks = FALSE))))),
 					 				  				  shiny::checkboxInput("na", "Color for missing values", value = FALSE),
@@ -526,7 +526,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		tab_vals = shiny::reactiveValues(pal = pal_init,
 										 na = FALSE,
-										 palBW = c(pal_init, "#FFFFFF", "#000000"),
+										 palBW = unique(c(pal_init, "#FFFFFF", "#000000")),
 										 pal_name = palette,
 										 n = n_init,
 										 colA1 = pal_init[1], colA2 = pal_init[2],
@@ -551,6 +551,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		})
 
 		shiny::observeEvent(get_cols(), {
+			if (is.null(input$sort)) return(NULL)
 			cols = get_cols()
 			sort = shiny::isolate(input$sort)
 			shiny::freezeReactiveValue(input, "sort")
@@ -573,9 +574,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			type = get_type12()
 
 			if (!(type %in% types_available)) return(NULL)
-			if (type %in% c("cat", "seq", "div")) {
+			if (is.null(input$n)) return(NULL)
+
+			if (type %in% c("cat", "seq", "div", "cyc")) {
 				series = series_d()
 				if (is.null(series)) return(NULL)
+
 				ns =  def_n(npref = input$n, type, series, tab_nmin, tab_nmax)
 				shiny::freezeReactiveValue(input, "n")
 				shiny::updateSliderInput(session, "n", min = ns$nmin, max = ns$nmax, value = ns$n)
@@ -607,7 +611,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		shiny::observeEvent(series_d(), {
 			type = get_type12()
 
-			if (!(type %in% c("cat", "seq", "div"))) return(NULL)
+			if (!(type %in% c("cat", "seq", "div", "cyc"))) return(NULL)
 
 			series = series_d()
 
@@ -631,6 +635,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 												style = "color: #000000;",
 												size = "l"))
 		})
+
+		output$nbivUI = shiny::renderUI({
+			type = get_type12()
+			shiny::sliderInput("nbiv", "Number of columns", min = 3, max = ifelse(type == "bivc", 10, 7), value = 3, ticks = FALSE)
+		})
+
 
 		get_cols = shiny::reactive({
 			type = get_type12()
@@ -686,7 +696,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				} else {
 					if (substr(type, 1, 3) == "biv") {
 						#browser()
-						prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = FALSE, n.only = FALSE)
+						prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = nbiv, verbose = FALSE, n.only = FALSE)
 
 					} else {
 						prep = prep_table(type = type, n = n, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = FALSE, n.only = n.only)
@@ -716,7 +726,6 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				shiny::freezeReactiveValue(input, "mbiv")
 				shiny::updateSliderInput(session, "mbiv", value = nbiv)
 			}
-
 		})
 
 		# shiny::observe({
@@ -820,7 +829,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				tab_vals$na = na
 				if (na) cols = c(cols, c4a_na(tab_vals$pal_name))
 				tab_vals$pal = cols
-				tab_vals$palBW = c(cols, "#FFFFFF", "#000000")
+				tab_vals$palBW = unique(c(cols, "#FFFFFF", "#000000"))
 				tab_vals$type = values$type
 				tab_vals$colA1 = cols[1]
 				tab_vals$colA2 = cols[2]
@@ -917,7 +926,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				cols = as.vector(c4a(x$fullname, n = tab_vals$n))
 				if (tab_vals$na) cols = c(cols, c4a_na(tab_vals$pal_name))
 
-				colsBW = c(cols, "#FFFFFF", "#000000")
+				colsBW = unique(c(cols, "#FFFFFF", "#000000"))
 
 				tab_vals$pal = cols
 				tab_vals$pal_name = pal_name
@@ -978,7 +987,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 				progress$set(message = "Colors in progress...", value = 0)
 
-				#sort = paste0({if (values$sortRev) "-" else ""}, values$sort)
+
 				tab = if (is.null(values$prep)) NULL
 				else plot_table(p = values$prep, text.format = values$format, text.col = values$textcol, include.na = values$na, cvd.sim = values$cvd, verbose = FALSE)
 			}

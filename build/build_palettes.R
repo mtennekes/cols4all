@@ -29,7 +29,7 @@ sessioninfo::session_info(pkgs = "attached")
 # viridisLite     * 0.4.2   2023-05-02 [1] CRAN (R 4.4.0)
 
 
-source("build/build_naming_model.R")
+#source("build/build_naming_model.R")
 
 c4a_sysdata_remove(are.you.sure = TRUE)
 
@@ -106,6 +106,9 @@ local({
 	types = ifelse(inf$category == "qual", "cat", inf$category)
 
 	c4a_load(c4a_data(pals, types = types, series = "brewer"))
+
+	divc = list(paired_biv = pals$Paired)
+	c4a_load(c4a_data(divc, types = "bivc", series = "brewer", biv.method = "bycol6"))
 })
 
 
@@ -296,21 +299,85 @@ local({
 }
 
 ###################################
-### package viridisLite
+### matplotlib: package viridisLite
+###################################
+# in the original cols4all package <0.8
+# now in seaborn and matplotlib
+if (FALSE) {
+	local({
+		nms = c("magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
+		types = ifelse(nms == "cividis", "div", "seq")
+
+		pals = lapply(nms, function(nm) {
+			viridisLite::viridis(11, option = nm)
+		})
+		names(pals) = nms
+
+		c4a_load(c4a_data(pals, types = types, series = "matplotlib"))
+	})
+}
+
+###################################
+### matplotlib: other palettes
 ###################################
 
 local({
-	nms = c("magma", "inferno", "plasma", "viridis", "cividis", "rocket", "mako", "turbo")
-	types = ifelse(nms == "cividis", "div", "seq")
+	library(reticulate)
 
-	pals = lapply(nms, function(nm) {
-		viridisLite::viridis(11, option = nm)
-	})
-	names(pals) = nms
+	mpl = import("matplotlib")
 
-	c4a_load(c4a_data(pals, types = types, series = "viridis"))
+	v = c("magma", "inferno", "plasma", "viridis", "cividis")
+
+	sq1 = c('Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds',
+	'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu',
+	'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn')
+
+	sq2 = c('gray', 'bone',
+		'pink', 'spring', 'summer', 'autumn', 'winter', 'cool',
+		'Wistia', 'hot', 'afmhot', 'gist_heat', 'copper')
+	# 'gist_gray' same as gray:
+	#   b = mpl$colormaps$get_cmap("gist_gray")(seq(0,1,length.out = 5))
+	#   a = mpl$colormaps$get_cmap("gray")(seq(0,1,length.out = 5))
+	#   a-b
+	# 'gist_yarg' just a reverse
+	# 'binary' also identical
+
+	# (almost?) identical to brewer
+	dv = c('PiYG', 'PRGn', 'BrBG', 'PuOr', 'RdGy', 'RdBu', 'RdYlBu',
+		   'RdYlGn', 'Spectral', 'coolwarm', 'bwr', 'seismic')
+
+	cyc = c("twilight", "twilight_shifted", "hsv")
+
+	# qualitative are equal to Brewer and Tableau (?)
+	misc = c('ocean', 'gist_earth', 'terrain',
+	'gist_stern', 'gnuplot', 'gnuplot2', 'CMRmap',
+	'cubehelix', 'brg', 'gist_rainbow', 'rainbow', 'jet',
+	'turbo', 'nipy_spectral', 'gist_ncar')
+	# 'flag', 'prism' left out
+
+	get_pals = function(nms) {
+		pals = lapply(nms, function(nm) {
+			x = mpl$colormaps$get_cmap(nm)(seq(0,1,length.out = 7))
+			rgb(x[,1], x[,2], x[,3])
+		})
+		names(pals) = nms
+		pals
+	}
+
+	pals_v = get_pals(v)
+	pals_sq1 = get_pals(sq1)
+	pals_sq2 = get_pals(sq2)
+	pals_dv = get_pals(dv)
+	pals_cyc = get_pals(cyc)
+	pals_misc = get_pals(misc)
+
+	c4a_load(c4a_data(pals_v, types = "seq", series = "matplotlib"))
+	c4a_load(c4a_data(pals_sq1, types = "seq", series = "matplotlib"))
+	c4a_load(c4a_data(pals_sq2, types = "seq", series = "matplotlib"))
+	c4a_load(c4a_data(pals_dv, types = "div", series = "matplotlib"))
+	c4a_load(c4a_data(pals_cyc, types = "cyc", series = "matplotlib"))
+	c4a_load(c4a_data(pals_misc, types = "seq", series = "matplotlib"))
 })
-
 
 
 
@@ -329,7 +396,7 @@ local({
 	pals = syspals[palsCat]
 	names(pals) = palsNew
 
-	pals4 = syspals[substr(names(syspals), 1, 6) == "kovesi" & substr(names(syspals), 1, 13) != "kovesi.cyclic"]
+	pals4 = syspals[substr(names(syspals), 1, 6) == "kovesi"] # & substr(names(syspals), 1, 13) != "kovesi.cyclic"]
 
 	isdiv = substr(names(pals4), 1, 16) == "kovesi.diverging"
 	iscyc = substr(names(pals4), 1, 13) == "kovesi.cyclic"
@@ -355,33 +422,22 @@ local({
 			 "linear_bgy_10_95_c74",
 			 "isoluminant_cgo_70_c39")
 
-	new = c("linear_grey",
-			"rainbow_bu_rd",
-			"rainbow_bu_pk",
-			"linear_ternary_blue",
-			"linear_ternary_green",
-			"linear_ternary_red",
-			"linear_yl_rd_bk",
-			"linear_wh_rd_bk",
-			"linear_green",
-			"linear_yl_mg_bu",
-			"linear_wh_mg_bu",
-			"linear_blue",
-			"linear_tq_bu",
-			"linear_wh_yl_gn_bu",
-			"linear_yl_gn_bu",
-			"isoluminant_tq_or")
-
-	ids = match(orig, names(pals4))
-	pals4_sel = pals4[ids]
-	pals4_type_sel = pals4_type[ids]
-	names(pals4_sel) = new
-
-
-	pals_ter = pals4["linear_gow_65_90_c35"]
-	names(pals_ter) = "linear_terrain"
-
-
+	new = c("grey",
+			"rainbow_bu_gn_yl_rd",
+			"rainbow_bu_gn_yl_rd_mg",
+			"ternary_blue",
+			"ternary_green",
+			"ternary_red",
+			"bk_rd_yl",
+			"bk_rd_wh",
+			"green",
+			"bu_yl_mg",
+			"bu_wh_mg",
+			"blue",
+			"blue_cyan",
+			"bu_gn_yl",
+			"bu_gn_yl_wh",
+			"cy_or")
 
 	orig_div = c("diverging_gwv_55_95_c39",
 				 "diverging_bky_60_10_c30",
@@ -398,19 +454,28 @@ local({
 				 "diverging_gkr_60_10_c40")
 
 
-	new_div = c("div_gn_wh_pu",
-				"div_bu_bk_br",
-				"div_bu_wh_rd",
-				"div_bu_wh_rd2",
-				"div_bu_gy_yl",
-				"div_bu_bk_rd",
-				"div_bu_gy_rd",
-				"div_isoluminant_tq_or",
-				"div_rainbow",
-				"div_tq_wh_pk",
-				"div_tq_gy_pk",
-				"div_gn_wh_rd",
-				"div_gn_bk_rd")
+	new_div = c("gn_wh_pu",
+				"bu_bk_br",
+				"bu_wh_rd",
+				"bu_wh_rd2",
+				"bu_gy_yl",
+				"bu_bk_rd",
+				"bu_gy_rd",
+				"cy_gy_or",
+				"rainbow",
+				"cy_wh_mg",
+				"cy_gy_mg",
+				"gn_wh_rd",
+				"gn_bk_rd")
+
+
+	orig_cyc = c("cyclic_grey_15_85_c0", "cyclic_grey_15_85_c0_s25", "cyclic_mrybm_35_75_c68",
+				 "cyclic_mrybm_35_75_c68_s25", "cyclic_mygbm_30_95_c78", "cyclic_mygbm_30_95_c78_s25",
+				 "cyclic_wrwbw_40_90_c42", "cyclic_wrwbw_40_90_c42_s25")
+
+	new_cyc = c("cyclic_grey", "cyclic_grey2", "cyclic_mg_rd_yl_bu_mg",
+				"cyclic_bu_mg_rd_yl_bu", "cyclic_mg_yl_gn_bu_mg", "cyclic_bu_mg_yl_gn_bu",
+				"cyclic_wh_rd_wh_bu_wh", "cyclic_bu_wh_rd_wh_bu")
 
 	ids = match(orig_div, names(pals4))
 	pals5 = pals4[ids]
@@ -418,10 +483,16 @@ local({
 	names(pals5) = new_div
 
 
+	#misc.watlington
 	c4a_load(c4a_data(pals, types = "cat", series = series))
-	c4a_load(c4a_data(pals4_sel, types = pals4_type_sel, series = "kovesi", format.palette.name = FALSE))
-	c4a_load(c4a_data_as_is(pals_ter, types = "seq", series = "kovesi", format.palette.name = FALSE))
-	c4a_load(c4a_data(pals5, types = pals5_type, series = "kovesi", format.palette.name = FALSE))
+
+	# kovesi
+	names(pals4)[match(orig, names(pals4))] = new
+	names(pals4)[match(orig_div, names(pals4))] = new_div
+	names(pals4)[match(orig_cyc, names(pals4))] = new_cyc
+
+	# c4a_data_as_is to prevent black and whites to be removed
+	c4a_load(c4a_data_as_is(pals4, types = pals4_type, series = "kovesi", format.palette.name = FALSE))
 
 })
 
@@ -526,6 +597,8 @@ local({
 		if (nm %in% mseq) {
 			c(rampPal(rgb(x$r[128:1], x$g[128:1], x$b[128:1], maxColorValue = 1), 7),
 			rampPal(rgb(x$r[256:129], x$g[256:129], x$b[256:129], maxColorValue = 1), 7))
+		} else if (nm %in% cyc) {
+			rampPal(rgb(c(x$r, x$r[1]), c(x$g, x$g[1]), c(x$b, x$b[1]), maxColorValue = 1), 15)
 		} else {
 			rampPal(rgb(x$r, x$g, x$b, maxColorValue = 1), 15)
 		}
@@ -541,6 +614,7 @@ local({
 		matrix(p[c(1:7,8:14)], ncol = 2)
 	})
 	pals_biv[["fes"]] = pals_biv[["fes"]][,2:1]
+	pals_cyc = pals[cyc]
 
 	#names(pals_seq)[match(c("batlowK", "batlowW", "grayC"), names(pals_seq))] = c("k_batlow", "w_batlow", "c_gray") # reverse names (because palettes will be reversed)
 
@@ -548,6 +622,7 @@ local({
 	c4a_load(c4a_data(pals_div, types = "div", series = "scico"))
 	c4a_load(c4a_data(pals_seq, types = "seq", series = "scico"))
 	c4a_load(c4a_data(pals_biv, types = c("bivc", "bivc", "bivg"), series = "scico", biv.method = "bycol2"))
+	c4a_load(c4a_data(pals_cyc, types = "cyc", series = "scico"))
 })
 
 ###################################
@@ -599,8 +674,19 @@ local({
 	c4a_load(c4a_data(tab_cat, types = "cat", series = "tableau"))
 	c4a_load(c4a_data(tab_seq, types = "seq", series = "tableau"))
 	c4a_load(c4a_data(tab_div, types = "div", series = "tableau"))
+
+	divc = list(winter_biv = tab_cat$Winter)
+	c4a_load(c4a_data(divc, types = "bivc", series = "tableau", biv.method = "bycol5"))
+
+	divc2 = list('20_div' = tab_cat$'20',
+				classic20_div = tab_cat$'Classic 20')
+	c4a_load(c4a_data(divc2, types = "bivc", series = "tableau", biv.method = "bycol10"))
+
 })
 
+###################################
+### seaborn
+###################################
 
 
 local({
@@ -834,4 +920,4 @@ local({
 
 save(.z, .s, .zbib, .zdes, file="R/sysdata.rda", compress="xz")
 source("build/build_data.R")
-
+source("build/build_naming_model.R")

@@ -139,11 +139,12 @@ check_seq_pal = function(p) {
 		max_step_size = max(step_sizes)
 		#mean_step_size = mean(step_sizes)
 		#step_indicator = max(abs(step_sizes - mean_step_size)) / mean_step_size
+		min_dist = min(m, na.rm = TRUE)
 
-		c(min_step = round(min_step_size * 100), max_step = round(max_step_size * 100))
+		c(min_step = round(min_step_size * 100), max_step = round(max_step_size * 100), min_dist = round(min_dist * 100))
 	}))
 
-	sc = as(c(min_step = min(scores[,1]), max_step = min(scores[,2])), "integer")
+	sc = as(c(min_step = min(scores[,1]), max_step = min(scores[,2]), min_dist = min(scores[,3])), "integer")
 	prop = hcl_prop(p)
 	rgb = rgb_prop(p)
 
@@ -152,23 +153,10 @@ check_seq_pal = function(p) {
 
 # Check cyclic palette
 #
-# Check cyclic palette. Same as \code{check_seq_pal}, but also the difference between the first and last color is considered as step
-#
-# check_cyc_pal = function(p) {
-# 	n = length(p)
-# 	cvds = c("deu", "pro", "tri")
-#
-# 	scores = t(sapply(cvds, function(cvd) {
-# 		m = colorblindcheck::palette_dist(c(p, p[1]), cvd = cvd)
-# 		step_sizes = mapply(function(i,j) m[i,j], 1:n, 2:(n+1))
-# 		min_step_size = min(step_sizes)
-# 		max_step_size = max(step_sizes)
-# 		#mean_step_size = mean(step_sizes)
-# 		#step_indicator = max(abs(step_sizes - mean_step_size)) / mean_step_size
-# 		c(min_step = round(min_step_size), max_step = round(max_step_size))
-# 	}))
-# 	as.integer(c(min_step = min(scores[,1]), max_step = min(scores[,2])))
-# }
+check_cyc_pal = function(p) {
+	if (p[1] != tail(p,1)) stop("first color should be equal to last color")
+	check_seq_pal(head(p, -1))
+}
 
 # Check categorical palette
 #
