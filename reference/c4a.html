@@ -53,6 +53,8 @@
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">c4a_ramp</span><span class="op">(</span><span class="va">...</span>, space <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rgb"</span>, <span class="st">"Lab"</span><span class="op">)</span>, interpolate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"spline"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">c4a_na</span><span class="op">(</span>palette <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cat"</span>, <span class="st">"seq"</span>, <span class="st">"div"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -103,6 +105,18 @@
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>should messages be printed?</p></dd>
 
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>passed on to <code>c4a</code>.</p></dd>
+
+
+<dt id="arg-space">space<a class="anchor" aria-label="anchor" href="#arg-space"></a></dt>
+<dd><p>a character string; interpolation in RGB or CIE Lab color spaces</p></dd>
+
+
+<dt id="arg-interpolate">interpolate<a class="anchor" aria-label="anchor" href="#arg-interpolate"></a></dt>
+<dd><p>use spline or linear interpolation</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -136,92 +150,104 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [22] "tol.nightfall"                          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [23] "tol.bu_rd"                              </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [24] "tol.pu_gn"                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [25] "viridis.cividis"                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [26] "kovesi.div_gn_wh_pu"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [27] "kovesi.div_bu_bk_br"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [28] "kovesi.div_bu_wh_rd"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [29] "kovesi.div_bu_wh_rd2"                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [30] "kovesi.div_bu_gy_yl"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [31] "kovesi.div_bu_bk_rd"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [32] "kovesi.div_bu_gy_rd"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [33] "kovesi.div_isoluminant_tq_or"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [34] "kovesi.div_rainbow"                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [35] "kovesi.div_tq_wh_pk"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [36] "kovesi.div_tq_gy_pk"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [37] "kovesi.div_gn_wh_rd"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [38] "kovesi.div_gn_bk_rd"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [39] "wes.zissou1"                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [40] "carto.tropic"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [41] "carto.temps"                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [42] "carto.teal_rose"                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [43] "carto.geyser"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [44] "carto.fall"                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [45] "carto.earth"                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [46] "carto.army_rose"                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [47] "scico.broc"                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [48] "scico.cork"                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [49] "scico.vik"                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [50] "scico.lisbon"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [51] "scico.tofino"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [52] "scico.berlin"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [53] "scico.bam"                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [54] "scico.roma"                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [55] "scico.vanimo"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [56] "scico.managua"                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [57] "tableau.orange_blue_diverging"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [58] "tableau.red_green_diverging"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [59] "tableau.green_blue_diverging"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [60] "tableau.red_blue_diverging"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [61] "tableau.red_black_diverging"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [62] "tableau.gold_purple_diverging"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [63] "tableau.red_green_gold_diverging"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [64] "tableau.sunset_sunrise_diverging"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [65] "tableau.orange_blue_white_diverging"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [66] "tableau.red_green_white_diverging"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [67] "tableau.green_blue_white_diverging"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [68] "tableau.red_blue_white_diverging"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [69] "tableau.red_black_white_diverging"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [70] "tableau.orange_blue_light_diverging"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [71] "tableau.temperature_diverging"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [72] "tableau.classic_red_green"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] "tableau.classic_red_blue"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [74] "tableau.classic_red_black"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [75] "tableau.classic_area_red_green"         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [76] "tableau.classic_orange_blue"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [77] "tableau.classic_green_blue"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [78] "tableau.classic_red_white_green"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [79] "tableau.classic_red_white_black"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [80] "tableau.classic_orange_white_blue"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [81] "tableau.classic_red_white_black_light"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [82] "tableau.classic_orange_white_blue_light"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [83] "tableau.classic_red_white_green_light"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [84] "tableau.classic_red_green_light"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [85] "seaborn.vlag"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [86] "seaborn.icefire"                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [87] "c4a.bu_br_div"                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [88] "c4a.pu_gn_div"                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [89] "met.benedictus"                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [90] "met.cassatt1"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] "met.cassatt2"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [92] "met.demuth"                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [93] "met.hiroshige"                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [94] "met.homer1"                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [95] "met.homer2"                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [96] "met.ingres"                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [97] "met.isfahan1"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [98] "met.johnson"                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [99] "met.morgenstern"                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [100] "met.okeeffe1"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [101] "met.paquin"                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [102] "met.troy"                               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [103] "parks.acadia"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [104] "parks.arches"                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [105] "parks.olympic"                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [25] "matplotlib.pi_yg"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [26] "matplotlib.prgn"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [27] "matplotlib.br_bg"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [28] "matplotlib.pu_or"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [29] "matplotlib.rd_gy"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [30] "matplotlib.rd_bu"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [31] "matplotlib.rd_yl_bu"                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [32] "matplotlib.rd_yl_gn"                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [33] "matplotlib.spectral"                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [34] "matplotlib.coolwarm"                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [35] "matplotlib.bwr"                         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [36] "matplotlib.seismic"                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [37] "kovesi.diverging_isoluminant_cjm_75_c23"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [38] "kovesi.cy_gy_mg"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [39] "kovesi.cy_gy_or"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [40] "kovesi.bu_gy_rd"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [41] "kovesi.bu_gy_yl"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [42] "kovesi.rainbow"                         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [43] "kovesi.bu_bk_rd"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [44] "kovesi.bu_bk_br"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [45] "kovesi.bu_wh_rd"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [46] "kovesi.bu_wh_rd2"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [47] "kovesi.cy_wh_mg"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [48] "kovesi.gn_bk_rd"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [49] "kovesi.gn_wh_rd"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [50] "kovesi.gn_wh_pu"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [51] "wes.zissou1"                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [52] "carto.tropic"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [53] "carto.temps"                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [54] "carto.teal_rose"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [55] "carto.geyser"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [56] "carto.fall"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [57] "carto.earth"                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [58] "carto.army_rose"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [59] "scico.broc"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [60] "scico.cork"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [61] "scico.vik"                              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [62] "scico.lisbon"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [63] "scico.tofino"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [64] "scico.berlin"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [65] "scico.bam"                              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [66] "scico.roma"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [67] "scico.vanimo"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [68] "scico.managua"                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [69] "tableau.orange_blue_diverging"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [70] "tableau.red_green_diverging"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [71] "tableau.green_blue_diverging"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [72] "tableau.red_blue_diverging"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] "tableau.red_black_diverging"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [74] "tableau.gold_purple_diverging"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [75] "tableau.red_green_gold_diverging"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [76] "tableau.sunset_sunrise_diverging"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [77] "tableau.orange_blue_white_diverging"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [78] "tableau.red_green_white_diverging"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [79] "tableau.green_blue_white_diverging"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [80] "tableau.red_blue_white_diverging"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [81] "tableau.red_black_white_diverging"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [82] "tableau.orange_blue_light_diverging"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [83] "tableau.temperature_diverging"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [84] "tableau.classic_red_green"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [85] "tableau.classic_red_blue"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [86] "tableau.classic_red_black"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [87] "tableau.classic_area_red_green"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [88] "tableau.classic_orange_blue"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [89] "tableau.classic_green_blue"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [90] "tableau.classic_red_white_green"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] "tableau.classic_red_white_black"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [92] "tableau.classic_orange_white_blue"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [93] "tableau.classic_red_white_black_light"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [94] "tableau.classic_orange_white_blue_light"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [95] "tableau.classic_red_white_green_light"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [96] "tableau.classic_red_green_light"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [97] "seaborn.vlag"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [98] "seaborn.icefire"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [99] "c4a.bu_br_div"                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [100] "c4a.pu_gn_div"                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [101] "met.benedictus"                         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [102] "met.cassatt1"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [103] "met.cassatt2"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [104] "met.demuth"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [105] "met.hiroshige"                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [106] "met.homer1"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [107] "met.homer2"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [108] "met.ingres"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [109] "met.isfahan1"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [110] "met.johnson"                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [111] "met.morgenstern"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [112] "met.okeeffe1"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [113] "met.paquin"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [114] "met.troy"                               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [115] "parks.acadia"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [116] "parks.arches"                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [117] "parks.olympic"                          </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">c4a</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"cat"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> These are the colors from palette "tol.muted", the default for type "cat":</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#CC6677" "#332288" "#DDCC77" "#117733" "#88CCEE" "#882255" "#44AA99"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [8] "#999933" "#AA4499"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "#CC6677" "#332288" "#DDCC77" "#117733" "#88CCEE" "#882255" "#44AA99"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] "#999933" "#AA4499" "#DDDDDD"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">pal</span> <span class="op">=</span> <span class="fu">c4a</span><span class="op">(</span><span class="st">"tol.sunset"</span>, n <span class="op">=</span> <span class="fl">7</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#6EA6CD" "#97C9E1" "#C2E4EF" "#EAECCC" "#FDDA8B" "#FDB366" "#F67E4B"</span>
@@ -232,6 +258,7 @@
 <span class="r-in"><span><span class="fu">c4a</span><span class="op">(</span><span class="st">"set2"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Multiple palettes called "set2" found: "brewer.set2", "hcl.set2". The first one, "brewer.set2", is returned.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#66C2A5" "#FC8D62" "#8DA0CB" "#E78AC3" "#A6D854" "#FFD92F" "#E5C494"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [8] "#B3B3B3"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">c4a</span><span class="op">(</span><span class="st">"hcl.set2"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "#ED90A4" "#EB9397" "#E79689" "#E29A7C" "#DC9E70" "#D4A264" "#CCA65A"</span>
