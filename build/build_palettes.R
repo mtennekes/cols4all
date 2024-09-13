@@ -16,7 +16,7 @@ library(MetBrewer)
 sessioninfo::session_info(pkgs = "attached")
 # colorblindcheck * 1.0.2   2023-05-13 [1] CRAN (R 4.4.0)
 # colorspace      * 2.1-1   2024-07-26 [1] CRAN (R 4.4.0)
-# P cols4all        * 0.7-2   2024-08-23 [?] load_all()
+# VP cols4all        * 0.7-2   2024-03-12 [?] CRAN (R 4.4.0) (on disk 0.7.1)
 # ggthemes        * 5.1.0   2024-02-10 [1] CRAN (R 4.4.0)
 # khroma          * 1.14.0  2024-08-26 [1] CRAN (R 4.4.1)
 # MetBrewer       * 0.2.0   2022-03-21 [1] CRAN (R 4.4.0)
@@ -26,6 +26,7 @@ sessioninfo::session_info(pkgs = "attached")
 # RColorBrewer    * 1.1-3   2022-04-03 [1] CRAN (R 4.4.0)
 # reticulate      * 1.38.0  2024-06-19 [1] CRAN (R 4.4.0)
 # shiny           * 1.8.1.1 2024-04-02 [1] CRAN (R 4.4.0)
+# treemap         * 2.4-4   2023-05-25 [1] CRAN (R 4.4.0)
 # viridisLite     * 0.4.2   2023-05-02 [1] CRAN (R 4.4.0)
 
 
@@ -575,6 +576,13 @@ local({
 	}), names = hclnames)
 
 	c4a_load(c4a_data(pals, types = "cat", series = "hcl"))
+
+	hcl_cyc = c("pastel1", "dark2", "dark3", "set2", "set3", "dynamic")
+	pals_cyc = structure(lapply(hcl_cyc, function(h){
+		pal = c4a(paste0("hcl.", h))
+		pal = c(pal, pal[1])
+	}), names = paste0(hcl_cyc, "_cyc"))
+	c4a_load(c4a_data(pals_cyc, types = "cyc", series = "hcl"))
 })
 
 ###################################
@@ -904,6 +912,21 @@ local({
 	c4a_load(c4a_data(pals, types = "cat", series = "c4a"))
 })
 
+
+if (FALSE) {
+	### tree colors
+	library(treemap)
+	for (child in 2:4) {
+		dseq = if (child == 2) 3:4 else 2
+		for (depth in dseq) {
+			res = rep(list(1:child),depth)
+			names(res) = paste0("index", 1:depth)
+			df = as.data.frame(do.call(expand.grid, rev(res))[,depth:1])
+			tp = treepalette(df, palette.HCL.options = list(hue_fraction = .8))
+			c4a_plot(tp$HCL.color)
+		}
+	}
+}
 
 
 .z = get("z", .C4A)

@@ -346,34 +346,66 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 
 	k = kableExtra::kbl(e2[, e2cols], col.names = e2th, escape = F)
 
-	for (cN in colNames) {
-		if (cN == " ") {
-			# column between colors and NA-color
-			k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "1em", width_max = "1em")
-		} else {
-			k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "6em", width_max = "6em")
-		}
-	}
-	for (i in which(substr(e2cols, 1, 4) == "Copy")) {
-		k = kableExtra::column_spec(k, i, width = "1em", extra_css = "padding-left: 10px; padding-right: 0px; text-align: right") #width_min = "1em", width_max = "1em")
+	# ORIGINAL
+	# for (cN in colNames) {
+	# 	if (cN == " ") {
+	# 		# column between colors and NA-color
+	# 		k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "1em", width_max = "1em")
+	# 	} else {
+	# 		k = kableExtra::column_spec(k, which(cN == e2nms), width_min = "6em", width_max = "6em")
+	# 	}
+	# }
+
+	# for (i in which(substr(e2cols, 1, 4) == "Copy")) {
+	# 	k = kableExtra::column_spec(k, i, width = "1em", extra_css = "padding-left: 10px; padding-right: 0px; text-align: right") #width_min = "1em", width_max = "1em")
+	# }
+
+
+	# FASTER
+	ks = strsplit(k[1], "<td style=\"text-align:left;\">", fixed = TRUE)[[1]]
+	ins = rep("<td style=\"text-align:left;\">", length(ks) - 1L)
+
+	col_repl = function(ins, cids, str) {
+		id = cids + rep(0:(nrow(e2)-1L) * length(e2cols), each = length(cids))
+		ins[id] = str
+		ins
 	}
 
-	k = kableExtra::column_spec(k, 1, width = "5em", extra_css = "padding-left: 10px; padding-right: 10px; text-align: right")
-	k = kableExtra::column_spec(k, 2, width = "5em", extra_css = "padding-left: 0px; padding-right: 10px; text-align: right")
-	k = kableExtra::column_spec(k, which(substr(e2cols, 1, 4) == "Copy"), width = "1em", extra_css = "padding-left: 5px; padding-right: 0px; text-align: right")
-	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "padding-left: 3px; padding-right: 3px; vertical-align: bottom; max-width: 0em;") #max-width: 5em;
+	ins2 = ins |>
+		col_repl(match(colNames[colNames == " "], e2cols), "<td style=\"text-align:left; min-width: 1em; max-width: 1em;\">") |>
+		col_repl(match(colNames[colNames != " "], e2cols), "<td style=\"text-align:left; min-width: 6em; max-width: 6em;\">") |>
+		#col_repl(which(substr(e2cols, 1, 4) == "Copy"), "<td style=\"text-align:left; width: 1em; padding-left: 10px; padding-right: 0px; text-align: right\">") |>
+		col_repl(1, "<td style=\"text-align:left; width: 5em; padding-left: 10px; padding-right: 10px; text-align: right\">") |>
+		col_repl(2, "<td style=\"text-align:left; width: 5em; padding-left: 0px; padding-right: 10px; text-align: right\">") |>
+		col_repl(which(substr(e2cols, 1, 4) == "Copy"), "<td style=\"text-align:left; width: 1em; padding-left: 5px; padding-right: 0px; text-align: right\">")
+
 
 	for (q in qn_other) {
 		if (q %in% dupl) {
-			k = kableExtra::column_spec(k, which(q == e2cols), width = "2.2em", extra_css = "text-align: center; vertical-align: center; overflow: hidden; text-overflow: ellipsis; max-width: 2.2em; min-width: 2.2em;")
+			ins2 = col_repl(ins2, which(q == e2cols), "<td style=\"text-align:left; width: 2.2em; text-align: center; vertical-align: center; overflow: hidden; text-overflow: ellipsis; max-width: 2.2em; min-width: 2.2em;\">")
 		} else {
-			k = kableExtra::column_spec(k, which(q == e2cols), width = "4em", extra_css = "text-align: center; vertical-align: center; overflow: hidden; text-overflow: ellipsis; max-width: 4em; min-width: 4em;")
+			ins2 = col_repl(ins2, which(q == e2cols), "<td style=\"text-align:left; width: 4em; text-align: center; vertical-align: center; overflow: hidden; text-overflow: ellipsis; max-width: 4em; min-width: 4em;\">")
 		}
 	}
 
 	for (q in qn_icons) {
-		k = kableExtra::column_spec(k, which(q == e2cols), extra_css = "font-size: 200%; line-height: 40%; vertical-align: center; text-align: center; white-space: nowrap; max-width: 2.2em; min-width: 2.2em;", width = "2.2em")
+		ins2 = col_repl(ins2, which(q == e2cols), "<td style=\"text-align:left; width: 2.2em; font-size: 200%; line-height: 40%; vertical-align: center; text-align: center; white-space: nowrap; max-width: 2.2em; min-width: 2.2em;\">")
 	}
+
+	# colIds1 = match(colNames[colNames != " "], e2cols) + rep(0:(nrow(e2)-1L) * length(e2cols), each = length(colNames[colNames != " "]))
+	# ins[colIds1] = "<td style=\"text-align:left; min-width: 6em; max-width: 6em;\">"
+	# colIds2 = match(colNames[colNames == " "], e2cols) + rep(0:(nrow(e2)-1L) * length(e2cols), each = length(colNames[colNames == " "]))
+	# ins[colIds2] = "<td style=\"text-align:left; min-width: 1em; max-width: 1em;\">"
+
+	k[1] = paste(c(ks[1], unlist(mapply(c, ins2, ks[-1], SIMPLIFY = FALSE, USE.NAMES = FALSE))), collapse = "")
+
+
+	# k = kableExtra::column_spec(k, 1, width = "5em", extra_css = "padding-left: 10px; padding-right: 10px; text-align: right")
+	# k = kableExtra::column_spec(k, 2, width = "5em", extra_css = "padding-left: 0px; padding-right: 10px; text-align: right")
+	# k = kableExtra::column_spec(k, which(substr(e2cols, 1, 4) == "Copy"), width = "1em", extra_css = "padding-left: 5px; padding-right: 0px; text-align: right")
+	k = kableExtra::row_spec(k, 0, align = "c", extra_css = "padding-left: 3px; padding-right: 3px; vertical-align: bottom; max-width: 0em;") #max-width: 5em;
+
+
 
 	kc = k[1]
 

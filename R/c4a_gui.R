@@ -529,9 +529,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 										 palBW = unique(c(pal_init, "#FFFFFF", "#000000")),
 										 pal_name = palette,
 										 n = n_init,
-										 colA1 = pal_init[1], colA2 = pal_init[2],
-										 colB1 = pal_init[1], colB2 = pal_init[2],
-										 colC1 = pal_init[1], colC2 = pal_init[2],
+										 idA1 = 1L, idA2 = 2L,
+										 idB1 = 1L, idB2 = 2L,
+										 idC1 = 1L, idC2 = 2L,
 										 CR = colorspace::contrast_ratio(pal_init[1], pal_init[2]),
 										 type = type12,
 										 cvd = "none",
@@ -831,15 +831,15 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				tab_vals$pal = cols
 				tab_vals$palBW = unique(c(cols, "#FFFFFF", "#000000"))
 				tab_vals$type = values$type
-				tab_vals$colA1 = cols[1]
-				tab_vals$colA2 = cols[2]
-				tab_vals$colB1 = cols[1]
-				tab_vals$colB2 = cols[2]
+				tab_vals$idA1 = 1L
+				tab_vals$idA2 = 2L
+				tab_vals$idB1 = 1L
+				tab_vals$idB2 = 2L
 				tab_vals$CR = colorspace::contrast_ratio(cols[1], cols[2])
 				tab_vals$b = approx_blues(cols)
 				tab_vals$r = approx_reds(cols)
-				tab_vals$colC1 = cols[which.max(tab_vals$b)]
-				tab_vals$colC2 = cols[which.max(tab_vals$r)]
+				tab_vals$idC1 = cols[which.max(tab_vals$b)]
+				tab_vals$idC2 = cols[which.max(tab_vals$r)]
 
 			} else {
 				tab_vals$pal = character(0)
@@ -848,13 +848,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				tab_vals$pal_name = character(0)
 				tab_vals$n = integer(0)
 				tab_vals$palBW = character(0)
-				tab_vals$colA1 = character(0)
-				tab_vals$colA2 = character(0)
-				tab_vals$colB1 = character(0)
-				tab_vals$colB2 = character(0)
+				tab_vals$idA1 = integer(0)
+				tab_vals$idA2 = integer(0)
+				tab_vals$idB1 = integer(0)
+				tab_vals$idB2 = integer(0)
 				tab_vals$CR = numeric(0)
-				tab_vals$colC1 = character(0)
-				tab_vals$colC2 = character(0)
+				tab_vals$idC1 = integer(0)
+				tab_vals$idC2 = integer(0)
 				tab_vals$b = integer(0)
 				tab_vals$r = integer(0)
 				tab_vals$type = character(0)
@@ -907,13 +907,13 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				tab_vals$pal_name = character(0)
 				tab_vals$n = integer(0)
 				tab_vals$palBW = character(0)
-				tab_vals$colA1 = character(0)
-				tab_vals$colA2 = character(0)
-				tab_vals$colB1 = character(0)
-				tab_vals$colB2 = character(0)
+				tab_vals$idA1 = integer(0)
+				tab_vals$idA2 = integer(0)
+				tab_vals$idB1 = integer(0)
+				tab_vals$idB2 = integer(0)
 				tab_vals$CR = numeric(0)
-				tab_vals$colC1 = character(0)
-				tab_vals$colC2 = character(0)
+				tab_vals$idC1 = integer(0)
+				tab_vals$idC2 = integer(0)
 				tab_vals$b = integer(0)
 				tab_vals$b = integer(0)
 				tab_vals$type = character(0)
@@ -938,14 +938,14 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 				if (pal_nr == 4) {
 					# select maximum floating colors
-					tab_vals$colC1 = cols[which.max(tab_vals$b)]
-					tab_vals$colC2 = cols[which.max(tab_vals$r)]
+					tab_vals$idC1 = which.max(tab_vals$b)
+					tab_vals$idC2 = which.max(tab_vals$r)
 				} else if (pal_nr == 1) {
-					tab_vals$colA1 = cols[1]
-					tab_vals$colA2 = cols[2]
+					tab_vals$idA1 = 1L
+					tab_vals$idA2 = 2L
 				} else {
-					tab_vals$colB1 = cols[1]
-					tab_vals$colB2 = cols[2]
+					tab_vals$idB1 = 1L
+					tab_vals$idB2 = 2L
 					tab_vals$CR = colorspace::contrast_ratio(cols[1], cols[2])
 
 				}
@@ -1044,10 +1044,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			col1 = tab_vals$colA1
-			col2 = tab_vals$colA2
-			id1 = which(col1 == pal)
-			id2 = which(col2 == pal)
+			id1 = tab_vals$idA1
+			id2 = tab_vals$idA2
 
 			c4a_plot_dist_matrix(pal, cvd = "none", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Gradient"), bc_adj = input$cbfBcAdj)
 		})
@@ -1056,10 +1054,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			col1 = tab_vals$colA1
-			col2 = tab_vals$colA2
-			id1 = which(col1 == pal)
-			id2 = which(col2 == pal)
+			id1 = tab_vals$idA1
+			id2 = tab_vals$idA2
 
 			c4a_plot_dist_matrix(pal, cvd = "deutan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Gradient"), bc_adj = input$cbfBcAdj)
 		})
@@ -1068,10 +1064,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			col1 = tab_vals$colA1
-			col2 = tab_vals$colA2
-			id1 = which(col1 == pal)
-			id2 = which(col2 == pal)
+			id1 = tab_vals$idA1
+			id2 = tab_vals$idA2
 
 			c4a_plot_dist_matrix(pal, cvd = "protan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Gradient"), bc_adj = input$cbfBcAdj)
 		})
@@ -1080,10 +1074,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (!length(tab_vals$pal)) return(NULL)
 
 			pal = tab_vals$pal
-			col1 = tab_vals$colA1
-			col2 = tab_vals$colA2
-			id1 = which(col1 == pal)
-			id2 = which(col2 == pal)
+			id1 = tab_vals$idA1
+			id2 = tab_vals$idA2
 
 			c4a_plot_dist_matrix(pal, cvd = "tritan", id1 = id1, id2 = id2, dark = input$dark, advanced = (input$cbfScore == "Gradient"), bc_adj = input$cbfBcAdj)
 		})
@@ -1112,24 +1104,24 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 
 		output$cbf_ex1 = shiny::renderPlot({
-			if (!length(tab_vals$colA1)) return(NULL)
+			if (!length(tab_vals$idA1)) return(NULL)
 			fun = paste0("cbf_", tolower(input$cbfType))
-			do.call(fun, list(cols = c(tab_vals$colA1, tab_vals$colA2), cvd = "none"))
+			do.call(fun, list(cols = tab_vals$pal[c(tab_vals$idA1, tab_vals$idA2)], cvd = "none"))
 		})
 		output$cbf_ex2 = shiny::renderPlot({
-			if (!length(tab_vals$colA1)) return(NULL)
+			if (!length(tab_vals$idA1)) return(NULL)
 			fun = paste0("cbf_", tolower(input$cbfType))
-			do.call(fun, list(cols = c(tab_vals$colA1, tab_vals$colA2), cvd = "deutan"))
+			do.call(fun, list(cols = tab_vals$pal[c(tab_vals$idA1, tab_vals$idA2)], cvd = "deutan"))
 		})
 		output$cbf_ex3 = shiny::renderPlot({
-			if (!length(tab_vals$colA1)) return(NULL)
+			if (!length(tab_vals$idA1)) return(NULL)
 			fun = paste0("cbf_", tolower(input$cbfType))
-			do.call(fun, list(cols = c(tab_vals$colA1, tab_vals$colA2), cvd = "protan"))
+			do.call(fun, list(cols = tab_vals$pal[c(tab_vals$idA1, tab_vals$idA2)], cvd = "protan"))
 		})
 		output$cbf_ex4 = shiny::renderPlot({
-			if (!length(tab_vals$colA1)) return(NULL)
+			if (!length(tab_vals$idA1)) return(NULL)
 			fun = paste0("cbf_", tolower(input$cbfType))
-			do.call(fun, list(cols = c(tab_vals$colA1, tab_vals$colA2), cvd = "tritan"))
+			do.call(fun, list(cols = tab_vals$pal[c(tab_vals$idA1, tab_vals$idA2)], cvd = "tritan"))
 		})
 
 
@@ -1193,9 +1185,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (input$plus_rev_original) {
 				c4a_plot_Plus_Reversed(orientation = "landscape", borders = borders, lwd = lwd)
 			} else {
-				col1 = tab_vals$colB1
+				col1 = tab_vals$idB1
 				if (!length(col1)) return(NULL)
-				col2 = tab_vals$colB2
+				col2 = tab_vals$idB2
 
 				c4a_plot_Plus_Reversed(col1, col2, orientation = "landscape", borders = borders, lwd = lwd)
 
@@ -1205,9 +1197,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		output$ex = shiny::renderPlot({
 
-			col1 = tab_vals$colB1
+			col1 = tab_vals$idB1
 			if (!length(col1)) return(NULL)
-			col2 = tab_vals$colB2
+			col2 = tab_vals$idB2
 
 			borders = input$borders
 			lwd = input$lwd
@@ -1220,14 +1212,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		output$table = shiny::renderPlot({
 
-			col1 = tab_vals$colB1
-			if (!length(col1)) return(NULL)
-			col2 = tab_vals$colB2
+			id1 = tab_vals$idB1
+			id2 = tab_vals$idB2
 			pal = tab_vals$palBW
 
-
-			id1 = which(col1 == pal)
-			id2 = which(col2 == pal)
 			c4a_plot_CR_matrix(pal, id1 = id1, id2 = id2, dark = input$dark)
 		})
 
@@ -1302,9 +1290,9 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		})
 
 		output$textPlot = shiny::renderPlot({
-			col1 = tab_vals$colB1
+			col1 = tab_vals$idB1
 			if (!length(col1)) return(NULL)
-			col2 = tab_vals$colB2
+			col2 = tab_vals$idB2
 
 			c4a_plot_text2(c(col1, col2), dark = input$dark)
 		})
@@ -1330,8 +1318,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			ids = get_click_id(pal, input$cbfSimi_click$x, input$cbfSimi_click$y)
 
-			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
-			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
+			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
+			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
 		})
 
 		shiny::observeEvent(input$cbfPSimi1_click, {
@@ -1340,8 +1328,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			ids = get_click_id(pal, input$cbfPSimi1_click$x, input$cbfPSimi1_click$y)
 
-			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
-			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
+			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
+			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
 
 		})
 
@@ -1351,8 +1339,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			ids = get_click_id(pal, input$cbfPSimi2_click$x, input$cbfPSimi2_click$y)
 
-			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
-			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
+			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
+			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
 		})
 
 		shiny::observeEvent(input$cbfPSimi3_click, {
@@ -1361,8 +1349,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			ids = get_click_id(pal, input$cbfPSimi3_click$x, input$cbfPSimi3_click$y)
 
-			if (!is.na(ids$x)) tab_vals$colA2 = pal[ids$x]
-			if (!is.na(ids$y)) tab_vals$colA1 = pal[ids$y]
+			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
+			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
 		})
 
 
@@ -1372,10 +1360,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 			ids = get_click_id(pal, input$table_click$x, input$table_click$y)
 
-			if (!is.na(ids$x)) tab_vals$colB2 = pal[ids$x]
-			if (!is.na(ids$y)) tab_vals$colB1 = pal[ids$y]
+			if (!is.na(ids$x)) tab_vals$idB2 = ids$x
+			if (!is.na(ids$y)) tab_vals$idB1 = ids$y
 
-			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$CR = colorspace::contrast_ratio(tab_vals$colB1, tab_vals$colB2)
+			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$CR = colorspace::contrast_ratio(tab_vals$idB1, tab_vals$idB2)
 		})
 
 
@@ -1423,18 +1411,18 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		})
 
 		shiny::observeEvent(input$float_col1, {
-			tab_vals$colC1 = tab_vals$pal[which(c(LETTERS, letters) == input$float_col1)]
+			tab_vals$idC1 = tab_vals$pal[which(c(LETTERS, letters) == input$float_col1)]
 		})
 
 		shiny::observeEvent(input$float_col2, {
-			tab_vals$colC2 = tab_vals$pal[which(c(LETTERS, letters) == input$float_col2)]
+			tab_vals$idC2 = tab_vals$pal[which(c(LETTERS, letters) == input$float_col2)]
 		})
 
 		output$float_letters_AB = shiny::renderPlot({
 			pal = tab_vals$pal
 			if (!length(pal)) return(NULL)
 
-			cols = c(tab_vals$colC1, tab_vals$colC2)
+			cols = c(tab_vals$idC1, tab_vals$idC2)
 
 
 			lL = c(LETTERS,letters)[c(which(pal == cols[1]),
@@ -1450,7 +1438,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				pal = tab_vals$pal
 
 
-				cols = c(tab_vals$colC1, tab_vals$colC2)
+				cols = c(tab_vals$idC1, tab_vals$idC2)
 
 				if (input$float_rev) cols = rev(cols)
 				c4a_plot_floating_rings(col1 = cols[2], col2 = cols[1], dark = input$dark)
