@@ -51,8 +51,9 @@
 <span>  mmax <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  mdef <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  format.palette.name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  remove.blacks <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  take.gray.for.NA <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  remove.blacks <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  remove.whites <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  take.gray.for.NA <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  remove.other.grays <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  light.to.dark <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  remove.names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -69,6 +70,7 @@
 <span>  <span class="va">...</span>,</span>
 <span>  format.palette.name <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  remove.blacks <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  remove.whites <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  take.gray.for.NA <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  remove.other.grays <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  light.to.dark <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -108,7 +110,7 @@
 <dd><p>should palette names be formatted to lowercase/underscore format?</p></dd>
 
 
-<dt id="arg-remove-blacks-take-gray-for-na-remove-other-grays">remove.blacks, take.gray.for.NA, remove.other.grays<a class="anchor" aria-label="anchor" href="#arg-remove-blacks-take-gray-for-na-remove-other-grays"></a></dt>
+<dt id="arg-remove-blacks-remove-whites-take-gray-for-na-remove-other-grays">remove.blacks, remove.whites, take.gray.for.NA, remove.other.grays<a class="anchor" aria-label="anchor" href="#arg-remove-blacks-remove-whites-take-gray-for-na-remove-other-grays"></a></dt>
 <dd><p>These arguments determine the processing of grayscale colors for categorical <code>"cat"</code> palettes: if <code>remove.blacks</code> and there are (near) blacks, these are removed first. Next, if <code>take.gray.for.NA</code>, <code>xNA</code> is <code>NA</code>, and a palette contains at least one grayscale color (which can also be white), this is used as color for missing values. In case there are more than one grayscale color, the lightest is taken. <code>remove.other.grays</code> determines what happens with the other grays.</p></dd>
 
 
@@ -219,9 +221,7 @@
 <span class="r-in"><span>    <span class="fu"><a href="c4a_gui.html">c4a_gui</a></span><span class="op">(</span>series <span class="op">=</span> <span class="st">"pinkfloyd"</span>, n <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: shiny</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: shinyjs</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: kableExtra</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in get_z_n(z[z$type == tp, ], n = n, m = m):</span> argument "filters" is missing, with no default</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

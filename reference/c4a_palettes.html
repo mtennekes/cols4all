@@ -40,12 +40,12 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">c4a_palettes</span><span class="op">(</span></span>
-<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"cat"</span>, <span class="st">"seq"</span>, <span class="st">"div"</span><span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"cat"</span>, <span class="st">"seq"</span>, <span class="st">"div"</span>, <span class="st">"cyc"</span><span class="op">)</span>,</span>
 <span>  series <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  full.names <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">c4a_series</span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"cat"</span>, <span class="st">"seq"</span>, <span class="st">"div"</span><span class="op">)</span>, as.data.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">c4a_series</span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"cat"</span>, <span class="st">"seq"</span>, <span class="st">"div"</span>, <span class="st">"cyc"</span><span class="op">)</span>, as.data.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">c4a_types</span><span class="op">(</span>series <span class="op">=</span> <span class="cn">NULL</span>, as.data.frame <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -77,6 +77,10 @@
 <dt id="arg-as-data-frame">as.data.frame<a class="anchor" aria-label="anchor" href="#arg-as-data-frame"></a></dt>
 <dd><p>should <code>c4a_series</code> and <code>c4a_types</code> return the result as a data.frame, with description included as a column?</p></dd>
 
+
+<dt id="arg-return-matrix">return.matrix<a class="anchor" aria-label="anchor" href="#arg-return-matrix"></a></dt>
+<dd><p>should only a matrix be returned with numbers per palette and type? If <code>FALSE</code> a data.frame is returned with addional information</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -101,14 +105,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8        misc                              Miscellaneous palettes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9       miscs                                                &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10      parks                 Palettes inspired by National Parks</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  pinkfloyd     Palettes extracted from Pink Floyd album covers</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12       poly               Qualitative palettes with many colors</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13      scico     Scientific colour map palettes by Fabio Crameri</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14    seaborn            Palettes from the Python library Seaborn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15    stevens                Bivariate palettes by Joshua Stevens</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16    tableau                        Palettes designed by Tableau</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17        tol                       Palettes designed by Paul Tol</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18        wes                   Palettes from Wes Anderson movies</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       poly               Qualitative palettes with many colors</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12      scico     Scientific colour map palettes by Fabio Crameri</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13    seaborn            Palettes from the Python library Seaborn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14    stevens                Bivariate palettes by Joshua Stevens</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15    tableau                        Palettes designed by Tableau</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16        tol                       Palettes designed by Paul Tol</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17        wes                   Palettes from Wes Anderson movies</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">c4a_types</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   type                          description</span>
@@ -123,7 +126,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">c4a_overview</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        series                                         description cat seq cyc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      brewer                                ColorBrewer palettes   9  18  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      brewer                                ColorBrewer palettes   8  18  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2         c4a                  cols4all palettes (in development)   9  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3       carto                          Palettes designed by CARTO   6  21  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4         hcl  Palettes from the Hue Chroma Luminance color space   9  23  NA</span>
@@ -133,14 +136,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8        misc                              Miscellaneous palettes   1  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9       miscs                                                       4  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10      parks                 Palettes inspired by National Parks  22   5  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  pinkfloyd     Palettes extracted from Pink Floyd album covers  16  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12       poly               Qualitative palettes with many colors   9  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13      scico     Scientific colour map palettes by Fabio Crameri  21  21   5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14    seaborn            Palettes from the Python library Seaborn   6   4  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15    stevens                Bivariate palettes by Joshua Stevens  NA  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16    tableau                        Palettes designed by Tableau  29  23  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17        tol                       Palettes designed by Paul Tol   8   8  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18        wes                   Palettes from Wes Anderson movies  23  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       poly               Qualitative palettes with many colors   9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12      scico     Scientific colour map palettes by Fabio Crameri  21  21   5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13    seaborn            Palettes from the Python library Seaborn   6   4  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14    stevens                Bivariate palettes by Joshua Stevens  NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15    tableau                        Palettes designed by Tableau  29  23  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16        tol                       Palettes designed by Paul Tol   8   8  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17        wes                   Palettes from Wes Anderson movies  23  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    div bivs bivc bivd bivg</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    9    2    2    1   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    2    2   NA    2    5</span>
@@ -153,13 +155,12 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9   NA   NA   NA   NA   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10   3   NA   NA   NA   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11  NA   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  NA   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13  10   NA    2   NA    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14   2   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15  NA    5   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16  28   NA    3   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17   4   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18   1   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  10   NA    2   NA    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13   2   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  NA    5   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  28   NA    3   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16   4   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17   1   NA   NA   NA   NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">c4a_palettes</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"cat"</span>, series <span class="op">=</span> <span class="st">"tol"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tol.bright"   "tol.contrast" "tol.vibrant"  "tol.muted"    "tol.medium"  </span>
