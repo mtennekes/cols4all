@@ -10,7 +10,7 @@ c4a(
   palette = NULL,
   n = NA,
   m = NA,
-  type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"),
+  type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"),
   reverse = FALSE,
   order = NULL,
   range = NA,
@@ -22,7 +22,7 @@ c4a(
 
 c4a_ramp(..., space = c("rgb", "Lab"), interpolate = c("linear", "spline"))
 
-c4a_na(palette = NULL, type = c("cat", "seq", "div"), verbose = TRUE)
+c4a_na(palette = NULL, type = c("cat", "seq", "div", "cyc"), verbose = TRUE)
 }
 \arguments{
 \item{palette}{name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided by \code{c4a_default_palette}. The palette name can be prefixed with a \code{"-"} symbol, which will reverse the palette (this can also be done with the \code{reverse} argument).}

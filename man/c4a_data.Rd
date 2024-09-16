@@ -18,8 +18,9 @@ c4a_data(
   mmax = NA,
   mdef = NA,
   format.palette.name = TRUE,
-  remove.blacks = TRUE,
-  take.gray.for.NA = TRUE,
+  remove.blacks = NA,
+  remove.whites = NA,
+  take.gray.for.NA = FALSE,
   remove.other.grays = FALSE,
   light.to.dark = FALSE,
   remove.names = TRUE,
@@ -36,6 +37,7 @@ c4a_data_as_is(
   ...,
   format.palette.name = FALSE,
   remove.blacks = FALSE,
+  remove.whites = FALSE,
   take.gray.for.NA = FALSE,
   remove.other.grays = FALSE,
   light.to.dark = FALSE,
@@ -57,7 +59,7 @@ c4a_data_as_is(
 
 \item{format.palette.name}{should palette names be formatted to lowercase/underscore format?}
 
-\item{remove.blacks, take.gray.for.NA, remove.other.grays}{These arguments determine the processing of grayscale colors for categorical \code{"cat"} palettes: if \code{remove.blacks} and there are (near) blacks, these are removed first. Next, if \code{take.gray.for.NA}, \code{xNA} is \code{NA}, and a palette contains at least one grayscale color (which can also be white), this is used as color for missing values. In case there are more than one grayscale color, the lightest is taken. \code{remove.other.grays} determines what happens with the other grays.}
+\item{remove.blacks, remove.whites, take.gray.for.NA, remove.other.grays}{These arguments determine the processing of grayscale colors for categorical \code{"cat"} palettes: if \code{remove.blacks} and there are (near) blacks, these are removed first. Next, if \code{take.gray.for.NA}, \code{xNA} is \code{NA}, and a palette contains at least one grayscale color (which can also be white), this is used as color for missing values. In case there are more than one grayscale color, the lightest is taken. \code{remove.other.grays} determines what happens with the other grays.}
 
 \item{light.to.dark}{should sequential \code{"seq"} palettes be automatically ordered from light to dark?}
 

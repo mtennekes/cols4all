@@ -7,26 +7,26 @@ table_columns = function(type, show.scores) {
 		qs = "nmax"
 	}
 
-	qn = c(qn, "cbfriendly", "chroma", "fair")
-	qs = c(qs, "cbfriendly", "Cmax", "fairness")
+	qn = c(qn, "cbfriendly", "fair")
+	qs = c(qs, "cbfriendly", "fairness")
 
 	if (type == "seq") {
-		qn = c(qn, "hueType", "contrastWT", "contrastBK", "float")
-		qs = c(qs, "Hwidth", "CRwt", "CRbk", "Blues")
+		qn = c(qn, "hues", "chroma", "contrastWT", "contrastBK", "float")
+		qs = c(qs, "Hwidth", "Cmax", "CRwt", "CRbk", "Blues")
 		sn = "H"
 	} else if (type == "cyc") {
-		qn = c(qn, "contrastWT", "contrastBK", "float")
-		qs = c(qs, "CRwt", "CRbk", "Blues")
+		qn = c(qn, "chroma", "contrastWT", "contrastBK", "float")
+		qs = c(qs, "Cmax", "CRwt", "CRbk", "Blues")
 		sn = character(0)
 	} else if (type %in% c("div", "bivs", "bivd", "bivg")) {
-		qn = c(qn, "hueType", "contrastWT", "contrastBK", "float")
-		qs = c(qs,  "HwidthLR", "CRwt", "CRbk", "Blues")
+		qn = c(qn, "chroma", "hues", "contrastWT", "contrastBK", "float")
+		qs = c(qs, "Cmax",  "HwidthLR", "CRwt", "CRbk", "Blues")
 		sn = c("HL", "HR", "Lmid")
 	} else {
 		# qn = c(qn, "nameable", "contrastWT", "contrastBK", "contrast", "float")
 		# qs = c(qs, "nameability", "CRwt", "CRbk", "CRmin", "Blues")
-		qn = c(qn, "nameable", "contrastWT", "contrastBK", "equiluminance", "float")
-		qs = c(qs, "nameability", "CRwt", "CRbk", "CRmin", "Blues")
+		qn = c(qn, "hues", "chroma", "nameable", "contrastWT", "contrastBK", "equiluminance", "float")
+		qs = c(qs, "Hspread", "Cmax", "nameability", "CRwt", "CRbk", "CRmin", "Blues")
 		sn = character(0)
 	}
 
@@ -42,7 +42,7 @@ table_columns = function(type, show.scores) {
 	list(qn = qn, ql = ql, qs = qs, sn = sn, sl = sl)
 }
 
-prep_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, sort = "name", series = "all", range = NA, colorsort = "orig", show.scores = FALSE, columns = NA, verbose = TRUE) {
+prep_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, sort = "name", series = "all", filters = character(0), range = NA, colorsort = "orig", show.scores = FALSE, columns = NA, verbose = TRUE) {
 	id = NULL
 
 	type = match.arg(type)
@@ -82,7 +82,7 @@ prep_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd
 		return(invisible(NULL))
 	}
 
-	zn = get_z_n(z[z$type == type, ], n = n, m = m, n.only = n.only, range = range, colorsort = colorsort)
+	zn = get_z_n(z[z$type == type, ], n = n, m = m, filters = filters, range = range, colorsort = colorsort)
 	if (!is.null(zn)) {
 		if (!series[1] == "all") zn = zn[zn$series %in% series, ]
 	}
@@ -296,7 +296,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 
 
 	rownames(e2) = NULL
-	for (var in c("cbfriendly", "chroma",  "hueType", "fair", "nameable", "equiluminance", "contrastWT", "contrastBK", "float")) {
+	for (var in c("cbfriendly", "chroma",  "hues", "fair", "nameable", "equiluminance", "contrastWT", "contrastBK", "float")) {
 		tcv = tc[[var]]
 		if (any(names(tcv) %in% c("seq", "cat", "div", "cyc"))) {
 			tcv = if (type %in% names(tcv)) tcv[[type]]	else tcv[["x"]]
@@ -437,6 +437,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #' @param type type of palette. Run \code{\link{c4a_types}} to see the implemented types and their description. For `c4a_gui` it only determines which type is shown initially.
 #' @param n,m `n` is the number of displayed colors. For bivariate palettes `"biv"`, `n` and `m` are the number of columns and rows respectively. If omitted: for `"cat"` the full palette is displayed, for `"seq"` and `"div"`, 9 colors, and for `"bivs"`/`"bivc"`/`"bivd"`/`"bivg"` 4 columns and rows. For `c4a_gui` it only determines which number of colors initially.
 #' @param n.only should only palettes be contained that have exactly `n.only` colors (`FALSE` by default)
+#' @param filters filters to be applied. A character vector with a subset from:`"nmax"` (only palettes where `n = nmax`, which is only applicable for categorical palettes),  `"cbf"` (colorblind-friendly), `"fair"` (fairness),`"naming"` (nameability),  `"crW"` (sufficient contrast ratio with white), and `"crB"` (sufficient contrast ratio with black). By default an empty vector, so no filters are applied.
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @param sort column name to sort the data. The available column names depend on the arguments `type` and `show.scores`. They are listed in the warning message. Use a `"-"` prefix to reverse the order.
 #' @param text.format The format of the text of the colors. One of `"hex"`, `"RGB"` or `"HCL"`.
@@ -461,8 +462,8 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #' @return An HMTL table (`kableExtra` object)
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, n.only = FALSE, cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, colorsort = "orig", include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
+c4a_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, filters = character(0), cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, colorsort = "orig", include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
 	cvd.sim = match.arg(cvd.sim)
-	p = prep_table(type = type, n = n, m = m, n.only = n.only, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = verbose)
+	p = prep_table(type = type, n = n, m = m, filters = filters, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = verbose)
 	plot_table(p = p, text.format = text.format, text.col = text.col, include.na = include.na, cvd.sim = cvd.sim, verbose = verbose)
 }

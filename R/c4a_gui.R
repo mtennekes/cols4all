@@ -177,60 +177,119 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					 shiny::fluidRow(
 					 	shiny::column(width = 3,
 					 				  shiny::img(src = "imgResources/cols4all_logo.png", height="200", align = "center", 'vertical-align' = "center")),
-					 	shiny::column(width = 9,
-					 				  shiny::fluidRow(
-					 				  	shiny::column(width = 4,
-		 				  				  shiny::radioButtons("type1", "Palette type", choices = types1, selected = type1),
-		 				  				  shiny::conditionalPanel(
-		 				  				  	condition = "input.type1 == 'biv'",
-		 				  				  	shiny::selectizeInput("type2", "Subtype", choices = types2[["biv"]], selected = type2))),
-					 				  	shiny::column(width = 4,
-					 				  				  shiny::conditionalPanel(
-					 				  				  	condition = "input.type1 != 'biv'",
-					 				  				  	shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
-					 				  				  shiny::uiOutput("checkOnly"),
-					 				  				  shiny::conditionalPanel(
-					 				  				  	condition = "input.type1 == 'biv'",
-					 				  				  	shiny::fluidRow(
-					 				  				  		shiny::column(6,
-					 				  				  					  shiny::uiOutput("nbivUI")),
-					 				  				  		shiny::column(6,
-					 				  				  					  shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 7, value = 3, ticks = FALSE))))),
-					 				  				  shiny::checkboxInput("na", "Color for missing values", value = FALSE),
-					 				  				  shiny::conditionalPanel(
-					 				  				  	condition = "input.type1 == 'seq' || input.type1 == 'div'",
-					 				  				  	shiny::fluidRow(
-					 				  				  		shiny::column(4,
-					 				  				  					  #shiny::br(),
-					 				  				  					  shiny::radioButtons("auto_range", label = "Range", choices = c("Automatic", "Manual"), selected = "Automatic")),
-					 				  				  		shiny::conditionalPanel(
-					 				  				  			condition = "input.auto_range == 'Manual'",
-					 				  				  			shiny::column(8,
-					 				  				  						  shiny::div(style = "font-size:0;margin-bottom:-10px", shiny::sliderInput("range", "", min = 0, max = 1, value = c(0,1), step = .05)),
-					 				  		shiny::uiOutput("range_info"))
+					 	shiny::column(width = 3,
+					 				  shiny::radioButtons("type1", "Palette type", choices = types1, selected = type1),
+					 				   				  				  shiny::conditionalPanel(
+					 				   				  				  	condition = "input.type1 == 'biv'",
+					 				   				  				  	shiny::selectizeInput("type2", "Subtype", choices = types2[["biv"]], selected = type2)),
+					 				  shiny::conditionalPanel(
+					 				  	condition = "input.type1 != 'biv'",
+					 				  	shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
+					 				  shiny::conditionalPanel(
+					 				  	condition = "input.type1 == 'biv'",
+					 				  	shiny::fluidRow(
+					 				  		shiny::column(6,
+					 				  					  shiny::uiOutput("nbivUI")),
+					 				  		shiny::column(6,
+					 				  					  shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 7, value = 3, ticks = FALSE))))),
+					 				  shiny::checkboxInput("na", "Color for missing values", value = FALSE),
+					 				  shiny::uiOutput("sortcolorUI"),
+					 				  shiny::conditionalPanel(
+					 				  	condition = "input.type1 == 'seq' || input.type1 == 'div'",
+					 				  	shiny::fluidRow(
+					 				  		shiny::column(4,
+					 				  					  #shiny::br(),
+					 				  					  shiny::radioButtons("auto_range", label = "Range", choices = c("Automatic", "Manual"), selected = "Automatic")),
+					 				  		shiny::conditionalPanel(
+					 				  			condition = "input.auto_range == 'Manual'",
+					 				  			shiny::column(8,
+					 				  						  shiny::div(style = "font-size:0;margin-bottom:-10px", shiny::sliderInput("range", "", min = 0, max = 1, value = c(0,1), step = .05)),
+					 				  						  shiny::uiOutput("range_info"))
 					 				  		)
-					 				  ))),
-					 				  shiny::column(width = 4,
-					 				  			  shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none")
-					 				  )),
-					 	shiny::fluidRow(
-					 		shiny::column(width = 4,
-					 					  shiny::div(style = "margin-bottom: 5px;", shiny::strong("Palette series")),
-					 					  shiny::div(class = 'multicol',
-					 					  		   shiny::checkboxGroupInput("series", label = "", choices = allseries, selected = series, inline = FALSE)),
-					 					  shiny::fluidRow(
-					 					  	shiny::column(12, align="right",
-					 					  				  shiny::actionButton("all", label = "All"),
-					 					  				  shiny::actionButton("none", label = "None"),
-					 					  				  shiny::actionButton("overview", label = "Overview")))),
-					 		shiny::column(width = 4,
-					 					  shiny::uiOutput("sortcolorUI")),
-					 		shiny::column(width = 4,
-					 					  shiny::selectizeInput("sort", "Sort palettes", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "name"),
-					 					  shiny::checkboxInput("sortRev", "Reverse sorting", value = FALSE),
-					 					  shiny::checkboxInput("advanced", "Show scores", value = FALSE),
-					 					  shiny::radioButtons("textformat", "Text", choices = c("None" = "none", "Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = T)
-					 		)))),
+					 				  	))
+					 	),
+
+					 	shiny::column(width = 3,
+					 				  shiny::selectizeInput("sort", "Sort palettes", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "name"),
+					 				  shiny::div(style = "margin-top: 5px;", shiny::checkboxInput("sortRev", "Reverse sorting", value = FALSE)),
+					 				  #shiny::div(style = "margin-bottom: 5px;", shiny::strong("Select")),
+					 				  shiny::div(class = "control-label", "Select"),
+					 				  shiny::uiOutput("filtersUI"),
+
+					 				  shiny::div(class = "control-label", "Palette series"),
+
+					 				  			 					  shiny::div(class = 'multicol',
+					 				  			 					  		   shiny::checkboxGroupInput("series", label = "", choices = allseries, selected = series, inline = FALSE)),
+					 				  			 					  shiny::fluidRow(
+					 				  			 					  	shiny::column(12, align="right",
+					 				  			 					  				  shiny::actionButton("all", label = "All"),
+					 				  			 					  				  shiny::actionButton("none", label = "None"),
+					 				  			 					  				  shiny::actionButton("overview", label = "Overview")))
+
+
+					 				  #shiny::
+					 				  ),
+					 	shiny::column(width = 3,
+					 				  shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
+					 				  shiny::radioButtons("textformat", "Text", choices = c("None" = "none", "Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = T),
+					 				  shiny::div(class = "control-label", "Underlying scores"),
+					 				  shiny::checkboxInput("advanced", "Show scores", value = FALSE)
+					 				  ),
+
+		# 			 				  shiny::fluidRow(
+		# 			 				  	shiny::column(width = 4,
+		#  				  				  shiny::radioButtons("type1", "Palette type", choices = types1, selected = type1),
+		#  				  				  shiny::conditionalPanel(
+		#  				  				  	condition = "input.type1 == 'biv'",
+		#  				  				  	shiny::selectizeInput("type2", "Subtype", choices = types2[["biv"]], selected = type2))),
+		# 			 				  	shiny::column(width = 4,
+		# 			 				  				  shiny::conditionalPanel(
+		# 			 				  				  	condition = "input.type1 != 'biv'",
+		# 			 				  				  	shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
+		# 			 				  				  shiny::uiOutput("checkOnly"),
+		# 			 				  				  shiny::conditionalPanel(
+		# 			 				  				  	condition = "input.type1 == 'biv'",
+		# 			 				  				  	shiny::fluidRow(
+		# 			 				  				  		shiny::column(6,
+		# 			 				  				  					  shiny::uiOutput("nbivUI")),
+		# 			 				  				  		shiny::column(6,
+		# 			 				  				  					  shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 7, value = 3, ticks = FALSE))))),
+		# 			 				  				  shiny::checkboxInput("na", "Color for missing values", value = FALSE),
+		# 			 				  				  shiny::conditionalPanel(
+		# 			 				  				  	condition = "input.type1 == 'seq' || input.type1 == 'div'",
+		# 			 				  				  	shiny::fluidRow(
+		# 			 				  				  		shiny::column(4,
+		# 			 				  				  					  #shiny::br(),
+		# 			 				  				  					  shiny::radioButtons("auto_range", label = "Range", choices = c("Automatic", "Manual"), selected = "Automatic")),
+		# 			 				  				  		shiny::conditionalPanel(
+		# 			 				  				  			condition = "input.auto_range == 'Manual'",
+		# 			 				  				  			shiny::column(8,
+		# 			 				  				  						  shiny::div(style = "font-size:0;margin-bottom:-10px", shiny::sliderInput("range", "", min = 0, max = 1, value = c(0,1), step = .05)),
+		# 			 				  		shiny::uiOutput("range_info"))
+		# 			 				  		)
+		# 			 				  ))),
+		# 			 				  shiny::column(width = 4,
+		# 			 				  			  shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none")
+		# 			 				  )),
+		# 			 	shiny::fluidRow(
+		# 			 		shiny::column(width = 4,
+		# 			 					  shiny::div(style = "margin-bottom: 5px;", shiny::strong("Palette series")),
+		# 			 					  shiny::div(class = 'multicol',
+		# 			 					  		   shiny::checkboxGroupInput("series", label = "", choices = allseries, selected = series, inline = FALSE)),
+		# 			 					  shiny::fluidRow(
+		# 			 					  	shiny::column(12, align="right",
+		# 			 					  				  shiny::actionButton("all", label = "All"),
+		# 			 					  				  shiny::actionButton("none", label = "None"),
+		# 			 					  				  shiny::actionButton("overview", label = "Overview")))),
+		# 			 		shiny::column(width = 4,
+		# 			 					  shiny::uiOutput("sortcolorUI")),
+		# 			 		shiny::column(width = 4,
+		# 			 					  shiny::selectizeInput("sort", "Sort palettes", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "name"),
+		# 			 					  shiny::checkboxInput("sortRev", "Reverse sorting", value = FALSE),
+		# 			 					  shiny::checkboxInput("advanced", "Show scores", value = FALSE),
+		# 			 					  shiny::radioButtons("textformat", "Text", choices = c("None" = "none", "Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = T)
+		# 			 		)))
+					 	),
 
 					 shiny::fluidRow(
 					 	shiny::column(
@@ -641,6 +700,26 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			shiny::sliderInput("nbiv", "Number of columns", min = 3, max = ifelse(type == "bivc", 10, 7), value = 3, ticks = FALSE)
 		})
 
+		output$filtersUI = shiny::renderUI({
+			type = get_type12()
+			filters = c("Colorblind-friendly" = "cbf",
+						"Fair" = "fair",
+						"Nameability" = "naming",
+						"Good contrast ratio with white" = "crW",
+						"Good contrast ratio with black" = "crB",
+						"Only n = nmax (categorical only)" = "nmax")
+
+			filters_type = if (type == "cat") {
+				filters
+			} else if (type %in% c("seq", "div", "cyc", "bivc", "bivs", "bivd", "bivg")) {
+				filters[c(1, 2, 4, 5)]
+			}
+
+
+			shiny::checkboxGroupInput("filters", label = "", choices = filters_type, inline = FALSE)
+
+		})
+
 
 		get_cols = shiny::reactive({
 			type = get_type12()
@@ -674,7 +753,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				 columns = if (n > 16) 12 else n,
 				 na = input$na,
 				 range = if (input$auto_range == "Automatic") NA else input$range,
-				 n.only = if (is.null(input$n.only) || type != "cat") FALSE else input$n.only,
+				 #n.only = if (is.null(input$n.only) || type != "cat") FALSE else input$n.only,
+				 filters = if (is.null(input$filters)) character(0) else input$filters,
 				 #c("Hide text" = "same", Black = "#000000", White = "#FFFFFF", Automatic = "auto")
 				 textcol = if (input$textformat == "none") "same" else "auto",
 				 format = if (input$textformat == "none") "hex" else input$textformat,
@@ -695,11 +775,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					pal_names = NULL
 				} else {
 					if (substr(type, 1, 3) == "biv") {
-						#browser()
-						prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = nbiv, verbose = FALSE, n.only = FALSE)
+						prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = nbiv, verbose = FALSE, filters = filters)
 
 					} else {
-						prep = prep_table(type = type, n = n, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = FALSE, n.only = n.only)
+						prep = prep_table(type = type, n = n, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = FALSE, filters = filters)
 					}
 					pal_names = prep$zn$fullname
 				}
@@ -780,16 +859,6 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				NULL
 			}
 		})
-
-		output$checkOnly = shiny::renderUI({
-			values = get_values()
-			if (!is.null(values$type) && values$type == "cat") {
-				shiny::checkboxInput("n.only", paste("Only palettes with max = ", values$n, " colors"), value = values$n.only)
-			} else {
-				NULL
-			}
-		})
-
 
 
 
@@ -1133,10 +1202,11 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		output$anaHUE = shiny::renderPlot({
 			if (!length(tab_vals$pal)) return(NULL)
 
-			width = switch(tab_vals$type,
-						   seq = "total",
-						   div = "halves",
-						   "total")
+			# width = switch(tab_vals$type,
+			# 			   seq = "total",
+			# 			   div = "halves",
+			# 			   "total")
+			width = "none"
 
 			pal = tab_vals$pal
 			c4a_plot_hues(pal, dark = input$dark, width = width)

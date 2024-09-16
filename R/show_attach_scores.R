@@ -29,7 +29,7 @@ show_attach_scores = function(z) {
 
 	z2$cbfriendly = get_friendlyness(z2)
 	z2$cbfriendly[is.na(z2$cbfriendly)] = 0
-	z2$iscbf = (z2$cbfriendly == 1)
+	#ßz2$iscbf = (z2$cbfriendly == 1)
 	#a = t(mapply(analyse_hcl, z2$palette, z2$type))
 	#z2 = cbind(z2, a)
 
@@ -40,6 +40,8 @@ show_attach_scores = function(z) {
 
 
 	#z2$highC = z2$Cmax >= .C4A$Cintense
+
+	z2$Hspread = round(get_spread(z2$Hwidth, z2$n))
 
 
 	if (type %in% c("cat", "bivc")) {
@@ -58,14 +60,15 @@ show_attach_scores = function(z) {
 
 
 	if (type == "div") {
-		z2$hueType = ifelse(z2$HwidthL >= .C4A$HwidthDivRainbow | z2$HwidthR >= .C4A$HwidthDivRainbow, "RH",
+		z2$hues = ifelse(z2$HwidthL >= .C4A$HwidthDivRainbow | z2$HwidthR >= .C4A$HwidthDivRainbow, "RH",
 					 ifelse(z2$HwidthL < .C4A$HwidthDivSingle & z2$HwidthR < .C4A$HwidthDivSingle, "SH", "MH"))
 		z2$HwidthLR = pmax(z2$HwidthL, z2$HwidthR)
 	} else if (type == "seq") {
-		z2$hueType = ifelse(z2$Hwidth < .C4A$HwidthSeqSingle, "SH", ifelse(z2$Hwidth < .C4A$HwidthSeqRainbow, "MH", "RH"))
-	} else if (type %in% c("cat", "cyc", "bivc")) {
+		z2$hues = ifelse(z2$Hwidth < .C4A$HwidthSeqSingle, "SH", ifelse(z2$Hwidth < .C4A$HwidthSeqRainbow, "MH", "RH"))
+	} else if (type %in% c("cat")) {
+		z2$hues = ifelse(z2$Hspread > .C4A$Hspread, "RH", "NA")
 	} else if (type %in% c("bivs", "bivd", "bivg")) {
-		z2$hueType = ifelse(z2$HwidthL >= .C4A$HwidthDivRainbow | z2$HwidthR >= .C4A$HwidthDivRainbow, "RH",
+		z2$hues = ifelse(z2$HwidthL >= .C4A$HwidthDivRainbow | z2$HwidthR >= .C4A$HwidthDivRainbow, "RH",
 					 ifelse(z2$HwidthL < .C4A$HwidthDivSingle & z2$HwidthR < .C4A$HwidthDivSingle, "SH", "MH"))
 		z2$HwidthLR = pmax(z2$HwidthL, z2$HwidthR)
 	}
@@ -80,8 +83,19 @@ show_attach_scores = function(z) {
 	z2$nameable = as.logical(z2$nameability)
 
 
+
 	z2
 }
+
+get_spread = function(Hwidth, n) {
+	one_piece = (360 / n)
+
+	mx = 360 - one_piece
+
+	Hwidth / mx * 100
+
+}
+
 
 
 get_friendlyness = function(zn) {

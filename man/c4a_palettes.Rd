@@ -13,12 +13,12 @@ An object of class \code{environment} of length 17.
 }
 \usage{
 c4a_palettes(
-  type = c("all", "cat", "seq", "div"),
+  type = c("all", "cat", "seq", "div", "cyc"),
   series = NULL,
   full.names = TRUE
 )
 
-c4a_series(type = c("all", "cat", "seq", "div"), as.data.frame = TRUE)
+c4a_series(type = c("all", "cat", "seq", "div", "cyc"), as.data.frame = TRUE)
 
 c4a_types(series = NULL, as.data.frame = TRUE)
 
@@ -34,6 +34,8 @@ c4a_overview(return.matrix = FALSE)
 \item{full.names}{should full names, i.e. with the prefix "series."? By default \code{TRUE}.}
 
 \item{as.data.frame}{should \code{c4a_series} and \code{c4a_types} return the result as a data.frame, with description included as a column?}
+
+\item{return.matrix}{should only a matrix be returned with numbers per palette and type? If \code{FALSE} a data.frame is returned with addional information}
 }
 \value{
 names of the loaded color palettes

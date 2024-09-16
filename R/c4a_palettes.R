@@ -79,6 +79,7 @@ c4a_types = function(series = NULL, as.data.frame = TRUE) {
 }
 
 #' @rdname c4a_palettes
+#' @param return.matrix should only a matrix be returned with numbers per palette and type? If `FALSE` a data.frame is returned with addional information
 #' @name c4a_series
 #' @export
 c4a_overview = function(return.matrix = FALSE) {

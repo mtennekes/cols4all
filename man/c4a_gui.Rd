@@ -8,7 +8,7 @@
 c4a_gui(type = "cat", n = NA, series = "all")
 
 c4a_table(
-  type = c("cat", "seq", "div", "bivs", "bivc", "bivd", "bivg"),
+  type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"),
   n = NULL,
   m = NULL,
   n.only = FALSE,
@@ -76,7 +76,7 @@ c4a_table(type = "cat")
 c4a_table(type = "seq", n = 7, sort = "H")
 
 # sort sequential palettes by hue type (how many hues are used)
-c4a_table(type = "seq", n = 5, sort = "hueType")
+c4a_table(type = "seq", n = 5, sort = "hues")
 }
 }
 \seealso{

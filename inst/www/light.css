@@ -50,6 +50,16 @@ input[type="checkbox"], input[type="radio"] {
 
 div.checkbox { padding: 0px; margin: 0px;}
 
+h4 {
+	margin-bottom: 6px !important;
+}
+
+.control-label {
+	font-size: 120% !important;
+	line-height: 1.1 !important;
+	font-weight: 700 !important;
+}
+
 #series .shiny-options-group {
 	margin-top: -12px;
 }

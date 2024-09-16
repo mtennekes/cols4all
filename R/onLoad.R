@@ -183,6 +183,8 @@ do_cellspec = function(lst) {
 		HwidthSeqRainbow = 180 # a sequential palette is labeled as 'rainbow hue' if Hwidth is at least HwidthSeqRainbow
 		HwidthSeqSingle = 15 # a sequential palette is labeled as 'single hue' if Hwidth is at most HwidthSeqSingle
 
+		Hspread = 90 # from which number between 0 and 100, is a palette labeled "Hue spread" (cat)
+
 		sc = c("min_dist",
 			   "nameability",
 			   "min_step",
@@ -236,9 +238,9 @@ do_cellspec = function(lst) {
 
 
 		rgb = c("Blues")
-		hcl = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "fairness", "CRmin", "CRwt", "CRbk")
+		hcl = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "Hspread", "HwidthL", "HwidthR", "Lrange", "Crange", "fairness", "CRmin", "CRwt", "CRbk")
 
-		sortRev = c("cbfriendly", "harmonyRank", "fairness", "Cmax", "min_dist", "nameability", "Lmid", "Hwidth", "HwidthL", "HwidthR", "nmax", "CRmin", "CRwt", "CRbk", "Blues")
+		sortRev = c("cbfriendly", "harmonyRank", "fairness", "Cmax", "min_dist", "nameability", "Lmid", "Hwidth", "Hspread", "HwidthL", "HwidthR", "nmax", "CRwt", "CRbk", "Blues")
 
 		# naming_fun = "naming_dist_centroid"
 		# naming_colors = c(Green = "#859F68",
@@ -275,6 +277,7 @@ do_cellspec = function(lst) {
 				   HR = "Hue middle R",
 				   Lmid = "Luminance mid",
 				   Hwidth = "Hue width",
+				   Hspread = "Hue spread",
 				   HwidthL = "Hue width L",
 				   HwidthR = "Hue width R",
 				   Lrange = "Luminance range",
@@ -288,7 +291,7 @@ do_cellspec = function(lst) {
 				   fair = "Fair",
 				   nameable = "Naming",
 				   fairness = "Fairness",
-				   hueType = "Hue type",
+				   hues = "Hues",
 				   equiluminance = "Contrast (between)",
 				   contrastWT = "Contrast (white)",
 				   contrastBK = "Contrast (black)",
@@ -299,15 +302,15 @@ do_cellspec = function(lst) {
 		th = list(series = list("Series", tooltip = "Palette series. See last column for references"),
 				  name = list("Name", tooltip = "Palette name"),
 				  cbfriendly = list("Colorblind-friendly", tooltip = "Is the palette suitable for colorblind people?"),
-				  chroma = list("Vivid", tooltip = "Are the colors vivid  or pastel?"),
+				  chroma = list("Vivid", tooltip = "Are there any vivid (saturated) colors?"),
 				  nmax = list("Max number", tooltip = "Maximum number of colors"),
 				  fair = list("Fair", tooltip = "Do colors stand out about equally?"),
-				  contrastWT = list("Contrast\nwt", tooltip = "Contrast issues with white (wt), black (bk), and between the colors (equiluminance)."),
+				  contrastWT = list("Contrast\nwt", tooltip = "Contrast with white (wt), black (bk), and between the colors (equiluminance)."),
 				  contrastBK = list("bk", tooltip = ""),
 				  equiluminance = list("eq.", tooltip = "If colors are equiluminant (i.e. very low contrast) visual illusions may appear"),
 				  nameable = list("Naming", tooltip = "Are the colors are easy to name? If so, they are also easy to remember"),
 				  float = list("3D Blues", tooltip = "Is there a pure blue color that may cause a 3D illusion?"),
-				  hueType = list("Hue type", tooltip = "How many different hues are used?"),
+				  hues = list("Hues", tooltip = "How many different hues are used?"),
 				  references = list("References", tooltip = "Click to copy the colors and references"))
 
 		tc = list(cbfriendly = list('NA' = "",
@@ -316,10 +319,14 @@ do_cellspec = function(lst) {
 									'1' = list("&#9786;", extra_css="font-size: 80%;", tooltip = "Colorblind-friendly! Be careful with points and lines", escape = FALSE),
 									'-1' = list("&#128064;", extra_css ="font-size: 60%;", tooltip = "Be careful! Some colors are hard to distinguish by color blind people (see tab 'Color Blind Friendliness'", escape = FALSE)),
 				  chroma = list('NA' = "",
-				  			  'H' = list("&#x1f576;", tooltip = "Vivid colors (high chroma): ideal for small important objects to stand out (e.g. markers on a map), but less suited for space filling visualizations (see tab 'HCL Analysis')", escape = FALSE),
+				  			  'H' = list("&#x1f576;", tooltip = "Vivid colors (high chroma) present: ideal for small important objects to stand out (e.g. markers on a map), but less suited for space filling visualizations because it may cause eye fatigue (see tab 'HCL Analysis')", escape = FALSE),
 				  			  'M' = "",
-				  			  'L' = list("&#10057;", tooltip = "Pastel colors (low chroma): ideal for space filling visualizations, such as choropleths (see tab 'HCL Analysis')", escape = FALSE, extra_css = "font-size: 70%;")), #&#9729; &#10020;
-				  hueType = list(seq = list('NA' = "",
+				  			  'L' = list("&#10057;", tooltip = "All colors are pastel colors (low chroma): ideal for space filling visualizations, such as choropleths (see tab 'HCL Analysis')", escape = FALSE, extra_css = "font-size: 70%;")), #&#9729; &#10020;
+				  hues = list(cat = list('NA' = "",
+				  					   'RH' = list("&#127752;",
+				  					   			tooltip = "Hues from the whole hue spectrum are used (see tab 'HCL Analysis')",
+				  					   			escape = FALSE, extra_css = "font-size: 150%; vertical-align: -0.1em; line-height: 0px;")),
+				  			 seq = list('NA' = "",
 				  						  'MH' = "",
 				  						  'RH' = list("&#127752;",
 				  						  			tooltip = "Spectral (&#34;rainbow&#34;) palette: easy to distinguish colors, but less suitable for quantitative analysis",
@@ -387,15 +394,15 @@ do_cellspec = function(lst) {
 				  							  tooltip = "Very low contrast between some colors (equiluminance); borders needed (see tab 'Contrast')",
 				  							  escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px;")),
 				  contrastWT = list('NA' = "",
-				  				  'FALSE' =  "",
-				  				  'TRUE' = list("&#127987;",
-				  				  			  tooltip = "Low contrast with white (see tab 'Contrast')",
-				  				  			  escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px; margin-right: -10px;")),
+				  				  'FALSE' =  list("&#127987;",
+				  				  				tooltip = "Good contrast with white for text and lines (see tab 'Contrast')",
+				  				  				escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px; margin-right: -10px;"),
+				  				  'TRUE' = ""),
 				  contrastBK = list('NA' = "",
-				  				  'FALSE' =  "",
-				  				  'TRUE' = list("&#127988;",
-				  				  			  tooltip = "Low contrast with black (see tab 'Contrast')",
-				  				  			  escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px; margin-right: -10px;")),
+				  				  'FALSE' =  list("&#127988;",
+				  				  				tooltip = "Good contrast with black for text and lines (see tab 'Contrast')",
+				  				  				escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px; margin-right: -10px;"),
+				  				  'TRUE' = ""),
 				  float = list('NA' = "",
 				  			 'FALSE' = "",
 				  			 'TRUE' = list("&#128313;",
