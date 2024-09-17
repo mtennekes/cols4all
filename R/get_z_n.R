@@ -1,4 +1,4 @@
-get_z_n = function(z, n = NA, m = NA, filters, range = NA, colorsort = "orig") {
+get_z_n = function(z, n = NA, m = NA, filters = character(0), range = NA, colorsort = "orig") {
 	# if (!is.null(n)) {
 
 	if ("nmax" %in% filters) {

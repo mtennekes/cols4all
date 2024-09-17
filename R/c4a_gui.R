@@ -213,10 +213,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					 				  shiny::selectizeInput("sort", "Sort palettes", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "name"),
 					 				  shiny::div(style = "margin-top: 5px;", shiny::checkboxInput("sortRev", "Reverse sorting", value = FALSE)),
 					 				  #shiny::div(style = "margin-bottom: 5px;", shiny::strong("Select")),
-					 				  shiny::div(class = "control-label", "Select"),
+					 				  shiny::div(class = "control-label2", "Filter"),
 					 				  shiny::uiOutput("filtersUI"),
 
-					 				  shiny::div(class = "control-label", "Palette series"),
+					 				  shiny::div(class = "control-label2", "Palette series"),
 
 					 				  			 					  shiny::div(class = 'multicol',
 					 				  			 					  		   shiny::checkboxGroupInput("series", label = "", choices = allseries, selected = series, inline = FALSE)),
@@ -232,63 +232,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					 	shiny::column(width = 3,
 					 				  shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none"),
 					 				  shiny::radioButtons("textformat", "Text", choices = c("None" = "none", "Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = T),
-					 				  shiny::div(class = "control-label", "Underlying scores"),
-					 				  shiny::checkboxInput("advanced", "Show scores", value = FALSE)
+					 				  shiny::div(class = "control-label3", "Underlying scores"),
+					 				  shiny::div(style = "margin-top: 5px;", shiny::checkboxInput("advanced", "Show scores", value = FALSE))
 					 				  ),
 
-		# 			 				  shiny::fluidRow(
-		# 			 				  	shiny::column(width = 4,
-		#  				  				  shiny::radioButtons("type1", "Palette type", choices = types1, selected = type1),
-		#  				  				  shiny::conditionalPanel(
-		#  				  				  	condition = "input.type1 == 'biv'",
-		#  				  				  	shiny::selectizeInput("type2", "Subtype", choices = types2[["biv"]], selected = type2))),
-		# 			 				  	shiny::column(width = 4,
-		# 			 				  				  shiny::conditionalPanel(
-		# 			 				  				  	condition = "input.type1 != 'biv'",
-		# 			 				  				  	shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
-		# 			 				  				  shiny::uiOutput("checkOnly"),
-		# 			 				  				  shiny::conditionalPanel(
-		# 			 				  				  	condition = "input.type1 == 'biv'",
-		# 			 				  				  	shiny::fluidRow(
-		# 			 				  				  		shiny::column(6,
-		# 			 				  				  					  shiny::uiOutput("nbivUI")),
-		# 			 				  				  		shiny::column(6,
-		# 			 				  				  					  shinyjs::disabled(shiny::sliderInput("mbiv", "Number of rows", min = 3, max = 7, value = 3, ticks = FALSE))))),
-		# 			 				  				  shiny::checkboxInput("na", "Color for missing values", value = FALSE),
-		# 			 				  				  shiny::conditionalPanel(
-		# 			 				  				  	condition = "input.type1 == 'seq' || input.type1 == 'div'",
-		# 			 				  				  	shiny::fluidRow(
-		# 			 				  				  		shiny::column(4,
-		# 			 				  				  					  #shiny::br(),
-		# 			 				  				  					  shiny::radioButtons("auto_range", label = "Range", choices = c("Automatic", "Manual"), selected = "Automatic")),
-		# 			 				  				  		shiny::conditionalPanel(
-		# 			 				  				  			condition = "input.auto_range == 'Manual'",
-		# 			 				  				  			shiny::column(8,
-		# 			 				  				  						  shiny::div(style = "font-size:0;margin-bottom:-10px", shiny::sliderInput("range", "", min = 0, max = 1, value = c(0,1), step = .05)),
-		# 			 				  		shiny::uiOutput("range_info"))
-		# 			 				  		)
-		# 			 				  ))),
-		# 			 				  shiny::column(width = 4,
-		# 			 				  			  shiny::radioButtons("cvd", "Color vision", choices = c(Normal = "none", 'Deutan (red-green blind)' = "deutan", 'Protan (also red-green blind)' = "protan", 'Tritan (blue-yellow)' = "tritan"), selected = "none")
-		# 			 				  )),
-		# 			 	shiny::fluidRow(
-		# 			 		shiny::column(width = 4,
-		# 			 					  shiny::div(style = "margin-bottom: 5px;", shiny::strong("Palette series")),
-		# 			 					  shiny::div(class = 'multicol',
-		# 			 					  		   shiny::checkboxGroupInput("series", label = "", choices = allseries, selected = series, inline = FALSE)),
-		# 			 					  shiny::fluidRow(
-		# 			 					  	shiny::column(12, align="right",
-		# 			 					  				  shiny::actionButton("all", label = "All"),
-		# 			 					  				  shiny::actionButton("none", label = "None"),
-		# 			 					  				  shiny::actionButton("overview", label = "Overview")))),
-		# 			 		shiny::column(width = 4,
-		# 			 					  shiny::uiOutput("sortcolorUI")),
-		# 			 		shiny::column(width = 4,
-		# 			 					  shiny::selectizeInput("sort", "Sort palettes", choices = structure(c("name", "rank"), names = c("Name", .C4A$labels["cbfriendly"])), selected = "name"),
-		# 			 					  shiny::checkboxInput("sortRev", "Reverse sorting", value = FALSE),
-		# 			 					  shiny::checkboxInput("advanced", "Show scores", value = FALSE),
-		# 			 					  shiny::radioButtons("textformat", "Text", choices = c("None" = "none", "Hex" = "hex", "RGB" = "RGB", "HCL" = "HCL"), inline = T)
-		# 			 		)))
 					 	),
 
 					 shiny::fluidRow(
@@ -380,43 +327,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 								shiny::column(width = 6,
 											  infoBoxUI("infoFair", "Fairness"),
 											  plotOverlay("anaFair", width = "600px", height = "600px", "aniFair")))),
-			shiny::tabPanel("Naming",
-							value = "tab_name",
-							shiny::fluidRow(
-								shiny::column(width = 12,
-									shiny::selectizeInput("namePal", "Palette", choices = init_pal_list),
-									infoBoxUI("infoName", "Naming table (in development)"),
-									plotOverlay("anaName", width = "1000px", height = "600px", "aniName"))),
-									#shiny::plotOutput("namePlot", height = "600px", width = "1000px"))),
-							shiny::fluidRow(
-								shiny::column(width = 12,
-											  shiny::sliderInput("nameAlpha", "Clarity level", min = .5, max = .C4A$naming_softmax$a + 2, step = .5, value = .C4A$naming_softmax$a))),
-											  #shiny::actionButton("showWeights", "Show weight calibration"))),
-							# shiny::conditionalPanel(
-							# 	condition = "input.showWeights % 2 == 1",
-							# 	shiny::fluidRow(
-							# 		shiny::column(width = 3,
-							# 				  shiny::sliderInput("w_1", "Green", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[1])),
-							# 				  shiny::sliderInput("w_2", "Blue", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[2])),
-							# 				  shiny::sliderInput("w_3", "Purple", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[3])),
-							# 				  shiny::sliderInput("w_4", "Pink", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[4]))
-							# 		),
-							# 		shiny::column(width = 3,
-							# 					  shiny::sliderInput("w_5", "Yellow", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[5])),
-							# 					  shiny::sliderInput("w_6", "Brown", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[6])),
-							# 					  shiny::sliderInput("w_7", "Orange", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[7])),
-							# 					  shiny::sliderInput("w_8", "Red", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[8]))
-							# 		),
-							# 		shiny::column(width = 3,
-							# 					  shiny::sliderInput("w_9", "White", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[9])),
-							# 					  shiny::sliderInput("w_10", "Gray", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[10])),
-							# 					  shiny::sliderInput("w_11", "Black", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[11])),
-							# 					  shiny::actionButton("w_do", "Update naming data")
-							# 		)
-							# 	)
-							# )
 
-			),
 			shiny::tabPanel("Contrast",
 							value = "tab_cont",
 							shiny::fluidRow(
@@ -488,7 +399,43 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 											  shiny::plotOutput("float_letters_AB", "Float letter", height = 150, width = 300)
 											  ))),
 
+			shiny::tabPanel("Naming",
+							value = "tab_name",
+							shiny::fluidRow(
+								shiny::column(width = 12,
+											  shiny::selectizeInput("namePal", "Palette", choices = init_pal_list),
+											  infoBoxUI("infoName", "Naming table (in development)"),
+											  plotOverlay("anaName", width = "1000px", height = "600px", "aniName"))),
+							#shiny::plotOutput("namePlot", height = "600px", width = "1000px"))),
+							shiny::fluidRow(
+								shiny::column(width = 12,
+											  shiny::sliderInput("nameAlpha", "Clarity level", min = .5, max = .C4A$naming_softmax$a + 2, step = .5, value = .C4A$naming_softmax$a))),
+							#shiny::actionButton("showWeights", "Show weight calibration"))),
+							# shiny::conditionalPanel(
+							# 	condition = "input.showWeights % 2 == 1",
+							# 	shiny::fluidRow(
+							# 		shiny::column(width = 3,
+							# 				  shiny::sliderInput("w_1", "Green", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[1])),
+							# 				  shiny::sliderInput("w_2", "Blue", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[2])),
+							# 				  shiny::sliderInput("w_3", "Purple", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[3])),
+							# 				  shiny::sliderInput("w_4", "Pink", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[4]))
+							# 		),
+							# 		shiny::column(width = 3,
+							# 					  shiny::sliderInput("w_5", "Yellow", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[5])),
+							# 					  shiny::sliderInput("w_6", "Brown", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[6])),
+							# 					  shiny::sliderInput("w_7", "Orange", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[7])),
+							# 					  shiny::sliderInput("w_8", "Red", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[8]))
+							# 		),
+							# 		shiny::column(width = 3,
+							# 					  shiny::sliderInput("w_9", "White", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[9])),
+							# 					  shiny::sliderInput("w_10", "Gray", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[10])),
+							# 					  shiny::sliderInput("w_11", "Black", min = 0, max = 1.2, step = 0.01, value = unname(.C4A$boynton_weights[11])),
+							# 					  shiny::actionButton("w_do", "Update naming data")
+							# 		)
+							# 	)
+							# )
 
+			),
 
 
 			shiny::tabPanel("Application",
@@ -702,12 +649,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		output$filtersUI = shiny::renderUI({
 			type = get_type12()
-			filters = c("Colorblind-friendly" = "cbf",
+			filters = c("Only n = nmax (categorical only)" = "nmax",
+						"Colorblind-friendly" = "cbf",
 						"Fair" = "fair",
-						"Nameability" = "naming",
 						"Good contrast ratio with white" = "crW",
 						"Good contrast ratio with black" = "crB",
-						"Only n = nmax (categorical only)" = "nmax")
+						"Nameability" = "naming")
 
 			filters_type = if (type == "cat") {
 				filters

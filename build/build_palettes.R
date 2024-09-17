@@ -43,7 +43,7 @@ local({
 	p1 = pals[c("R3", "R4", "ggplot2", "Okabe-Ito")]
 	names(p1) = c("R3", "R4", "ggplot2", "okabe")
 
-	c4a_load(c4a_data(p1, types = "cat", series = "miscs"))
+	c4a_load(c4a_data(p1, types = "cat", series = "misc"))
 })
 
 ###################################

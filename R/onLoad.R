@@ -238,7 +238,12 @@ do_cellspec = function(lst) {
 
 
 		rgb = c("Blues")
-		hcl = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "Hspread", "HwidthL", "HwidthR", "Lrange", "Crange", "fairness", "CRmin", "CRwt", "CRbk")
+
+		# for score file
+		hcl = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "HwidthL", "HwidthR", "Lrange", "Crange", "fairness", "CRmin", "CRwt", "CRbk")
+
+		# for table (with derived variables)
+		hcl2 = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "Hspread", "HwidthL", "HwidthR", "Lrange", "Crange", "fairness", "CRmin", "CRwt", "CRbk")
 
 		sortRev = c("cbfriendly", "harmonyRank", "fairness", "Cmax", "min_dist", "nameability", "Lmid", "Hwidth", "Hspread", "HwidthL", "HwidthR", "nmax", "CRwt", "CRbk", "Blues")
 
@@ -308,7 +313,7 @@ do_cellspec = function(lst) {
 				  contrastWT = list("Contrast\nwt", tooltip = "Contrast with white (wt), black (bk), and between the colors (equiluminance)."),
 				  contrastBK = list("bk", tooltip = ""),
 				  equiluminance = list("eq.", tooltip = "If colors are equiluminant (i.e. very low contrast) visual illusions may appear"),
-				  nameable = list("Naming", tooltip = "Are the colors are easy to name? If so, they are also easy to remember"),
+				  nameable = list("Naming", tooltip = "Are the colors are easy to name? If so, they are also easy to remember (in development)"),
 				  float = list("3D Blues", tooltip = "Is there a pure blue color that may cause a 3D illusion?"),
 				  hues = list("Hues", tooltip = "How many different hues are used?"),
 				  references = list("References", tooltip = "Click to copy the colors and references"))
@@ -386,7 +391,7 @@ do_cellspec = function(lst) {
 				  nameable = list('NA' = "",
 				  				  'FALSE' =  "",
 				  				  'TRUE' = list("&#10023;",
-				  				  			  tooltip = "Colors are easy to name, and therefore, easy to remember",
+				  				  			  tooltip = "Colors are easy to name, and therefore, easy to remember (in development)",
 				  				  			  escape = FALSE, extra_css = "font-size: 130%; vertical-align: -0.1em; line-height: 0px;")),
 				  equiluminance = list('NA' = "",
 				  				'FALSE' =  "",

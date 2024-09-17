@@ -253,21 +253,13 @@ c4a_plot(sel)
 
 res5 = colors_cbf_set(sel, k = 5, dE_min = 20)
 
-
 pals = res5$palettes
 names(pals) = paste0("pal", 1:length(pals))
 
 pals_sel = pals[seq(1, length(pals), length.out = 500)]
 
-ids = which(.C4A$z$series == "c4b")
-s = .C4A$s[ids,,5]
-
-s2 = s[which(s[,"Hwidth"] >= 240),]
-palnames = substr(rownames(s2), 5, nchar(rownames(s2)))
-
 c4a_sysdata_remove(series = "c4b")
-c4a_load(c4a_data(pals[palnames], series = "c4b"))
-
+c4a_load(c4a_data(pals_sel, series = "c4b"))
 
 c4a_load(c4a_data(pals, series = "c4b"))
 

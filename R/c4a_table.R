@@ -25,15 +25,15 @@ table_columns = function(type, show.scores) {
 	} else {
 		# qn = c(qn, "nameable", "contrastWT", "contrastBK", "contrast", "float")
 		# qs = c(qs, "nameability", "CRwt", "CRbk", "CRmin", "Blues")
-		qn = c(qn, "hues", "chroma", "nameable", "contrastWT", "contrastBK", "equiluminance", "float")
-		qs = c(qs, "Hspread", "Cmax", "nameability", "CRwt", "CRbk", "CRmin", "Blues")
+		qn = c(qn, "hues", "chroma", "contrastWT", "contrastBK", "equiluminance", "float", "nameable")
+		qs = c(qs, "Hspread", "Cmax", "CRwt", "CRbk", "CRmin", "Blues", "nameability")
 		sn = character(0)
 	}
 
 
 	if (show.scores) {
-		qn = c(qn, names(.C4A$CB_ranges[[type]]), .C4A$hcl, .C4A$rgb)
-		qs = c(qs, names(.C4A$CB_ranges[[type]]), .C4A$hcl, .C4A$rgb)
+		qn = c(qn, names(.C4A$CB_ranges[[type]]), .C4A$hcl2, .C4A$rgb)
+		qs = c(qs, names(.C4A$CB_ranges[[type]]), .C4A$hcl2, .C4A$rgb)
 	}
 	ql = gsub("&nbsp;", "", .C4A$labels[qn])
 
