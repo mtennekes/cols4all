@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">cols4all</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,7 +79,7 @@ However, people often cannot see the trees through the forest, so
 therefore they tend to stick with the color palettes they know, or with
 the most popular ones.</p>
 <p>The <code>cols4all</code> package also contains a large collection of
-palettes (to be precise 560 at the time of writing), but with the
+palettes (to be precise 571 at the time of writing), but with the
 central question: <strong>which palettes are good and why?</strong>
 There is no simple answer, since there are many aspects to take into
 account, which may have opposite effects. In <code>cols4all</code> we
@@ -110,11 +110,11 @@ Are border lines needed to separate colors?</p></li>
 that could result in a floating effect?</p></li>
 </ul>
 <p>Currently, <strong>cols4all</strong> contains palettes from several
-popular and lesser known color palette series: “brewer”, “c4a”, “carto”,
-“hcl”, “kovesi”, “matplotlib”, “met”, “miscs”, “parks”, “poly”, “scico”,
-“seaborn”, “stevens”, “tableau”, “tol” , and “wes”. Stand-alone palettes
-that are included have been put in the series “misc” (miscellaneous).
-Own palettes series can be added as well.</p>
+popular and lesser known color palette series: “brewer”, “carto”,
+“cols4all”, “hcl”, “kovesi”, “matplotlib”, “met”, “parks”, “poly”,
+“scico”, “seaborn”, “stevens”, “tableau”, “tol” , and “wes”. Stand-alone
+palettes that are included have been put in the series “misc”
+(miscellaneous). Own palettes series can be added as well.</p>
 <p>Color palettes are organized and made consistent with each other. For
 instance, all sequential palettes go from light to dark. Furthermore,
 for each color palette a color for missing values is assigned, which is
@@ -203,61 +203,58 @@ with:</p>
 <span><span class="fu"><a href="../reference/c4a_palettes.html">c4a_series</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        series                                         description</span></span>
 <span><span class="co">#&gt; 1      brewer                                ColorBrewer palettes</span></span>
-<span><span class="co">#&gt; 2         c4a                  cols4all palettes (in development)</span></span>
-<span><span class="co">#&gt; 3       carto                          Palettes designed by CARTO</span></span>
+<span><span class="co">#&gt; 2       carto                          Palettes designed by CARTO</span></span>
+<span><span class="co">#&gt; 3    cols4all                                                &lt;NA&gt;</span></span>
 <span><span class="co">#&gt; 4         hcl  Palettes from the Hue Chroma Luminance color space</span></span>
 <span><span class="co">#&gt; 5      kovesi                   Palettes designed by Peter Kovesi</span></span>
 <span><span class="co">#&gt; 6  matplotlib         Palettes from the Python library matplotlib</span></span>
 <span><span class="co">#&gt; 7         met Palettes inspired by The Metropolitan Museum of Art</span></span>
 <span><span class="co">#&gt; 8        misc                              Miscellaneous palettes</span></span>
-<span><span class="co">#&gt; 9       miscs                                                &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 10      parks                 Palettes inspired by National Parks</span></span>
-<span><span class="co">#&gt; 11       poly               Qualitative palettes with many colors</span></span>
-<span><span class="co">#&gt; 12      scico     Scientific colour map palettes by Fabio Crameri</span></span>
-<span><span class="co">#&gt; 13    seaborn            Palettes from the Python library Seaborn</span></span>
-<span><span class="co">#&gt; 14    stevens                Bivariate palettes by Joshua Stevens</span></span>
-<span><span class="co">#&gt; 15    tableau                        Palettes designed by Tableau</span></span>
-<span><span class="co">#&gt; 16        tol                       Palettes designed by Paul Tol</span></span>
-<span><span class="co">#&gt; 17        wes                   Palettes from Wes Anderson movies</span></span></code></pre></div>
+<span><span class="co">#&gt; 9       parks                 Palettes inspired by National Parks</span></span>
+<span><span class="co">#&gt; 10       poly               Qualitative palettes with many colors</span></span>
+<span><span class="co">#&gt; 11      scico     Scientific colour map palettes by Fabio Crameri</span></span>
+<span><span class="co">#&gt; 12    seaborn            Palettes from the Python library Seaborn</span></span>
+<span><span class="co">#&gt; 13    stevens                Bivariate palettes by Joshua Stevens</span></span>
+<span><span class="co">#&gt; 14    tableau                        Palettes designed by Tableau</span></span>
+<span><span class="co">#&gt; 15        tol                       Palettes designed by Paul Tol</span></span>
+<span><span class="co">#&gt; 16        wes                   Palettes from Wes Anderson movies</span></span></code></pre></div>
 <p>How many palettes per type x series?</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/c4a_palettes.html">c4a_overview</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        series                                         description cat seq cyc</span></span>
 <span><span class="co">#&gt; 1      brewer                                ColorBrewer palettes   8  18  NA</span></span>
-<span><span class="co">#&gt; 2         c4a                  cols4all palettes (in development)   9  NA  NA</span></span>
-<span><span class="co">#&gt; 3       carto                          Palettes designed by CARTO   6  21  NA</span></span>
-<span><span class="co">#&gt; 4         hcl  Palettes from the Hue Chroma Luminance color space   9  23  NA</span></span>
+<span><span class="co">#&gt; 2       carto                          Palettes designed by CARTO   6  21  NA</span></span>
+<span><span class="co">#&gt; 3    cols4all                                                      14  NA  NA</span></span>
+<span><span class="co">#&gt; 4         hcl  Palettes from the Hue Chroma Luminance color space   9  23   6</span></span>
 <span><span class="co">#&gt; 5      kovesi                   Palettes designed by Peter Kovesi  NA  28   8</span></span>
 <span><span class="co">#&gt; 6  matplotlib         Palettes from the Python library matplotlib  NA  51   3</span></span>
 <span><span class="co">#&gt; 7         met Palettes inspired by The Metropolitan Museum of Art  33   8  NA</span></span>
-<span><span class="co">#&gt; 8        misc                              Miscellaneous palettes   1  NA  NA</span></span>
-<span><span class="co">#&gt; 9       miscs                                                       4  NA  NA</span></span>
-<span><span class="co">#&gt; 10      parks                 Palettes inspired by National Parks  22   5  NA</span></span>
-<span><span class="co">#&gt; 11       poly               Qualitative palettes with many colors   9  NA  NA</span></span>
-<span><span class="co">#&gt; 12      scico     Scientific colour map palettes by Fabio Crameri  21  21   5</span></span>
-<span><span class="co">#&gt; 13    seaborn            Palettes from the Python library Seaborn   6   4  NA</span></span>
-<span><span class="co">#&gt; 14    stevens                Bivariate palettes by Joshua Stevens  NA  NA  NA</span></span>
-<span><span class="co">#&gt; 15    tableau                        Palettes designed by Tableau  29  23  NA</span></span>
-<span><span class="co">#&gt; 16        tol                       Palettes designed by Paul Tol   8   8  NA</span></span>
-<span><span class="co">#&gt; 17        wes                   Palettes from Wes Anderson movies  23  NA  NA</span></span>
+<span><span class="co">#&gt; 8        misc                              Miscellaneous palettes   5  NA  NA</span></span>
+<span><span class="co">#&gt; 9       parks                 Palettes inspired by National Parks  22   5  NA</span></span>
+<span><span class="co">#&gt; 10       poly               Qualitative palettes with many colors   9  NA  NA</span></span>
+<span><span class="co">#&gt; 11      scico     Scientific colour map palettes by Fabio Crameri  21  21   5</span></span>
+<span><span class="co">#&gt; 12    seaborn            Palettes from the Python library Seaborn   6   4  NA</span></span>
+<span><span class="co">#&gt; 13    stevens                Bivariate palettes by Joshua Stevens  NA  NA  NA</span></span>
+<span><span class="co">#&gt; 14    tableau                        Palettes designed by Tableau  29  23  NA</span></span>
+<span><span class="co">#&gt; 15        tol                       Palettes designed by Paul Tol   8   8  NA</span></span>
+<span><span class="co">#&gt; 16        wes                   Palettes from Wes Anderson movies  23  NA  NA</span></span>
 <span><span class="co">#&gt;    div bivs bivc bivd bivg</span></span>
 <span><span class="co">#&gt; 1    9    2    2    1   NA</span></span>
-<span><span class="co">#&gt; 2    2    2   NA    2    5</span></span>
-<span><span class="co">#&gt; 3    7   NA   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 2    7   NA   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 3    2    2   NA    2    5</span></span>
 <span><span class="co">#&gt; 4   11   NA   NA   NA   NA</span></span>
 <span><span class="co">#&gt; 5   14   NA   NA   NA   NA</span></span>
 <span><span class="co">#&gt; 6   12   NA   NA   NA   NA</span></span>
 <span><span class="co">#&gt; 7   14   NA    1   NA   NA</span></span>
 <span><span class="co">#&gt; 8   NA   NA    3   NA   NA</span></span>
-<span><span class="co">#&gt; 9   NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 10   3   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 11  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 12  10   NA    2   NA    1</span></span>
-<span><span class="co">#&gt; 13   2   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 14  NA    5   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 15  28   NA    3   NA   NA</span></span>
-<span><span class="co">#&gt; 16   4   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 17   1   NA   NA   NA   NA</span></span></code></pre></div>
+<span><span class="co">#&gt; 9    3   NA   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 10  NA   NA   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 11  10   NA    2   NA    1</span></span>
+<span><span class="co">#&gt; 12   2   NA   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 13  NA    5   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 14  28   NA    3   NA   NA</span></span>
+<span><span class="co">#&gt; 15   4   NA   NA   NA   NA</span></span>
+<span><span class="co">#&gt; 16   1   NA   NA   NA   NA</span></span></code></pre></div>
 <p>What palettes are available, e.g diverging from the hcl series?</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Diverging palettes from the 'hcl' series</span></span>
