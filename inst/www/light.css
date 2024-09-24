@@ -50,11 +50,23 @@ input[type="checkbox"], input[type="radio"] {
 
 div.checkbox { padding: 0px; margin: 0px;}
 
-h4 {
-	margin-bottom: 6px !important;
-}
 
 .control-label {
+	margin-top: 0px !important;
+	font-size: 120% !important;
+	line-height: 1.1 !important;
+	font-weight: 700 !important;
+}
+
+.control-label2 {
+	margin-bottom: 5px !important;
+	font-size: 120% !important;
+	line-height: 1.1 !important;
+	font-weight: 700 !important;
+}
+
+.control-label3 {
+	margin-top: 10px !important;
 	font-size: 120% !important;
 	line-height: 1.1 !important;
 	font-weight: 700 !important;

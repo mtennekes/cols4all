@@ -43,9 +43,9 @@ get_z_n = function(z, n = NA, m = NA, filters = character(0), range = NA, colors
 			} else if (f == "naming") {
 				z3$nameable
 			} else if (f == "crW") {
-				z3$contrastWT
+				!z3$contrastWT
 			} else if (f == "crB") {
-				z3$contrastBK
+				!z3$contrastBK
 			}
 		})
 		fsel = Reduce("&", sels)

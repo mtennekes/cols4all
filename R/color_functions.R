@@ -23,7 +23,7 @@ colors_name = function(x, label = c("i", "H", "C", "L", "CRW", "CRB")) {
 	structure(x, names = round(df[[label]], 2))
 }
 
-get_dist_matrices = function(p, th = 15) {
+get_dist_matrices = function(p) {
 	#norm = cols4all:::get_dist_matrix(p, cvd = "none")
 
 	res = lapply(c("protan", "deutan", "tritan", "none"), function(cvd) {
@@ -86,72 +86,167 @@ colors_order = function(x, head = 1, weight_normal = 0) {
 	x[ids]
 }
 
-colors_cbf_set = function(x, k, plot = TRUE, dE_min = 10, columns = 2, cex = 1, required = NULL, top = 20, parallelize = NA) {
-	if (!is.list(required) && !is.null(required)) required = list(required)
 
-	ms = get_dist_matrices(x, th = dE_min)
-	n = length(x)
 
-	ncomb = choose(n,k)
 
-	message("There are ", ncomb, " combinations to check")
+colors_cbf_set = function(x, k = NA, option_list = NULL, plot = TRUE, dE_min = 10, columns = 2, cex = 1, required = NULL, top = 20, parallelize = NA, ncores = 4, batch.size = 2e7, max.size = 100e7, step = -1, dir = "temp", init = NULL) {
+	# step -1: initialize only (return init)
+	# step 0: all
+	# step 1, ... batch process
+	# step Inf, only combining results
+
+	if (step < 1 || is.null(init)) {
+		if (!is.list(required) && !is.null(required)) required = list(required)
+
+		stopifnot(!(is.na(k) && is.null(option_list)))
+
+
+		message("Step 0a: Initialize: calculating combinations")
+		n = length(x)
+
+		if (!is.null(option_list)) {
+			option_list = lapply(option_list, as.integer)
+			y = unname(t(do.call(expand.grid, option_list)))
+			ncomb = ncol(y)
+		} else {
+			ncomb = choose(n,k)
+		}
+
+		if (ncomb >= max.size) stop("Number of combinations is ", formatC(ncomb, format = "fg", big.mark = ","))
+
+		message("Number of combinations: ", formatC(ncomb, format = "fg", big.mark = ","))
+
+		if (is.null(option_list)) {
+			y = combn(1:n, k)
+
+			message("Starting now...")
+
+			if (!is.null(required)) {
+				sel = apply(y, MARGIN = 2, function(x) {
+					all(vapply(required, function(req) {
+						any(req %in% x)
+					}, FUN.VALUE = logical(1)))
+				})
+				message("After filtering by required colors ", ncol(y), " combinations are left")
+				y = y[, sel]
+
+			}
+		}
+
+		ny = ncol(y)
+
+		##
+		message("Step 0b: Create batch files")
+
+		start = seq(1, ny + batch.size, by = batch.size)
+		end = start[-1] - 1
+		start = head(start, -1)
+		if (end[length(end)] != ny) end[length(end)] = ny
+
+		bn = length(start)
+
+		if (!dir.exists(dir)) dir.create(dir)
+
+		fls = paste0(dir, "/k", k, "_batch_", 1L:bn, ".rds")
+
+		if (!all(file.exists(fls))) {
+			for (i in 1L:bn) {
+				ysel = y[, start[i]:end[i]]
+				saveRDS(ysel, file = fls[i])
+			}
+		}
+
+		rm(y)
+		gc()
+
+		if (step == -1) {
+			return(list(k = k,
+						x = x,
+						ny = ny,
+						start = start,
+						end = end,
+						dE_min = dE_min,
+						bn = bn,
+						fls = fls))
+		}
+	} else {
+		k = init$k
+		x = init$x
+		ny = init$ny
+		start = init$start
+		end = init$end
+		bn = init$bn
+		dE_min = init$dE_min
+		fls = init$fls
+	}
 
 	if (is.na(parallelize)) {
-		parallelize = ncomb > 1e7
+		parallelize = ny >= 1e7
 	}
 
-	y = combn(1:n, k)
 
-	message("Starting now...")
+	step = max(step, 1)
 
-	if (parallelize) {
-		message("In parallel")
-		ncores = parallel::detectCores()
-		cl = parallel::makeCluster(ncores)
-		on.exit(parallel::stopCluster(cl))
-	}
+	if (step != Inf) {
+		ms = get_dist_matrices(x)
 
-	if (!is.null(required)) {
-		sel = apply(y, MARGIN = 2, function(x) {
-			all(vapply(required, function(req) {
-				any(req %in% x)
-			}, FUN.VALUE = logical(1)))
+		if (parallelize) {
+			message("In parallel")
+			ncores = if (is.na(ncores)) parallel::detectCores() else ncores
+			cl = parallel::makeCluster(ncores)
+			on.exit(parallel::stopCluster(cl))
+		}
+
+		dfs = lapply(step:bn, function(s) {
+			message("Step ", s)
+			y = readRDS(fls[s])
+			if (parallelize) {
+				res = parallel::parApply(cl = cl, X = y, MARGIN = 2, function(yi) {
+					mins = vapply(ms, function(m) {
+						min(m[yi,yi], na.rm = TRUE)
+					}, FUN.VALUE = numeric(1))
+					which.min(mins) * 1000 + min(mins)
+				})
+			} else {
+				res = pbapply::pbapply(y, MARGIN = 2, function(yi) {
+					mins = vapply(ms, function(m) {
+						min(m[yi,yi], na.rm = TRUE)
+					}, FUN.VALUE = numeric(1))
+					which.min(mins) * 1000 + min(mins)
+				})
+
+			}
+			whichType = res %/% 1000
+			dE = res %% 1000
+
+			ids = which(dE > dE_min)
+
+			if (!length(ids)) {
+				message("maximum Delta E value is ", max(dE))
+				ids = which(dE >= floor(max(dE)))
+			}
+			df = cbind(as.data.frame(t(y[,ids])), dist = dE[ids], type = names(ms)[whichType[ids]])
+			saveRDS(df, paste0(dir, "/k", k, "_df_", s, ".rds"))
+			df
 		})
-		message("After filtering by required colors ", ncol(y2), " combinations are left")
-		y2 = y[, sel]
+		if (step > 1) {
+			dfs0 = lapply(1:(step-1), function(s) {
+				readRDS(paste0(dir, "/k", k, "_df_", s, ".rds"))
+			})
+			dfs = rbind(dfs0, dfs)
+		}
 	} else {
-		y2 = y
-	}
-
-
-	if (parallelize) {
-		res = parallel::parApply(cl = cl, X = y2, MARGIN = 2, function(yi) {
-			mins = vapply(ms, function(m) {
-				min(m[yi,yi], na.rm = TRUE)
-			}, FUN.VALUE = numeric(1))
-			which.min(mins) * 1000 + min(mins)
+		dfs = lapply(step:bn, function(s) {
+			readRDS(paste0(dir, "/k", k, "_df_", s, ".rds"))
 		})
-	} else {
-		res = pbapply::pbapply(y2, MARGIN = 2, function(yi) {
-			mins = vapply(ms, function(m) {
-				min(m[yi,yi], na.rm = TRUE)
-			}, FUN.VALUE = numeric(1))
-			which.min(mins) * 1000 + min(mins)
-		})
-
-	}
-	whichType = res %/% 1000
-	dE = res %% 1000
-
-	ids = which(dE > dE_min)
-
-	if (!length(ids)) {
-		message("maximum Delta E value is ", max(dE))
-		ids = which(dE >= floor(max(dE)))
 	}
 
-	df = cbind(as.data.frame(t(y2[,ids])), dist = dE[ids], type = names(ms)[whichType[ids]])
+
+	df = do.call(rbind, dfs)
+
 	df2 = df[order(df$dist, decreasing = TRUE), ]
+
+	message("Complete")
 
 	if (plot) {
 		if (nrow(df2) > top) {
@@ -171,14 +266,21 @@ colors_cbf_set = function(x, k, plot = TRUE, dE_min = 10, columns = 2, cex = 1, 
 	invisible(z)
 }
 
-colors_remove_twins = function(x, th = 2) {
+colors_remove_twins = function(x, th = 2, include.cvd = FALSE) {
 	n = length(x)
-	d = cols4all:::get_dist_matrix(x)
+
+	if (include.cvd) {
+		m = cols4all:::get_dist_matrices(x)
+		d = do.call(pmin, m)
+	} else {
+		d = cols4all:::get_dist_matrix(x)
+
+	}
+
 	d[lower.tri(d)] = NA
 	ids = which(d < th)
 	rids = ((ids - 1) %/% n) + 1
 	cids = ((ids - 1) %% n) + 1
-	intersect(cids, rids)
 	keeps = setdiff(cids, rids)
 	rem = setdiff(c(rids,cids), keeps)
 	remain = setdiff(1L:n, rem)

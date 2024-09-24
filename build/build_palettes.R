@@ -833,10 +833,10 @@ local({
 	pals_bivg = list(bu_bivg = bu2, yl_rd_bivg = yl_rd, br_bivg = bu_br_biv[8:10], pu_bivg = pu_gn_biv[4:2], gn_bivg = pu_gn_biv[8:10])
 
 
-	c4a_load(c4a_data(pals_div, types = "div", series = "c4a", space = "rgb"))
-	c4a_load(c4a_data(pals_bivs, types = "bivs", series = "c4a", biv.method = "div2seqseq", space = "rgb"))
-	c4a_load(c4a_data(pals_bivd, types = "bivd", series = "c4a", biv.method = "div2catseq", space = "rgb"))
-	c4a_load(c4a_data(pals_bivg, types = "bivg", series = "c4a", biv.method = "seq2uncseq", space = "rgb"))
+	c4a_load(c4a_data(pals_div, types = "div", series = "cols4all", space = "rgb"))
+	c4a_load(c4a_data(pals_bivs, types = "bivs", series = "cols4all", biv.method = "div2seqseq", space = "rgb"))
+	c4a_load(c4a_data(pals_bivd, types = "bivd", series = "cols4all", biv.method = "div2catseq", space = "rgb"))
+	c4a_load(c4a_data(pals_bivg, types = "bivg", series = "cols4all", biv.method = "seq2uncseq", space = "rgb"))
 
 	pals2 = list(pinkgreen = pals::stevens.pinkgreen(n = 9),
 				 bluered = pals::stevens.bluered(n = 9),
@@ -909,7 +909,7 @@ local({
 				line7 = c("#1F77B4", "#2CA02C", "#E73F74", "#6699CC", "#994F88", "#117733", "#D37295"),
 				line8 = c("#DC050C", "#1F77B4", "#117733", "#994F88", "#999933", "#D37295", "#6699CC", "#E73F74"),
 				line9 = c("#EE3377", "#1F77B4", "#117733", "#CF1C90", "#999933", "#994455", "#6699CC", "#D37295", "#DC050C"))
-	c4a_load(c4a_data(pals, types = "cat", series = "c4a"))
+	c4a_load(c4a_data(pals, types = "cat", series = "cols4all"))
 })
 
 
