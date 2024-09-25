@@ -193,8 +193,8 @@ do_cellspec = function(lst) {
 
 		types = c("Categorical" = "cat",
 				  "Sequential" = "seq",
-				  "Cyclic" = "cyc",
 				  "Diverging" = "div",
+				  "Cyclic" = "cyc",
 				  "Bivariate (sequential x sequential)" = "bivs",
 				  "Bivariate (sequential x categorical)" = "bivc",
 				  "Bivariate (sequential x diverging)" = "bivd",
@@ -202,8 +202,8 @@ do_cellspec = function(lst) {
 
 		types1 = c("Categorical" = "cat",
 				   "Sequential" = "seq",
-				   "Cyclic" = "cyc",
 				   "Diverging" = "div",
+				   "Cyclic" = "cyc",
 				   "Bivariate" = "biv")
 
 		types2 = list(biv = c("Sequential x sequential" = "bivs",

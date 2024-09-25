@@ -22,12 +22,16 @@ table_columns = function(type, show.scores) {
 		qn = c(qn, "chroma", "hues", "contrastWT", "contrastBK", "float")
 		qs = c(qs, "Cmax",  "HwidthLR", "CRwt", "CRbk", "Blues")
 		sn = c("HL", "HR", "Lmid")
-	} else {
-		# qn = c(qn, "nameable", "contrastWT", "contrastBK", "contrast", "float")
-		# qs = c(qs, "nameability", "CRwt", "CRbk", "CRmin", "Blues")
+	} else if (type == "cat") {
 		qn = c(qn, "hues", "chroma", "contrastWT", "contrastBK", "equiluminance", "float", "nameable")
 		qs = c(qs, "Hspread", "Cmax", "CRwt", "CRbk", "CRmin", "Blues", "nameability")
 		sn = character(0)
+	} else if (type == "bivc") {
+		qn = c(qn, "chroma", "contrastWT", "contrastBK", "equiluminance", "float", "nameable")
+		qs = c(qs, "Cmax", "CRwt", "CRbk", "CRmin", "Blues", "nameability")
+		sn = character(0)
+	} else {
+		stop("Unknown type")
 	}
 
 
