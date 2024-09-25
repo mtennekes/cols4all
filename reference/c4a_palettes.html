@@ -117,50 +117,50 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   type                          description</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  cat                          categorical</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  seq                           sequential</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  cyc                               cyclic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3  div                            diverging</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  cyc                               cyclic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 bivs  bivariate (sequential x sequential)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 bivc bivariate (sequential x categorical)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7 bivd   bivariate (sequential x diverging)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8 bivg bivariate (sequential x desaturated)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">c4a_overview</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        series                                         description cat seq cyc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      brewer                                ColorBrewer palettes   9  18  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       carto                          Palettes designed by CARTO   6  21  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    cols4all                                                      14  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4         hcl  Palettes from the Hue Chroma Luminance color space   9  23   6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      kovesi                   Palettes designed by Peter Kovesi  NA  28   8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  matplotlib         Palettes from the Python library matplotlib  NA  51   3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7         met Palettes inspired by The Metropolitan Museum of Art  33   8  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        series                                         description cat seq div</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      brewer                                ColorBrewer palettes   9  18   9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       carto                          Palettes designed by CARTO   6  21   7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    cols4all                                                      14  NA   2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4         hcl  Palettes from the Hue Chroma Luminance color space   9  23  11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      kovesi                   Palettes designed by Peter Kovesi  NA  28  14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  matplotlib         Palettes from the Python library matplotlib  NA  51  12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7         met Palettes inspired by The Metropolitan Museum of Art  33   8  14</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8        misc                              Miscellaneous palettes   5  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9       parks                 Palettes inspired by National Parks  22   5  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9       parks                 Palettes inspired by National Parks  22   5   3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10  pinkfloyd     Palettes extracted from Pink Floyd album covers  16  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11       poly               Qualitative palettes with many colors   9  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12      scico     Scientific colour map palettes by Fabio Crameri  21  21   5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13    seaborn            Palettes from the Python library Seaborn   6   4  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12      scico     Scientific colour map palettes by Fabio Crameri  21  21  10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13    seaborn            Palettes from the Python library Seaborn   6   4   2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 14    stevens                Bivariate palettes by Joshua Stevens  NA  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15    tableau                        Palettes designed by Tableau  29  23  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16        tol                       Palettes designed by Paul Tol   8   8  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17        wes                   Palettes from Wes Anderson movies  23  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    div bivs bivc bivd bivg</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    9    2    2    1   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    7   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2    2   NA    2    5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   11   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   14   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   12   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   14   NA    1   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15    tableau                        Palettes designed by Tableau  29  23  28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16        tol                       Palettes designed by Paul Tol   8   8   4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17        wes                   Palettes from Wes Anderson movies  23  NA   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    cyc bivs bivc bivd bivg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   NA    2    2    1   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   NA   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   NA    2   NA    2    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    6   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    8   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    3   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   NA   NA    1   NA   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8   NA   NA    3   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9    3   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   NA   NA   NA   NA   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10  NA   NA   NA   NA   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11  NA   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  10   NA    2   NA    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13   2   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12   5   NA    2   NA    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  NA   NA   NA   NA   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 14  NA    5   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15  28   NA    3   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16   4   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17   1   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  NA   NA    3   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  NA   NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  NA   NA   NA   NA   NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">c4a_palettes</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"cat"</span>, series <span class="op">=</span> <span class="st">"tol"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tol.bright"   "tol.contrast" "tol.vibrant"  "tol.muted"    "tol.medium"  </span>
