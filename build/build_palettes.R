@@ -12,6 +12,9 @@ library(ggthemes)
 library(reticulate) # to get seaborn
 library(Polychrome)
 library(MetBrewer)
+library(rvest)
+library(xml2)
+
 
 sessioninfo::session_info(pkgs = "attached")
 # colorblindcheck * 1.0.2   2023-05-13 [1] CRAN (R 4.4.0)
@@ -916,6 +919,50 @@ local({
 					friendly13 = c("#E73F74", "#F1CE63", "#77AADD", "#009988", "#9467BD", "#FF9D9A", "#99DDFF", "#AAAA00", "#225522", "#882255", "#997700", "#4B4B8F", "#8C564B"))
 	c4a_load(c4a_data(cols4all, types = "cat", series = "cols4all"))
 })
+
+local({
+
+
+	# scrape (date website 2024-07-12, scraped on 2024-09-25)
+	url <-"https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-report-themes"
+	url2 = "https://learn.microsoft.com/en-us/power-bi/create-reports"
+
+	webpage <- session(url)
+	link.titles <- webpage %>% html_nodes("img")
+	img.url <- link.titles[7:30] %>% html_attr("src")
+
+	fn = basename(img.url)
+
+	td = "build/bowerbi"
+	unlink(td, force = TRUE, recursive = TRUE)
+	dir.create(td)
+
+	fls = mapply(function(a, b) {
+		b2 = file.path(td, b)
+		download.file(paste(url2, a, sep = "/"), destfile = b2)
+		b2
+	}, img.url, fn)
+
+	pals = lapply(fls, function(f) {
+		p = png::readPNG(f)
+		rgb_codes = p[12, seq(15,230, length.out = 8), 1:3]
+		do.call(rgb, unname(as.list(as.data.frame(rgb_codes))))
+	})
+
+	# manual
+	nms = fn
+	nms[1:19] = substr(nms[1:19], 28, nchar(nms[1:19]) - 4)
+	nms[20:24] = paste0("accessible_", substr(nms[20:24], 18, nchar(nms[20:24]) - 4))
+	nms = sub("-", "_", nms, fixed = TRUE)
+
+	names(pals) = nms
+
+	ts = c(rep("cat", 6), rep("div", 4), "seq", rep("cat", 13))
+
+	c4a_load(c4a_data(pals, types = ts, series = "powerbi"), overwrite = T)
+
+})
+
 
 
 if (FALSE) {
