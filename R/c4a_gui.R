@@ -316,9 +316,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 															Luminance - 0 (black) to 100 (white)
 
-															Chroma - 0 (grayscale) to 70-180
-
-															<font size ='1'>Depends on H and L, see richt-hand side plotsL</font>
+															Chroma - 0 (grayscale) to max, which depends on H and L (see right-hand side)
 															")),
 								shiny::column(width = 3,
 											  infoBoxUI(title = "Maximum Chroma"),
@@ -1195,7 +1193,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		#############################
 
 		output$cr_title = shiny::renderUI({
-			shiny::markdown(paste0("#### Contrast ratios with ", ifelse(input$dark, "black", "white"), " (background))"))
+			shiny::markdown(paste0("#### Contrast ratios with ", ifelse(input$dark, "black", "white"), " (background)"))
 		})
 
 		output$ex_plus = shiny::renderPlot({

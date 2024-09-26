@@ -13,7 +13,6 @@ grid.t = function(text, x, y, scale = 1, bg = TRUE, r = 0.5, just = "center") {
 	nlines = length(strsplit(text, "\n", fixed = TRUE)[[1]])
 	if (bg) grid.roundrect(x = x, y = y, just = just, width = scale * (convertWidth(stringWidth(text), unitTo = "npc") + unit(3, "lines")), height = scale * (unit(nlines+max(0,(nlines-1)*0.5),"lines")), r = unit(r, "npc"), gp=gpar(col=NA, fill = "white"))
 	grid.text(text, x = x, y = y, just = just, gp = gpar(cex = 1.2 * scale, fontfamily = "xkcd", fontface = "bold"))
-
 }
 
 
@@ -230,7 +229,7 @@ for (scale in 1:2) {
 for (scale in 1:2) {
 	unlink("temp", recursive = T, force = T)
 	dir.create("temp")
-	for (i in 1:3) {
+	for (i in 1:2) {
 		png(paste0("temp/cl_plot", i, ".png"), width = 600*scale, height = 600*scale, bg = "transparent")
 		#c4a_plot_CL(c4a("brewer.set1", 7))
 		if (i >= 1) {
@@ -239,16 +238,39 @@ for (scale in 1:2) {
 		if (i >= 2) {
 			grid.t("Vertical axes:\nhow bright are the colors?", 0.2, 0.3, scale, bg = FALSE)
 		}
-		if (i >= 3) {
-			grid.t("Fairness: do the palette colors stand out about equally?", 0.7, 0.26, scale, bg = TRUE)
-			grid.t("High chroma colors stand out more than 'pastel' colors", 0.7, 0.22, scale, bg = TRUE)
-			grid.t("Dark colors stand out more against a white background", 0.7, 0.18, scale, bg = TRUE)
-			grid.t("Bright colors stand out more against a black background", 0.7, 0.14, scale, bg = TRUE)
-		}
+
 
 		dev.off()
 	}
 	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 600*scale, height = 600*scale, delay = 1.5, gif_file = paste0("inst/img/cl_plot", scale, "x.gif"), loop = FALSE)
+}
+
+################################
+#### fairness plot #################
+################################
+for (scale in 1:2) {
+	unlink("temp", recursive = T, force = T)
+	dir.create("temp")
+	for (i in 1:4) {
+		png(paste0("temp/fair_plot", i, ".png"), width = 600*scale, height = 600*scale, bg = "transparent")
+		#c4a_plot_CL(c4a("brewer.set1", 7))
+		if (i >= 1) {
+			grid.t("Fairness: do the palette colors stand out about equally?", 0.3, 0.85, scale, bg = FALSE, just = "left")
+		}
+
+		if (i >= 2) {
+			grid.t("The lower the chroma range -x axis- the more colors are equally saturated: fair", 0.5, 0.07, scale, bg = FALSE)
+		}
+		if (i >= 3) {
+			grid.t("The lower the luminance range (y axis), the more colors are equally bright: fair", 0.05, 0.2, scale, bg = FALSE, just = "left")
+		}
+		if (i >= 4) {
+			grid.t("So the higher the score, the fairer the color palette is!", 0.3, 0.75, scale, bg = FALSE, just = "left")
+		}
+
+		dev.off()
+	}
+	gifski::gifski(png_files = list.files(path = "temp", full.names = TRUE), width = 600*scale, height = 600*scale, delay = 1.5, gif_file = paste0("inst/img/fair_plot", scale, "x.gif"), loop = FALSE)
 }
 
 ################################
