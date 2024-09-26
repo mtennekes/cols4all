@@ -314,12 +314,15 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 															Hue - in degrees (0 to 360)
 
-															Chroma - in the range (0 to 100 or above*)
+															Luminance - 0 (black) to 100 (white)
 
-															Luminance - in the range (0 to 100)
+															Chroma - 0 (grayscale) to 70-180
 
-															<font size ='1'>*The maximum C depends on H and L</font>
-															"))),
+															<font size ='1'>Depends on H and L, see richt-hand side plotsL</font>
+															")),
+								shiny::column(width = 3,
+											  infoBoxUI(title = "Maximum Chroma"),
+											  shiny::img(src = "imgResources/max_chromax1.png", srcset = "imgResources/max_chromax2.png 1x, imgResources/max_chromax2.png 2x"))),
 							shiny::fluidRow(
 								shiny::column(width = 6,
 											  infoBoxUI("infoCL", "Chroma-Luminance"),

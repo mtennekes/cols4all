@@ -17,7 +17,6 @@
 c4a_plot = function(palette, ..., dark = FALSE, include.na = FALSE, hex = FALSE, include.cvd = FALSE, nrows = NA, ncols = NA) {
 	args = list(...)
 
-	if (hex) names(palette) = palette
 	nms = names(palette)
 
 	if (length(palette) == 1L) {
@@ -25,6 +24,7 @@ c4a_plot = function(palette, ..., dark = FALSE, include.na = FALSE, hex = FALSE,
 		if (is.null(pal)) {
 			pal = validate_colors(palette, name = "palette")
 		} else {
+			nms = NULL
 			if (is.matrix(pal)) {
 				ncols = ncol(pal)
 				pal = t(pal)
@@ -34,6 +34,13 @@ c4a_plot = function(palette, ..., dark = FALSE, include.na = FALSE, hex = FALSE,
 	} else {
 		pal = validate_colors(palette, name = "palette")
 	}
+
+	if (hex) {
+		nms = unname(pal)
+		names(pal) = nms
+	}
+
+
 
 	if (is.null(pal)) return(invisible(NULL))
 
