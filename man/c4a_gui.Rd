@@ -11,7 +11,7 @@ c4a_table(
   type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"),
   n = NULL,
   m = NULL,
-  n.only = FALSE,
+  filters = character(0),
   cvd.sim = c("none", "deutan", "protan", "tritan"),
   sort = "name",
   text.format = "hex",
@@ -32,7 +32,7 @@ c4a_table(
 
 \item{series}{Series of palettes to show. See \code{\link{c4a_series}} for options. By default, \code{"all"}, which means all series. For \code{c4a_gui} it only determines which series are shown initially.}
 
-\item{n.only}{should only palettes be contained that have exactly \code{n.only} colors (\code{FALSE} by default)}
+\item{filters}{filters to be applied. A character vector with a subset from:\code{"nmax"} (only palettes where \code{n = nmax}, which is only applicable for categorical palettes),  \code{"cbf"} (colorblind-friendly), \code{"fair"} (fairness),\code{"naming"} (nameability),  \code{"crW"} (sufficient contrast ratio with white), and \code{"crB"} (sufficient contrast ratio with black). By default an empty vector, so no filters are applied.}
 
 \item{cvd.sim}{color vision deficiency simulation: one of \code{"none"}, \code{"deutan"}, \code{"protan"}, \code{"tritan"}}
 

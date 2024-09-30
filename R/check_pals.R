@@ -11,16 +11,35 @@ check_div_pal = function(p) {
 	nh = floor(n/2)
 
 	# needed for inter_wing_dist
-	p2 = c(rampPal(p[1:nh], 9), rampPal(p[(nh+1+(!is_even)):n], 9))
-	n2 = 18
-	nh2 = n2 / 2
+
+	# 1 2 3 4 5 6 7
+	# create two wings of n2/2
+	n2 = 50
+	p2 = c(rampPal(p[1:(nh+1) ], n2/2), rampPal(p[(nh+(!is_even)):n], n2/2))
+
+	# left wing: 1...nh1_scaled, right wing nh2_scaled ... n2
+	nh1 = (n - is_even) / 2
+	nh2 = nh1 + 1 + is_even
+
+
+	nh1b = floor(nh1)
+	nh2b = ceiling(nh2)
+
+	scale = function(id) ((id - 1) / (n - 1)) * (n2 - 1) + 1
+
+	nh1_scaled = floor(scale(nh1))
+	nh2_scaled = ceiling(scale(nh2))
+
+	nh1b_scaled = floor(scale(nh1b))
+	nh2b_scaled = ceiling(scale(nh2b))
 
 	cvds = c("deutan", "protan", "tritan")
 
 	scores = t(sapply(cvds, function(cvd) {
 		inter_wing_dist = local({
 			dm = get_dist_matrix(p2, cvd = cvd)
-			min(dm[1:nh2, (nh2+1):n2])
+			min(dm[1:nh1b_scaled, nh2_scaled:n2])
+			min(dm[1:nh1_scaled, nh2b_scaled:n2])
 		})
 
 		min_step_size = local({

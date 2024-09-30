@@ -12,7 +12,7 @@
 #' @rdname c4a_palettes
 #' @name c4a_palettes
 #' @export
-c4a_palettes = function(type = c("all", "cat", "seq", "div", "cyc"), series = NULL, full.names = TRUE) {
+c4a_palettes = function(type = c("all", "cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), series = NULL, full.names = TRUE) {
 	type = match.arg(type)
 	z = .C4A$z
 	if (is.null(z)) {

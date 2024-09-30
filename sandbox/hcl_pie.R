@@ -23,6 +23,14 @@ add_coords = function(df, height = .6, amp_s = 0.48, amp_c = 0.30) {
 	})
 }
 
+add_coords2= function(df, width = 180) {
+	df = within(df, {
+		x = sin(H / 180 * pi) * (C / 180) * width
+		y = cos(H / 180 * pi) * (C / 180) * width
+	})
+}
+
+
 df = add_coords(df)
 
 df$col = hcl(df$H, df$C, df$L)
@@ -66,3 +74,19 @@ for (scale in 1:2) {
 	grid.lines(a$x[8:nrow(a)], a$y[8:nrow(a)], arrow = arrow(length = unit(6 * lwd, "point")), gp = gpar(lwd = lwd*scale))
 	dev.off()
 }
+
+
+
+
+### HCL rock
+
+library(plotly)
+# volcano is a numeric matrix that ships with R
+fig <- plot_ly(z = ~volcano)
+fig <- fig %>% add_surface()
+
+fig
+
+
+
+#hdf = hdf[hdf$C <= 50 & hdf$L <= 80 & hdf$L >= 20, ]

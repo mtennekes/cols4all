@@ -689,8 +689,8 @@ local({
 	divc = list(winter_biv = tab_cat$Winter)
 	c4a_load(c4a_data(divc, types = "bivc", series = "tableau", biv.method = "bycol5"))
 
-	divc2 = list('20_div' = tab_cat$'20',
-				classic20_div = tab_cat$'Classic 20')
+	divc2 = list('20_biv' = tab_cat$'20',
+				classic20_biv = tab_cat$'Classic 20')
 	c4a_load(c4a_data(divc2, types = "bivc", series = "tableau", biv.method = "bycol10"))
 
 })
@@ -773,8 +773,8 @@ local({
 ########################################################################################
 #c4a_palettes_remove(series = "c4a")
 local({
-	bu2 = c4a("hcl.blues3", n = 5, range = c(0.3, 0.8))
-	yl_rd = c4a("hcl.red_yellow", n = 5, range = c(0.3, 0.8))
+	bu2 = c4a("-hcl.blues3", n = 5, range = c(0.3, 0.8))
+	yl_rd = c4a("-hcl.red_yellow", n = 5, range = c(0.3, 0.8))
 	pg = hcl.colors(11, "Purple-Green")
 	bu = hcl.colors(9, "Blues 3")[7:3]
 	gn = hcl.colors(9, "Greens 3")[7:3]

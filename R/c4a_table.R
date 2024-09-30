@@ -146,7 +146,8 @@ prep_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd
 	zn$nlines = ((zn$n * m -1) %/% columns) + 1
 
 	if (substr(type, 1, 3) == "biv") {
-		zn$palette = lapply(zn$palette, function(p) as.vector(t(p[nrow(p):1L,])))
+		#zn$palette = lapply(zn$palette, function(p) as.vector(t(p[nrow(p):1L,])))
+		zn$palette = lapply(zn$palette, function(p) as.vector(t(p)))
 	}
 	list(zn = zn, n = n, m = m, columns = columns, type = type, qn = qn, ql = ql)
 }
@@ -440,7 +441,6 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #'
 #' @param type type of palette. Run \code{\link{c4a_types}} to see the implemented types and their description. For `c4a_gui` it only determines which type is shown initially.
 #' @param n,m `n` is the number of displayed colors. For bivariate palettes `"biv"`, `n` and `m` are the number of columns and rows respectively. If omitted: for `"cat"` the full palette is displayed, for `"seq"` and `"div"`, 9 colors, and for `"bivs"`/`"bivc"`/`"bivd"`/`"bivg"` 4 columns and rows. For `c4a_gui` it only determines which number of colors initially.
-#' @param n.only should only palettes be contained that have exactly `n.only` colors (`FALSE` by default)
 #' @param filters filters to be applied. A character vector with a subset from:`"nmax"` (only palettes where `n = nmax`, which is only applicable for categorical palettes),  `"cbf"` (colorblind-friendly), `"fair"` (fairness),`"naming"` (nameability),  `"crW"` (sufficient contrast ratio with white), and `"crB"` (sufficient contrast ratio with black). By default an empty vector, so no filters are applied.
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @param sort column name to sort the data. The available column names depend on the arguments `type` and `show.scores`. They are listed in the warning message. Use a `"-"` prefix to reverse the order.

@@ -124,6 +124,53 @@ rdata = c(rdata, local({
 
 	list(lines.x = x,
 		 lines.s = s)
+}), local({
+	require(colorspace)
+	require(volcano3D) # for polar grid
+
+	add_coords2= function(df, width = 180) {
+		df = within(df, {
+			x = sin(H / 180 * pi) * (C / 180) * width
+			y = cos(H / 180 * pi) * (C / 180) * width
+		})
+	}
+
+	hdf_all = expand.grid(H = seq(0, 360, by = 1),
+						  L = seq(0, 100, by = 0.5),
+						  Crel = seq(0, 1, by = 0.05))
+	hdf_all$Cmax = colorspace::max_chroma(h = hdf_all$H, l = hdf_all$L)
+	hdf_all$C = hdf_all$Crel * hdf_all$Cmax
+	hdf_all$hex = hcl(hdf_all$H, hdf_all$C, hdf_all$L)
+
+	hdf_all = hdf_all[!duplicated(hdf_all$hex), ]
+
+	hdf_all$prob = ifelse(hdf_all$C == hdf_all$Cmax, 0.8, 0.01)
+
+
+	rgb_extremes = c("#FF0000", "#00FF00", "#0000FF")
+	hcl_extremes = as.data.frame((hex2RGB(rgb_extremes) |> as("polarLUV"))@coords)[,3:1]
+	hcl_extremes2 = data.frame(H = hcl_extremes$H,
+							   L = hcl_extremes$L,
+							   Crel = 1,
+							   Cmax = hcl_extremes$C,
+							   C = hcl_extremes$C,
+							   hex = rgb_extremes,
+							   prob = 1e15)
+	hdf_all = rbind(hcl_extremes2, hdf_all)
+
+
+	hdf_all = add_coords2(hdf_all)
+	hdf_all$text = paste0(hdf_all$hex, "\n", "H ", round(hdf_all$H), ", C ", round(hdf_all$C), ", L ", round(hdf_all$L))
+
+
+	hdf = hdf_all[sample(nrow(hdf_all),10000, prob = hdf_all$prob),]
+	hdf_pg = polar_grid(r_axis_ticks = c(0, 45, 90, 135, 180),#seq(0, 180, by = 45),
+						z_axis_ticks = seq(0, 100, by = 20))
+
+
+	list(hdf = hdf,
+		 hdf_pg = hdf_pg )
+
 }))
 
 

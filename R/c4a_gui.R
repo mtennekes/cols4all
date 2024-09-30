@@ -52,7 +52,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 	ani_off = shiny::icon("circle-xmark", "fa-2x fa-solid", verify_fa = FALSE)
 	ani_on = shiny::icon("circle-info", "fa-2x fa-light", verify_fa = FALSE)
 
-	if (!check_installed_packages(c("shiny", "shinyjs", "kableExtra", "colorblindcheck"))) return(invisible(NULL))
+	if (!check_installed_packages(c("shiny", "shinyjs", "kableExtra", "colorblindcheck", "plotly"))) return(invisible(NULL))
 
 
 	shiny::addResourcePath(prefix = "imgResources", directoryPath = system.file("img", package = "cols4all"))
@@ -303,24 +303,19 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 								shiny::column(width = 12,
 											  shiny::selectizeInput("CLPal", "Palette", choices = init_pal_list))),
 							shiny::fluidRow(
+								shiny::column(width = 4,
+											  infoBoxUI(title = "HCL space"),
+											  shiny::sliderInput("rangeH", min = 0, max = 360, value = c(0, 360), step = 10, label = "Hue"),
+											  shiny::sliderInput("rangeC", min = 0, max = 180, value = c(0, 180), step = 10, label = "Chroma"),
+											  shiny::sliderInput("rangeL", min = 0, max = 100, value = c(0, 100), step = 10, label = "Luminance"),
+											  shiny::checkboxInput("hclspacepal", "Palette colors", FALSE)),
+								shiny::column(width = 8,
+											  plotly::plotlyOutput("hclspace", height = "600px"))
+											  ),
+							shiny::fluidRow(
 								shiny::column(width = 6,
 											  infoBoxUI("infoHUE", "Hue necklace"),
-											  plotOverlay("anaHUE", width = "400px", height = "400px", "aniHUE")),
-								shiny::column(width = 3,
-											  infoBoxUI(title = "HCL space"),
-											  shiny::img(src = "imgResources/hcl_spacex1.png", srcset = "imgResources/hcl_spacex1.png 1x, imgResources/hcl_spacex2.png 2x"),
-											  shiny::markdown("
-															**Dimensions**
-
-															Hue - in degrees (0 to 360)
-
-															Luminance - 0 (black) to 100 (white)
-
-															Chroma - 0 (grayscale) to max, which depends on H and L (see right-hand side)
-															")),
-								shiny::column(width = 3,
-											  infoBoxUI(title = "Maximum Chroma"),
-											  shiny::img(src = "imgResources/max_chromax1.png", srcset = "imgResources/max_chromax2.png 1x, imgResources/max_chromax2.png 2x"))),
+											  plotOverlay("anaHUE", width = "400px", height = "400px", "aniHUE"))),
 							shiny::fluidRow(
 								shiny::column(width = 6,
 											  infoBoxUI("infoCL", "Chroma-Luminance"),
@@ -645,7 +640,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		output$nbivUI = shiny::renderUI({
 			type = get_type12()
-			shiny::sliderInput("nbiv", "Number of columns", min = 3, max = ifelse(type == "bivc", 10, 7), value = 3, ticks = FALSE)
+			shiny::sliderInput("nbiv", "Number of columns", min = 2, max = ifelse(type == "bivc", 10, 7), value = 3, ticks = FALSE)
 		})
 
 		output$filtersUI = shiny::renderUI({
@@ -1145,6 +1140,22 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 		#############################
 		## HCL analysis tab
 		#############################
+
+		output$hclspace = plotly::renderPlotly({
+
+			Hr = input$rangeH
+			Cr = input$rangeC
+			Lr = input$rangeL
+
+
+			pal = if (input$hclspacepal) {
+				tab_vals$pal
+			} else NULL
+			c4a_plot_hcl_space(Hmin = Hr[1], Hmax = Hr[2],
+							   Cmin = Cr[1], Cmax = Cr[2],
+							   Lmin = Lr[1], Lmax = Lr[2],
+							   colors = pal)
+		})
 
 
 		output$anaHUE = shiny::renderPlot({
