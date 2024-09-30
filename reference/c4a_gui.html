@@ -45,7 +45,7 @@
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cat"</span>, <span class="st">"seq"</span>, <span class="st">"div"</span>, <span class="st">"cyc"</span>, <span class="st">"bivs"</span>, <span class="st">"bivc"</span>, <span class="st">"bivd"</span>, <span class="st">"bivg"</span><span class="op">)</span>,</span>
 <span>  n <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  m <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  n.only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  filters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  cvd.sim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"deutan"</span>, <span class="st">"protan"</span>, <span class="st">"tritan"</span><span class="op">)</span>,</span>
 <span>  sort <span class="op">=</span> <span class="st">"name"</span>,</span>
 <span>  text.format <span class="op">=</span> <span class="st">"hex"</span>,</span>
@@ -76,8 +76,8 @@
 <dd><p>Series of palettes to show. See <code><a href="c4a_palettes.html">c4a_series</a></code> for options. By default, <code>"all"</code>, which means all series. For <code>c4a_gui</code> it only determines which series are shown initially.</p></dd>
 
 
-<dt id="arg-n-only">n.only<a class="anchor" aria-label="anchor" href="#arg-n-only"></a></dt>
-<dd><p>should only palettes be contained that have exactly <code>n.only</code> colors (<code>FALSE</code> by default)</p></dd>
+<dt id="arg-filters">filters<a class="anchor" aria-label="anchor" href="#arg-filters"></a></dt>
+<dd><p>filters to be applied. A character vector with a subset from:<code>"nmax"</code> (only palettes where <code>n = nmax</code>, which is only applicable for categorical palettes),  <code>"cbf"</code> (colorblind-friendly), <code>"fair"</code> (fairness),<code>"naming"</code> (nameability),  <code>"crW"</code> (sufficient contrast ratio with white), and <code>"crB"</code> (sufficient contrast ratio with black). By default an empty vector, so no filters are applied.</p></dd>
 
 
 <dt id="arg-cvd-sim">cvd.sim<a class="anchor" aria-label="anchor" href="#arg-cvd-sim"></a></dt>
