@@ -27,7 +27,7 @@ get_dist_matrices = function(p) {
 	#norm = cols4all:::get_dist_matrix(p, cvd = "none")
 
 	res = lapply(c("protan", "deutan", "tritan", "none"), function(cvd) {
-		m = cols4all:::get_dist_matrix(p, cvd = cvd)
+		m = get_dist_matrix(p, cvd = cvd)
 		m
 	})
 	names(res) = c("protan", "deutan", "tritan", "normal")
@@ -270,10 +270,10 @@ colors_remove_twins = function(x, th = 2, include.cvd = FALSE) {
 	n = length(x)
 
 	if (include.cvd) {
-		m = cols4all:::get_dist_matrices(x)
+		m = get_dist_matrices(x)
 		d = do.call(pmin, m)
 	} else {
-		d = cols4all:::get_dist_matrix(x)
+		d = get_dist_matrix(x)
 
 	}
 

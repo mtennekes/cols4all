@@ -6,11 +6,17 @@ def_n = function(npref = NA, type, series, tab_nmin, tab_nmax) {
 
 	if (is.na(npref)) npref = switch(type, cat = 7, seq = 7, div = 9, 3)
 	if (is.infinite(nmax)) nmax = 15
-	if (nmin < 2) nmin = 2
+
+	if (type == "div") {
+		if (nmin < 3) nmin = 3
+		if (npref < 3) npref = 3
+	} else {
+		if (nmin < 2) nmin = 2
+	}
 
 	n = if (is.infinite(nmin)) {
 		npref # should not happen or else throw a message elsewhere
-	} else if (nmin < npref && nmax > npref) {
+	} else if (nmin <= npref && nmax >= npref) {
 		npref
 	} else if (is.infinite(nmax)) {
 		nmin

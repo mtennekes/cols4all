@@ -32,7 +32,7 @@ c4a_plot_CR = function(p, dark = FALSE, title = FALSE, sort = FALSE, lines_WCAG 
 	}
 
 	if (lines_equiluminance) {
-		crm = cols4all:::get_CR_matrix(p)
+		crm = get_CR_matrix(p)
 		els = which(crm <= 1.2)
 		if (length(els)) {
 			eldf = data.frame(c1 = (els-1) %/% length(p) + 1,

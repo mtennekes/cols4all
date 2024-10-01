@@ -454,12 +454,12 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #' @param columns number of columns. By default equal to `n` or, if not specified, 12. Cannot be higher than the palette lengths.
 #' @param verbose should messages and warnings be printed?
 #' @import colorspace abind
-#' @importFrom grDevices hcl dev.size
-#' @importFrom stats lm predict
-#' @importFrom utils tail head
+#' @importFrom grDevices hcl dev.size contourLines
+#' @importFrom stats lm predict dbeta
+#' @importFrom utils tail head combn
 #' @importFrom png readPNG
 #' @importFrom stats rnorm runif
-#' @importFrom graphics barplot lines par
+#' @importFrom graphics barplot lines par abline axis
 #' @example ./examples/c4a_table.R
 #' @seealso References of the palettes: \code{\link{cols4all-package}}.
 #' @export

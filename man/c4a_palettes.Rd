@@ -13,7 +13,7 @@ An object of class \code{environment} of length 17.
 }
 \usage{
 c4a_palettes(
-  type = c("all", "cat", "seq", "div", "cyc"),
+  type = c("all", "cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"),
   series = NULL,
   full.names = TRUE
 )

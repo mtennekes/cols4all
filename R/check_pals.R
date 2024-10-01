@@ -83,7 +83,7 @@ check_bivs_pal = function(p) {
 	x1d = check_div_pal(c(rev(p1[-1]), pd))
 	x2d = check_div_pal(c(rev(p2[-1]), pd))
 
-	sc = pmin(x12, x1d, x2d)[1:2]
+	sc = pmin(x12, x1d, x2d)[1:3]
 
 	p2 = c(as.vector(p[lower.tri(p)]), p[1,1], as.vector(p[upper.tri(p)]))
 
@@ -124,7 +124,7 @@ check_bivd_pal = function(p) {
 	x12 = check_div_pal(c(rev(p[,c1]), "#FFFFFF", p[,c2]))
 	x23 = check_div_pal(c(rev(p[,c2]), "#FFFFFF", p[,c3]))
 
-	sc = pmin(x12, x13, x23)[1:2]
+	sc = pmin(x12, x13, x23)[1:3]
 
 	p2 = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
 	prop = hcl_prop(p2)
@@ -134,7 +134,7 @@ check_bivd_pal = function(p) {
 }
 
 check_bivg_pal = function(p) {
-	sc = check_div_pal(c(rev(p[,1]), "#FFFFFF", p[,ncol(p)]))[1:2]
+	sc = check_div_pal(c(rev(p[,1]), "#FFFFFF", p[,ncol(p)]))[1:3]
 
 	p2 = c(rev(p[, 1]), p[1, round((ncol(p)+1)/2)], p[, ncol(p)])
 	prop = hcl_prop(p2)

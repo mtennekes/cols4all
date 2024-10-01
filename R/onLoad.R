@@ -148,13 +148,13 @@ do_cellspec = function(lst) {
 
 		# unfriendly (rolling eyes)
 		CBU_th = list(cat = c(min_dist = 2),
-					  seq = c(min_dist = 1, tri_ineq = 0),
-					  cyc = c(min_dist = 1, tri_ineq = 0),
-					  div = c(inter_wing_dist = 4, min_step = 1, tri_ineq = 0),
-					  bivs = c(inter_wing_dist = 3, min_step = 1, tri_ineq = 0),
+					  seq = c(min_dist = 2, tri_ineq = 0),
+					  cyc = c(min_dist = 2, tri_ineq = 0),
+					  div = c(inter_wing_dist = 4, min_step = 2, tri_ineq = 0),
+					  bivs = c(inter_wing_dist = 3, min_step = 2, tri_ineq = 0),
 					  bivc = c(min_dist = 2),
-					  bivd = c(inter_wing_dist = 3, min_step = 1, tri_ineq = 0),
-					  bivg = c(inter_wing_dist = 3, min_step = 1, tri_ineq = 0))
+					  bivd = c(inter_wing_dist = 3, min_step = 2, tri_ineq = 0),
+					  bivg = c(inter_wing_dist = 3, min_step = 2, tri_ineq = 0))
 
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
 
