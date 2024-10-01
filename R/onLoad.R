@@ -131,30 +131,30 @@ do_cellspec = function(lst) {
 	with(.C4A,{
 		defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple_green", bivs = "c4a.bu_br_bivs", bivc = "met_monet", bivd = "c4a.pu_gn_bivd", bivg = "c4a.br_bivg")
 
-		score_x100 = c("min_dist", "min_step", "max_step", "inter_wing_dist", "CRmin", "CRwt", "CRbk", "Blues")
+		score_x100 = c("min_dist", "min_step", "max_step", "inter_wing_dist", "tri_ineq", "CRmin", "CRwt", "CRbk", "Blues")
 
 		#color-blind-friendly thresholds
 		CBF_th = list(cat = c(min_dist = 10),
-					  seq = c(min_dist = 5),
-					  cyc = c(min_dist = 5),
-					  div = c(inter_wing_dist = 10, min_step = 5),
-					  bivs = c(inter_wing_dist = 7, min_step = 3),
+					  seq = c(min_dist = 5, tri_ineq = 2),
+					  cyc = c(min_dist = 5, tri_ineq = 2),
+					  div = c(inter_wing_dist = 10, min_step = 5, tri_ineq = 2),
+					  bivs = c(inter_wing_dist = 7, min_step = 3, tri_ineq = 1),
 					  bivc = c(min_dist = 10),
-					  bivd = c(inter_wing_dist = 7, min_step = 3),
-					  bivg = c(inter_wing_dist = 7, min_step = 3))
+					  bivd = c(inter_wing_dist = 7, min_step = 3, tri_ineq = 1),
+					  bivg = c(inter_wing_dist = 7, min_step = 3, tri_ineq = 1))
 
 		#color-blind-very-friendly thresholds
 		CBVF_th = list(cat = c(min_dist = 15))
 
 		# unfriendly (rolling eyes)
 		CBU_th = list(cat = c(min_dist = 2),
-					  seq = c(min_dist = 1),
-					  cyc = c(min_dist = 1),
-					  div = c(inter_wing_dist = 4, min_step = 1),
-					  bivs = c(inter_wing_dist = 3, min_step = 1),
+					  seq = c(min_dist = 1, tri_ineq = 0),
+					  cyc = c(min_dist = 1, tri_ineq = 0),
+					  div = c(inter_wing_dist = 4, min_step = 1, tri_ineq = 0),
+					  bivs = c(inter_wing_dist = 3, min_step = 1, tri_ineq = 0),
 					  bivc = c(min_dist = 2),
-					  bivd = c(inter_wing_dist = 3, min_step = 1),
-					  bivg = c(inter_wing_dist = 3, min_step = 1))
+					  bivd = c(inter_wing_dist = 3, min_step = 1, tri_ineq = 0),
+					  bivg = c(inter_wing_dist = 3, min_step = 1, tri_ineq = 0))
 
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
 
@@ -189,7 +189,8 @@ do_cellspec = function(lst) {
 			   "nameability",
 			   "min_step",
 			   "max_step",
-			   "inter_wing_dist")
+			   "inter_wing_dist",
+			   "tri_ineq")
 
 		types = c("Categorical" = "cat",
 				  "Sequential" = "seq",
@@ -222,13 +223,13 @@ do_cellspec = function(lst) {
 		mdef = c(cat = 1, seq = 1, cyc = 1, div = 1, bivc = 3, bivs = NA, bivd = 3, bivg  = 3) # NA meaning same as ndef
 
 		CB_ranges = list(cat = list(min_dist = c(0, 20)),
-						 seq = list(min_dist = c(0, 20)),
-						 cyc = list(min_dist = c(0, 20)),
-						 div = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)),
-						 bivs = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)),
+						 seq = list(min_dist = c(0, 20), tri_ineq = c(-50, 50)),
+						 cyc = list(min_dist = c(0, 20), tri_ineq = c(-50, 50)),
+						 div = list(inter_wing_dist = c(0, 20), min_step = c(0, 20), tri_ineq = c(-50, 50)),
+						 bivs = list(inter_wing_dist = c(0, 20), min_step = c(0, 20), tri_ineq = c(-50, 50)),
 						 bivc = list(min_dist = c(0, 20)),
-						 bivd = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)),
-						 bivg = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)))
+						 bivd = list(inter_wing_dist = c(0, 20), min_step = c(0, 20), tri_ineq = c(-50, 50)),
+						 bivg = list(inter_wing_dist = c(0, 20), min_step = c(0, 20), tri_ineq = c(-50, 50)))
 
 		Ohter_ranges = list(C = c(0, 180, 5),
 							L = c(0, 100, 5),
@@ -245,7 +246,7 @@ do_cellspec = function(lst) {
 		# for table (with derived variables)
 		hcl2 = c("Cmax", "H", "HL", "HR", "Lmid", "Hwidth", "Hspread", "HwidthL", "HwidthR", "Lrange", "Crange", "fairness", "CRmin", "CRwt", "CRbk")
 
-		sortRev = c("cbfriendly", "harmonyRank", "fairness", "Cmax", "min_dist", "nameability", "Lmid", "Hwidth", "Hspread", "HwidthL", "HwidthR", "nmax", "CRwt", "CRbk", "Blues")
+		sortRev = c("cbfriendly", "harmonyRank", "fairness", "Cmax", "min_dist", "tri_ineq", "nameability", "Lmid", "Hwidth", "Hspread", "HwidthL", "HwidthR", "nmax", "CRwt", "CRbk", "Blues")
 
 		# naming_fun = "naming_dist_centroid"
 		# naming_colors = c(Green = "#859F68",
@@ -275,6 +276,7 @@ do_cellspec = function(lst) {
 				   min_step = "Minimum step",
 				   max_step = "Maximum step",
 				   inter_wing_dist = "Inter-wing-distance",
+				   tri_ineq = "Triangle inequality",
 				   Crel = "Chroma (rel) max",
 				   Cmax = "Chroma max",
 				   H = "Hue middle",

@@ -104,29 +104,29 @@ get_friendlyness = function(zn) {
 							  ifelse(min_dist <= .C4A$CBU_th$cat["min_dist"], -1, 0))),
 
 
-		ifelse(type == "seq", (min_dist / 1000) + ifelse(min_dist >= .C4A$CBF_th$seq["min_dist"], 1,
-							  ifelse(min_dist <= .C4A$CBU_th$seq["min_dist"], -1, 0)),
+		ifelse(type == "seq", (min_dist / 1000) + ifelse(min_dist >= .C4A$CBF_th$seq["min_dist"] & tri_ineq >= .C4A$CBF_th$seq["tri_ineq"], 1,
+							  ifelse(min_dist < .C4A$CBU_th$seq["min_dist"] | tri_ineq < .C4A$CBU_th$seq["tri_ineq"], -1, 0)),
 
-		ifelse(type == "cyc", (min_dist / 1000) + ifelse(min_dist >= .C4A$CBF_th$cyc["min_dist"], 1,
-			   												 ifelse(min_dist <= .C4A$CBU_th$cyc["min_dist"], -1, 0)),
+		ifelse(type == "cyc", (min_dist / 1000) + ifelse(min_dist >= .C4A$CBF_th$cyc["min_dist"] & tri_ineq >= .C4A$CBF_th$cyc["tri_ineq"], 1,
+			   												 ifelse(min_dist <= .C4A$CBU_th$cyc["min_dist"] | tri_ineq < .C4A$CBU_th$cyc["tri_ineq"], -1, 0)),
 
-		ifelse(type == "div", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$div["inter_wing_dist"] & min_step >= .C4A$CBF_th$div["min_step"], 1,
-							  ifelse(inter_wing_dist <= .C4A$CBU_th$div["inter_wing_dist"] | min_step <= .C4A$CBU_th$div["min_step"], -1, 0)),
+		ifelse(type == "div", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$div["inter_wing_dist"] & min_step >= .C4A$CBF_th$div["min_step"] & tri_ineq >= .C4A$CBF_th$div["tri_ineq"], 1,
+							  ifelse(inter_wing_dist < .C4A$CBU_th$div["inter_wing_dist"] | min_step < .C4A$CBU_th$div["min_step"] | tri_ineq < .C4A$CBU_th$div["tri_ineq"], -1, 0)),
 
 
-		ifelse(type == "bivs", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$bivs["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivs["min_step"], 1,
-							   ifelse(inter_wing_dist <= .C4A$CBU_th$bivs["inter_wing_dist"] | min_step <= .C4A$CBU_th$bivs["min_step"], -1, 0)),
+		ifelse(type == "bivs", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$bivs["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivs["min_step"] & tri_ineq >= .C4A$CBF_th$bivs["tri_ineq"], 1,
+							   ifelse(inter_wing_dist < .C4A$CBU_th$bivs["inter_wing_dist"] | min_step < .C4A$CBU_th$bivs["min_step"] | tri_ineq < .C4A$CBU_th$bivs["tri_ineq"], -1, 0)),
 
 
 	   ifelse(type == "bivc", (min_dist / 1000) + ifelse(min_dist >= .C4A$CBF_th$cat["min_dist"], 1,
 	   							 ifelse(min_dist <= .C4A$CBU_th$cat["min_dist"], -1, 0)),
 
 
-		ifelse(type == "bivd", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$bivd["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivd["min_step"], 1,
-   							  ifelse(inter_wing_dist <= .C4A$CBU_th$bivd["inter_wing_dist"] | min_step <= .C4A$CBU_th$bivd["min_step"], -1, 0)),
+		ifelse(type == "bivd", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$bivd["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivd["min_step"] & tri_ineq >= .C4A$CBF_th$bivd["tri_ineq"], 1,
+   							  ifelse(inter_wing_dist < .C4A$CBU_th$bivd["inter_wing_dist"] | min_step < .C4A$CBU_th$bivd["min_step"] | tri_ineq < .C4A$CBU_th$bivd["tri_ineq"], -1, 0)),
 
 
-	   ifelse(type == "bivg", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$bivg["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivg["min_step"], 1,
-							   ifelse(inter_wing_dist <= .C4A$CBU_th$bivg["inter_wing_dist"] | min_step <= .C4A$CBU_th$bivg["min_step"], -1, 0)), 0))))))))
+	   ifelse(type == "bivg", (inter_wing_dist / 1000) + (min_step / 1e6) + ifelse(inter_wing_dist >= .C4A$CBF_th$bivg["inter_wing_dist"] & min_step >= .C4A$CBF_th$bivg["min_step"] & tri_ineq >= .C4A$CBF_th$bivg["tri_ineq"], 1,
+							   ifelse(inter_wing_dist < .C4A$CBU_th$bivg["inter_wing_dist"] | min_step < .C4A$CBU_th$bivg["min_step"] | tri_ineq < .C4A$CBU_th$bivs["tri_ineq"], -1, 0)), 0))))))))
 	})
 }

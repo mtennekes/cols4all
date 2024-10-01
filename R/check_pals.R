@@ -42,18 +42,25 @@ check_div_pal = function(p) {
 			min(dm[1:nh1_scaled, nh2b_scaled:n2])
 		})
 
-		min_step_size = local({
-			dm = get_dist_matrix(p, cvd = cvd)
-			step_sizes = mapply(function(i,j) dm[i,j], 1:(n-1), 2:n)
-			min(step_sizes)
-		})
-		c(inter_wing_dist = round(inter_wing_dist * 100), min_step = round(min_step_size * 100))
+		dm = get_dist_matrix(p, cvd = cvd)
+		step_sizes = diag(dm[1:(n-1), 2:n])
+
+		step2_sizes = diag(dm[1:(n-2), 3:n])
+
+		# should be positive
+		step12a = step2_sizes - step_sizes[1:(n-2)]
+		step12b = step2_sizes - step_sizes[2:(n-1)]
+
+		min_step_size = min(step_sizes)
+		tri_ineq = min(step12a, step12b)
+
+		c(inter_wing_dist = round(inter_wing_dist * 100), min_step = round(min_step_size * 100), tri_ineq = round(tri_ineq * 100))
 	}))
 	inter_wing_dist = min(scores[,1])
 	min_step = min(scores[,2])
+	tri_ineq = min(scores[,3])
 
-
-	sc = as(c(inter_wing_dist = inter_wing_dist, min_step = min_step), "integer")
+	sc = as(c(inter_wing_dist = inter_wing_dist, min_step = min_step, tri_ineq = tri_ineq), "integer")
 	prop = hcl_prop(p)
 	rgb = rgb_prop(p)
 
@@ -153,17 +160,32 @@ check_seq_pal = function(p) {
 
 	scores = t(sapply(cvds, function(cvd) {
 		m = get_dist_matrix(p, cvd = cvd)
-		step_sizes = mapply(function(i,j) m[i,j], 1:(n-1), 2:n)
+		step_sizes =  diag(m[1:(n-1), 2:n])# mapply(function(i,j) m[i,j], 1:(n-1), 2:n)
 		min_step_size = min(step_sizes)
 		max_step_size = max(step_sizes)
 		#mean_step_size = mean(step_sizes)
 		#step_indicator = max(abs(step_sizes - mean_step_size)) / mean_step_size
 		min_dist = min(m, na.rm = TRUE)
 
-		c(min_step = round(min_step_size * 100), max_step = round(max_step_size * 100), min_dist = round(min_dist * 100))
+		if (n > 2) {
+			step2_sizes = diag(m[1:(n-2), 3:n])
+
+			# should be positive
+			step12a = step2_sizes - step_sizes[1:(n-2)]
+			step12b = step2_sizes - step_sizes[2:(n-1)]
+
+			tri_ineq = min(step12a, step12b)
+		} else {
+			tri_ineq = 100
+		}
+
+
+
+
+		c(min_step = round(min_step_size * 100), max_step = round(max_step_size * 100), min_dist = round(min_dist * 100), tri_ineq = round(tri_ineq * 100))
 	}))
 
-	sc = as(c(min_step = min(scores[,1]), max_step = min(scores[,2]), min_dist = min(scores[,3])), "integer")
+	sc = as(c(min_step = min(scores[,1]), max_step = min(scores[,2]), min_dist = min(scores[,3]), tri_ineq = min(scores[,4])), "integer")
 	prop = hcl_prop(p)
 	rgb = rgb_prop(p)
 
