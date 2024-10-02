@@ -35,7 +35,7 @@ get_fairness = function(dL, dC, round = TRUE) {
 }
 
 
-c4a_plot_fair = function(pal, type = c("LC", "C"), dark = FALSE, contours = seq(10, 90, by = 10)) {
+c4a_plot_fair = function(pal = NULL, type = c("LC", "C"), dark = FALSE, contours = seq(10, 90, by = 10)) {
 	grid::grid.newpage()
 
 	type = match.arg(type)
@@ -48,11 +48,13 @@ c4a_plot_fair = function(pal, type = c("LC", "C"), dark = FALSE, contours = seq(
 	grid::grid.rect(gp=grid::gpar(fill = bc, col = NA))
 	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc"), clip = TRUE))
 	grid::pushViewport(grid::viewport(layout = grid::grid.layout(3, 3,
-																 widths = grid::unit(c(2,1,2), c("lines", "null", "lines")),
-																 heights = grid::unit(c(2,1,2), c("lines", "null", "lines")))))
+																 widths = grid::unit(c(2.5,1,1), c("lines", "null", "lines")),
+																 heights = grid::unit(c(1,1,2.5), c("lines", "null", "lines")))))
 
-	hcl = get_hcl_matrix(pal)
-	cr = diff(range(hcl[,2]))
+	if (!is.null(pal)) {
+		hcl = get_hcl_matrix(pal)
+		cr = diff(range(hcl[,2]))
+	}
 
 	if (type == "LC") {
 		dL = seq(0,100, by = 1)[2:100]
@@ -76,14 +78,18 @@ c4a_plot_fair = function(pal, type = c("LC", "C"), dark = FALSE, contours = seq(
 		sq = 2
 		marg = 1.5
 
-		lr = diff(range(hcl[,3]))
-		LC = get_fairness(lr, cr)
+		if (!is.null(pal)) {
+			lr = diff(range(hcl[,3]))
+			LC = get_fairness(lr, cr)
+		}
 	} else {
 		sq = 2
 		marg = 1.5
 		dC = seq(0,160, by = .1)
 		Fs = get_fairness(0, dC, round = FALSE)
-		LC = get_fairness(0, cr)
+		if (!is.null(pal)) {
+			LC = get_fairness(0, cr)
+		}
 	}
 
 
@@ -109,20 +115,23 @@ c4a_plot_fair = function(pal, type = c("LC", "C"), dark = FALSE, contours = seq(
 			#
 			# grid::grid.text(contours, x = grid::unit(dC[contourTextIds], "native"), y= grid::unit(dL[contourTextIds], "native"))
 
+			if (!is.null(pal)) {
+				if (cr < marg*1.8) cr = marg*1.8
+				if (lr < marg) lr = marg
 
-			if (cr < marg*1.8) cr = marg*1.8
-			if (lr < marg) lr = marg
-
-			cr2 = cr + c(-marg, marg) * 1.8
-			lr2 = lr + c(-marg, marg)
+				cr2 = cr + c(-marg, marg) * 1.8
+				lr2 = lr + c(-marg, marg)
+			}
 
 
 
 			#grid::grid.points(m[,2], m[,3], pch = 15, gp = grid::gpar(col = cols))
-			grid::grid.rect(grid::unit(cr, "native"), grid::unit(lr, "native"), width = grid::unit(sq * 1.8, "native"), height = grid::unit(sq, "native"), gp = grid::gpar(col = bc, fill = fc))
+			if (!is.null(pal)) {
+				grid::grid.rect(grid::unit(cr, "native"), grid::unit(lr, "native"), width = grid::unit(sq * 1.8, "native"), height = grid::unit(sq, "native"), gp = grid::gpar(col = bc, fill = fc))
 
-			grid::grid.rect(x = grid::unit(cr, "native") + grid::unit(0.75, "lines"), y = grid::unit(lr, "native"), width = grid::unit(1, "lines"), height = grid::unit(1, "lines"), gp = grid::gpar(col = NA, fill = gc), just = "left")
-			grid::grid.text(round(LC), x = grid::unit(cr, "native") + grid::unit(0.75, "lines"), y = grid::unit(lr, "native"), gp = grid::gpar(col = fc), just = "left")
+				grid::grid.rect(x = grid::unit(cr, "native") + grid::unit(0.75, "lines"), y = grid::unit(lr, "native"), width = grid::unit(1, "lines"), height = grid::unit(1, "lines"), gp = grid::gpar(col = NA, fill = gc), just = "left")
+				grid::grid.text(round(LC), x = grid::unit(cr, "native") + grid::unit(0.75, "lines"), y = grid::unit(lr, "native"), gp = grid::gpar(col = fc), just = "left")
+			}
 		}, yscale = c(0,100), xscale = c(0,180))
 
 		cellplot(2, 1, {
@@ -149,10 +158,13 @@ c4a_plot_fair = function(pal, type = c("LC", "C"), dark = FALSE, contours = seq(
 			grid::grid.polyline(x = grid::unit(dC, "native"), y = grid::unit(Fs, "native"))
 
 			#grid::grid.points(m[,2], m[,3], pch = 15, gp = grid::gpar(col = cols))
-			grid::grid.rect(grid::unit(cr, "native"), grid::unit(LC, "native"), width = grid::unit(sq * 1.8, "native"), height = grid::unit(sq, "native"), gp = grid::gpar(col = bc, fill = fc))
+			if (!is.null(pal)) {
+				grid::grid.rect(grid::unit(cr, "native"), grid::unit(LC, "native"), width = grid::unit(sq * 1.8, "native"), height = grid::unit(sq, "native"), gp = grid::gpar(col = bc, fill = fc))
 
-			grid::grid.rect(x = grid::unit(cr, "native") + grid::unit(0.75, "lines"), y = grid::unit(LC, "native"), width = grid::unit(1, "lines"), height = grid::unit(1, "lines"), gp = grid::gpar(col = NA, fill = gc), just = "left")
-			grid::grid.text(round(LC), x = grid::unit(cr, "native") + grid::unit(0.75, "lines"), y = grid::unit(LC, "native"), gp = grid::gpar(col = fc), just = "left")
+				grid::grid.rect(x = grid::unit(cr, "native") + grid::unit(0.75, "lines"), y = grid::unit(LC, "native"), width = grid::unit(1, "lines"), height = grid::unit(1, "lines"), gp = grid::gpar(col = NA, fill = gc), just = "left")
+				grid::grid.text(round(LC), x = grid::unit(cr, "native") + grid::unit(0.75, "lines"), y = grid::unit(LC, "native"), gp = grid::gpar(col = fc), just = "left")			}
+
+
 		}, yscale = c(0,100), xscale = c(0,180))
 
 		cellplot(2, 1, {

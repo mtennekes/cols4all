@@ -311,6 +311,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 							shiny::fluidRow(
 								shiny::column(width = 4,
 											  infoBoxUI(title = "HCL space"),
+											  shiny::img(src = "imgResources/hcl_spacex1.png", srcset = "imgResources/hcl_spacex1.png 1x, imgResources/hcl_spacex2.png 2x"),
 											  shiny::sliderInput("rangeH", min = 0, max = 360, value = c(0, 360), step = 10, label = "Hue"),
 											  shiny::sliderInput("rangeC", min = 0, max = 180, value = c(0, 180), step = 10, label = "Chroma"),
 											  shiny::sliderInput("rangeL", min = 0, max = 100, value = c(0, 100), step = 10, label = "Luminance"),
@@ -661,7 +662,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			filters_type = if (type == "cat") {
 				filters
 			} else if (type %in% c("seq", "div", "cyc", "bivc", "bivs", "bivd", "bivg")) {
-				filters[c(1, 2, 4, 5)]
+				filters[c(1, 2, 3, 4, 5)]
 			}
 
 

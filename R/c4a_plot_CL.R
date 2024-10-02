@@ -10,8 +10,8 @@ c4a_plot_CL = function(cols, Lrange = FALSE, dark = FALSE) {
 
 	grid::pushViewport(grid::viewport(width = grid::unit(1, "snpc"), height = grid::unit(1, "snpc"), clip = TRUE))
 	grid::pushViewport(grid::viewport(layout = grid::grid.layout(3, 3,
-																 widths = grid::unit(c(2,1,2), c("lines", "null", "lines")),
-																 heights = grid::unit(c(2,1,2), c("lines", "null", "lines")))))
+																 widths = grid::unit(c(2.5,1,1), c("lines", "null", "lines")),
+																 heights = grid::unit(c(1,1,2.5), c("lines", "null", "lines")))))
 
 	sq = 2
 	marg = 1.5
