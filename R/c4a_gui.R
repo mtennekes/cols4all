@@ -1143,6 +1143,76 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			do.call(fun, list(cols = tab_vals$pal[c(tab_vals$idA1, tab_vals$idA2)], cvd = "tritan"))
 		})
 
+		get_click_id = function(pal, x, y) {
+			n = length(pal)
+
+			brks_x = seq(0.04, 0.76, length.out = n + 2)
+			brks_y = seq(0, 1, length.out = n + 2)
+
+			x_id = as.integer(cut(x, breaks = brks_x)) - 1
+			y_id = n + 1 - as.integer(cut(y, breaks = brks_y))
+
+			if (!is.na(x_id) && (x_id < 1 || x_id > n)) x_id = NA
+			if (!is.na(y_id) && (y_id < 1 || y_id > n)) y_id = NA
+
+			list(x = x_id, y = y_id)
+		}
+
+		shiny::observeEvent(input$cbfSimi_click, {
+			pal = tab_vals$pal
+			if (!length(pal)) return(NULL)
+
+			ids = get_click_id(pal, input$cbfSimi_click$x, input$cbfSimi_click$y)
+
+			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
+			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
+		})
+
+		shiny::observeEvent(input$cbfPSimi1_click, {
+			pal = tab_vals$pal
+			if (!length(pal)) return(NULL)
+
+			ids = get_click_id(pal, input$cbfPSimi1_click$x, input$cbfPSimi1_click$y)
+
+			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
+			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
+
+		})
+
+		shiny::observeEvent(input$cbfPSimi2_click, {
+			pal = tab_vals$pal
+			if (!length(pal)) return(NULL)
+
+			ids = get_click_id(pal, input$cbfPSimi2_click$x, input$cbfPSimi2_click$y)
+
+			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
+			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
+		})
+
+		shiny::observeEvent(input$cbfPSimi3_click, {
+			pal = tab_vals$pal
+			if (!length(pal)) return(NULL)
+
+			ids = get_click_id(pal, input$cbfPSimi3_click$x, input$cbfPSimi3_click$y)
+
+			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
+			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
+		})
+
+
+		shiny::observeEvent(input$table_click, {
+			pal = tab_vals$palBW
+			if (!length(pal)) return(NULL)
+
+			ids = get_click_id(pal, input$table_click$x, input$table_click$y)
+
+			if (!is.na(ids$x)) tab_vals$idB2 = ids$x
+			if (!is.na(ids$y)) tab_vals$idB1 = ids$y
+
+			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$CR = colorspace::contrast_ratio(tab_vals$idB1, tab_vals$idB2)
+		})
+
+
 
 		#############################
 		## HCL analysis tab
@@ -1221,21 +1291,23 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			if (input$plus_rev_original) {
 				c4a_plot_Plus_Reversed(orientation = "landscape", borders = borders, lwd = lwd)
 			} else {
-				col1 = tab_vals$idB1
+				pal = tab_vals$palBW
+
+				col1 = pal[tab_vals$idB1]
 				if (!length(col1)) return(NULL)
-				col2 = tab_vals$idB2
+				col2 = pal[tab_vals$idB2]
 
 				c4a_plot_Plus_Reversed(col1, col2, orientation = "landscape", borders = borders, lwd = lwd)
 
 			}
-
 		})
 
 		output$ex = shiny::renderPlot({
+			pal = tab_vals$palBW
 
-			col1 = tab_vals$idB1
+			col1 = pal[tab_vals$idB1]
 			if (!length(col1)) return(NULL)
-			col2 = tab_vals$idB2
+			col2 = pal[tab_vals$idB2]
 
 			borders = input$borders
 			lwd = input$lwd
@@ -1260,6 +1332,52 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			opts = input$cr_plot_opts
 			c4a_plot_CR(pal, dark = input$dark, sort =  ("sort" %in% opts), lines_WCAG = ("wcag" %in% opts), lines_equiluminance = ("equi" %in% opts))
 		})
+
+
+
+
+		output$textCR = shiny::renderUI({
+			cr = tab_vals$CR
+			if (!length(cr)) return(NULL)
+
+			txt = if (cr >= 7) {
+				"safe to print text according to [WCAG 2.2](https://www.w3.org/TR/WCAG22/) level **AAA**"
+			} else if (cr >= 4.5) {
+				"safe to print text according to the [WCAG 2.2](https://www.w3.org/TR/WCAG22/) level **AA**"
+			} else if (cr >= 3) {
+				"safe to print text according to the [WCAG 2.2](https://www.w3.org/TR/WCAG22/) level **A**"
+			} else {
+				"not safe to print text according to the [WCAG 2.2](https://www.w3.org/TR/WCAG22/)"
+			}
+
+			shiny::markdown(paste0("**Contrast ratio** (", sprintf("%.2f", round(cr, 1)), "): ", txt))
+		})
+
+		output$bordersCR = shiny::renderUI({
+			cr = tab_vals$CR
+			if (!length(cr)) return(NULL)
+
+			txt = if (cr <= 1.2) {
+				"strongly recommended to use border lines when plotting these colors next to each other"
+			} else if (cr <= 1.5) {
+				"recommended to use border lines when plotting these colors next to each other"
+			} else if (cr <= 2) {
+				"consider to use border lines when plotting these colors next to each other"
+			} else {
+				"colors can be plot next to each other without border lines"
+			}
+			shiny::markdown(paste0("**Contrast ratio** (", sprintf("%.2f", round(cr, 1)), "): ", txt))
+		})
+
+		output$textPlot = shiny::renderPlot({
+			pal = tab_vals$palBW
+			col1 = pal[tab_vals$idB1]
+			if (!length(col1)) return(NULL)
+			col2 = pal[tab_vals$idB2]
+
+			c4a_plot_text2(c(col1, col2), dark = input$dark)
+		})
+
 
 
 		#############################
@@ -1291,118 +1409,6 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 				c4a_plot_names(pal, dark = input$dark, a = input$nameAlpha)
 			})
 		}
-
-		output$textCR = shiny::renderUI({
-			cr = tab_vals$CR
-			if (!length(cr)) return(NULL)
-
-			txt = if (cr >= 7) {
-				"safe to print text according to [WCAG 2.1](https://www.w3.org/TR/WCAG21/) level **AAA**"
-			} else if (cr >= 4.5) {
-				"safe to print text according to the [WCAG 2.1](https://www.w3.org/TR/WCAG21/) level **AA**"
-			} else if (cr >= 3) {
-				"safe to print text according to the [WCAG 2.1](https://www.w3.org/TR/WCAG21/) level **A**"
-			} else {
-				"not safe to print text according to the [WCAG 2.1](https://www.w3.org/TR/WCAG21/)"
-			}
-
-			shiny::markdown(paste0("**Contrast ratio** (", sprintf("%.2f", round(cr, 1)), "): ", txt))
-		})
-
-		output$bordersCR = shiny::renderUI({
-			cr = tab_vals$CR
-			if (!length(cr)) return(NULL)
-
-			txt = if (cr <= 1.2) {
-				"strongly recommended to use border lines when plotting these colors next to each other"
-			} else if (cr <= 1.5) {
-				"recommended to use border lines when plotting these colors next to each other"
-			} else if (cr <= 2) {
-				"consider to use border lines when plotting these colors next to each other"
-			} else {
-				"colors can be plot next to each other without border lines"
-			}
-			shiny::markdown(paste0("**Contrast ratio** (", sprintf("%.2f", round(cr, 1)), "): ", txt))
-		})
-
-		output$textPlot = shiny::renderPlot({
-			col1 = tab_vals$idB1
-			if (!length(col1)) return(NULL)
-			col2 = tab_vals$idB2
-
-			c4a_plot_text2(c(col1, col2), dark = input$dark)
-		})
-
-		get_click_id = function(pal, x, y) {
-			n = length(pal)
-
-			brks_x = seq(0.04, 0.76, length.out = n + 2)
-			brks_y = seq(0, 1, length.out = n + 2)
-
-			x_id = as.integer(cut(x, breaks = brks_x)) - 1
-			y_id = n + 1 - as.integer(cut(y, breaks = brks_y))
-
-			if (!is.na(x_id) && (x_id < 1 || x_id > n)) x_id = NA
-			if (!is.na(y_id) && (y_id < 1 || y_id > n)) y_id = NA
-
-			list(x = x_id, y = y_id)
-		}
-
-		shiny::observeEvent(input$cbfSimi_click, {
-			pal = tab_vals$pal
-			if (!length(pal)) return(NULL)
-
-			ids = get_click_id(pal, input$cbfSimi_click$x, input$cbfSimi_click$y)
-
-			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
-			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
-		})
-
-		shiny::observeEvent(input$cbfPSimi1_click, {
-			pal = tab_vals$pal
-			if (!length(pal)) return(NULL)
-
-			ids = get_click_id(pal, input$cbfPSimi1_click$x, input$cbfPSimi1_click$y)
-
-			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
-			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
-
-		})
-
-		shiny::observeEvent(input$cbfPSimi2_click, {
-			pal = tab_vals$pal
-			if (!length(pal)) return(NULL)
-
-			ids = get_click_id(pal, input$cbfPSimi2_click$x, input$cbfPSimi2_click$y)
-
-			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
-			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
-		})
-
-		shiny::observeEvent(input$cbfPSimi3_click, {
-			pal = tab_vals$pal
-			if (!length(pal)) return(NULL)
-
-			ids = get_click_id(pal, input$cbfPSimi3_click$x, input$cbfPSimi3_click$y)
-
-			if (!is.na(ids$x)) tab_vals$idA2 = ids$x
-			if (!is.na(ids$y)) tab_vals$idA1 = ids$y
-		})
-
-
-		shiny::observeEvent(input$table_click, {
-			pal = tab_vals$palBW
-			if (!length(pal)) return(NULL)
-
-			ids = get_click_id(pal, input$table_click$x, input$table_click$y)
-
-			if (!is.na(ids$x)) tab_vals$idB2 = ids$x
-			if (!is.na(ids$y)) tab_vals$idB1 = ids$y
-
-			if (!is.na(ids$x) || !is.na(ids$y)) tab_vals$CR = colorspace::contrast_ratio(tab_vals$idB1, tab_vals$idB2)
-		})
-
-
 
 
 		##############################
