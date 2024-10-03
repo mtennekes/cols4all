@@ -192,6 +192,10 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					 				  	condition = "input.type1 != 'biv'",
 					 				  	shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
 					 				  shiny::conditionalPanel(
+					 				  	condition = "input.type1 == 'seq' || input.type1 == 'div'",
+					 				  	shiny::checkboxInput("continuous", "Show as continuous palette", value = FALSE)
+					 				  ),
+					 				  shiny::conditionalPanel(
 					 				  	condition = "input.type1 == 'biv'",
 					 				  	shiny::fluidRow(
 					 				  		shiny::column(6,
@@ -691,6 +695,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			n = input$n
 			if (is.null(n)) return(NULL)
 			lst = list(n = n,
+					   continuous = input$continuous,
 				 nbiv = input$nbiv,
 				 mbiv = input$mbiv,
 				 trigger = get_trigger(),
@@ -728,7 +733,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 						prep = prep_table(type = type, n = nbiv, m = mbiv, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = nbiv, verbose = FALSE, filters = filters)
 
 					} else {
-						prep = prep_table(type = type, n = n, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = FALSE, filters = filters)
+						prep = prep_table(type = type, n = n, continuous = continuous, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = FALSE, filters = filters)
 					}
 					pal_names = prep$zn$fullname
 				}

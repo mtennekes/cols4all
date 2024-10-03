@@ -46,12 +46,18 @@ table_columns = function(type, show.scores) {
 	list(qn = qn, ql = ql, qs = qs, sn = sn, sl = sl)
 }
 
-prep_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, sort = "name", series = "all", filters = character(0), range = NA, colorsort = "orig", show.scores = FALSE, columns = NA, verbose = TRUE) {
+prep_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, sort = "name", series = "all", filters = character(0), range = NA, colorsort = "orig", show.scores = FALSE, columns = NA, verbose = TRUE, continuous = FALSE) {
 	id = NULL
 
 	type = match.arg(type)
 
-	if (is.null(n)) {
+	if (!type %in% c("seq", "div", "cyc")) continuous = FALSE
+
+	if (continuous) {
+		#n = 15
+		columns = n
+		#columns = 15
+	} else if (is.null(n)) {
 		n = if (type == "cat") {
 			7
 		} else if (type == "bivc") {
@@ -59,7 +65,6 @@ prep_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd
 		} else .C4A$ndef[type]
 
 	}
-
 
 	#if (length(series) == 2) browser()
 
@@ -149,7 +154,7 @@ prep_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd
 		#zn$palette = lapply(zn$palette, function(p) as.vector(t(p[nrow(p):1L,])))
 		zn$palette = lapply(zn$palette, function(p) as.vector(t(p)))
 	}
-	list(zn = zn, n = n, m = m, columns = columns, type = type, qn = qn, ql = ql)
+	list(zn = zn, n = n, m = m, columns = columns, continuous = continuous, type = type, qn = qn, ql = ql)
 }
 
 plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
@@ -161,6 +166,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 	n = p$n
 	m = p$m
 	columns = p$columns
+	continuous = p$continuous
 
 	k = nrow(zn)
 
@@ -206,14 +212,20 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 	})
 
 	# color matrix spread over lines
-	me = local({
-		sid = split(1:tot, f = rep(1:ml, each = columns, length.out = tot))
-		x = do.call(rbind, lapply(1:nrow(e), function(i) {
-			cm[e$did[i], sid[[e$ind[i]]]]
-		}))
-		colnames(x) = 1:ncol(x)
-		x
-	})
+	if (continuous) {
+		me = matrix("", nrow = k, ncol = 1) # dummy
+		colnames(me) = 1
+		columns = 1
+	} else {
+		me = local({
+			sid = split(1:tot, f = rep(1:ml, each = columns, length.out = tot))
+			x = do.call(rbind, lapply(1:nrow(e), function(i) {
+				cm[e$did[i], sid[[e$ind[i]]]]
+			}))
+			colnames(x) = 1:ncol(x)
+			x
+		})
+	}
 
 	if (include.na) {
 		me = cbind(me, ' '="", 'Missings' = "")
@@ -251,33 +263,54 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 
 
 	for (cn in colNames) {
-		cols = e2[[cn]]
-		sel = (!is.na(cols) & cols != "")
-		cols[!sel] = ""
-		cols_cvd = cols
-		cols_cvd[sel] = sim_cvd(cols[sel], cvd.sim)
+		if (continuous && cn == "1") {
+			if (cvd.sim != "none") cm = apply(cm, MARGIN = 2, sim_cvd, cvd = cvd.sim)
 
-		textcol = if (text.col == "same") {
-			cols_cvd
-		} else if (text.col == "auto") {
-			tmp = cols_cvd
-			#if (any(sel)) tmp[sel] = ifelse(get_hcl_matrix(cols_cvd[sel])[,3]>=50, "#000000", "#FFFFFF")
-			if (any(sel)) tmp[sel] = ifelse(is_light(cols_cvd[sel]), "#000000", "#FFFFFF")
-			tmp
+			css = apply(cm, MARGIN = 1, function(cols) {
+				paste0("border-radius: 0px; display:block; white-space: nowrap; overflow: auto; text-overflow: ellipsis; ",
+					   "background-position: right 50px;",
+					   #"visibility:hidden",
+					   #"font-size:1%;",
+					   "height: 1.5em; font-size: 80%;",
+					   "background-image: linear-gradient(to right, ", paste0(cols, collapse = ", "), ");")
+			})
+
+			textcol = apply(cm, MARGIN = 2, function(cols) {
+				paste0(cols, collapse = "; ")
+			})
+
+
+			e2[[cn]] = kableExtra::cell_spec("&nbsp;", monospace = TRUE, align = "c", extra_css = css, escape = FALSE)
+
+
+
 		} else {
-			text.col
+			cols = e2[[cn]]
+			sel = (!is.na(cols) & cols != "")
+			cols[!sel] = ""
+			cols_cvd = cols
+			cols_cvd[sel] = sim_cvd(cols[sel], cvd.sim)
+
+			textcol = if (text.col == "same") {
+				cols_cvd
+			} else if (text.col == "auto") {
+				tmp = cols_cvd
+				#if (any(sel)) tmp[sel] = ifelse(get_hcl_matrix(cols_cvd[sel])[,3]>=50, "#000000", "#FFFFFF")
+				if (any(sel)) tmp[sel] = ifelse(is_light(cols_cvd[sel]), "#000000", "#FFFFFF")
+				tmp
+			} else {
+				text.col
+			}
+
+			txt = cols
+			if (any(sel)) txt[sel] = switch(text.format, hex = cols[sel], RGB = get_rgb_triple(cols[sel]), HCL = get_hcl_triple(cols[sel]))
+
+			#e2[[cn]] = kableExtra::cell_spec(txt, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;")
+
+			fz = switch(text.format, RGB = "height: 1.5em; font-size: 70%;", "height: 1.5em; font-size: 80%;")
+
+			e2[[cn]] = kableExtra::cell_spec(txt, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = paste0("border-radius: 0px; max-width: 18em; display:block; white-space: nowrap; overflow: auto; text-overflow: ellipsis; ", fz))
 		}
-
-		txt = cols
-		if (any(sel)) txt[sel] = switch(text.format, hex = cols[sel], RGB = get_rgb_triple(cols[sel]), HCL = get_hcl_triple(cols[sel]))
-
-		#e2[[cn]] = kableExtra::cell_spec(txt, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = "border-radius: 0px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;")
-
-		fz = switch(text.format, RGB = "height: 1.5em; font-size: 70%;", "height: 1.5em; font-size: 80%;")
-
-		e2[[cn]] = kableExtra::cell_spec(txt, color = textcol, background = cols_cvd, monospace = TRUE, align = "c", extra_css = paste0("border-radius: 0px; max-width: 18em; display:block; white-space: nowrap; overflow: auto; text-overflow: ellipsis; ", fz))
-
-
 	}
 
 	# make icons (cannot do that in onLoad due to dependency of suggested kableExtra)
@@ -338,6 +371,10 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 
 	e2th = e2nms
 
+	if (continuous) {
+		e2th[e2th == "1"] = ""
+	}
+
 
 	for (i in 1:length(th)) {
 		hd = names(th)[i]
@@ -376,9 +413,16 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 		ins
 	}
 
+
+	css_col_norm = "<td style=\"text-align:left; min-width: 6em; max-width: 6em;\">"
+	css_col_ramp = paste0("<td style=\"text-align:left; min-width: ", 6 * n, "em; max-width: 60em;\">")
+
+
+
 	ins2 = ins |>
 		col_repl(match(colNames[colNames == " "], e2cols), "<td style=\"text-align:left; min-width: 1em; max-width: 1em;\">") |>
-		col_repl(match(colNames[colNames != " "], e2cols), "<td style=\"text-align:left; min-width: 6em; max-width: 6em;\">") |>
+		col_repl(match(colNames[colNames == "Missings"], e2cols), css_col_norm) |>
+		col_repl(match(colNames[colNames != " " & colNames != "Missings"], e2cols), ifelse(continuous, css_col_ramp, css_col_norm)) |>
 		#col_repl(which(substr(e2cols, 1, 4) == "Copy"), "<td style=\"text-align:left; width: 1em; padding-left: 10px; padding-right: 0px; text-align: right\">") |>
 		col_repl(1, "<td style=\"text-align:left; width: 5em; padding-left: 10px; padding-right: 10px; text-align: right\">") |>
 		col_repl(2, "<td style=\"text-align:left; width: 5em; padding-left: 0px; padding-right: 10px; text-align: right\">") |>
@@ -466,8 +510,8 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #' @return An HMTL table (`kableExtra` object)
 #' @rdname c4a_gui
 #' @name c4a_gui
-c4a_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, filters = character(0), cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, colorsort = "orig", include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
+c4a_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, continuous = FALSE, filters = character(0), cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, colorsort = "orig", include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
 	cvd.sim = match.arg(cvd.sim)
-	p = prep_table(type = type, n = n, m = m, filters = filters, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = verbose)
+	p = prep_table(type = type, n = n, m = m, continuous = continuous, filters = filters, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = verbose)
 	plot_table(p = p, text.format = text.format, text.col = text.col, include.na = include.na, cvd.sim = cvd.sim, verbose = verbose)
 }
