@@ -169,6 +169,13 @@ c4a_na = function(palette = NULL, type = c("cat", "seq", "div", "cyc"), verbose 
 }
 
 
+get_zp = function(p, n = NA) {
+	x = c4a_info(p, no.match, verbose)
+	if (is.na(n)) {
+		n = x$ndef
+	}
+	z = data.frame(name = x$name, series = x$series, fullname = x$fullname, type = x$type, n = n)
+}
 
 #' Get information from a cols4all palette
 #'
@@ -180,19 +187,18 @@ c4a_na = function(palette = NULL, type = c("cat", "seq", "div", "cyc"), verbose 
 #' @param verbose should messages be printed?
 #' @return list with the following items: name, series, fullname, type, palette (colors), na (color), nmax, and reverse. The latter is `TRUE` when there is a `"-"` prefix before the palette name.
 #' @export
-c4a_scores = function(palette, n = NA, no.match = c("message", "error", "null"), verbose = TRUE) {
-	x = c4a_info(palette, no.match, verbose)
-	if (is.na(n)) {
-		n = x$ndef
+#' @example examples/c4a_scores.R
+c4a_scores = function(palette = NULL, type = NULL, series = NULL, n = NA, no.match = c("message", "error", "null"), verbose = TRUE) {
+	if (!is.null(palette)) {
+		z = get_zp(palette, n)
+	} else {
+		if (is.null(type)) stop("Please specify either palette or type (optionally in combination with series)")
+		if (is.na(n)) n = .C4A$ndef[[type]]
+		pals = c4a_palettes(type = type, series = series)
+		z = do.call(rbind, lapply(pals, get_zp))
 
 	}
-	s = .C4A$s
-	rowid = which(x$fullname == dimnames(s)[[1]])[1]
-	if (is.na(rowid)) stop("No scores have been found")
-
-	si = s[rowid, , n]
-	si[.C4A$score_x100] = si[.C4A$score_x100] / 100
-	si
+	show_attach_scores(z)
 }
 
 

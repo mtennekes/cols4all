@@ -192,7 +192,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 					 				  	condition = "input.type1 != 'biv'",
 					 				  	shiny::sliderInput("n", "Number of colors", min = ns$nmin, max = ns$nmax, value = ns$n, ticks = FALSE)),
 					 				  shiny::conditionalPanel(
-					 				  	condition = "input.type1 == 'seq' || input.type1 == 'div'",
+					 				  	condition = "input.type1 == 'seq' || input.type1 == 'div' || input.type1 == 'cyc'",
 					 				  	shiny::checkboxInput("continuous", "Show as continuous palette", value = FALSE)
 					 				  ),
 					 				  shiny::conditionalPanel(

@@ -99,26 +99,40 @@ process_palette = function(pal, type, colNA = NA, take.gray.for.NA = FALSE, remo
 		if (substr(type, 1, 3) == "biv") {
 			colNA = "#FFFFFF"
 		} else {
-			# first candidates: choose NA from grays, such that luminance is at most 0.3 lighter and not darker than the lightest resp. darkest color.
+			# first candidates: choose NA from grays: for bright palette prefer even lighter grey, dark palettes dark gray or black
 			# prefer lightest gray
-			gray_range = c(min(hcl[,3]/100), min(1, (max(hcl[,3]/100) + 0.3)))
-			candidates = list(grDevices::gray.colors(10, start = gray_range[1], end = gray_range[2]),
-							  grDevices::hcl(h = seq(0, 340, by = 20), c = 30, l = 70),
-							  grDevices::hcl(h = seq(0, 340, by = 20), c = 50, l = 70))
+			gray_range = range(hcl[,3]) / 100
 
-			colNA = "#FFFFFF"
-			for (cand in candidates) {
-				pal2 = c(pal, cand)
-				m = sapply(c("protan", "deutan", "tritan"), function(cvd) {
-					m = get_dist_matrix(pal2, cvd = cvd)
-					m2 = m[1L:length(pal), (length(pal) + 1L):length(pal2)]
-					apply(m2, MARGIN = 2, min)
-				})
-				scores = apply(m, MARGIN = 1, min)
-				if (max(scores) >= 10) {
-					colNA = cand[which.max(scores)[1]]
-					break
-				}
+
+			candidates = list(grDevices::gray.colors(10, start = gray_range[2], end = 1),
+							  grDevices::gray.colors(10, start = gray_range[2], end = 0))
+
+			if (gray_range[2] < 0.6) {
+				# => dark palette
+				candidates = rev(candidates)
+			}
+
+			if (substr(type, 1, 3) == "cat") {
+				# restrict to ligher color for bright palettes and darker colors for dark palettes, because otherwise colNA stands out too much
+				candidates = candidates[[1]]
+			}
+
+
+			cand = unlist(candidates)
+			pal2 = c(pal, cand)
+			m = sapply(c("protan", "deutan", "tritan"), function(cvd) {
+				m = get_dist_matrix(pal2, cvd = cvd)
+				m2 = m[1L:length(pal), (length(pal) + 1L):length(pal2)]
+				apply(m2, MARGIN = 2, min)
+			})
+			scores = apply(m, MARGIN = 1, min)
+
+			# take the first with at least 10 difference (larger would be too much)
+			s10 = which(scores >= 10)
+			if (length(s10)) {
+				colNA = cand[s10[1]]
+			} else {
+				colNA = cand[which.max(scores)]
 			}
 		}
 	}

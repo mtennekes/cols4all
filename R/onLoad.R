@@ -138,10 +138,10 @@ do_cellspec = function(lst) {
 					  seq = c(min_dist = 5, tri_ineq = 2),
 					  cyc = c(min_dist = 5, tri_ineq = 2),
 					  div = c(inter_wing_dist = 10, min_step = 5, tri_ineq = 2),
-					  bivs = c(inter_wing_dist = 7, min_step = 3, tri_ineq = 1),
+					  bivs = c(inter_wing_dist = 7, min_step = 3),
 					  bivc = c(min_dist = 10),
-					  bivd = c(inter_wing_dist = 7, min_step = 3, tri_ineq = 1),
-					  bivg = c(inter_wing_dist = 7, min_step = 3, tri_ineq = 1))
+					  bivd = c(inter_wing_dist = 7, min_step = 3),
+					  bivg = c(inter_wing_dist = 7, min_step = 3))
 
 		#color-blind-very-friendly thresholds
 		CBVF_th = list(cat = c(min_dist = 15))
@@ -151,10 +151,10 @@ do_cellspec = function(lst) {
 					  seq = c(min_dist = 2, tri_ineq = 0),
 					  cyc = c(min_dist = 2, tri_ineq = 0),
 					  div = c(inter_wing_dist = 4, min_step = 2, tri_ineq = 0),
-					  bivs = c(inter_wing_dist = 3, min_step = 2, tri_ineq = 0),
+					  bivs = c(inter_wing_dist = 3, min_step = 2),
 					  bivc = c(min_dist = 2),
-					  bivd = c(inter_wing_dist = 3, min_step = 2, tri_ineq = 0),
-					  bivg = c(inter_wing_dist = 3, min_step = 2, tri_ineq = 0))
+					  bivd = c(inter_wing_dist = 3, min_step = 2),
+					  bivg = c(inter_wing_dist = 3, min_step = 2))
 
 		Cgray = 10 # maximum chroma value to be considered as gray (used for Hwidth and c4a_add_series)
 
@@ -226,10 +226,10 @@ do_cellspec = function(lst) {
 						 seq = list(min_dist = c(0, 20), tri_ineq = c(-50, 50)),
 						 cyc = list(min_dist = c(0, 20), tri_ineq = c(-50, 50)),
 						 div = list(inter_wing_dist = c(0, 20), min_step = c(0, 20), tri_ineq = c(-50, 50)),
-						 bivs = list(inter_wing_dist = c(0, 20), min_step = c(0, 20), tri_ineq = c(-50, 50)),
+						 bivs = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)),
 						 bivc = list(min_dist = c(0, 20)),
-						 bivd = list(inter_wing_dist = c(0, 20), min_step = c(0, 20), tri_ineq = c(-50, 50)),
-						 bivg = list(inter_wing_dist = c(0, 20), min_step = c(0, 20), tri_ineq = c(-50, 50)))
+						 bivd = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)),
+						 bivg = list(inter_wing_dist = c(0, 20), min_step = c(0, 20)))
 
 		Ohter_ranges = list(C = c(0, 180, 5),
 							L = c(0, 100, 5),
