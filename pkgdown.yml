@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   cols4all: cols4all.html
-last_built: 2024-10-07T18:52Z
+last_built: 2024-10-07T18:54Z
 urls:
   reference: https://mtennekes.github.io/cols4all/reference
   article: https://mtennekes.github.io/cols4all/articles
