@@ -66,555 +66,895 @@
     
     
 <div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h2 id="introduction">Introduction}<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>Color is essential in many charts and maps. There are a lot of color
-palettes to choose from: most visualization software tools have their
-own palettes and there are many other series of color palettes, such as
-ColorBrewer (Harrower and Brewer, 2003). To make life easier for R
-users, there are a couple of packages that contain a large collection of
-palettes, most notably <code>pals</code> (Wright, 2021) with 139 and
-<code>paletteer</code> (Hvitfeldt, 2021) with 2569 (!) palettes.
-However, people often cannot see the trees through the forest, so
-therefore they tend to stick with the color palettes they know, or with
-the most popular ones.</p>
-<p>The <code>cols4all</code> package also contains a large collection of
-palettes (to be precise 595 at the time of writing), but with the
-central question: <strong>which palettes are good and why?</strong>
-There is no simple answer, since there are many aspects to take into
-account, which may have opposite effects. In <code>cols4all</code> we
-examine the following aspects:</p>
-<ul>
-<li><p><strong>Color Blind Friendliness</strong> First and most
-importantly, is a palette suitable for colorblind people? About 1 out of
-12 humans have a color vision deficiency, and we want to include them;
-hence the package name “colors for all”.</p></li>
-<li><p><strong>HCL Analysis</strong> Does a palette work well for
-statistical purposes? We analyse this with the HCL
-(hue-chroma-luminance) color space. Concrete questions for these
-analysis are the following. How <strong>vivid</strong> are colors? Do
-the colors stand out about equally (which we call
-<strong>fairness</strong>)? What hue ranges are used for quantitative
-color palettes?</p></li>
-</ul>
-<!--First of all, we check how vivid (chroma) the colors are: vivid colors are preferable for coloring small objects (dots) while pastel colors are preferable for large areas such as maps. Secondly, we also check whether the palette is fair, by which we mean that no colors stand out more than others. Finally, we check the hues of the palettes:--><ul>
-<li><p><strong>Nameability</strong> (in development) Easy to name colors
-are also easy to remember. Therefore, it is beneficial to use a color
-palette with easy nameable colors.</p></li>
-<li><p><strong>Contrast</strong> What is the contrast between the colors
-in the palette? We focus on two specific questions: 1) Is there
-sufficient contrast with the background color (usually white or black)?
-This is especially needed for text but also point- and line charts. 2)
-Are border lines needed to separate colors?</p></li>
-<li><p><strong>3D Blues</strong> Does the palette contain blue colors
-that could result in a floating effect?</p></li>
-</ul>
-<p>Currently, <strong>cols4all</strong> contains palettes from several
-popular and lesser known color palette series: “brewer”, “carto”,
-“cols4all”, “hcl”, “kovesi”, “matplotlib”, “met”, “parks”, “poly”,
-“powerbi”, “scico”, “seaborn”, “stevens”, “tableau”, “tol” , and “wes”.
-Stand-alone palettes that are included have been put in the series
-“misc” (miscellaneous). Own palettes series can be added as well.</p>
-<p>Color palettes are organized and made consistent with each other. For
-instance, all sequential palettes go from light to dark. Furthermore,
-for each color palette a color for missing values is assigned, which is
-especially important for spatial data visualization. Currently we
-support several types: <em>categorical</em> (qualitative) palettes,
-<em>sequential</em> palettes, <em>diverging</em> palettes, and
-<em>bivariate</em> palettes (divided into four subtypes).</p>
-<p><img src="dash-3.png" alt="Dashboard" width="650"></p>
-<p>The figure above shows the main tool of this package, a dashboard.
-The first tab page contains an overview table of all palettes (given the
-input selection criteria). The other tab pages are for further
-palette-wise analyses.</p>
-<p>Color palettes also are important in areas other than data
-visualization, such as arts, web design, and fashion. The same aspects
-apply as well here, but obviously different criteria apply: the colors
-of a dress don’t have to be distinguished by colorblind people, websites
-often contain colors that purposely stand out more than others, and
-there are paintings that purposely use visual illusions.</p>
+<p>Effective data visualization relies heavily on well-chosen color
+palettes to highlight patterns and convey information clearly <span class="citation">@midway20</span>}. With the abundance of available
+color palettes, ranging from those derived from perceptually uniform
+color spaces like HCL <span class="citation">@hcl</span>,scico,matplotlib} to those designed for
+color blindness accessibility <span class="citation">@misc.okabe</span>,tol,matplotlib} or inspired by art
+<span class="citation">@met</span>,wes} and nature <span class="citation">@parks</span>}, selecting the optimal palette for a
+specific visualization task can be challenging.</p>
+<p>This challenge is further compounded by the need to consider
+accessibility for individuals with color vision deficiency, who comprise
+an estimated 8% of males and 0.5% of females globally <span class="citation">@birch2012</span>}. Accessibility guidelines, such as
+WCAG 2.2 <span class="citation">@wcag22</span>}, recommend minimum
+contrast ratios between colors to ensure readability. Ensuring that
+visualizations are interpretable by everyone, regardless of their color
+vision capabilities, is essential for effective communication.</p>
+<p>To address these challenges, we introduce , an open-source software
+tool for analyzing and comparing color palettes. Developed as a package
+for the R programming language <span class="citation">@c4a</span>} that
+features an interactive dashboard tool, provides a comprehensive set of
+features to evaluate palettes based on various criteria, including
+color-blind friendliness, contrast, and a novel fairness metric.
+Fairness evaluates whether all colors in a palette stand out equally.
+This is particularly important for categorical palettes to prevent
+visual bias and ensure that no single category dominates the
+visualization.</p>
+<p>Recognizing that these properties can involve trade-offs, empowers
+users to make informed decisions based on their specific needs and
+priorities. The tool’s interactive nature allows users to explore and
+compare palettes, weighing different factors to select the most suitable
+option for their visualization task.</p>
+<p>With , we aim to engage the information visualization community in
+color perception research and promote the development of more accessible
+and effective visualizations. By providing this open-source tool, we
+hope to reach researchers, designers, and practitioners alike,
+encouraging the sharing of knowledge and best practices in color palette
+selection and design.</p>
 </div>
 <div class="section level2">
-<h2 id="related-r-packages">Related R packages<a class="anchor" aria-label="anchor" href="#related-r-packages"></a>
+<h2 id="related-literature">Related literature}<a class="anchor" aria-label="anchor" href="#related-literature"></a>
 </h2>
-<p>The foundation of this package is another R package: <a href="https://colorspace.r-forge.r-project.org/" class="external-link"><strong>colorspace</strong></a>.
-We use this package to analyse colors. For this purpose and specifically
-for color blind friendliness checks, we additionally use <a href="https://github.com/Nowosad/colorblindcheck" class="external-link"><strong>colorblindcheck</strong></a>.</p>
-<p>There are a few other pacakges with a large collection of color
-palettes, in particular <a href="https://kwstat.github.io/pals/" class="external-link"><strong>pals</strong></a> and <a href="https://github.com/EmilHvitfeldt/paletteer" class="external-link"><strong>paletteer</strong></a>.
-There are a few features that distinguishes <strong>cols4all</strong>
-from those packages:</p>
-<ul>
-<li><p>Color palettes are characterized and analysed. Properties such as
-color blindness, fairness (whether colors stand out about equally), and
-contrast are determined for each palette.</p></li>
-<li><p>Bivariate color palettes are available (besides the three main
-palette types: categorical, sequential, and diverging).</p></li>
-<li><p>Own color palettes can be loaded and analysed.</p></li>
-<li><p>Color for missing values are made explicit.</p></li>
-<li><p>Palettes are made consistent with each other to enable
-comparison. For instance, black and white are (by default) removed from
-categorical palettes. Another standard that we adapt to is that all
-sequential palettes go from light to dark and not the other way
-round.</p></li>
-<li><p>There is native support for <strong>ggplot2</strong> and
-<strong>tmap</strong> (as of the upcoming version 4).</p></li>
-<li><p>There are a couple of exporting options, including (bibtex)
-citation.</p></li>
-</ul>
+<p>Visualization software and tools increasingly incorporate features
+for color palette selection, offering predefined palettes and
+interactive previews. ColorBrewer <span class="citation">@brewer</span>}
+provides a limited but highly popular set of palettes and includes a
+colorblind-safe checkbox to aid in palette selection. Commercial
+platforms like Tableau <span class="citation">@tableau</span>} and
+Microsoft Power BI <span class="citation">@powerbi</span>} offer more
+extensive built-in palettes. Platforms like Adobe Color <span class="citation">@adobe</span>} and Color Hunt <span class="citation">@colorhunt</span>} support community-driven exploration
+and creation. However, these tools primarily focus on quick exploration
+rather than in-depth analysis and comparison of palette properties.</p>
+<p>Dedicated tools address this gap by providing more comprehensive
+analytical capabilities. CCC-Tool <span class="citation">@CCCtool</span>} and Colorgorical <span class="citation">@Colorgorical</span>} allow for palette generation
+based on user preferences, catering to experienced users. In contrast,
+prioritizes analysis and comparison over generation, empowering users to
+make informed choices based on quantitative and qualitative insights
+derived from objective metrics and visualizations.</p>
+<p>Recent research has explored advanced techniques for color palette
+recommendation. Deep learning approaches show promise for automated
+palette selection <span class="citation">@yuan22</span>}, but often lack
+the transparency and interpretability of ’s user-centric approach.
+Similarly, McNutt et al. <span class="citation">@mcnutt2024</span>}
+introduced a visualization linter for automated color palette checking,
+which is valuable for identifying potential issues but differs from ’s
+focus on interactive exploration and comparison.</p>
+<p>Furthermore, deliberately avoids linking colors or palettes to
+specific emotions, recognizing the cultural and temporal variability of
+color associations <span class="citation">@elliot2014</span>,
+schloss2011}. By focusing on objective metrics rather than subjective
+interpretations, fosters informed decision-making without relying on
+potentially culturally biased associations.</p>
 </div>
 <div class="section level2">
-<h2 id="using-cols4all">Using cols4all<a class="anchor" aria-label="anchor" href="#using-cols4all"></a>
+<h2 id="preliminaries">Preliminaries}<a class="anchor" aria-label="anchor" href="#preliminaries"></a>
 </h2>
 <div class="section level3">
-<h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h3 id="color-vision">Color vision}<a class="anchor" aria-label="anchor" href="#color-vision"></a>
 </h3>
-<p>The <code>cols4all</code> is available on CRAN and can be installed
-as follows</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"cols4all"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>The latest development version can be installed as follows:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mtennekes/cols4all"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>Humans typically perceive color through three types of cone cells.
+These cones measure the color spectrum in three different areas: short,
+medium, and long wavelengths. The combination of these three cone types
+leads to a color percept (a perceived color).</p>
+<p>People with color vision deficiency lack (at least) one type of cone.
+For the three types of color blindness, , , and , the missing cones are
+those mainly sensitive to medium (green), long (red), and short (blue)
+wavelengths, respectively. Color perception for these individuals is
+based on the two remaining cone types. As a result, people with
+deuteranopia and protanopia have difficulty distinguishing green and
+red, whereas people with tritanopia can hardly distinguish blue from
+yellow <span class="citation">@neitz90</span>}.</p>
+<p>People can also be partially color blind. However, to avoid excessive
+complexity in the analysis, we do not take the severity level into
+account. For brevity, individuals with deuteranopia, protanopia, and
+tritanopia will be referred to as , , and , respectively.</p>
 </div>
 <div class="section level3">
-<h3 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+<h3 id="contrast-ratio">Contrast ratio}<a class="anchor" aria-label="anchor" href="#contrast-ratio"></a>
 </h3>
-<p>Load the package:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mtennekes.github.io/cols4all/">cols4all</a></span><span class="op">)</span></span></code></pre></div>
-<p>The main tool is a dashboard (shown above), which is started
-with:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/c4a_gui.html">c4a_gui</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>What types and series are available?</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/c4a_palettes.html">c4a_types</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   type                          description</span></span>
-<span><span class="co">#&gt; 1  cat                          categorical</span></span>
-<span><span class="co">#&gt; 2  seq                           sequential</span></span>
-<span><span class="co">#&gt; 3  div                            diverging</span></span>
-<span><span class="co">#&gt; 4  cyc                               cyclic</span></span>
-<span><span class="co">#&gt; 5 bivs  bivariate (sequential x sequential)</span></span>
-<span><span class="co">#&gt; 6 bivc bivariate (sequential x categorical)</span></span>
-<span><span class="co">#&gt; 7 bivd   bivariate (sequential x diverging)</span></span>
-<span><span class="co">#&gt; 8 bivg bivariate (sequential x desaturated)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/c4a_palettes.html">c4a_series</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        series                                         description</span></span>
-<span><span class="co">#&gt; 1      brewer                                ColorBrewer palettes</span></span>
-<span><span class="co">#&gt; 2       carto                          Palettes designed by CARTO</span></span>
-<span><span class="co">#&gt; 3    cols4all                  cols4all palettes (in development)</span></span>
-<span><span class="co">#&gt; 4         hcl  Palettes from the Hue Chroma Luminance color space</span></span>
-<span><span class="co">#&gt; 5      kovesi                   Palettes designed by Peter Kovesi</span></span>
-<span><span class="co">#&gt; 6  matplotlib         Palettes from the Python library matplotlib</span></span>
-<span><span class="co">#&gt; 7         met Palettes inspired by The Metropolitan Museum of Art</span></span>
-<span><span class="co">#&gt; 8        misc                              Miscellaneous palettes</span></span>
-<span><span class="co">#&gt; 9       parks                 Palettes inspired by National Parks</span></span>
-<span><span class="co">#&gt; 10       poly               Qualitative palettes with many colors</span></span>
-<span><span class="co">#&gt; 11    powerbi                    Palettes from Microsoft Power BI</span></span>
-<span><span class="co">#&gt; 12      scico             Scientific colour maps by Fabio Crameri</span></span>
-<span><span class="co">#&gt; 13    seaborn            Palettes from the Python library Seaborn</span></span>
-<span><span class="co">#&gt; 14    stevens                Bivariate palettes by Joshua Stevens</span></span>
-<span><span class="co">#&gt; 15    tableau                        Palettes designed by Tableau</span></span>
-<span><span class="co">#&gt; 16        tol                       Palettes designed by Paul Tol</span></span>
-<span><span class="co">#&gt; 17        wes                   Palettes from Wes Anderson movies</span></span></code></pre></div>
-<p>How many palettes per type x series?</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/c4a_palettes.html">c4a_overview</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        series                                         description cat seq div</span></span>
-<span><span class="co">#&gt; 1      brewer                                ColorBrewer palettes   8  18   9</span></span>
-<span><span class="co">#&gt; 2       carto                          Palettes designed by CARTO   6  21   7</span></span>
-<span><span class="co">#&gt; 3    cols4all                  cols4all palettes (in development)  14  NA   2</span></span>
-<span><span class="co">#&gt; 4         hcl  Palettes from the Hue Chroma Luminance color space   9  23  11</span></span>
-<span><span class="co">#&gt; 5      kovesi                   Palettes designed by Peter Kovesi  NA  28  14</span></span>
-<span><span class="co">#&gt; 6  matplotlib         Palettes from the Python library matplotlib  NA  51  12</span></span>
-<span><span class="co">#&gt; 7         met Palettes inspired by The Metropolitan Museum of Art  33   8  14</span></span>
-<span><span class="co">#&gt; 8        misc                              Miscellaneous palettes   5  NA  NA</span></span>
-<span><span class="co">#&gt; 9       parks                 Palettes inspired by National Parks  22   5   3</span></span>
-<span><span class="co">#&gt; 10       poly               Qualitative palettes with many colors   9  NA  NA</span></span>
-<span><span class="co">#&gt; 11    powerbi                    Palettes from Microsoft Power BI  19   1   4</span></span>
-<span><span class="co">#&gt; 12      scico             Scientific colour maps by Fabio Crameri  21  21  10</span></span>
-<span><span class="co">#&gt; 13    seaborn            Palettes from the Python library Seaborn   6   4   2</span></span>
-<span><span class="co">#&gt; 14    stevens                Bivariate palettes by Joshua Stevens  NA  NA  NA</span></span>
-<span><span class="co">#&gt; 15    tableau                        Palettes designed by Tableau  29  23  28</span></span>
-<span><span class="co">#&gt; 16        tol                       Palettes designed by Paul Tol   8   8   4</span></span>
-<span><span class="co">#&gt; 17        wes                   Palettes from Wes Anderson movies  23  NA   1</span></span>
-<span><span class="co">#&gt;    cyc bivs bivc bivd bivg</span></span>
-<span><span class="co">#&gt; 1   NA    2    2    1   NA</span></span>
-<span><span class="co">#&gt; 2   NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 3   NA    2   NA    2    5</span></span>
-<span><span class="co">#&gt; 4    6   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 5    8   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 6    3   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 7   NA   NA    1   NA   NA</span></span>
-<span><span class="co">#&gt; 8   NA   NA    3   NA   NA</span></span>
-<span><span class="co">#&gt; 9   NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 10  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 11  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 12   5   NA    2   NA    1</span></span>
-<span><span class="co">#&gt; 13  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 14  NA    5   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 15  NA   NA    3   NA   NA</span></span>
-<span><span class="co">#&gt; 16  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; 17  NA   NA   NA   NA   NA</span></span></code></pre></div>
-<p>What palettes are available, e.g diverging from the hcl series?</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Diverging palettes from the 'hcl' series</span></span>
-<span><span class="fu"><a href="../reference/c4a_palettes.html">c4a_palettes</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"div"</span>, series <span class="op">=</span> <span class="st">"hcl"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "hcl.blue_red"     "hcl.blue_red2"    "hcl.blue_red3"    "hcl.red_green"   </span></span>
-<span><span class="co">#&gt;  [5] "hcl.purple_green" "hcl.purple_brown" "hcl.green_brown"  "hcl.blue_yellow2"</span></span>
-<span><span class="co">#&gt;  [9] "hcl.blue_yellow3" "hcl.green_orange" "hcl.cyan_magenta"</span></span></code></pre></div>
-<p>Give me the colors!</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># select purple green palette from the hcl series:</span></span>
-<span><span class="fu"><a href="../reference/c4a.html">c4a</a></span><span class="op">(</span><span class="st">"hcl.purple_green"</span>, <span class="fl">11</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "#492050" "#82498C" "#B574C2" "#D2A9DB" "#E8D4ED" "#F1F1F1" "#C8E1C9"</span></span>
-<span><span class="co">#&gt;  [8] "#91C392" "#4E9D4F" "#256C26" "#023903"</span></span>
-<span></span>
-<span><span class="co"># get the associated color for missing values</span></span>
-<span><span class="fu"><a href="../reference/c4a.html">c4a_na</a></span><span class="op">(</span><span class="st">"hcl.purple_green"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "#BABABA"</span></span></code></pre></div>
-<p>Plot these colors:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/c4a_plot.html">c4a_plot</a></span><span class="op">(</span><span class="st">"hcl.purple_green"</span>, <span class="fl">11</span>, include.na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cols4all_files/figure-html/unnamed-chunk-11-1.png" width="576"></p>
+<p>The contrast ratio measures the difference in brightness between
+foreground and background colors. It is defined as:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>R</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>+</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mi>j</mi></msub><mo>+</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">\begin{equation}\label{eq:cr}
+CR(i,j) = \frac{(Y_i + \alpha)}{(Y_j + \alpha)}
+\end{equation}</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
+represent two colors, with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+being the lighter one, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">Y_i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Y</mi><mi>j</mi></msub><annotation encoding="application/x-tex">Y_j</annotation></semantics></math>
+are their relative luminance values, ranging from 0 to 1. The parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">\alpha = 0.05</annotation></semantics></math>
+is an offset used to compensate for contrast ratios that occur when
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Y</mi><mi>j</mi></msub><annotation encoding="application/x-tex">Y_j</annotation></semantics></math>
+is (close to) 0. With this
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+value, the contrast ratio ranges from 1:1 to 21:1.</p>
+<p>The WCAG 2.2 guidelines for text readability are as follows <span class="citation">@wcag22</span>}:</p>
+<p>WCAG 2.2 level AA requires a minimum contrast ratio of 3:1 for
+informational non-text elements, both against the background and any
+adjacent colors <span class="citation">@wcag22</span>}.</p>
 </div>
 <div class="section level3">
-<h3 id="using-cols4all-palettes-in-ggplot2">Using cols4all palettes in ggplot2<a class="anchor" aria-label="anchor" href="#using-cols4all-palettes-in-ggplot2"></a>
+<h3 id="hcl-color-space">HCL color space}<a class="anchor" aria-label="anchor" href="#hcl-color-space"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"diamonds"</span><span class="op">)</span></span>
-<span><span class="va">diam_exp</span> <span class="op">=</span> <span class="va">diamonds</span><span class="op">[</span><span class="va">diamonds</span><span class="op">$</span><span class="va">price</span> <span class="op">&gt;=</span> <span class="fl">15000</span>, <span class="op">]</span></span>
-<span></span>
-<span><span class="co"># discrete categorical scale</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">diam_exp</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">carat</span>, y <span class="op">=</span> <span class="va">price</span>, color <span class="op">=</span> <span class="va">color</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/scales_ggplot2.html">scale_color_discrete_c4a_cat</a></span><span class="op">(</span><span class="st">"carto.safe"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_light</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cols4all_files/figure-html/unnamed-chunk-12-1.png" width="576"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># continuous diverging scale</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">diam_exp</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">carat</span>, y <span class="op">=</span> <span class="va">depth</span>, color <span class="op">=</span> <span class="va">price</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/scales_ggplot2.html">scale_color_continuous_c4a_div</a></span><span class="op">(</span><span class="st">"wes.zissou1"</span>, mid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">diam_exp</span><span class="op">$</span><span class="va">price</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_light</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="cols4all_files/figure-html/unnamed-chunk-12-2.png" width="576"></p>
+<p>This work adopts the Hue-Chroma-Luminance (HCL) color space, a
+cylindrical transformation of the CIELUV color space. This color space,
+also used by <span class="citation">@hcl</span>,colorspace,ihaka2003},
+has three dimensions:
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>),
+ranging from 0 to 360 degrees;
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>),
+ranging from 0 (grayscale) to a maximum that depends on both hue and
+luminance; and
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>),
+ranging from 0 (black) to 100 (white).</p>
 </div>
 <div class="section level3">
-<h3 id="overview-of-functions">Overview of functions<a class="anchor" aria-label="anchor" href="#overview-of-functions"></a>
+<h3 id="color-distance">Color distance}<a class="anchor" aria-label="anchor" href="#color-distance"></a>
 </h3>
-<p>Main functions:</p>
-<ul>
-<li>
-<code>c4a_gui</code> Dashboard for analyzing the palettes</li>
-<li>
-<code>c4a</code> Get the colors from a palette (<code>c4a_na</code>
-for the associated color for missing values)</li>
-<li>
-<code>c4a_plot</code> Plot a color palette</li>
-</ul>
-<p>Palette names and properties:</p>
-<ul>
-<li>
-<code>c4a_palettes</code> Get available palette names</li>
-<li>
-<code>c4a_series</code> Get available series names</li>
-<li>
-<code>c4a_types</code> Get implemented types</li>
-<li>
-<code>c4a_overview</code> Get an overview of palettes per series x
-type.</li>
-<li>
-<code>c4a_citation</code> Show how to cite palettes (with bibtex
-code).</li>
-<li>
-<code>c4a_info</code> Get information from a palette, such as type
-and maximum number of colors</li>
-<li>
-<code>.P</code> Environment via which palette names can be browsed
-with auto-completion (using <code>$</code>)</li>
-</ul>
-<p>Importing and exporting palettes:</p>
-<ul>
-<li>
-<code>c4a_data</code> Build color palette data</li>
-<li>
-<code>c4a_load</code> Load color palette data</li>
-<li>
-<code>c4a_sysdata_import</code> Import system data</li>
-<li>
-<code>c4a_sysdata_export</code> Export system data</li>
-</ul>
-<p>Edit color palette data</p>
-<ul>
-<li>
-<code>c4a_duplicate</code> Duplicates a color palette</li>
-<li>
-<code>c4a_modify</code> Modifies palette colors</li>
-</ul>
-<p>ggplot2</p>
-<ul>
-<li>
-<code>scale_&lt;aesthetic&gt;_&lt;mapping&gt;_c4a_&lt;type&gt;</code>
-e.g. <code>scale_color_continuous_c4a_div</code> Add scale to
-ggplot2.</li>
-</ul>
+<p>To measure the perceived distance between two colors, we use the
+metric <span class="citation">@sharma2005</span>}, denoted by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Delta E(i,j)</annotation></semantics></math>.</p>
+<p>The interpretation of Delta E values depends on several factors, most
+importantly the application. We apply the following rule of thumb:</p>
+<table class="table">
+<thead><tr class="header">
+<th align="left">Delta E Range</th>
+<th align="left">Perceptibility</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">0-1</td>
+<td align="left">Not perceptible at all</td>
+</tr>
+<tr class="even">
+<td align="left">1-2</td>
+<td align="left">Perceptible through close observation</td>
+</tr>
+<tr class="odd">
+<td align="left">2-5</td>
+<td align="left">Noticeable difference</td>
+</tr>
+<tr class="even">
+<td align="left">5-10</td>
+<td align="left">Strong color difference</td>
+</tr>
+<tr class="odd">
+<td align="left">10-15</td>
+<td align="left">Substantial color difference</td>
+</tr>
+<tr class="even">
+<td align="left">15+</td>
+<td align="left">Vastly different colors</td>
+</tr>
+</tbody>
+</table>
+<p>To measure color distances as perceived by people with color vision
+deficiency, we apply the Delta E metric in simulations for deuteranopia,
+protanopia, and tritanopia <span class="citation">@machado2009</span>,colorblindcheck}. These metrics are
+denoted by <span class="math inline">$\Delta E^{\mbox{\scriptsize
+deutan}}(i,j)$</span>, <span class="math inline">$\Delta
+E^{\mbox{\scriptsize protan}}(i,j)$</span>, and <span class="math inline">$\Delta E^{\mbox{\scriptsize tritan}}(i,j)$</span>,
+respectively.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="color-spaces">Color spaces<a class="anchor" aria-label="anchor" href="#color-spaces"></a>
+<h2 id="tool-description">Tool description}<a class="anchor" aria-label="anchor" href="#tool-description"></a>
 </h2>
-<p>Visual perception, in particular colors, is complex. For the purpose
-of information visualization it is explained in an accessible way by
-Ware (2019). In this vignette, we briefly describe the color spaces that
-are needed to understand the functionality of
-<strong>cols4all</strong>.</p>
-<p>The human eye has three types of cones (specific photoreceptor cells
-in the retina), which are sensitive to light of different wavelengths:
-long, medium, and short. Their peak sensitivities (of 565, 540, and
-440nm respectively) correspond to the primary colors red, green, and
-blue respectively. In computer graphics, a color is usually defined as
-RGB, which is a mixture of those three primary colors. RGB colors are
-often represented in hex-format (e.g. #FF00FF), where the first two
-characters specify red, the third and fourth green and the last two
-blue. Therefore #FF00FF is purple. A standard RGB space in computer
-graphics is <em>sRGB</em> (which exactly defines the primary colors, the
-white point, and a so-called gamma correction which is needed to
-perceive a grayscale linearly).</p>
-<p>To analyse color palettes, we also use the polarLUV color space,
-which is a transformation of the CIELUV space. In this space, known as
-<em>HCL</em>, a color is defined by three variables:</p>
+<p>We introduce a tool, called , that can be used to analyse and compare
+color palettes. It is written as a package for the R programming
+language <span class="citation">@r</span>}.</p>
+<p>The cols4all package has an on-going development and driven by the
+active community of statisticians and data scientists that use R. The
+color palettes can easily be used in any other R package, and has native
+integration with the popular visualization package ggplot2 <span class="citation">@ggplot2</span>}. Via the GUI, these palettes can also
+be copied to the clipboard and used anywhere else.</p>
+<p>The tool is intended for data visualization designers to select
+appropriate color palettes for their data visualizations. Another use
+case for designers is to test their own (corporate) palettes, and to
+compare them against other existing palettes. The tool may also be
+useful for other users, in particular graphic designers and web
+designers. User studies are required to ensure that the design of the
+interface is effective, efficient, and easy to use.</p>
+<div class="section level3">
+<h3 id="organisation-of-palettes">Organisation of palettes}<a class="anchor" aria-label="anchor" href="#organisation-of-palettes"></a>
+</h3>
+<p>This work focuses exclusively on color palettes. Continuous color
+palettes can be loaded and analysed in as well, but under the hood they
+are discretized in a sufficient number of classes. Conversely,
+interpolation (linear or spline) in a color space (RGB or CIELab) can
+transform any discrete palette into a continuous color ramp.</p>
+<p>Palettes are organised by functional type. We distinguish the
+following types:</p>
 <ul>
 <li>
-<strong>Hue</strong> The hue of a color is how we call casually name
-colors: e.g. yellow, purple, blue, orange, etc. It is defined as a polar
-coordinate, so takes values from 0 to 360 degrees.</li>
+<strong>Categorical:</strong> Colors from a categorical (also known
+as qualitative) palette are typically very distinct, especially in hue
+and are unordered. These palettes are employed to represent categorical
+data without a natural order, such as economic sectors.</li>
 <li>
-<strong>Chroma</strong> The vividness or intensity of the color. The
-higher, the more colorful. The maximum chroma depends on the hue.
-Grayscale colors have 0 chroma. The maximum value depends the hue and
-luminance.</li>
+<strong>Sequential:</strong> A sequential palette consists of a
+gradient of colors, which are used to represent data that follow a
+natural order or progression, such as age.</li>
 <li>
-<strong>Luminance</strong> The amount of light emitted from an
-object (e.g. a computer screen). It is similar to <em>brightness</em>,
-although the latter is a relative measure. It takes values from 0 to
-100.</li>
+<strong>Diverging:</strong> A diverging palette also consists of a
+gradient of colors, but with a clear midpoint. Consequently, these
+palettes encode data that have a clear neutral value, for instance stock
+price changes or Likert scale responses.</li>
+<li>
+<strong>Cyclical:</strong> A cyclic palette consists of a gradient
+of colors that can be repeated seamlessly, so the first and last color
+should be identical. Although used rarely compared to the types
+mentioned above, they can be useful for several applications, such as
+encoding biological rhythms and cyclic economic indicators, such as
+business cycles.</li>
+<li>
+<strong>Bivariate:</strong> A bivariate palette is a two-dimensional
+color table that is used to encode bivariate data, for instance
+population density and income, or bivaraite socioeconomic indicators. We
+distinguish four subtypes where the first dimension, represented by the
+rows, is equal to sequential color scale. For these subtypes, the second
+dimension (columns) is represented as sequential, categorical,
+diverging, and a desaturated scale respectively.</li>
 </ul>
+<p>Examples of each of these palette types are provided in Figure~. This
+list of palette types is not exhaustive; for instance also palettes for
+tree-structured data have been designed <span class="citation">@tennekes14</span>}. Because these kind of palette
+types are special and often one of a kind, they are not (yet) included
+in .</p>
+<p>Palettes are also arranged by series, by which we mean either the
+source (e.g.  stands for ColorBrewer <span class="citation">@brewer</span>}) or group of similar palettes (e.g. 
+includes categorical palettes with many colors). An overview of the
+palettes that are included in cols4all is provided in Table~.</p>
+<p>Some categorical color palettes have included black or white, e.g. 
+<span class="citation">@misc.okabe</span>}. Since these colors are
+typically used for background or annotations only, not just for those
+palettes but for any categorical palette, we removed black and white
+from all categorical palettes. However, we took both black and white
+into account for certain parts of the analysis, for instance regarding
+contrast ratio.</p>
+<p>Exploratory data analysis often deals with analysis and visualisation
+of missing values <span class="citation">@vim</span>,song21}. Therefore,
+we assigned a special color for missing values for each palette. The
+palette series by Paul Tol <span class="citation">@tol</span>} already
+contains dedicated colors for missing values. For the other palettes, we
+use simple heuristics to obtain a suitable color, which is a greyscale
+color that is distinguishable from the other palette colors not only by
+people with normal color vision but also by colorblind people.</p>
+<p>Users are able to load, analyse, and compare other palettes as well
+<span class="citation">@c4a</span>}. The palette names in the tool are
+formatted in snake case, with the series name put in front separated
+with a dot. E.g. the Color Blind from Tableau <span class="citation">@tableau</span>} is called .</p>
+</div>
+<div class="section level3">
+<h3 id="properties">Properties}<a class="anchor" aria-label="anchor" href="#properties"></a>
+</h3>
+<div class="section level4">
+<h4 id="color-blind-friendliness">Color blind friendliness}<a class="anchor" aria-label="anchor" href="#color-blind-friendliness"></a>
+</h4>
+<p>Let the minimal perceived distance of two colors
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
+colors by defined as</p>
+<p><span class="math display">$$\begin{equation}
+d(i,j) = \min \left( \substack{
+\Delta E(i,j), \\
+\Delta E^{\mbox{\scriptsize deutan}}(i,j), \\
+\Delta E^{\mbox{\scriptsize protan}}(i,j), \\
+\Delta E^{\mbox{\scriptsize tritan}}(i,j)
+} \right)
+\end{equation}$$</span></p>
+<p>This metric takes all four groups (people with normal color vision
+and each of the color blindness groups) into account. In case two color
+can easily be distinguished by three of these groups, but not so well by
+the fourth, than
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">d(i,j)</annotation></semantics></math>
+will be low.</p>
+<p>For
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">d(i,j)</annotation></semantics></math>
+we use the same interpretation as provided in Table~, so of the group
+that has the most trouble with distinguishing the colors.</p>
+<p>For palettes we simply use the minimum distance over any two palette
+colors
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">min_dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>min</mo><mrow><mi>i</mi><mo>,</mo><mi>j</mi><mo>∈</mo><mi>S</mi></mrow></munder><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}\label{Minimum distance}
+\mbox{min\_dist}(S) = \min_{i,j \in S} d(i,j)
+\end{equation}</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math>
+is the set of colors that form a certain color palette.</p>
+<p>Higher values are generally preferable. To make decision making
+easier, we discretize this metric into three point Likert scale, with
+additional fourth
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>+</mo><mo>+</mo></mrow><annotation encoding="application/x-tex">++</annotation></semantics></math>
+category:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>−</mo></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mn>0</mn><mo>≤</mo><mtext mathvariant="normal">min_dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>&lt;</mo><mn>2</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>∘</mo></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mn>2</mn><mo>≤</mo><mtext mathvariant="normal">min_dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>&lt;</mo><mn>10</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>+</mo></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mn>10</mn><mo>≤</mo><mtext mathvariant="normal">min_dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>&lt;</mo><mn>15</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>+</mo><mo>+</mo></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">min_dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mn>15</mn></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{equation}
+\begin{aligned}
+&amp;- &amp;&amp; 0 \le \mbox{min\_dist}(S) &lt; 2 \\
+&amp;\circ &amp;&amp; 2 \le \mbox{min\_dist}(S) &lt; 10 \\
+&amp;+ &amp;&amp; 10 \le \mbox{min\_dist}(S) &lt; 15 \\
+&amp;++ &amp;&amp; \mbox{min\_dist}(S) \ge 15
+\end{aligned}
+\end{equation}</annotation></semantics></math></p>
+<p>In the main overview table (Figure~), the categories are represented
+by symbols: side eyes for
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>−</mo><annotation encoding="application/x-tex">−</annotation></semantics></math>,
+a smiley for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>+</mo><annotation encoding="application/x-tex">+</annotation></semantics></math>,
+and a double smiley for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>+</mo><mo>+</mo></mrow><annotation encoding="application/x-tex">++</annotation></semantics></math>.</p>
+<p>While the default threshold values are based on the Delta~E
+interpretation provided above, users can adjust them within cols4all.
+The
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>+</mo><annotation encoding="application/x-tex">+</annotation></semantics></math>
+category can be interpreted as color blind friendly, the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>−</mo><annotation encoding="application/x-tex">-</annotation></semantics></math>
+as not color blind friendly, and the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>∘</mo><annotation encoding="application/x-tex">\circ</annotation></semantics></math>
+as in between. For categorical palettes we added the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>+</mo><mo>+</mo></mrow><annotation encoding="application/x-tex">++</annotation></semantics></math>
+to highlight palettes for which the colors can be distinguished with
+ease by people with color vision deficiency. This is especially useful
+for applications in which the colored objects are small, e.g. lines and
+points.</p>
+<p>We use the same metric
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">min_dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mbox{min\_dist}(S)</annotation></semantics></math>
+for palettes. Because color distances are smaller for gradient color
+ramps we use different default threshold values, namely 1 and 5 and make
+not use of an additional fourth category.</p>
+<p>In addition, it is important that the order of the colors is
+correctly perceived. If three colors
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+are next to each other in a palette, then both
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">d(i,j)</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">d(j,k)</annotation></semantics></math>
+should be less than
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">d(i,k</annotation></semantics></math>.
+Hence, we derive the following metric, that we call triangle inequality
+difference score:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">tri_ineq</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>min</mo><mrow><mo stretchy="false" form="prefix">{</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">}</mo><mo>∈</mo><mi>S</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">(</mo><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mo>max</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}\label{Minimum distance}
+\mbox{tri\_ineq}(S) = \min_{\{i,j,k\} \in S} \left( d(i,k) - \max \left( d(i,j), d(j,k) \right) \right)
+\end{equation}</annotation></semantics></math></p>
+<p>where we use
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{\}</annotation></semantics></math>
+to denote colors that are next to each other.</p>
+<p>Higher values are generally preferable, with 0 as a clear threshold.
+Values below 0 indicate that the perceived color distance between
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+is less than that between either
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
+or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>−</mo></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mn>0</mn><mo>≤</mo><mtext mathvariant="normal">min_dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>&lt;</mo><mn>2</mn></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">OR</mtext></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">tri_ineq</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>&lt;</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>+</mo></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">min_dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mn>5</mn></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">AND</mtext></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">tri_ineq</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mn>2</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>∘</mo></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">otherwise</mtext></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{equation}
+\begin{aligned}
+&amp;- &amp;&amp; 0 \le \mbox{min\_dist}(S) &lt; 2 &amp;&amp; \mbox{OR} &amp;&amp; \mbox{tri\_ineq}(S) &lt; 0\\
+&amp;+ &amp;&amp; \mbox{min\_dist}(S) \ge 5 &amp;&amp; \mbox{AND} &amp;&amp; \mbox{tri\_ineq}(S) \ge 2\\
+&amp;\circ &amp;&amp; \mbox{otherwise} &amp;&amp; &amp;&amp; \\
+\end{aligned}
+\end{equation}</annotation></semantics></math></p>
+<p>These threshold values can be adjusted inside cols4all if needed.</p>
+<p>For palettes we use three metrics to derive a color blind
+friendliness property. Instead of min_dist, two metrics are introduced,
+namely min_step that is defined as the minimum distance of two
+neighbouring colors, and inter_wing_dist, the distance between the two
+wings of the palette.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">min_step</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>min</mo><mrow><mo stretchy="false" form="prefix">{</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">}</mo><mo>∈</mo><mi>S</mi></mrow></munder><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}\label{Minimum distance}
+\mbox{min\_step}(S) = \min_{\{i,j\} \in S} d(i,j)
+\end{equation}</annotation></semantics></math></p>
+<p>The inter wing distance is the minimum distance between any palette
+color
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+(except the middle color) and its opposite wing:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">inter_wing_dist</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>min</mo><mrow><mi>i</mi><mo>∈</mo><mi>S</mi><mi>′</mi></mrow></munder><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><msub><mi>R</mi><mrow><mo>−</mo><mi>i</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}\label{Inter wing distance}
+\mbox{inter\_wing\_dist}(S) = \min_{i \in S'} d(i,R_{-i})
+\end{equation}</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>′</mi></mrow><annotation encoding="application/x-tex">S'</annotation></semantics></math>
+is equal to the palette
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math>
+without middle color (in case the number of colors is odd). We denote
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>R</mi><mrow><mo>−</mo><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">R_{-i}</annotation></semantics></math>
+as the colors of the wing opposite to color
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+in the form of a color ramp. A color ramp is needed to make sure the
+distance between
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+and the colors from the other wing cannot be large just because of the
+luminance (most diverging palettes diverge in luminance with a hue for
+each wing).</p>
+<p>For the palettes we use exactly the same definition of color blind
+friendliness as palettes, with the addition that the first and last
+colors should be identical.</p>
+<p>The color palettes are analysed using a combination of one of the
+definitions above. For a bivaraite sequential x sequential (Figure~(e)),
+three sequential palettes are derived: the two marginal ones (in the
+figure, the top row and the left hand side column) and the diagonal (in
+the figure from top left to bottom right). For each pair of sequential
+palettes, an odd numbered diverging palette is constructed, each with
+the top left color as the middle color. Subsequently the color blind
+friendliness scores for diverging color palettes (as described above) is
+computed, and the minimal score is used. A similar approach is used for
+the other three bivariate color palette types <span class="citation">@c4a</span>}.</p>
+<p>Figure~ shows how users can analyse color blind friendliness in .</p>
+<p>On the top left the CIE xyY space clipped to sRGB gamut is shown with
+hue lines diverging from the defined white point (CIE standard
+illuminant D65). The bottom left shows the same plot, but using colors
+simulated for deutans, with confusion lines <span class="citation">@judd43</span>}.</p>
+<p>In the middle column two similarity matrices are shown, above for
+people with normal color vision, below for deutans. The big dot
+indicates there is a minor issue with pink and grey. This is illustrated
+in the maps in the right hand side column.</p>
+</div>
+<div class="section level4">
+<h4 id="fairness">Fairness}<a class="anchor" aria-label="anchor" href="#fairness"></a>
+</h4>
+<p>We say that a color palette is fair if all colors stand out about
+equally.</p>
+<p>For categorical palettes this property ensures visual balance in data
+visualisations, preventing any single category from dominating, which
+can obscure other categories or create misleading impressions, unless
+deliberate highlighting is employed.</p>
+<p>This is quantified using the luminance and chroma ranges of the
+palette colors:</p>
+<p><span class="math display">$$\begin{equation}
+\Delta L^{\mbox{\scriptsize max}}(S) = \max_{i \in S} L_i - \min_{j \in
+S} L_j
+\end{equation}$$</span></p>
+<p><span class="math display">$$\begin{equation}
+\Delta C^{\mbox{\scriptsize max}}(S) = \max_{i \in S} C_i - \min_{j \in
+S} C_j
+\end{equation}$$</span></p>
+<p>It is important to note that a color’s luminance alone does not
+determine its salience against the background; the background luminance
+also plays a crucial role. This is exactly where the contrast ratio~()
+comes into play. However, the smaller the luminance range of the colors,
+the smaller the contrast ratios of each of those colors with the
+background color, irrespective of the background color and its luminace
+itself.</p>
+<p>For chroma this is a different story; the higher the chroma, the more
+that color will stand out, especilly because background colors are
+generally unchromatic.</p>
+<p>Unlike accessibility properties, there are no hard threshold values
+about what is fair and what not. Therfore, we apply logit
+transformations for both <span class="math inline">$\Delta
+L^{\mbox{\scriptsize max}}$</span> and <span class="math inline">$\Delta
+C^{\mbox{\scriptsize max}}$</span>, normalise and multiply them. The
+result of the derived fairness score is shown in Figure~. The scores
+range from 0 to 100 (fairest). The parameters of those logit
+transformations, resulting in the shown contour lines, can be adjusted
+within cols4all <span class="citation">@c4a</span>}.</p>
+<p>To aid decision making a palette is called fair if the fairness score
+is at least 75, and unfair if it is below 25. This is indicated in the
+main overview table of cols4all (see Figure~) with a heart symbol and a
+cross respectively.</p>
+<p>For the other palette types we only take the chroma range into
+account, because luminance is usually used to form the gradient of
+colors.</p>
+</div>
+<div class="section level4">
+<h4 id="vividness">Vividness}<a class="anchor" aria-label="anchor" href="#vividness"></a>
+</h4>
+<p>Another property that is useful for data visualisation is how vivid
+the palette colors are.</p>
+<p>Prolonged exposure to highly saturated colors can induce visual
+fatigue <span class="citation">@cakir1980</span>}. Therefore, low
+saturated (pastel) colors are generally recommended for space-filling
+visualisations such as choropleths and treemaps <span class="citation">@ware2021</span>}.</p>
+<p><span class="math display">$$\begin{equation}
+C^{\mbox{\scriptsize max}}(S) = \max_{i \in S} C_i
+\end{equation}$$</span></p>
+<p>For decision making purposes, we discretize this metric using default
+threshold values of 100 and 70. In the main overview table (Figure~),
+these classes are shown with a pair of sunglasses (for <span class="math inline">$C^{\mbox{\scriptsize max}}(S) &gt;= 100$</span>)
+and an asterisk (for <span class="math inline">$C^{\mbox{\scriptsize
+max}}(S) &lt; 70$</span>).</p>
+</div>
+<div class="section level4">
+<h4 id="hues">Hues}<a class="anchor" aria-label="anchor" href="#hues"></a>
+</h4>
+<p>Analyzing the distribution of hues within a palette is crucial for
+several reasons. Categorical palettes with an even distribution of hues
+are often aesthetically preferred to those with uneven
+distributions.</p>
+<p>For other palettes types, the distribution of hues is even more
+important, because it directly relates to color blind friendliness.
+Rainbow like sequential or diverging palettes, e.g. that use a wide
+range of hue values, are typically not color blind friendly.</p>
+<p>To facilitate color palette analysis and comparison regarding the
+distribution of hues, we introduce a metric called hue width, which is
+defined as the total width (angle) of all hues of the palette colors.
+This can be computed by 360 minus the largest hue gap:</p>
+<p><span class="math display">$$\begin{equation}
+H^{\mbox{\scriptsize width}}(S) = 360 - \max_{\{i,j\} \in S} H_i-H_j
+\end{equation}$$</span></p>
+<p>Because the maximum value for a palette of length
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>360</mn><mo>−</mo><mn>360</mn><mi>/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">360 - 360/n</annotation></semantics></math>,
+which occurs when the hues are spaced evenly, a score between 0 and 100
+can be derived which we call hue spread:</p>
+<p><span class="math display">$$\begin{equation}
+H^{\mbox{\scriptsize spread}}(S) = \frac{H^{\mbox{\scriptsize
+width}}(S)}{360 - 360/n} * 100
+\end{equation}$$</span></p>
+<p>In the overview table (Figure~ categorical palettes get a rainbow
+symbol when the hue spread is above the default threshold value of
+90.</p>
+<p>For sequential palettes we use the hue width to classify the hues.
+Palettes for which the hue width is less than 15 are labeled as “single
+hue” in the overview table indicated with a pencil symbol. Those
+palettes are generally recommended because of the relative low visual
+bias <span class="citation">@ware2021</span>}. Palettes with a hue width
+above the default threshold value of 180 are labeled as rainbow palette.
+Note that this specification is different than for categorical palettes,
+due to the nature of these palette types.</p>
+<p>For diverging palettes, we calculate the hue widths for both wings.
+If at least one of those hue widths is above 90, the palette is labeled
+as rainbow palette (with a rainbow symbol in the overview table), and if
+both hue widths score below 20, it is classified as double hue, shown in
+the overview table with a yin-yang symbol.</p>
+<p>Color blind friendliness can be analysed with the next tab of the
+tool. Figure~ shows a part of this tab.</p>
+<p>On the top left the CIE xyY space clipped to sRGB gamut is shown with
+hue lines diverging from the defined white point (CIE standard
+illuminant D65). The bottom left shows the same plot, but using colors
+simulated for deutans, with confusion lines <span class="citation">@judd43</span>}.</p>
+<p>In the middle column two similarity matrices are shown, above for
+people with normal color vision, below for deutans. The big dot
+indicates there is a minor issue with pink and grey. This is illustrated
+in the maps in the right hand side column.</p>
+</div>
+<div class="section level4">
+<h4 id="contrast">Contrast}<a class="anchor" aria-label="anchor" href="#contrast"></a>
+</h4>
+<p>Since white and black are frequently used for backgrounds or text,
+properties are included to assess whether palette colors have sufficient
+contrast against them.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">CR_white</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>min</mo><mrow><mi>i</mi><mo>∈</mo><mi>S</mi></mrow></munder><mtext mathvariant="normal">CR</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mtext mathvariant="normal">white</mtext><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}
+\mbox{CR\_white}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{white})
+\end{equation}</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">CR_black</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>min</mo><mrow><mi>i</mi><mo>∈</mo><mi>S</mi></mrow></munder><mtext mathvariant="normal">CR</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mtext mathvariant="normal">black</mtext><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}
+\mbox{CR\_black}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{black})
+\end{equation}</annotation></semantics></math></p>
+<p>If all colors have sufficient contrast with white, which is 3
+according to the WCAG guideline, then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">CR_white</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\mbox{CR\_white}(S)\geq 3</annotation></semantics></math>
+and a white flag will be shown in the overview table (Figure~. For the
+contrast ratio with black, a black flag will be shown.</p>
+<p>Figure~ shows a bar chart of the contrast ratio values of the
+palette~ against white. The horizontal lines correspond to the WCAG
+threshold values; in this example, only yellow does not meet the
+criterion of 3.</p>
+<p>The contrast ratio between two colors is not only useful to check
+accessibility, but also to warn for unwanted visual illusions. Two
+colors are called equiluminant if they have similar luminance values, so
+resulting in a contrast ratio close to 1.</p>
+<p>Several visual illusions could appear at equiluminance, such as that
+the eye has trouble to separate neighbouring objects, even though they
+use totally different colors in terms of hue <span class="citation">@bach</span>}. This is illustrated in the map shown in
+Figure~(a) where two colors of the palette are used.</p>
+<p>Therefore, we compute the minimal contrast ratio between palette
+colors:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">CR_within</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>min</mo><mrow><mi>i</mi><mo>,</mo><mi>j</mi><mo>∈</mo><mi>S</mi></mrow></munder><mtext mathvariant="normal">CR</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}
+\mbox{CR\_within}(S) = \min_{i,j \in S}\mbox{CR}(i, j)
+\end{equation}</annotation></semantics></math></p>
+<p>When this value is below the default threshold value of 1.2, a spiral
+symbol is shown in the overview table~.</p>
+</div>
+<div class="section level4">
+<h4 id="d-blues">3D Blues}<a class="anchor" aria-label="anchor" href="#d-blues"></a>
+</h4>
+<p>A visual illusion called chromostereopsis occurs where two colors are
+perceived in different depth planes <span class="citation">@brewster1844</span>}. This illusion, most prominent
+with red and blue against a black background, can create a perception of
+depth or displacement.</p>
+<p>Figure~ illustrates this illusion with a categorical map of the red
+and blue colors from .</p>
+<p>To warn for this possible visual illusion, which especially occurs
+against a dark background, an blue diamond symbol is shown in the
+overview table.</p>
+</div>
+<div class="section level4">
+<h4 id="naming">Naming}<a class="anchor" aria-label="anchor" href="#naming"></a>
+</h4>
+<p>Color naming significantly influences our perception and
+communication of color, impacting how we understand and interpret visual
+information. The ability to accurately name colors is particularly
+important in data visualization, where clear communication is essential
+<span class="citation">@reda21</span>}. However, color naming is
+inherently subject to cultural variations <span class="citation">@kim19</span>}, with differences observed not only
+between distinct cultural regions but also among neighboring countries.
+For instance, while Dutch uses “paars” and “roze” to describe shades of
+purple and pink, German employs “Violet”, “Lila,” “Pink”, and “Rosa”,
+highlighting the nuances in color terminology even within geographically
+close regions. This cultural variability poses a challenge for
+developing universally applicable color naming systems in data
+visualization.</p>
+<p>In cols4all we derived a property called nameability that informs
+users whether palette colors are easy to name.</p>
+<p>To accomplish this, we explore the match between the palette colors
+and a basic, commonly used, set of color names. By default we use the
+English names of the 11 colors identified by <span class="citation">@boynton89</span>}: green, blue, purple, pink, yellow,
+brown, orange, red, white, grey, and black.</p>
+<p>Let us denote the common color name set as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>.
+We say that the colors of a palette are easy to name if and only if:</p>
+<p>The naming match between the palette colors and the common color
+names is illustrated in Figure~, where the first seven colors from are
+examined. The palette colors are shown as row heads, and the common
+color names as column heads. For each common color name a large set of
+small dots is shown to illustrate the variety of colors that are named
+after this name (more on this later).</p>
+<p>Each dot represents a match; larger dots indicate stronger matches.
+When there are multiple dots in one row, it means that multiple names
+can be given to the corresponding palette color, which violated rule 1.
+This is the case for the last palette color which is most often named
+“purple” but also “pink”. Multiple dots in one column indicate that a
+common color name is used more than once, in this case blue. Hence rule
+2 is violated.</p>
+<p>We used the following method to compute this match and to derive a
+nameability score is the following:</p>
+<p>Advanced users are also able to specify a custom set of basic color
+names and a function that returns a similarity matrix <span class="citation">@c4a</span>}. This enables users to fit a color naming
+model that matches the language of the target audience.</p>
+<p>The variety of colors shown in the column headings are generated by
+the specified classification method. This enables advanced users to
+visually verify the classification and target users to understand the
+match between palette colors and basic color names.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="implementation">Implementation}<a class="anchor" aria-label="anchor" href="#implementation"></a>
+</h3>
+<div class="section level4">
+<h4 id="r-package-cols4all">R package cols4all}<a class="anchor" aria-label="anchor" href="#r-package-cols4all"></a>
+</h4>
+<p>The interactive tool described in this paper is part of the R package
+cols4all. This package can be installed by running the following R
+code:</p>
+<p>In addition to the interactive tool, the package includes functions
+for programmatic access to palette colors, parameter setting, and
+uploading user-defined palettes for analysis. Those functions are out of
+the scope of this paper and are described in the documentation <span class="citation">@c4a</span>}.</p>
+<p>Figures~, ~, and~ present screenshots of the main table for
+categorical, sequential, and diverging palettes, respectively. With the
+inputs above the table, users are able to select and filter color
+palettes. In addition, color blind simulation can be enabled, and color
+codes in various formats can be shown. For advanced users, the
+underlying scores can be shown in the table as additional columns. A
+“dark mode” toggle allows users to switch between light and dark
+background themes.</p>
+<p>The columns on the right-hand side of the colors include symbols on
+which the user can click to obtain either a citation (either plan or in
+Bibtex format) or the palette colors, either in square brackets (used by
+JavaScript and Python) or in R format (using the function).</p>
+<p>The other tabs are used for further analysis of the properties, as
+illustrated above. All figures in this paper are included in these
+tabs.</p>
+<p>The properties fairness, hues, and vividness all use the HCL color
+space, and are therefore further analysed in the HCL Analysis tab.
+Furthermore, in this tab an interactive 3D scatter plot (using <span class="citation">@plotly</span>}) provide additional insights in how the
+palette colors are located in this color space. A screenshot is shown in
+Figure~ where the colors from are plotted.</p>
+<p>In the last tap, Application, users can explore palettes with
+examples of the basic geometry types, points, lines, polygons, and text.
+Furthermore, color vision simulation can be enabled.</p>
+</div>
+</div>
 </div>
 <div class="section level2">
-<h2 id="indicators">Indicators<a class="anchor" aria-label="anchor" href="#indicators"></a>
+<h2 id="palette-design-insights-and-strategies">Palette Design: Insights and Strategies}<a class="anchor" aria-label="anchor" href="#palette-design-insights-and-strategies"></a>
 </h2>
+<p>Although the main focus of this paper is the tool itself rather than
+the analysis and comparison of color palette, we would like to share
+some insights we obtains when using the tool to choose palettes for
+everyday visualisation tasks. Next, we challenged ourselves to create
+own color palettes. Strategies to obtain those palettes are described
+later on.</p>
 <div class="section level3">
-<h3 id="colorblind-friendliness">Colorblind friendliness<a class="anchor" aria-label="anchor" href="#colorblind-friendliness"></a>
+<h3 id="insights-from-palette-analysis">Insights from Palette Analysis}<a class="anchor" aria-label="anchor" href="#insights-from-palette-analysis"></a>
 </h3>
-<p>First of all, we use the distance measure between two colors A and B
-from CIE as defined in 2000 (see Lindbloom, Bruce Justin. Delta E (CIE
-2000).).</p>
-<p>For simplicity, we apply two labels: colorblind friendly
-<font size="4">☺</font> and colorblind unfriendly
-<font size="4">👀</font>. A palette without such label is classified in
-between. Our definition of these labels depend on the palette type:</p>
-<ul>
-<li>(<strong>categorical</strong>) The minimum distance metric
-(<code>min_dist</code>) is the minimum distance between any two colors
-for any color vision deficiency type.
-<ul>
-<li><p><font size="4">☺</font> (colorblind friendly):
-<code>min_dist &gt;= 10</code></p></li>
-<li>
-<p><font size="4">👀</font> (colorblind unfriendly):
-<code>min_dist &lt;= 2</code></p>
-<p>These numbers are parameters that can be changed via
-<code>c4a_options</code>.</p>
-</li>
-</ul>
-</li>
-<li>(<strong>sequential</strong>) The minimum step metric
-(<code>min_step</code>) is used, which is the smallest distance between
-any two adjacent colors (for any color vision deficiency type).
-<ul>
-<li><p><font size="4">☺</font> (colorblind friendly):
-<code>min_step &gt;= 5</code></p></li>
-<li>
-<p><font size="4">👀</font> (colorblind unfriendly):
-<code>min_dist &lt;= 1</code></p>
-<p>Again, these numbers are parameters that can be changed via
-<code>c4a_options</code>. Note that this metric is not very useful when
-a continuous scale is used. In that case, it is recommended to analyse
-the palette with say 7 or 9 colors.</p>
-</li>
-</ul>
-</li>
-<li>(<strong>diverging</strong>) The <code>min_step</code> metric used
-in a similar way as for sequential palettes. In addition, the inter wing
-distance metric (<code>inter_wing_dist</code>) is used, which is the
-minimum color distance between any color in the left wing to any color
-in the right wing of the palette (for any color vision deficiency type).
-<ul>
-<li><p><font size="4">☺</font> (colorblind friendly):
-<code>min_step &gt;= 5</code> and
-<code>inter_wing_dist &gt;= 10</code></p></li>
-<li>
-<p><font size="4">👀</font> (colorblind unfriendly):
-<code>min_dist &lt;= 1</code> or
-<code>inter_wing_dist &lt;= 4</code></p>
-<p>These parameters can be changed via
-<code>c4a_options</code>.</p>
-</li>
-</ul>
-</li>
-<li>(<strong>bivariate (seq x seq)</strong>) Three sequential palettes
-are extracted: a) the first column, b) the bottom row, and c) the
-diagonal. These are combined to form three diverging palettes: ab, ac,
-and bc. For each of these diverging palette, the same checks are applied
-as described above for regular diverging palettes.</li>
-<li>(<strong>bivariate (seq x cat)</strong>) For each row, the same
-checks apply as for a categorical palette</li>
-<li>(<strong>bivariate (seq x div)</strong>) Three sequential palettes
-are extracted: a) the first column, b) the middle column column, and c)
-the last column. These are combined to form three diverging palettes:
-ab, ac, and bc. For each of these diverging palette, the same checks are
-applied as described above for regular diverging palettes.</li>
-<li>(<strong>bivariate (seq x desaturated)</strong>) A diverging palette
-is formed from the first and the last column. The same checks are
-applied as described above for regular diverging palettes.</li>
-</ul>
+<p>Fairness and color blind friendliness often present conflicting
+objectives. Many categorical palettes with seven colors that score high
+on fairness are not classified as color blind friendly. This is shown in
+the main table after filtering on “Fair” and sorting by “Colorblind
+friendly” (Figure~). The most color blind friendly palette of this
+selection is for which the min_dist score is 7.23, a strong color
+difference according Table~, but too low to be labeled as color blind
+friendly. Reversely, color palettes that are labeled as color blind
+friendly were not labeled as fair. The fairest palettes and scored 56
+and 29 on the fairness score, which both fall into the neutral category.
+A general aesthetic preference for fair palettes was observed. Further
+research is necessary to investigate whether this preference is
+subjective or shared across a wider population.</p>
+<p>Many spectral sequential and diverging palettes exhibit limitations
+in terms of color blind friendliness. Designing color blind friendly
+spectral/rainbow palettes is challenging, as individuals with color
+vision deficiency struggle to differentiate hues (see the simulated
+color space for deutans in Figure~).</p>
+<p>A severe issue that may induce visual bias for color blind people is
+illustrated with the palette (which is similar to in Figure~. For people
+with normal color vision, green, the fifth of seven colors, appears to
+be on the right-hand side wing. However, for deutans and protans, this
+color is much closer to the colors from the left-hand side wing. This
+can be explained by analysing the confusion lines (Figure~ bottom left);
+color 5 is on the same confusion line as colors 4 and 1, and only 2
+lines away from colors 2 and 3, whereas the differences with colors 6
+and 7 are 2.5 and 6 confusion lines respectively.</p>
+<p>Several spectral sequential palettes from the series <span class="citation">@scico</span>}, (viridis), and <span class="citation">@kovesi</span>} did succeed in this quest. Moreover,
+they scored high on fairness, as can be seen in Figure~. Also the cyclic
+palettes from scored well on color blind friendliness and fairness.</p>
+<p>Diverging palettes score well on color blind friendliness when both
+wings have a distinct hue (yin yang symbol). More specifically, almost
+exclusively the combinations red/orange/brown with blue, and purple with
+green scored well (Figure~). The former combination has the drawback
+that red and orange are often more saturated, leading to a lower
+fairness score than the latter combination.</p>
+<p>Color blind friendliness of bivariate palettes is even more
+challenging to achieve, because not only the two (or three) marginal
+palettes on which they are based need to be color blind friendly, also
+the bivariate color combinations. Because the properties for bivariate
+palettes are still in development, the labels for color blind
+friendliness and fairness have to be taken with a grain of salt.
+Bivariate palettes that are based on either the orange-blue or
+purple-green combinations are the least color blind unfriendly and could
+therefore be used, albeit with caution. Bivariate palettes of the
+subtype sequantial x categorical with 3 or more columns (categories) are
+almost by definition not color blind friendly, because color blind
+people can only perceive combinations of at most two hues (Figure~). The
+fact they can observe three or more different hues in categorical
+palettes is not because of the hue, but due to the variance in chroma
+and luminance.</p>
 </div>
 <div class="section level3">
-<h3 id="hcl-analysis">HCL analysis<a class="anchor" aria-label="anchor" href="#hcl-analysis"></a>
+<h3 id="strategies-for-palette-design">Strategies for Palette Design}<a class="anchor" aria-label="anchor" href="#strategies-for-palette-design"></a>
 </h3>
-<p>Regarding the used <strong>hues</strong>, there is no simple good and
-bad. However, for quantitative palettes we distinguish</p>
-<ul>
-<li>(<strong>sequential</strong>)
-<ul>
-<li>Single hue palettes (🖌) which are recommended for quantitative
-analysis, but harder to distinguish colors</li>
-<li>Spectral (🌈) which are easy to distinguish colors, but less
-suitable for quantitative analysis</li>
-</ul>
-</li>
-<li>(<strong>diverging</strong>)
-<ul>
-<li>Two-hue palettes (☯) each wing has its own distinct hue, which is
-highly recommended</li>
-<li>Spectral (🌈) which are easy to distinguish colors, but less
-suitable for quantitative analysis</li>
-</ul>
-</li>
-</ul>
-<p>Regarding the used <strong>chroma</strong> /
-<strong>vividness</strong>, we label a color palette</p>
-<ul>
-<li>
-<strong>vivid</strong> (<font size="4">🕶</font>) if it contains a
-color with a chroma value of 100 or higher</li>
-<li>
-<strong>pastel</strong> (<font size="4">❉</font>) if all colors have
-chroma values of at most 70</li>
-</ul>
-<p>These threshold numbers can be configured via options (to do).</p>
-<p>Pastel (low chroma) colors are recommended for <em>space-filling
-visualizations</em>, like maps and bar charts. Vivid (high chroma)
-colors for <em>small objects</em>, such as dots, lines, and text
-labels.</p>
-<p>We also use the <strong>chroma</strong> and
-<strong>luminance</strong> values of palette colors to find out whether
-some colors stand out more than other colors. Ideally, a categorical
-palette should contain colors that stand out about equally (for
-otherwise, one color will draw more attention than another, which may
-bias our perception and interpretation of the shown data). Colors with a
-high chroma value stand out more than less chromatic colors.
-Furthermore, against a bright background, dark colors (low luminance)
-stand out more, while bright colors (high luminance) stand out more
-against a dark background. Luminance is only considered for categorical
-palettes, because quantitative palettes (sequential and diverging) often
-map a numeric variable to luminance.</p>
-<p>Let us define the luminance range (<code>Lrange</code>) as the
-maximum minus the minimum luminance value of the palette and the chroma
-range (<code>Crange</code>) as the maximum chroma value minus the
-minimum chroma value.</p>
-<p>Regarding <strong>Fairness</strong> we consider two metrics: the
-luminance range (<code>Lrange</code>) and the chroma range
-(<code>Crange</code>). We call a palette:</p>
-<ul>
-<li>
-<strong>fair</strong> (<font size="4">♡</font>) if
-<code>Crange &lt;= 50</code> and (for categorical palettes only)
-<code>Lrange &lt;= 30</code>
-</li>
-<li>
-<strong>unfair</strong> (<font size="4">⨯</font>) if
-<code>Crange &lt;= 80</code> or (for categorical palettes only)
-<code>Lrange &gt;= 50</code>
-</li>
-</ul>
-<p>Note that harmonic color palettes are usually not color blind
-friendly. Furthermore, when the luminance values of the colors are about
-equal, the contrast of those colors is low, which requires the use of
-border lines (see below).</p>
-</div>
-<div class="section level3">
-<h3 id="naming">Naming<a class="anchor" aria-label="anchor" href="#naming"></a>
-</h3>
-<p>This property is still in development. Details will follow.</p>
-</div>
-<div class="section level3">
-<h3 id="contrast">Contrast<a class="anchor" aria-label="anchor" href="#contrast"></a>
-</h3>
-<p>The border between two colored shapes appears <strong>wobbly</strong>
-when the colors are equally luminant (bright), no matter what hue (red,
-blue, etc.) they have. This visual illusion is called
-<strong>equiluminance</strong>.</p>
-<p>The <strong>contrast ratio</strong> is a measure for equiluminance,
-calculated as <code>CR = (L1 + 0.05) / (L2 + 0.05)</code>, where
-<code>L1</code> and <code>L2</code> are the luminances (normalized
-between 0 and 1) of the lighter and darker colors, respectively. Note
-that the minimum contrast ratio is 1 and the maximum 21.</p>
-<p>In the overview table, there are three flags that indicate low
-contrast (<code>CR &lt; 1.2</code>):</p>
-<ul>
-<li>
-<font size="1">🏁</font>: Between two colors of the palettes</li>
-<li>
-<font size="1">🏳</font>: Between one color of the palette and
-white</li>
-<li>
-<font size="1">🏴</font>: Between one color of the palette and
-black</li>
-</ul>
-<p>The go-to solution to prevent wobbly borders is by using black or
-white (depending of the lightness of the colors) <strong>border
-lines</strong>.</p>
-</div>
-<div class="section level3">
-<h3 id="d-blues">3D Blues<a class="anchor" aria-label="anchor" href="#d-blues"></a>
-</h3>
-<p>Pure blue colors, by which we mean a 0 or very low number for the R
-(red) and G (green) channels and a high number for the B (blue) channel
-may cause a visual illusion called <strong>chromostereopsis</strong>.
-This effect is especially prominent when blue objects are shown next to
-red objects against a black background.</p>
-<p>The table column “3D Blues” indicates when a palette contains a pure
-blue color. The used symbol is B7#9 (which refers to a music chord used
-in blues music).</p>
+<p>We used the development functions included in the R package to find
+categorical palettes that are color blind friendly, fair, and with
+sufficient contrast with white and/or black.</p>
+<p>More specifically, we aimed for three use cases:</p>
+<p>We designed the following preliminary set of color palettes, of which
+the first seven colors are shown in Figure~.</p>
+<p>.</p>
+<p>The used approach to find those palettes was the following:</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 id="discussion">Discussion}<a class="anchor" aria-label="anchor" href="#discussion"></a>
 </h2>
-<p>Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for
-Selecting Colour Schemes for Maps.” <em>The Cartographic Journal</em>,
-<em>40</em>(1), 27-37.</p>
-<p>Hvitfeldt E. (2021). paletteer: Comprehensive Collection of Color
-Palettes. version 1.3.0. <a href="https://github.com/EmilHvitfeldt/paletteer" class="external-link uri">https://github.com/EmilHvitfeldt/paletteer</a></p>
-<p>Ware, C (2019). Information Visualization - Perception for Design -
-4th Edition. Elsevier</p>
-<p>Wright K (2021). <em>pals: Color Palettes, Colormaps, and Tools to
-Evaluate Them</em>. R package version 1.7, <a href="https://CRAN.R-project.org/package=pals" class="external-link uri">https://CRAN.R-project.org/package=pals</a>.</p>
+<p> offers a unique approach to color palette analysis and comparison,
+going beyond the functionalities of existing tools. By focusing on
+accessibility, fairness, and visual effectiveness, cols4all empowers
+users to make informed decisions based on quantitative and qualitative
+insights. The inclusion of color blindness simulation and contrast
+analysis aids in creating visualizations that are inclusive and
+perceptually effective for a wider audience. The concept of fairness
+introduces a novel perspective, promoting palettes where all colors are
+equally salient.</p>
+<p> is in active ongoing development with new features and refinements
+regularly added. This commitment to ongoing improvement is driven by a
+desire to meet the evolving needs of users and address the limitations
+identified through community feedback and ongoing research. For example,
+while the tool currently focuses on discrete palettes, it can
+effectively analyze continuous palettes by discretizing them into a
+sufficient number of classes, thus extending its applicability. However,
+the tool could also incorporate features to analyse sequential and
+diverging palettes in their continuous form.</p>
+<p>While provides objective metrics, cultural backgrounds, individual
+preferences, and the specific context of use can influence how colors
+are perceived and interpreted. To better account for these subjective
+factors, future development could explore incorporating user feedback
+mechanisms and customizable settings to accommodate individual
+preferences. Furthermore, drawing upon insights from other fields, such
+as visual perception research, can inform the development of new metrics
+and analytical tools that better capture the nuances of human color
+perception.</p>
+<p>Various sequential and diverging color palettes have been designed to
+be perceptually linear, in particular the <span class="citation">@scico</span>}, <span class="citation">@hcl</span>},
+and (viridis) <span class="citation">@matplotlib</span>} series.
+Currently there are no properties in that assess whether sequential and
+diverging palettes are perceived linearly. This could be assessed for
+people with normal color vision only, or also for color blind
+people.</p>
+<p>One area where further development is needed is in improving the
+“nameability” of palette colors. Nameability, which refers to how easily
+colors can be identified and labeled with common color names, has been
+shown to improve user performance in data visualization tasks <span class="citation">@reda21</span>}. The nameability property we proposed
+has a few limitations that require further research. Besides the room
+for improvement regarding the method to match the colors to the common
+color names, one aspect that remains unclear is whether “light” or
+“dark” variants of the common color names should be taken into account.
+Observe that for set of 11 common color names <span class="citation">@boynton89</span>}, these variants are only commonly
+used in combination with blue and green; for instance dark pink can also
+be named purple and light red as orange or pink. How does the presence
+of both light and dark blue (as illustrated in Figure~), influence user
+performance?</p>
+<p>User studies, both qualitative and quantitative, are needed to verify
+and if needed further improve the properties described in this paper.
+This holds for both the underlying property scores and the derived
+3-point Likert scales that are shown in the main table. The current
+default threshold values are based on a combination of guidelines
+(e.g. regarding Delta~E), common sense, and a more or less even
+distribution of popular color palettes into three classes. Task oriented
+user studies are recommended to asses the quality of the properties. For
+instance, what is the relation between measured visual bias in typical
+visualisation tasks and our proposed fairness score?</p>
+<p>This work provides strategies for creating color palettes that meet
+specific criteria, such as color blind friendliness and fairness. These
+strategies currently involve manual adjustments and refinements based on
+the analysis provided by cols4all. However, mathematical optimization
+and machine learning offer promising avenues for automating palette
+generation <span class="citation">@yuan22</span>}. Future work could
+explore developing separate tools that leverage these techniques,
+optimizing palettes for the properties proposed in this paper. A key
+challenge in designing such tools lies in integrating user preferences
+and domain expertise into the automated process. Interactive
+visualization tools that enable users to guide and refine the automated
+learning process would be a valuable asset, allowing for efficient
+exploration of the vast design space while ensuring the resulting
+palettes align with user needs and preferences.</p>
+<p>During the development of and the properties related to color
+distance we noticed that the perceived distance of two colors depends
+not only on those two color, but also on the background color. To
+accommodate for this phenomenon we introduce a so-called background
+adjusted color distance between colors
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
+against background color
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mn>2</mn><mi>d</mi><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">\begin{equation}
+d(i,j,k) = \frac{2d(i,j)^2}{d(i,k) + d(j,k)}
+\end{equation}</annotation></semantics></math></p>
+<p>We implemented this function in the main tool (tab page “Color Blind
+Friendliness”, checkbox “Background Adjusted” located above the
+similarity matrix). However this metric needs further development and is
+therefore not yet used in the properties introduced in this paper.</p>
+</div>
+<div class="section level2">
+<h2 id="conclusion">Conclusion}<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</h2>
+<p> represents a significant step towards creating more accessible and
+effective data visualizations. By providing a comprehensive platform for
+color palette analysis and comparison, it encourages informed
+decision-making and promotes inclusivity in design. The open-source
+nature of the tool fosters community involvement and collaborative
+development, paving the way for future enhancements and a broader
+understanding of color perception in visualization. Future research
+could focus on user studies to evaluate the tool’s effectiveness and
+identify areas for improvement, as well as the development of new
+metrics and visualizations to further enhance its analytical
+capabilities.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

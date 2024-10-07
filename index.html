@@ -63,7 +63,7 @@
 <!-- badges: start --->
 
 <p><strong>cols4all</strong> is an R package for selecting color palettes. “Color for all” refers to our mission that colors should be usable for not just people with normal color vision, but also for people with color vision deficiency. Currently, this package contains palettes from several popular and lesser known color palette series. Own palettes series can be added as well.</p>
-<p>Color palettes are well organized and made consistent with each other. Moreover, they are scored on several aspects: color-blind-friendliness, the presence of intense colors (which should be avoided), the overall aesthetic harmony, and how many different hues are used. Finally, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: <em>categorical</em> (qualitative) palettes, <em>sequential</em> palettes, <em>diverging</em> palettes, and <em>bivariate</em> palettes (divided into four subtypes).</p>
+<p>Color palettes are well organized and made consistent with each other. Moreover, they are scored on several aspects: color-blind-friendliness, the presence of intense colors (which should be avoided), the overall aesthetic harmony, and how many different hues are used. Finally, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: <em>categorical</em> (qualitative) palettes, <em>sequential</em> palettes, <em>diverging</em> palettes, <em>cycling</em> palettes and <em>bivariate</em> palettes (divided into four subtypes).</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -74,6 +74,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mtennekes/cols4all"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>This development version will be on CRAN soon (October 2024)</p>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
@@ -84,85 +85,76 @@
 <p>The main tool is a dashboard, which is started with:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_gui.html">c4a_gui</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><a href="vignettes/dash-3.png"><img src="articles/dash-3.png" width="650"></a></p>
-<p>What types and series are available?</p>
+<p><a href="vignettes/cols4all2.png"><img src="articles/cols4all2.png" width="900"></a></p>
+<p>What palettes are available? That is, by default; other palettes can be added!</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_palettes.html">c4a_types</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   type                          description</span></span>
-<span><span class="co">#&gt; 1  cat                          categorical</span></span>
-<span><span class="co">#&gt; 2  seq                           sequential</span></span>
-<span><span class="co">#&gt; 3  div                            diverging</span></span>
-<span><span class="co">#&gt; 4 bivs  bivariate (sequential x sequential)</span></span>
-<span><span class="co">#&gt; 5 bivc bivariate (sequential x categorical)</span></span>
-<span><span class="co">#&gt; 6 bivd   bivariate (sequential x diverging)</span></span>
-<span><span class="co">#&gt; 7 bivg bivariate (sequential x desaturated)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/c4a_palettes.html">c4a_series</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     series                                         description</span></span>
-<span><span class="co">#&gt; 1   brewer                                ColorBrewer palettes</span></span>
-<span><span class="co">#&gt; 2      c4a                  cols4all palettes (in development)</span></span>
-<span><span class="co">#&gt; 3    carto                          Palettes designed by CARTO</span></span>
-<span><span class="co">#&gt; 4      hcl  Palettes from the Hue Chroma Luminance color space</span></span>
-<span><span class="co">#&gt; 5   kovesi                   Palettes designed by Peter Kovesi</span></span>
-<span><span class="co">#&gt; 6      met Palettes inspired by The Metropolitan Museum of Art</span></span>
-<span><span class="co">#&gt; 7     misc                              Miscellaneous palettes</span></span>
-<span><span class="co">#&gt; 8    miscs                                                &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 9    parks                 Palettes inspired by National Parks</span></span>
-<span><span class="co">#&gt; 10    poly               Qualitative palettes with many colors</span></span>
-<span><span class="co">#&gt; 11   scico     Scientific colour map palettes by Fabio Crameri</span></span>
-<span><span class="co">#&gt; 12 seaborn            Palettes from the Python library Seaborn</span></span>
-<span><span class="co">#&gt; 13 stevens                Bivariate palettes by Joshua Stevens</span></span>
-<span><span class="co">#&gt; 14 tableau                        Palettes designed by Tableau</span></span>
-<span><span class="co">#&gt; 15     tol                       Palettes designed by Paul Tol</span></span>
-<span><span class="co">#&gt; 16 viridis          Palettes fom the Python library matplotlib</span></span>
-<span><span class="co">#&gt; 17     wes                   Palettes from Wes Anderson movies</span></span></code></pre></div>
-<p>How many palettes per type x series?</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_palettes.html">c4a_overview</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         cat seq div bivs bivc bivd bivg</span></span>
-<span><span class="co">#&gt; brewer    8  18   9    2    1    1   NA</span></span>
-<span><span class="co">#&gt; c4a      NA  NA   2    2   NA    2    5</span></span>
-<span><span class="co">#&gt; carto     6  21   7   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; hcl       9  23  11   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; kovesi   NA  17  13   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; met      33   8  14   NA    1   NA   NA</span></span>
-<span><span class="co">#&gt; misc      1  NA  NA   NA    3   NA   NA</span></span>
-<span><span class="co">#&gt; miscs     4  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; parks    22   5   3   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; poly      9  NA  NA   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; scico    21  21  10   NA    2   NA    1</span></span>
-<span><span class="co">#&gt; seaborn   6   4   2   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; stevens  NA  NA  NA    5   NA   NA   NA</span></span>
-<span><span class="co">#&gt; tableau  29  23  28   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; tol       8   8   4   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; viridis  NA   7   1   NA   NA   NA   NA</span></span>
-<span><span class="co">#&gt; wes      23  NA   1   NA   NA   NA   NA</span></span></code></pre></div>
-<p>What palettes are available, e.g diverging from the hcl series?</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Diverging palettes from the 'hcl' series</span></span>
-<span><span class="fu"><a href="reference/c4a_palettes.html">c4a_palettes</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"div"</span>, series <span class="op">=</span> <span class="st">"hcl"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "hcl.blue_red1"    "hcl.blue_red2"    "hcl.blue_red3"    "hcl.red_green"   </span></span>
-<span><span class="co">#&gt;  [5] "hcl.purple_green" "hcl.purple_brown" "hcl.green_brown"  "hcl.blue_yellow2"</span></span>
-<span><span class="co">#&gt;  [9] "hcl.blue_yellow3" "hcl.green_orange" "hcl.cyan_magenta"</span></span></code></pre></div>
-<p>Give me the colors!</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># select purple green palette from the hcl series:</span></span>
-<span><span class="fu"><a href="reference/c4a.html">c4a</a></span><span class="op">(</span><span class="st">"hcl.purple_green"</span>, <span class="fl">11</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "#492050" "#82498C" "#B574C2" "#D2A9DB" "#E8D4ED" "#F1F1F1" "#C8E1C9"</span></span>
-<span><span class="co">#&gt;  [8] "#91C392" "#4E9D4F" "#256C26" "#023903"</span></span>
-<span></span>
-<span><span class="co"># get the associated color for missing values</span></span>
-<span><span class="fu"><a href="reference/c4a.html">c4a_na</a></span><span class="op">(</span><span class="st">"hcl.purple_green"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "#868686"</span></span></code></pre></div>
-<p>Plot these colors:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_plot.html">c4a_plot</a></span><span class="op">(</span><span class="st">"hcl.purple_green"</span>, <span class="fl">11</span>, include.na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-10-1.png"><!-- --></p>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_palettes.html">c4a_series</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        series                                         description</span></span>
+<span><span class="co">#&gt; 1      brewer                                ColorBrewer palettes</span></span>
+<span><span class="co">#&gt; 2       carto                          Palettes designed by CARTO</span></span>
+<span><span class="co">#&gt; 3    cols4all                  cols4all palettes (in development)</span></span>
+<span><span class="co">#&gt; 4         hcl  Palettes from the Hue Chroma Luminance color space</span></span>
+<span><span class="co">#&gt; 5      kovesi                   Palettes designed by Peter Kovesi</span></span>
+<span><span class="co">#&gt; 6  matplotlib         Palettes from the Python library matplotlib</span></span>
+<span><span class="co">#&gt; 7         met Palettes inspired by The Metropolitan Museum of Art</span></span>
+<span><span class="co">#&gt; 8        misc                              Miscellaneous palettes</span></span>
+<span><span class="co">#&gt; 9       parks                 Palettes inspired by National Parks</span></span>
+<span><span class="co">#&gt; 10       poly               Qualitative palettes with many colors</span></span>
+<span><span class="co">#&gt; 11    powerbi                    Palettes from Microsoft Power BI</span></span>
+<span><span class="co">#&gt; 12      scico             Scientific colour maps by Fabio Crameri</span></span>
+<span><span class="co">#&gt; 13    seaborn            Palettes from the Python library Seaborn</span></span>
+<span><span class="co">#&gt; 14    stevens                Bivariate palettes by Joshua Stevens</span></span>
+<span><span class="co">#&gt; 15    tableau                        Palettes designed by Tableau</span></span>
+<span><span class="co">#&gt; 16        tol                       Palettes designed by Paul Tol</span></span>
+<span><span class="co">#&gt; 17        wes                   Palettes from Wes Anderson movies</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="using-cols4all-palettes-in-ggplot2">Using cols4all palettes in ggplot2<a class="anchor" aria-label="anchor" href="#using-cols4all-palettes-in-ggplot2"></a>
+<h2 id="using-the-tool">Using the tool<a class="anchor" aria-label="anchor" href="#using-the-tool"></a>
 </h2>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p>Use the tool to compare palettes and if needed analyse a palette in depth (via the other tabs).</p>
+<p>Find a trade-off you like among the following properties (the columns in the main table):</p>
+<ul>
+<li>Colorblind friendly: Is the palette color blind friendly?</li>
+<li>Fair: Is the palette fair? In a fair palette, colors stand out about equally.</li>
+<li>Hues: What hue ranges are used? All across the (rainbow) color spectrum, or a limited range?</li>
+<li>Vivid: Are there any colors that are very saturated? Perhaps a little too much?</li>
+<li>Contrast: Is there sufficient contrast against white, black (using WACG criteria) and between colors?</li>
+<li>3D Blues: If blue is a palette color, a 3D visual illusion could appear.</li>
+<li>Naming (in development): How well can palette colors be named?</li>
+</ul>
+<div class="section level3">
+<h3 id="example-1">Example 1<a class="anchor" aria-label="anchor" href="#example-1"></a>
+</h3>
+<p>When we are looking for a fair categorical palette of seven colors that is as color blind friendly as possible, then filter on “Fair”, and sort by “Colorblind-friendly”:</p>
+<p><a href="vignettes/cols4all_fair_sort_cbf.png"><img src="articles/cols4all_fair_sort_cbf.png" width="900"></a></p>
+</div>
+<div class="section level3">
+<h3 id="example-2">Example 2<a class="anchor" aria-label="anchor" href="#example-2"></a>
+</h3>
+<p>Say we need a diverging palette that is color blind friendly, and what to choose one by eye. Then filter by “Colorblind-friendly” and sort by “Huddle Middle L” (the hue of the left wing):</p>
+<p><a href="vignettes/cols4all_div.png"><img src="articles/cols4all_div.png" width="900"></a></p>
+<p>Reverse sorting is also applied.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="preliminary-set-of-new-cols4all-palettes">Preliminary set of new <code>cols4all</code> palettes<a class="anchor" aria-label="anchor" href="#preliminary-set-of-new-cols4all-palettes"></a>
+</h2>
+<p>We applied a basic heuristics to explore palettes that score well on a mix of the properties named above</p>
+<p><a href="vignettes/c4a_pals.png"><img src="articles/c4a_pals.png" width="900"></a></p>
+<p><code>area7</code>, <code>area8</code> and <code>area9</code> are fair, contain low pastel colors, and are color-blind friendly (up to 7 colors). So ideal for maps and other space-filling visualizations! These are used in <a href="%60tmap4%60">https://github.com/r-tmap/tmap</a>.</p>
+<p><a href="vignettes/area7.png"><img src="articles/area7.png" width="900"></a></p>
+<p><code>area7d</code>, <code>area8d</code> and <code>area9d</code> similar but for dark mode:.</p>
+<p><a href="vignettes/area7d.png"><img src="articles/area7d.png" width="900"></a></p>
+<p><code>line7</code>, <code>line8</code> and <code>line9</code> are colors with good contrast against both black and white, and are also colorblind-friendly to some extent. So ideal for line graphs and scatter plots:</p>
+<p><a href="vignettes/line7_wt.png"><img src="articles/line7_wt.png" width="440"></a> <a href="vignettes/line7_bk.png"><img src="articles/line7_bk.png" width="440"></a></p>
+<p>Finally <code>friendly7</code> … <code>friendly13</code> are colorblind-friendly palettes (disregarding the other properties):</p>
+<p><a href="vignettes/friendly13.png"><img src="articles/friendly13.png" width="900"></a></p>
+</div>
+<div class="section level2">
+<h2 id="ggplot2-integration">
+<code>ggplot2</code> integration<a class="anchor" aria-label="anchor" href="#ggplot2-integration"></a>
+</h2>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"diamonds"</span><span class="op">)</span></span>
 <span><span class="va">diam_exp</span> <span class="op">=</span> <span class="va">diamonds</span><span class="op">[</span><span class="va">diamonds</span><span class="op">$</span><span class="va">price</span> <span class="op">&gt;=</span> <span class="fl">15000</span>, <span class="op">]</span></span>
@@ -172,15 +164,15 @@
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="reference/scales_ggplot2.html">scale_color_discrete_c4a_cat</a></span><span class="op">(</span><span class="st">"carto.safe"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_light</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-11-1.png"><!-- --></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p><img src="reference/figures/README-unnamed-chunk-7-1.png"><!-- --></p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># continuous diverging scale</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">diam_exp</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">carat</span>, y <span class="op">=</span> <span class="va">depth</span>, color <span class="op">=</span> <span class="va">price</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="reference/scales_ggplot2.html">scale_color_continuous_c4a_div</a></span><span class="op">(</span><span class="st">"wes.zissou1"</span>, mid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">diam_exp</span><span class="op">$</span><span class="va">price</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_light</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-11-2.png"><!-- --></p>
+<p><img src="reference/figures/README-unnamed-chunk-7-2.png"><!-- --></p>
 </div>
 <div class="section level2">
 <h2 id="overview-of-functions">Overview of functions<a class="anchor" aria-label="anchor" href="#overview-of-functions"></a>
@@ -236,16 +228,40 @@
 </ul>
 </div>
 <div class="section level2">
+<h2 id="other-r-funtions">Other R funtions<a class="anchor" aria-label="anchor" href="#other-r-funtions"></a>
+</h2>
+<p>What palettes are available, e.g diverging from the hcl series?</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Diverging palettes from the 'hcl' series</span></span>
+<span><span class="fu"><a href="reference/c4a_palettes.html">c4a_palettes</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"div"</span>, series <span class="op">=</span> <span class="st">"hcl"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "hcl.blue_red"     "hcl.blue_red2"    "hcl.blue_red3"    "hcl.red_green"   </span></span>
+<span><span class="co">#&gt;  [5] "hcl.purple_green" "hcl.purple_brown" "hcl.green_brown"  "hcl.blue_yellow2"</span></span>
+<span><span class="co">#&gt;  [9] "hcl.blue_yellow3" "hcl.green_orange" "hcl.cyan_magenta"</span></span></code></pre></div>
+<p>Give me the colors!</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># select purple green palette from the hcl series:</span></span>
+<span><span class="fu"><a href="reference/c4a.html">c4a</a></span><span class="op">(</span><span class="st">"hcl.purple_green"</span>, <span class="fl">11</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "#492050" "#82498C" "#B574C2" "#D2A9DB" "#E8D4ED" "#F1F1F1" "#C8E1C9"</span></span>
+<span><span class="co">#&gt;  [8] "#91C392" "#4E9D4F" "#256C26" "#023903"</span></span>
+<span></span>
+<span><span class="co"># get the associated color for missing values</span></span>
+<span><span class="fu"><a href="reference/c4a.html">c4a_na</a></span><span class="op">(</span><span class="st">"hcl.purple_green"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "#BABABA"</span></span></code></pre></div>
+<p>Plot these colors:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_plot.html">c4a_plot_cvd</a></span><span class="op">(</span><span class="st">"hcl.purple_green"</span>, <span class="fl">11</span>, include.na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-10-1.png"><!-- --></p>
+</div>
+<div class="section level2">
 <h2 id="related-r-packages">Related R packages<a class="anchor" aria-label="anchor" href="#related-r-packages"></a>
 </h2>
 <p>The foundation of this package is another R package: <a href="https://colorspace.r-forge.r-project.org/" class="external-link"><strong>colorspace</strong></a>. We use this package to analyse colors. For this purpose and specifically for color blind friendliness checks, we also use <a href="https://github.com/Nowosad/colorblindcheck" class="external-link"><strong>colorblindcheck</strong></a>.</p>
 <p>There are a few other pacakges with a large collection of color palettes, in particular <a href="https://kwstat.github.io/pals/" class="external-link"><strong>pals</strong></a> and <a href="https://github.com/EmilHvitfeldt/paletteer" class="external-link"><strong>paletteer</strong></a>. There are a few features that distinguishes <strong>cols4all</strong> from those packages:</p>
 <ul>
 <li><p>Color palettes are characterized and analysed. Properties such as color blindness, fairness (whether colors stand out about equally), and contrast are determined for each palette.</p></li>
-<li><p>Bivariate color palettes are available (besides the three main palette types: categorical, sequential, and diverging).</p></li>
+<li><p>Bivariate color palettes are available.</p></li>
 <li><p>Own color palettes can be loaded and analysed.</p></li>
-<li><p>Color for missing values are made explicit.</p></li>
-<li><p>Palettes are made consistent with each other to enable comparison. For instance, black and white are (by default) removed from categorical palettes. Another standard that we adapt to is that all sequential palettes go from light to dark and not the other way round.</p></li>
+<li><p>Colors for missing values are made explicit.</p></li>
 <li><p>There is native support for <strong>ggplot2</strong> and <strong>tmap</strong> (as of the upcoming version 4).</p></li>
 <li><p>There are a couple of exporting options, including (bibtex) citation.</p></li>
 </ul>
