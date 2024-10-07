@@ -41,315 +41,689 @@ knitr::knit_hooks$set(output = function(x, options) {
 library(cols4all)
 ```
 
+## Introduction}
 
 
-## Introduction
+Effective data visualization relies heavily on well-chosen color palettes to highlight patterns and convey information clearly @midway20}.  With the abundance of available color palettes, ranging from those derived from perceptually uniform color spaces like HCL @hcl,scico,matplotlib} to those designed for color blindness accessibility @misc.okabe,tol,matplotlib} or inspired by art @met,wes} and nature @parks}, selecting the optimal palette for a specific visualization task can be challenging.
 
-Color is essential in many charts and maps. There are a lot of color palettes to choose from: most visualization software tools have their own palettes and there are many other series of color palettes, such as ColorBrewer (Harrower and Brewer, 2003). To make life easier for R users, there are a couple of packages that contain a large collection of palettes, most notably `pals` (Wright, 2021) with 139 and `paletteer` (Hvitfeldt, 2021) with 2569 (!) palettes. However, people often cannot see the trees through the forest, so therefore they tend to stick with the color palettes they know, or with the most popular ones.
+This challenge is further compounded by the need to consider accessibility for individuals with color vision deficiency, who comprise an estimated 8\% of males and 0.5\% of females globally @birch2012}.  Accessibility guidelines, such as WCAG 2.2 @wcag22}, recommend minimum contrast ratios between colors to ensure readability. Ensuring that visualizations are interpretable by everyone, regardless of their color vision capabilities, is essential for effective communication.
 
-The `cols4all` package also contains a large collection of palettes (to be precise `r length(c4a_palettes())` at the time of writing), but with the central question: **which palettes are good and why?** There is no simple answer, since there are many aspects to take into account, which may have opposite effects. In `cols4all` we examine the following aspects:
+To address these challenges, we introduce \texttt{cols4all}, an open-source software tool for analyzing and comparing color palettes. Developed as a package for the R programming language @c4a} that features an interactive dashboard tool, \texttt{cols4all} provides a comprehensive set of features to evaluate palettes based on various criteria, including color-blind friendliness, contrast, and a novel fairness metric. Fairness evaluates whether all colors in a palette stand out equally. This is particularly important for categorical palettes to prevent visual bias and ensure that no single category dominates the visualization.
 
-* **Color Blind Friendliness** First and most importantly, is a palette suitable for colorblind people? About 1 out of 12 humans have a color vision deficiency, and we want to include them; hence the package name "colors for all".
+Recognizing that these properties can involve trade-offs, \texttt{cols4all} empowers users to make informed decisions based on their specific needs and priorities. The tool's interactive nature allows users to explore and compare palettes, weighing different factors to select the most suitable option for their visualization task.
 
-* **HCL Analysis** Does a palette work well for statistical purposes? We analyse this with the HCL (hue-chroma-luminance) color space. Concrete questions for these analysis are the following. How **vivid** are colors? Do the colors stand out about equally (which we call **fairness**)? What hue ranges are used for quantitative color palettes?
-
-<!--First of all, we check how vivid (chroma) the colors are: vivid colors are preferable for coloring small objects (dots) while pastel colors are preferable for large areas such as maps. Secondly, we also check whether the palette is fair, by which we mean that no colors stand out more than others. Finally, we check the hues of the palettes:-->
-
-* **Nameability** (in development) Easy to name colors are also easy to remember. Therefore, it is beneficial to use a color palette with easy nameable colors.
-
-* **Contrast** What is the contrast between the colors in the palette? We focus on two specific questions: 1) Is there sufficient contrast with the background color (usually white or black)? This is especially needed for text but also point- and line charts. 2) Are border lines needed to separate colors?
-
-* **3D Blues** Does the palette contain blue colors that could result in a floating effect?
-
-Currently, **cols4all** contains palettes from several popular and lesser known color palette series: `r paste0("\"", paste(setdiff(head(c4a_series(as.data.frame = FALSE), -1), "misc"), collapse = "\", \""), "\"")` , and `r paste0("\"", tail(c4a_series(as.data.frame = FALSE), 1), "\"")`. Stand-alone palettes that are included have been put in the series "misc" (miscellaneous). Own palettes series can be added as well.
-
-Color palettes are organized and made consistent with each other. For instance, all sequential palettes go from light to dark. Furthermore, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, and *bivariate* palettes (divided into four subtypes).
-
-```{r}
-#| fig.alt = "Dashboard",
-#| out.width = 650,
-#| echo = FALSE
-
-knitr::include_graphics("dash-3.png")
-```
-
-The figure above shows the main tool of this package, a dashboard. The first tab page contains an overview table of all palettes (given the input selection criteria). The other tab pages are for further palette-wise analyses.
-
-Color palettes also are important in areas other than data visualization, such as arts, web design, and fashion. The same aspects apply as well here, but obviously different criteria apply: the colors of a dress don't have to be distinguished by colorblind people, websites often contain colors that purposely stand out more than others, and there are paintings that purposely use visual illusions.
+With \texttt{cols4all}, we aim to engage the information visualization community in color perception research and promote the development of more accessible and effective visualizations. By providing this open-source tool, we hope to reach researchers, designers, and practitioners alike, encouraging the sharing of knowledge and best practices in color palette selection and design.
 
 
-## Related R packages
+## Related literature}
 
-The foundation of this package is another R package: [**colorspace**](https://colorspace.r-forge.r-project.org/). We use this package to analyse colors. For this purpose and specifically for color blind friendliness checks, we additionally use [**colorblindcheck**](https://github.com/Nowosad/colorblindcheck).
+Visualization software and tools increasingly incorporate features for color palette selection, offering predefined palettes and interactive previews.  ColorBrewer @brewer} provides a limited but highly popular set of palettes and includes a colorblind-safe checkbox to aid in palette selection. Commercial platforms like Tableau @tableau} and Microsoft Power BI @powerbi} offer more extensive built-in palettes. Platforms like Adobe Color @adobe} and Color Hunt @colorhunt} support community-driven exploration and creation.  However, these tools primarily focus on quick exploration rather than in-depth analysis and comparison of palette properties.
 
-There are a few other pacakges with a large collection of color palettes, in particular [**pals**](https://kwstat.github.io/pals/) and [**paletteer**](https://github.com/EmilHvitfeldt/paletteer). There are a few features that distinguishes **cols4all** from those packages:
+Dedicated tools address this gap by providing more comprehensive analytical capabilities. CCC-Tool @CCCtool} and Colorgorical @Colorgorical} allow for palette generation based on user preferences, catering to experienced users. In contrast, \texttt{cols4all} prioritizes analysis and comparison over generation, empowering users to make informed choices based on quantitative and qualitative insights derived from objective metrics and visualizations.
 
-*	Color palettes are characterized and analysed. Properties such as color blindness, fairness (whether colors stand out about equally), and contrast are determined for each palette.
+Recent research has explored advanced techniques for color palette recommendation. Deep learning approaches show promise for automated palette selection @yuan22}, but often lack the transparency and interpretability of \texttt{cols4all}'s user-centric approach. Similarly, McNutt et al. @mcnutt2024} introduced a visualization linter for automated color palette checking, which is valuable for identifying potential issues but differs from \texttt{cols4all}'s focus on interactive exploration and comparison.
 
-*	Bivariate color palettes are available (besides the three main palette types: categorical, sequential, and diverging).
-
-*	Own color palettes can be loaded and analysed.
-
-*	Color for missing values are made explicit.
-
-*   Palettes are made consistent with each other to enable comparison. For instance, black and white are (by default) removed from categorical palettes. Another standard that we adapt to is that all sequential palettes go from light to dark and not the other way round.
-
-*   There is native support for **ggplot2** and **tmap** (as of the
-    upcoming version 4).
-    
-*	There are a couple of exporting options, including (bibtex) citation.
+Furthermore, \texttt{cols4all} deliberately avoids linking colors or palettes to specific emotions, recognizing the cultural and temporal variability of color associations @elliot2014, schloss2011}. By focusing on objective metrics rather than subjective interpretations, \texttt{cols4all} fosters informed decision-making without relying on potentially culturally biased associations.
 
 
 
-## Using cols4all
- 
-### Installation
-
-The `cols4all` is available on CRAN and can be installed as follows
-
-```{r, eval=FALSE}
-install.packages("cols4all", dependencies = TRUE)
-```
-
-The latest development version can be installed as follows:
-
-```{r, eval=FALSE}
-remotes::install_github("mtennekes/cols4all", dependencies = TRUE)
-```
+## Preliminaries}
 
 
-### Getting started
 
-Load the package:
+### Color vision}
 
-```{r, eval=TRUE}
+
+Humans typically perceive color through three types of cone cells. These cones measure the color spectrum in three different areas: short, medium, and long wavelengths. The combination of these three cone types leads to a color percept (a perceived color).
+
+People with color vision deficiency lack (at least) one type of cone. For the three types of color blindness, \textit{deuteranopia}, \textit{protanopia}, and \textit{tritanopia}, the missing cones are those mainly sensitive to medium (green), long (red), and short (blue) wavelengths, respectively. Color perception for these individuals is based on the two remaining cone types. As a result, people with deuteranopia and protanopia have difficulty distinguishing green and red, whereas people with tritanopia can hardly distinguish blue from yellow @neitz90}. 
+
+People can also be partially color blind. However, to avoid excessive complexity in the analysis, we do not take the severity level into account. For brevity, individuals with deuteranopia, protanopia, and tritanopia will be referred to as \textit{deutans}, \textit{protans}, and \textit{tritans}, respectively.
+
+
+### Contrast ratio}
+
+
+The contrast ratio measures the difference in brightness between foreground and background colors. It is defined as:
+
+\begin{equation}\label{eq:cr}
+CR(i,j) = \frac{(Y_i + \alpha)}{(Y_j + \alpha)}
+\end{equation}
+
+\noindent where $i$ and $j$ represent two colors, with $i$ being the lighter one, and $Y_i$ and $Y_j$ are their relative luminance values, ranging from 0 to 1. The parameter $\alpha = 0.05$ is an offset used to compensate for contrast ratios that occur when $Y_j$ is (close to) 0. With this $\alpha$ value, the contrast ratio ranges from 1:1 to 21:1.
+
+The WCAG 2.2 guidelines for text readability are as follows @wcag22}:
+
+\begin{enumerate}
+\item Large text (18 point) requires a contrast ratio of at least 3:1 (AA) and 4.5:1 (AAA).
+\item Normal text (14 point) requires a contrast ratio of at least 4.5:1 (AA) and 7:1 (AAA).
+\end{enumerate}
+
+WCAG 2.2 level AA requires a minimum contrast ratio of 3:1 for informational non-text elements, both against the background and any adjacent colors @wcag22}.
+
+### HCL color space}
+
+This work adopts the Hue-Chroma-Luminance (HCL) color space, a cylindrical transformation of the CIELUV color space. This color space, also used by @hcl,colorspace,ihaka2003}, has three dimensions: \textit{hue} ($H$), ranging from 0 to 360 degrees; \textit{chroma} ($C$), ranging from 0 (grayscale) to a maximum that depends on both hue and luminance; and \textit{luminance} ($L$), ranging from 0 (black) to 100 (white).
+
+### Color distance}
+
+To measure the perceived distance between two colors, we use the \emph{Delta E 2000} metric @sharma2005}, denoted by $\Delta E(i,j)$.
+
+The interpretation of Delta E values depends on several factors, most importantly the application. We apply the following rule of thumb\footnote{Based on: Zachary Schuessler, "Delta E 101," accessed 2024-09-30, \url{http://zschuessler.github.io/DeltaE/learn/}.}:
+
+|Delta E Range|Perceptibility|
+|:---|:---|
+|0-1|Not perceptible at all|
+|1-2|Perceptible through close observation|
+|2-5|Noticeable difference|
+|5-10|Strong color difference|
+|10-15|Substantial color difference|
+|15+|Vastly different colors|
+
+To measure color distances as perceived by people with color vision deficiency, we apply the Delta E metric in simulations for deuteranopia, protanopia, and tritanopia @machado2009,colorblindcheck}. These metrics are denoted by $\Delta E^{\mbox{\scriptsize deutan}}(i,j)$, $\Delta E^{\mbox{\scriptsize protan}}(i,j)$, and $\Delta E^{\mbox{\scriptsize tritan}}(i,j)$, respectively.
+
+
+## Tool description}
+
+We introduce a tool, called \texttt{cols4all}, that can be used to analyse and compare color palettes. It is written as a package for the R programming language @r}. 
+
+The cols4all package has an on-going development and driven by the active community of statisticians and data scientists that use R. The color palettes can easily be used in any other R package, and has native integration with the popular visualization package ggplot2 @ggplot2}. Via the GUI, these palettes can also be copied to the clipboard and used anywhere else.
+
+The tool is intended for data visualization designers to select appropriate color palettes for their data visualizations. Another use case for designers is to test their own (corporate) palettes, and to compare them against other existing palettes. The tool may also be useful for other users, in particular graphic designers and web designers. User studies are required to ensure that the design of the interface is effective, efficient, and easy to use.
+
+### Organisation of palettes}
+
+This work focuses exclusively on \textbf{discrete} color palettes. Continuous color palettes can be loaded and analysed in \texttt{cols4all} as well, but under the hood they are discretized in a sufficient number of classes. Conversely, interpolation (linear or spline) in a color space (RGB or CIELab) can transform any discrete palette into a continuous color ramp.
+
+
+Palettes are organised by functional type. We distinguish the following types:
+
+*   **Categorical:** Colors from a categorical (also known as qualitative) palette are typically very distinct, especially in hue and are unordered. These palettes are employed to represent categorical data without a natural order, such as economic sectors.
+*   **Sequential:** A sequential palette consists of a gradient of colors, which are used to represent data that follow a natural order or progression, such as age.
+*   **Diverging:** A diverging palette also consists of a gradient of colors, but with a clear midpoint. Consequently, these palettes encode data that have a clear neutral value, for instance stock price changes or Likert scale responses.
+*   **Cyclical:** A cyclic palette consists of a gradient of colors that can be repeated seamlessly, so the first and last color should be identical. Although used rarely compared to the types mentioned above, they can be useful for several applications, such as encoding biological rhythms and cyclic economic indicators, such as business cycles.
+*   **Bivariate:** A bivariate palette is a two-dimensional color table that is used to encode bivariate data, for instance population density and income, or bivaraite socioeconomic indicators. We distinguish four subtypes where the first dimension, represented by the rows, is equal to sequential color scale. For these subtypes, the second dimension (columns) is represented as sequential, categorical, diverging, and a desaturated scale respectively.
+
+
+Examples of each of these palette types are provided in Figure~\ref{fig:expals}. This list of palette types is not exhaustive; for instance also palettes for tree-structured data have been designed @tennekes14}. Because these kind of palette types are special and often one of a kind, they are not (yet) included in \texttt{cols4all}.
+
+
+
+\begin{figure}
+\begin{tabular}{ll}
+  \multicolumn{2}{c}{\includegraphics[width=0.9\columnwidth]{ex_cat} }\\
+  \multicolumn{2}{l}{\footnotesize \hspace{1.5em}(a) Categorical palette \texttt{misc.okabe}}\\[1em]
+  \multicolumn{2}{c}{\includegraphics[width=0.9\columnwidth]{ex_seq} }\\
+  \multicolumn{2}{l}{\footnotesize \hspace{1.5em}(b) Sequential palette \texttt{matplotlib.viridis}}\\[1em]
+  \multicolumn{2}{c}{\includegraphics[width=0.9\columnwidth]{ex_div} }\\
+  \multicolumn{2}{l}{\footnotesize \hspace{1.5em}(c) Diverging palette \texttt{scico.roma}}\\[1em]
+  \multicolumn{2}{c}{\includegraphics[width=0.9\columnwidth]{ex_cyc} }\\
+  \multicolumn{2}{l}{\footnotesize \hspace{1.5em}(d) Cyclic palette \texttt{kovesi.cyclic\_bu\_mg\_yl\_gn\_bu}}\\[1em]
+ \includegraphics[width=0.43\columnwidth]{ex_bivs} &   \includegraphics[width=0.43\columnwidth]{ex_bivc} \\
+\footnotesize \hspace{1.5em}(e) Bivariate (seq. x seq.) & \footnotesize  \hspace{0.5em}(f) Bivariate (seq. x cat.) \\[6pt]
+ \includegraphics[width=0.43\columnwidth]{ex_bivd} &   \includegraphics[width=0.43\columnwidth]{ex_bivg} \\
+\footnotesize \hspace{1.5em}(g) Bivariate (seq. x div.) & \footnotesize  \hspace{0.5em}(h) Bivariate (seq. x desaturated) \\[6pt]
+\end{tabular}
+\caption{Examples of palette types supported by cols4all}\label{fig:expals}
+\end{figure}
+
+
+Palettes are also arranged by series, by which we mean either the source (e.g. \texttt{brewer} stands for ColorBrewer @brewer}) or group of similar palettes (e.g. \texttt{poly} includes categorical palettes with many colors). An overview of the palettes that are included in cols4all is provided in Table~\ref{table:overview}.
+
+
+\begin{table}[ht]\caption{Overview of palette series included in cols4all}\label{table:overview}
+\begin{minipage}
+\tiny
+\centering
+\begin{tabular}{p{3em}l
+                S[table-format=2.0]
+                S[table-format=2.0]
+                S[table-format=2.0]
+                S[table-format=1.0]
+                S[table-format=1.0]}
+  \hline
+series & description & $\hspace{-1ex}\mbox{cat.}$ & $\hspace{-1ex}\mbox{seq.}$ & $\hspace{-1ex}\mbox{div.}$ & $\hspace{-3ex}\mbox{cyc.}$ & $\hspace{-3ex}\mbox{biv.}$ \\ 
+  \hline
+brewer & ColorBrewer palettes @brewer} &   8 &  18 &   9 & 5 & \\ 
+  carto & Palettes designed by CARTO @carto} &   6 &  21 &   7 & & \\ 
+  cols4all & cols4all palettes (in development) &  14 &  &  2 & & 9 \\ 
+  hcl & Derived from the HCL color space @hcl} &   9 &  23 &  11 &   6 & \\ 
+  kovesi & Designed by Peter Kovesi @kovesi} &  &  28 &  14 &   8 & \\ 
+  matplotlib & From the Python library matplotlib @matplotlib} &  &  51 &  12 &   3 & \\ 
+  met & Inspired by The Met museum @met} &  33 &   8 &  14 &  & 1 \\ 
+  misc & Miscellaneous palettes\footnotemark &   5 &  &  &  & 3 \\ 
+  parks & Palettes inspired by National Parks @parks} &  22 &   5 &   3 &  &  \\ 
+  poly & Qualitative palettes with many colors\footnotemark &   9 &  &  &  &    \\ 
+  powerbi & Palettes from Microsoft Power BI @powerbi} &  19 &   1 &   4 &  & \\ 
+  scico & Scientific colour maps @scico} &  21 &  21 &  10 &   5 & 3\\ 
+  seaborn & From the Python library Seaborn @seaborn} &   6 &   4 &   2 &  & \\ 
+  stevens & Bivariate palettes by Joshua Stevens @stevens} &  &  &  &  &   5 \\ 
+  tableau & Designed by Tableau @tableau} &  29 &  23 &  28 &  & 3 \\ 
+  tol & Designed by Paul Tol @tol} &   8 &   8 &   4 &  & \\ 
+  wes & Inspired by Wes Anderson movies @wes} &  23 &  &   1 &  & \\ 
+   \hline
+\end{tabular}
+\end{minipage}
+
+% Footnotes in a separate minipage with adjusted font size
+\begin{minipage}{30ex}
+\scriptsize % Or \footnotesize, adjust as needed
+\begin{description}
+\item \footnotemark[1] \cite{misc.ggplot2,misc.okabe,misc.r3.r4,misc.watlington}
+\item \footnotemark[2] \cite{poly.alphabet.palette36.light24.dark24.sky24,poly.alphabet2,poly.glasbey,poly.kelly,poly.wright25}
+\end{description}
+\end{minipage}
+\end{table}
+
+Some categorical color palettes have included black or white, e.g. \texttt{misc.okabe} @misc.okabe}. Since these colors are typically used for background or annotations only, not just for those palettes but for any categorical palette, we removed black and white from all categorical palettes. However, we took both black and white into account for certain parts of the analysis, for instance regarding contrast ratio.
+
+Exploratory data analysis often deals with analysis and visualisation of missing values @vim,song21}. Therefore, we assigned a special color for missing values for each palette. The palette series by Paul Tol @tol} already contains dedicated colors for missing values. For the other palettes, we use simple heuristics to obtain a suitable color, which is a greyscale color that is distinguishable from the other palette colors not only by people with normal color vision but also by colorblind people.
+
+Users are able to load, analyse, and compare other palettes as well @c4a}. The palette names in the tool are formatted in snake case, with the series name put in front separated with a dot. E.g. the Color Blind from Tableau @tableau} is called \texttt{tableau.color\_blind}.
+
+
+### Properties}
+
+#### Color blind friendliness}
+
+Let the minimal perceived distance of two colors $i$ and $j$ colors by defined as
+
+\begin{equation}
+d(i,j) = \min \left( \substack{
+\Delta E(i,j), \\
+\Delta E^{\mbox{\scriptsize deutan}}(i,j), \\
+\Delta E^{\mbox{\scriptsize protan}}(i,j), \\
+\Delta E^{\mbox{\scriptsize tritan}}(i,j)
+} \right)
+\end{equation}
+
+This metric takes all four groups (people with normal color vision and each of the color blindness groups) into account. In case two color can easily be distinguished by three of these groups, but not so well by the fourth, than $d(i,j)$ will be low.
+
+For $d(i,j)$ we use the same interpretation as provided in Table~\ref{tab:delta_e}, so of the group that has the most trouble with distinguishing the colors.
+
+
+For \textbf{categorical} palettes we simply use the minimum distance over any two palette colors $i$ and $j$:
+
+\begin{equation}\label{Minimum distance}
+\mbox{min\_dist}(S) = \min_{i,j \in S} d(i,j)
+\end{equation}
+
+\noindent where $S$ is the set of colors that form a certain color palette.
+
+Higher values are generally preferable. To make decision making easier, we discretize this metric into three point Likert scale, with additional fourth $++$ category: 
+
+\begin{equation}
+\begin{aligned}
+&- && 0 \le \mbox{min\_dist}(S) < 2 \\
+&\circ && 2 \le \mbox{min\_dist}(S) < 10 \\
+&+ && 10 \le \mbox{min\_dist}(S) < 15 \\
+&++ && \mbox{min\_dist}(S) \ge 15
+\end{aligned}
+\end{equation}
+
+In the main overview table (Figure~\ref{fig:teaser}), the categories are represented by symbols: side eyes for $$−$$, a smiley for $+$, and a double smiley for $++$.
+
+While the default threshold values are based on the Delta~E interpretation provided above, users can adjust them within cols4all. The $+$ category can be interpreted as color blind friendly, the $-$ as not color blind friendly, and the $\circ$ as in between. For categorical palettes we added the $++$ to highlight palettes for which the colors can be distinguished with ease by people with color vision deficiency. This is especially useful for applications in which the colored objects are small, e.g. lines and points.
+
+We use the same metric $\mbox{min\_dist}(S)$ for \textbf{sequential} palettes. Because color distances are smaller for gradient color ramps we use different default threshold values, namely 1 and 5 and make not use of an additional fourth category.
+
+In addition, it is important that the order of the colors is correctly perceived. If three colors $i$, $j$, and $k$ are next to each other in a palette, then both $d(i,j)$ and $d(j,k)$ should be less than $d(i,k$. 
+Hence, we derive the following metric, that we call triangle inequality difference score:
+
+\begin{equation}\label{Minimum distance}
+\mbox{tri\_ineq}(S) = \min_{\{i,j,k\} \in S} \left( d(i,k) - \max \left( d(i,j), d(j,k) \right) \right)
+\end{equation}
+
+where we use $\{\}$ to denote colors that are next to each other.
+
+Higher values are generally preferable, with 0 as a clear threshold. Values below 0 indicate that the perceived color distance between $i$ and $k$ is less than that between either $i$ and $j$ or $j$ and $k$.
+
+
+\begin{equation}
+\begin{aligned}
+&- && 0 \le \mbox{min\_dist}(S) < 2 && \mbox{OR} && \mbox{tri\_ineq}(S) < 0\\
+&+ && \mbox{min\_dist}(S) \ge 5 && \mbox{AND} && \mbox{tri\_ineq}(S) \ge 2\\
+&\circ && \mbox{otherwise} && && \\
+\end{aligned}
+\end{equation}
+
+These threshold values can be adjusted inside cols4all if needed.
+
+For \textbf{diverging} palettes we use three metrics to derive a color blind friendliness property. Instead of min\_dist, two metrics are introduced, namely min\_step that is defined as the minimum distance of two neighbouring colors, and inter\_wing\_dist, the distance between the two wings of the palette.
+
+\begin{equation}\label{Minimum distance}
+\mbox{min\_step}(S) = \min_{\{i,j\} \in S} d(i,j)
+\end{equation}
+
+The inter wing distance is the minimum distance between any palette color $i$ (except the middle color) and its opposite wing:
+
+\begin{equation}\label{Inter wing distance}
+\mbox{inter\_wing\_dist}(S) = \min_{i \in S'} d(i,R_{-i})
+\end{equation}
+
+\noindent where $S'$ is equal to the palette $S$ without middle color (in case the number of colors is odd). We denote $R_{-i}$ as the colors of the wing opposite to color $i$ in the form of a color ramp. A color ramp is needed to make sure the distance between $i$ and the colors from the other wing cannot be large just because of the luminance (most diverging palettes diverge in luminance with a hue for each wing).
+
+For the \textbf{cyclic} palettes we use exactly the same definition of color blind friendliness as \textbf{sequential} palettes, with the addition that the first and last colors should be identical.
+
+The \textbf{bivariate} color palettes are analysed using a combination of one of the definitions above. For a bivaraite sequential x sequential (Figure~\ref{fig:expals}(e)), three sequential palettes are derived: the two marginal ones (in the figure, the top row and the left hand side column) and the diagonal (in the figure from top left to bottom right). For each pair of sequential palettes, an odd numbered diverging palette is constructed, each with the top left color as the middle color. Subsequently the color blind friendliness scores for diverging color palettes (as described above) is computed, and the minimal score is used. A similar approach is used for the other three bivariate color palette types @c4a}.
+
+Figure~\ref{fig:cbf_okabe} shows how users can analyse color blind friendliness in \texttt{cols4all}.
+
+On the top left the CIE xyY space clipped to sRGB gamut is shown with hue lines diverging from the defined white point (CIE standard illuminant D65). The bottom left shows the same plot, but using colors simulated for deutans, with confusion lines @judd43}.
+
+In the middle column two similarity matrices are shown, above for people with normal color vision, below for deutans. The big dot indicates there is a minor issue with pink and grey. This is illustrated in the maps in the right hand side column.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{cbf_okabe}\\
+\caption{Color blind friendliness analysis plots for the palette \texttt{misc.okabe}}
+\label{fig:cbf_okabe}\end{figure}
+
+
+
+#### Fairness}
+
+We say that a color palette is fair if all colors stand out about equally. 
+
+For categorical palettes this property ensures visual balance in data visualisations, preventing any single category from dominating, which can obscure other categories or create misleading impressions, unless deliberate highlighting is employed.
+
+This is quantified using the luminance and chroma ranges of the palette colors:
+
+\begin{equation}
+\Delta L^{\mbox{\scriptsize max}}(S) = \max_{i \in S} L_i - \min_{j \in S} L_j
+\end{equation}
+
+\begin{equation}
+\Delta C^{\mbox{\scriptsize max}}(S) = \max_{i \in S} C_i - \min_{j \in S} C_j
+\end{equation}
+
+It is important to note that a color's luminance alone does not determine its salience against the background; the background luminance also plays a crucial role. This is exactly where the contrast ratio~(\ref{eq:cr}) comes into play. However, the smaller the luminance range of the colors, the smaller the contrast ratios of each of those colors with the background color, irrespective of the background color and its luminace itself.
+
+For chroma this is a different story; the higher the chroma, the more that color will stand out, especilly because background colors are generally unchromatic.
+
+Unlike accessibility properties, there are no hard threshold values about what is fair and what not. Therfore, we apply logit transformations for both $\Delta L^{\mbox{\scriptsize max}}$ and $\Delta C^{\mbox{\scriptsize max}}$, normalise and multiply them. The result of the derived fairness score is shown in Figure~\ref{fig:fairness}. The scores range from 0 to 100 (fairest). The parameters of those logit transformations, resulting in the shown contour lines, can be adjusted within cols4all @c4a}.
+
+To aid decision making a palette is called fair if the fairness score is at least 75, and unfair if it is below 25. This is indicated in the main overview table of cols4all (see Figure~\ref{fig:teaser}) with a heart symbol and a cross respectively.
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{fairness}
+    \caption{Fairness scores}
+    \label{fig:fairness}
+\end{figure}
+
+For the other palette types we only take the chroma range into account, because luminance is usually used to form the gradient of colors.
+
+
+#### Vividness}
+
+Another property that is useful for data visualisation is how vivid the palette colors are.
+
+Prolonged exposure to highly saturated colors can induce visual fatigue @cakir1980}. Therefore, low saturated (pastel) colors are generally recommended for space-filling visualisations such as choropleths and treemaps @ware2021}.
+
+\begin{equation}
+C^{\mbox{\scriptsize max}}(S) = \max_{i \in S} C_i
+\end{equation}
+
+For decision making purposes, we discretize this metric using default threshold values of 100 and 70. In the main overview table (Figure~\ref{fig:teaser}), these classes are shown with a pair of sunglasses (for $C^{\mbox{\scriptsize max}}(S) >= 100$) and an asterisk (for $C^{\mbox{\scriptsize max}}(S) < 70$).
+
+#### Hues}
+
+Analyzing the distribution of hues within a palette is crucial for several reasons. Categorical palettes with an even distribution of hues are often aesthetically preferred to those with uneven distributions.
+
+For other palettes types, the distribution of hues is even more important, because it directly relates to color blind friendliness. Rainbow like sequential or diverging palettes, e.g. that use a wide range of hue values, are typically not color blind friendly.
+
+To facilitate color palette analysis and comparison regarding the distribution of hues, we introduce a metric called hue width, which is defined as the total width (angle) of all hues of the palette colors. This can be computed by 360 minus the largest hue gap:
+
+\begin{equation}
+H^{\mbox{\scriptsize width}}(S) = 360 - \max_{\{i,j\} \in S} H_i-H_j
+\end{equation}
+
+Because the maximum value for a palette of length $n$ is $360 - 360/n$, which occurs when the hues are spaced evenly, a score between 0 and 100 can be derived which we call hue spread:
+
+\begin{equation}
+H^{\mbox{\scriptsize spread}}(S) = \frac{H^{\mbox{\scriptsize width}}(S)}{360 - 360/n} * 100
+\end{equation}
+
+In the overview table (Figure~\ref{fig:teaser} categorical palettes get a rainbow symbol when the hue spread is above the default threshold value of 90.
+
+For sequential palettes we use the hue width to classify the hues. Palettes for which the hue width is less than 15 are labeled as "single hue" in the overview table indicated with a pencil symbol. Those palettes are generally recommended because of the relative low visual bias @ware2021}. Palettes with a hue width above the default threshold value of 180 are labeled as rainbow palette. Note that this specification is different than for categorical palettes, due to the nature of these palette types.
+
+For diverging palettes, we calculate the hue widths for both wings. If at least one of those hue widths is above 90, the palette is labeled as rainbow palette (with a rainbow symbol in the overview table), and if both hue widths score below 20, it is classified as double hue, shown in the overview table with a yin-yang symbol.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{necklace}
+    \caption{Hue necklace with the hue width for \texttt{carto.safe}}
+    \label{fig:necklace}
+\end{figure}
+
+
+
+Color blind friendliness can be analysed with the next tab of the tool. Figure~\ref{fig:cbf_okabe} shows a part of this tab.
+
+On the top left the CIE xyY space clipped to sRGB gamut is shown with hue lines diverging from the defined white point (CIE standard illuminant D65). The bottom left shows the same plot, but using colors simulated for deutans, with confusion lines @judd43}.
+
+In the middle column two similarity matrices are shown, above for people with normal color vision, below for deutans. The big dot indicates there is a minor issue with pink and grey. This is illustrated in the maps in the right hand side column.
+
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{cbf_okabe}\\
+\caption{Color blind friendliness analysis plots for the palette \texttt{misc.okabe}}
+\label{fig:cbf_okabe}\end{figure}
+
+
+
+
+
+#### Contrast}
+
+Since white and black are frequently used for backgrounds or text, properties are included to assess whether palette colors have sufficient contrast against them.
+
+\begin{equation}
+\mbox{CR\_white}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{white})
+\end{equation}
+
+\begin{equation}
+\mbox{CR\_black}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{black})
+\end{equation}
+
+If all colors have sufficient contrast with white, which is 3 according to the WCAG guideline, then $\mbox{CR\_white}(S)\geq 3$ and a white flag will be shown in the overview table (Figure~\ref{fig:teaser}. For the contrast ratio with black, a black flag will be shown.
+
+Figure~\ref{fig:contrast} shows a bar chart of the contrast ratio values of the palette~\texttt{powerbi.default} against white. The horizontal lines correspond to the WCAG threshold values; in this example, only yellow does not meet the criterion of 3.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{contrast_powerbi_default}\\
+\caption{Contrast ratio of \texttt{powerbi.default} against white }
+\label{fig:contrast}\end{figure}
+
+The contrast ratio between two colors is not only useful to check accessibility, but also to warn for unwanted visual illusions. Two colors are called equiluminant if they have similar luminance values, so resulting in a contrast ratio close to 1.
+
+Several visual illusions could appear at equiluminance, such as that the eye has trouble to separate neighbouring objects, even though they use totally different colors in terms of hue @bach}. This is illustrated in the map shown in Figure~\ref{fig:equi}(a) where two colors of the palette \texttt{hcl.set3} are used.
+
+
+\begin{figure}
+\centering
+\begin{tabular}{l}
+\includegraphics[width=0.8\linewidth]{equi1}\\
+(a) Without borders\\
+\includegraphics[width=0.8\linewidth]{equi2}\\
+(b) Without borders\\
+\end{tabular}
+\caption{Equiliminant colors from the palette \texttt{hcl.set3}}
+\label{fig:equi}\end{figure}
+
+Therefore, we compute the minimal contrast ratio between palette colors:
+
+\begin{equation}
+\mbox{CR\_within}(S) = \min_{i,j \in S}\mbox{CR}(i, j)
+\end{equation}
+
+When this value is below the default threshold value of 1.2, a spiral symbol is shown in the overview table~\ref{fig:teaser}.
+
+
+
+
+
+
+
+
+#### 3D Blues}
+
+A visual illusion called chromostereopsis occurs where two colors are perceived in different depth planes @brewster1844}. This illusion, most prominent with red and blue against a black background, can create a perception of depth or displacement.
+
+Figure~\ref{fig:3dblues} illustrates this illusion with a categorical map of the red and blue colors from \texttt{seaborn.bright}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{3Dblues_map}\\
+\caption{Chromostereopsis caused by two palette colors from \texttt{seaborn.bright}}
+\label{fig:3dblues}\end{figure}
+
+
+To warn for this possible visual illusion, which especially occurs against a dark background, an blue diamond symbol is shown in the overview table.
+
+#### Naming}
+
+Color naming significantly influences our perception and communication of color, impacting how we understand and interpret visual information. The ability to accurately name colors is particularly important in data visualization, where clear communication is essential @reda21}. However, color naming is inherently subject to cultural variations @kim19}, with differences observed not only between distinct cultural regions but also among neighboring countries. For instance, while Dutch uses "paars" and "roze" to describe shades of purple and pink, German employs "Violet", "Lila," "Pink", and "Rosa", highlighting the nuances in color terminology even within geographically close regions. This cultural variability poses a challenge for developing universally applicable color naming systems in data visualization.
+
+In cols4all we derived a property called nameability that informs users whether palette colors are easy to name.
+
+To accomplish this, we explore the match between the palette colors and a basic, commonly used, set of color names. By default we use the English names of the 11 colors identified by @boynton89}: green, blue, purple, pink, yellow, brown, orange, red, white, grey, and black.
+
+Let us denote the common color name set as $Q$. We say that the colors of a palette are easy to name if and only if:
+
+\begin{enumerate}
+\item Each palette color is almost always named $q \in Q$ by people with normal color vision.
+\item Each color name $q \in Q$ is used at most for one palette color. 
+\end{enumerate}
+
+The naming match between the palette colors and the common color names is illustrated in Figure~\ref{fig:name}, where the first seven colors from \texttt{tableau.10} are examined. The palette colors are shown as row heads, and the common color names as column heads. For each common color name a large set of small dots is shown to illustrate the variety of colors that are named after this name (more on this later).
+
+Each dot represents a match; larger dots indicate stronger matches. When there are multiple dots in one row, it means that multiple names can be given to the corresponding palette color, which violated rule 1. This is the case for the last palette color which is most often named "purple" but also "pink". Multiple dots in one column indicate that a common color name is used more than once, in this case blue. Hence rule 2 is violated.
+
+
+We used the following method to compute this match and to derive a nameability score is the following:
+
+\begin{description}
+    \item[Obtain annotated colors] We conducted a user experiment of 194 Dutch people with normal vision who were asked to label 64 random colors according choosing from the same set of 11 colors  (which map 1:1 to Dutch color names).
+    \item[Model fit] For each of the basic color names and for each dimension in a color space (we used the HCL space) fit the parameters of a suitable distribution function (we used the beta distribution) using the label frequenties of the annotated colors.
+    \item[Similarity matrix] Compute a similarity matrix based on the fitted distributions, in which the rows correspond to the palette colors and the columns to the basic color names (as in Figure~\ref{fig:name}).
+    \item[Softmax normalisation] Apply softmax function row wise where its parameters determine how much large the dots are shown compared to each other; a higher power exponent multiplier gives higher weight to the dominant color name, and therefore only draws dots that correspond to those names. In the example: a higher value of this parameter would result in just one dot in the seventh row, namely the one for purple, the most dominant color name. In \texttt{cols4all} this is configurable via a slider called "Clarity level".
+\end{description}
+
+
+Advanced users are also able to specify a custom set of basic color names and a function that returns a similarity matrix @c4a}. This enables users to fit a color naming model that matches the language of the target audience. 
+
+The variety of colors shown in the column headings are generated by the specified classification method. This enables advanced users to visually verify the classification and target users to understand the match between palette colors and basic color names.
+
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.98\linewidth]{naming_tableau10}\\
+\caption{Nameability analysis of \texttt{tableau.10}}
+\label{fig:name}\end{figure}
+
+
+
+
+
+### Implementation}
+
+#### R package cols4all}
+
+The interactive tool described in this paper is part of the R package cols4all. This package can be installed by running the following R code:
+
+\begin{lstlisting}
+install.packages("cols4all", 
+    dependencies = TRUE)
 library(cols4all)
-```
-
-The main tool is a dashboard (shown above), which is started with:
-
-```{r, eval=FALSE}
 c4a_gui()
-```
+\end{lstlisting}
 
+In addition to the interactive tool, the package includes functions for programmatic access to palette colors, parameter setting, and uploading user-defined palettes for analysis. Those functions are out of the scope of this paper and are described in the documentation @c4a}.
 
-What types and series are available?
+Figures~\ref{fig:teaser}, ~\ref{fig:overview_seq}, and~\ref{fig:overview_div} present screenshots of the main table for categorical, sequential, and diverging palettes, respectively. With the inputs above the table, users are able to select and  filter color palettes. In addition, color blind simulation can be enabled, and color codes in various formats can be shown. For advanced users, the underlying scores can be shown in the table as additional columns. A "dark mode" toggle allows users to switch between light and dark background themes.
 
-```{r}
-c4a_types()
 
-c4a_series()
-```
+The columns on the right-hand side of the colors include symbols on which the user can click to obtain either a citation (either plan or in Bibtex format) or the palette colors, either in square brackets (used by JavaScript and Python) or in R format (using the \texttt{c()} function).
 
-How many palettes per type x series?
 
-```{r}
-c4a_overview()
-```
+\begin{figure*}
+\centering
+\includegraphics[width = 0.9\textwidth]{overview_seq2}\\
+\caption{Overview table of sequential palettes}
+\label{fig:overview_seq}\end{figure*}
 
-What palettes are available, e.g diverging from the hcl series?
+\begin{figure*}
+\centering
+\includegraphics[width = 0.9\textwidth]{overview_div}\\
+\caption{Overview table of diverging palettes}
+\label{fig:overview_div}\end{figure*}
 
-```{r}
-# Diverging palettes from the 'hcl' series
-c4a_palettes(type = "div", series = "hcl")
-```
 
-Give me the colors!
+The other tabs are used for further analysis of the properties, as illustrated above. All figures in this paper are included in these tabs.
 
-```{r}
-# select purple green palette from the hcl series:
-c4a("hcl.purple_green", 11)
+The properties fairness, hues, and vividness all use the HCL color space, and are therefore further analysed in the HCL Analysis tab. Furthermore, in this tab an interactive 3D scatter plot (using \texttt{plotly} @plotly}) provide additional insights in how the palette colors are located in this color space. A screenshot is shown in Figure~\ref{fig:hcl_space} where the colors from \texttt{carto.safe} are plotted.
 
-# get the associated color for missing values
-c4a_na("hcl.purple_green")
-```
 
-Plot these colors:
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{hcl_carto_safe}\\
+\caption{3D scatter plot of \texttt{carto.safe} in the HCL color space}
+\label{fig:hcl_space}\end{figure}
 
-```{r, fig.height = 2}
-c4a_plot("hcl.purple_green", 11, include.na = TRUE)
-```
+In the last tap, Application, users can explore palettes with examples of the basic geometry types, points, lines, polygons, and text. Furthermore, color vision simulation can be enabled.
 
 
+## Palette Design: Insights and Strategies}
 
-### Using cols4all palettes in ggplot2
+Although the main focus of this paper is the tool itself rather than the analysis and comparison of color palette, we would like to share some insights we obtains when using the tool to choose palettes for everyday visualisation tasks. Next, we challenged ourselves to create own color palettes. Strategies to obtain those \texttt{cols4all} palettes are described later on.
 
-```{r}
-library(ggplot2)
-data("diamonds")
-diam_exp = diamonds[diamonds$price >= 15000, ]
+### Insights from Palette Analysis}
 
-# discrete categorical scale
-ggplot(diam_exp, aes(x = carat, y = price, color = color)) +
-	geom_point(size = 2) +
-	scale_color_discrete_c4a_cat("carto.safe") +
-	theme_light()
+Fairness and color blind friendliness often present conflicting objectives. Many categorical palettes with seven colors that score high on fairness are not classified as color blind friendly. This is shown in the main table after filtering on "Fair" and sorting by "Colorblind friendly" (Figure~\ref{fig:fair_sort_cbf}). The most color blind friendly palette of this selection is \texttt{tol.light} for which the min\_dist score is 7.23, a strong color difference according Table~\ref{tab:delta_e}, but too low to be labeled as color blind friendly. Reversely, color palettes that are labeled as color blind friendly were not labeled as fair. The fairest palettes \texttt{misc.okabe} and \texttt{tol.muted} scored 56 and 29 on the fairness score, which both fall into the neutral category. A general aesthetic preference for fair palettes was observed. Further research is necessary to investigate whether this preference is subjective or shared across a wider population.
 
-# continuous diverging scale
-ggplot(diam_exp, aes(x = carat, y = depth, color = price)) +
-	geom_point(size = 2) +
-	scale_color_continuous_c4a_div("wes.zissou1", mid = mean(diam_exp$price)) +
-	theme_light()
-```		
+\begin{figure}
+\centering
+\includegraphics[width=0.98\linewidth]{cols4all_fair_sort_cbf}\\
+\caption{Fairest categorical palettes, sorted by color blind friendliness}
+\label{fig:fair_sort_cbf}\end{figure}
 
-### Overview of functions
 
-Main functions:
+Many spectral sequential and diverging palettes exhibit limitations in terms of color blind friendliness. Designing color blind friendly spectral/rainbow palettes is challenging, as individuals with color vision deficiency struggle to differentiate hues (see the simulated color space for deutans in Figure~\ref{fig:cbf_okabe}).
 
-*   `c4a_gui` Dashboard for analyzing the palettes
-*   `c4a` Get the colors from a palette (`c4a_na` for the associated color for missing values)
-*	`c4a_plot` Plot a color palette
+A severe issue that may induce visual bias for color blind people is illustrated with the palette \texttt{matplotlib.spectral} (which is similar to \texttt{brewer.spectral} in Figure~\ref{fig:spectral}. For people with normal color vision, green, the fifth of seven colors, appears to be on the right-hand side wing. However, for deutans and protans, this color is much closer to the colors from the left-hand side wing. This can be explained by analysing the confusion lines (Figure~\ref{fig:spectral} bottom left); color 5 is on the same confusion line as colors 4 and 1, and only 2 lines away from colors 2 and 3, whereas the differences with colors 6 and 7 are 2.5 and 6 confusion lines respectively.
 
-Palette names and properties:
 
-*   `c4a_palettes` Get available palette names
-*   `c4a_series` Get available series names
-*   `c4a_types` Get implemented types
-* 	`c4a_overview` Get an overview of palettes per series x type.
-*   `c4a_citation` Show how to cite palettes (with bibtex code).
-*   `c4a_info` Get information from a palette, such as type and maximum number
-    of colors
-*   `.P` Environment via which palette names can be browsed with
-    auto-completion (using `$`)
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{cols4all_matplotlib_spectral}\\
+\caption{Visual bias for deutans when using a spectral palette}
+\label{fig:spectral}\end{figure}
 
 
-Importing and exporting palettes:
+Several spectral sequential palettes from the series \texttt{scico} @scico}, \texttt{matplotlib}\cite{matplotlib} (viridis), and \texttt{kovesi} @kovesi} did succeed in this quest. Moreover, they scored high on fairness, as can be seen in Figure~\ref{fig:seq_spec}. Also the cyclic palettes from \texttt{scico} scored well on color blind friendliness and fairness.
 
-*   `c4a_data` Build color palette data
-*   `c4a_load` Load color palette data
-*   `c4a_sysdata_import` Import system data
-*   `c4a_sysdata_export` Export system data
 
-Edit color palette data
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{cols4all_seq_spectral}\\
+\caption{Spectral sequential palettes that scores well in general, shown in continuous format}
+\label{fig:seq_spec}\end{figure}
 
-*   `c4a_duplicate` Duplicates a color palette
-*   `c4a_modify` Modifies palette colors 
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{cols4all_div}\\
+\caption{Color blind friendly diverging palettes}
+\label{fig:div}\end{figure}
 
-ggplot2
 
-* 	`scale_<aesthetic>_<mapping>_c4a_<type>` e.g. `scale_color_continuous_c4a_div` Add scale to ggplot2. 
+Diverging palettes score well on color blind friendliness when both wings have a distinct hue (yin yang symbol). More specifically, almost exclusively the combinations red/orange/brown with blue, and purple with green scored well (Figure~\ref{fig:div}). The former combination has the drawback that red and orange are often more saturated, leading to a lower fairness score than the latter combination.
 
+Color blind friendliness of bivariate palettes is even more challenging to achieve, because not only the two (or three) marginal palettes on which they are based need to be color blind friendly, also the bivariate color combinations. Because the properties for bivariate palettes are still in development, the labels for color blind friendliness and fairness have to be taken with a grain of salt. Bivariate palettes that are based on either the orange-blue or purple-green combinations are the least color blind unfriendly and could therefore be used, albeit with caution. Bivariate palettes of the subtype sequantial x categorical with 3 or more columns (categories) are almost by definition not color blind friendly, because color blind people can only perceive combinations of at most two hues (Figure~\ref{fig:cbf_okabe}). The fact they can observe three or more different hues in categorical palettes is not because of the hue, but due to the variance in chroma and luminance.
 
 
-## Color spaces
+### Strategies for Palette Design}
 
-Visual perception, in particular colors, is complex. For the purpose of information visualization it is explained in an accessible way by Ware (2019). In this vignette, we briefly describe the color spaces that are needed to understand the functionality of **cols4all**.
+We used the development functions included in the R package \texttt{cols4all} to find categorical palettes that are color blind friendly, fair, and with sufficient contrast with white and/or black.
 
-The human eye has three types of cones (specific photoreceptor cells in the retina), which are sensitive to light of different wavelengths: long, medium, and short. Their peak sensitivities (of 565, 540, and 440nm respectively) correspond to the primary colors red, green, and blue respectively. In computer graphics, a color is usually defined as RGB, which is a mixture of those three primary colors. RGB colors are often represented in hex-format (e.g. #FF00FF), where the first two characters specify red, the third and fourth green and the last two blue. Therefore #FF00FF is purple. A standard RGB space in computer graphics is _sRGB_ (which exactly defines the primary colors, the white point, and a so-called gamma correction which is needed to perceive a grayscale linearly).
+More specifically, we aimed for three use cases:
 
-To analyse color palettes, we also use the polarLUV color space, which is a transformation of the CIELUV space. In this space, known as _HCL_, a color is defined by three variables: 
+\begin{description}
+    \item[Space-filling] Example applications: categorical maps, area charts, and treemaps. To reduce potential eye fatigue we prioritized pastel (low saturated) colors. Fairness was also important, so colors also needed to be similarly bright. We tool color blind friendliness more as an constraint that needed to be satistied, rather than the objective.
+    \item[Lines and points] Example applications: line charts, scatter plots. Contrast with the background color was an important contraint, more specifically, a contrast ratio of 3 had to be achieved. Here the objective was to maximize color blind friendliness. Because fairness is less, manual inspection of how aesthetically pleasing the palettes is important (recall our observation that we preferred fair palettes aesthetically).
+    \item[Just color blind friendly] These could be useful for situations where color blind people need visualisations of complex datasets.
+\end{description}
 
-* **Hue** The hue of a color is how we call casually name colors: e.g. yellow, purple, blue, orange, etc. It is defined as a polar coordinate, so takes values from 0 to 360 degrees.
-* **Chroma** The vividness or intensity of the color. The higher, the more colorful. The maximum chroma depends on the hue. Grayscale colors have 0 chroma. The maximum value depends the hue and luminance. 
-* **Luminance** The amount of light emitted from an object (e.g. a computer screen). It is similar to _brightness_, although the latter is a relative measure. It takes values from 0 to 100.
 
+We designed the following preliminary set of color palettes, of which the first seven colors are shown in Figure~\ref{fig:c4a}.
 
+\begin{description}
+    \item[\texttt{area7}, \texttt{area8}, \texttt{area9}] Palettes for bright space-filling visualisations, preferably used against a white background. There is sufficient contrast with black, so black text annotations are possible (and according WCAG standards). See Figure~\ref{fig:area7} for an example.
+    \item[\texttt{area7}, \texttt{area8}, \texttt{area9}] The same as above, but dark variants for a black background and white text annotations (see Figure~\ref{fig:area7d}.
+    \item[\texttt{line7}, \texttt{line8}, \texttt{line9}] Palettes for line and point charts. These palettes have sufficient contrast with both white and black so can be used for both light and dark modes (Figure~\ref{fig:line7}.
+    \item[\texttt{friendly7}, \texttt{friendly9}, \texttt{friendly11}, \texttt{friendly13}] We managed to develope colorblind-friendly palettes with up to 13 colors (Figure~\ref{fig:friendly}, ensuring a minimum color distance of 10. However, we advise against using such a large number of categorical colors for visualizing critical information, as it can hinder clarity and interpretation.
+\end{description}.
 
+The used approach to find those palettes was the following:
 
+\begin{description}
+    \item[Pool of colors] We selected colors from several existing color blind friendly palettes (\texttt{carto}, \texttt{tableau} and \texttt{tol}).
+    \item[Filter] We filtered the colors by chroma and or luminance to obtain the desired ranges. This ensures the desired fairness, vividness and contrast ratio scores.
+    \item[Compute \texttt{min_dist}] For each permutation we computed the minimum distance. To reduce the high number of permutations, "twin" colors from the pool were also filtered out.
+    \item[Visual inspection] The color palette candidates were loaded in \texttt{cols4all} and analysed.
+    \item[Selection] The visually most appealing palettes (given the constraints) were selected.
+\end{description}
 
 
 
-## Indicators
 
-### Colorblind friendliness
 
-First of all, we use the distance measure between two colors A and B from CIE as defined in 2000 (see Lindbloom, Bruce Justin. Delta E (CIE 2000).).
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{c4a_pals}\\
+\caption{New preliminary set of \texttt{cols4all} palettes}
+\label{fig:c4a}\end{figure}
 
-For simplicity, we apply two labels: colorblind friendly <font size="4">&#9786;</font> and colorblind unfriendly <font size="4">&#128064;</font>. A palette without such label is classified in between. 
-Our definition of these labels depend on the palette type:
 
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{area7}\\
+\caption{\texttt{area7}: a palette for space-filling visualisations}
+\label{fig:area7}\end{figure}
 
-* (**categorical**) The minimum distance metric (`min_dist`) is the minimum distance between any two colors for any color vision deficiency type. 
-  - <font size="4">&#9786;</font> (colorblind friendly): `min_dist >= 10`
-  - <font size="4">&#128064;</font> (colorblind unfriendly): `min_dist <= 2`
-  
-    These numbers are parameters that can be changed via `c4a_options`.
-* (**sequential**) The minimum step metric (`min_step`) is used, which is the smallest distance between any two adjacent colors (for any color vision deficiency type).
-  - <font size="4">&#9786;</font> (colorblind friendly): `min_step >= 5`
-  - <font size="4">&#128064;</font> (colorblind unfriendly): `min_dist <= 1`
-  
-    Again, these numbers are parameters that can be changed via `c4a_options`.
-    Note that this metric is not very useful when a continuous scale is used. In that case, it is recommended to analyse the palette with say 7 or 9 colors.
-* (**diverging**) The `min_step` metric used in a similar way as for sequential palettes. In addition, the inter wing distance metric (`inter_wing_dist`) is used, which is the minimum color distance between any color in the left wing to any color in the right wing of the palette (for any color vision deficiency type). 
-  - <font size="4">&#9786;</font> (colorblind friendly): `min_step >= 5` and `inter_wing_dist >= 10`
-  - <font size="4">&#128064;</font> (colorblind unfriendly): `min_dist <= 1` or `inter_wing_dist <= 4`
-  
-    These parameters can be changed via `c4a_options`.
-* (**bivariate (seq x seq)**) Three sequential palettes are extracted: a) the first column, b) the bottom row, and c) the diagonal. These are combined to form three diverging palettes: ab, ac, and bc. For each of these diverging palette, the same checks are applied as described above for regular diverging palettes.
-* (**bivariate (seq x cat)**) For each row, the same checks apply as for a categorical palette
-* (**bivariate (seq x div)**) Three sequential palettes are extracted: a) the first column, b) the middle column column, and c) the last column. These are combined to form three diverging palettes: ab, ac, and bc. For each of these diverging palette, the same checks are applied as described above for regular diverging palettes.
-* (**bivariate (seq x desaturated)**) A diverging palette is formed from the first and the last column. The same checks are applied as described above for regular diverging palettes.
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{area7d}\\
+\caption{\texttt{area7d}: a palette for space-filling visualisations with dark background}
+\label{fig:area7d}\end{figure}
 
-### HCL analysis
+\begin{figure}
+\centering
+\includegraphics[width=0.45\linewidth]{line7_wt}
+\includegraphics[width=0.45\linewidth]{line7_bk}
+\caption{\texttt{line7}: a palette for point and line charts}
+\label{fig:line7}\end{figure}
 
-Regarding the used **hues**, there is no simple good and bad. However, for quantitative palettes we distinguish 
+\begin{figure}
+\centering
+\includegraphics[width=0.98\linewidth]{friendly13}\\
+\caption{\texttt{friendly}: a palette optimized for color blind friendliness}
+\label{fig:friendly}\end{figure}
 
-* (**sequential**) 
-  - Single hue palettes (&#128396;) which are recommended for quantitative analysis, but harder to distinguish colors
-  - Spectral (&#127752;) which are easy to distinguish colors, but less suitable for quantitative analysis
-* (**diverging**)
-  - Two-hue palettes (&#x262F;) each wing has its own distinct hue, which is highly recommended
-  - Spectral (&#127752;) which are easy to distinguish colors, but less suitable for quantitative analysis
- 
+## Discussion}
 
-Regarding the used **chroma** / **vividness**, we label a color palette
+\texttt{cols4all} offers a unique approach to color palette analysis and comparison, going beyond the functionalities of existing tools. By focusing on accessibility, fairness, and visual effectiveness, cols4all empowers users to make informed decisions based on quantitative and qualitative insights. The inclusion of color blindness simulation and contrast analysis aids in creating visualizations that are inclusive and perceptually effective for a wider audience. The concept of fairness introduces a novel perspective, promoting palettes where all colors are equally salient.
 
-- **vivid** (<font size="4">&#x1f576;</font>) if it contains a color with a chroma value of 100 or higher
-- **pastel** (<font size="4">&#10057;</font>) if all colors have chroma values of at most 70
+\texttt{cols4all} is in active ongoing development with new features and refinements regularly added. This commitment to ongoing improvement is driven by a desire to meet the evolving needs of users and address the limitations identified through community feedback and ongoing research. For example, while the tool currently focuses on discrete palettes, it can effectively analyze continuous palettes by discretizing them into a sufficient number of classes, thus extending its applicability. However, the tool could also incorporate features to analyse sequential and diverging palettes in their continuous form.
 
-These threshold numbers can be configured via options (to do).
+While \texttt{cols4all} provides objective metrics, cultural backgrounds, individual preferences, and the specific context of use can influence how colors are perceived and interpreted. To better account for these subjective factors, future development could explore incorporating user feedback mechanisms and customizable settings to accommodate individual preferences.  Furthermore, drawing upon insights from other fields, such as visual perception research, can inform the development of new metrics and analytical tools that better capture the nuances of human color perception.
 
-Pastel (low chroma) colors are recommended for *space-filling visualizations*, like maps and bar charts. Vivid (high chroma) colors for *small objects*, such as dots, lines, and text labels.
+Various sequential and diverging color palettes have been designed to be perceptually linear, in particular the \texttt{scico} @scico}, \texttt{hcl} @hcl}, and \texttt{matplotlib} (viridis) @matplotlib} series. Currently there are no properties in \texttt{cols4all} that assess whether sequential and diverging palettes are perceived linearly. This could be assessed for people with normal color vision only, or also for color blind people.
 
-We also use the **chroma** and **luminance** values of palette colors to find out whether some colors stand out more than other colors. Ideally, a categorical palette should contain colors that stand out about equally (for otherwise, one color will draw more attention than another, which may bias our perception and interpretation of the shown data). Colors with a high chroma value stand out more than less chromatic colors. Furthermore, against a bright background, dark colors (low luminance) stand out more, while bright colors (high luminance) stand out more against a dark background. Luminance is only considered for categorical palettes, because quantitative palettes (sequential and diverging) often map a numeric variable to luminance.
+One area where further development is needed is in improving the "nameability" of palette colors.  Nameability, which refers to how easily colors can be identified and labeled with common color names, has been shown to improve user performance in data visualization tasks @reda21}.  The nameability property we proposed has a few limitations that require further research. Besides the room for improvement regarding the method to match the colors to the common color names, one aspect that remains unclear is whether "light" or "dark" variants of the common color names should be taken into account. Observe that for set of 11 common color names @boynton89}, these variants are only commonly used in combination with blue and green; for instance dark pink can also be named purple and light red as orange or pink. How does the presence of both light and dark blue (as illustrated in Figure~\ref{fig:name}), influence user performance?  
 
-Let us define the luminance range (`Lrange`) as the maximum minus the minimum luminance value of the palette and the chroma range (`Crange`) as the maximum chroma value minus the minimum chroma value.
+User studies, both qualitative and quantitative, are needed to verify and if needed further improve the properties described in this paper. This holds for both the underlying property scores and the derived 3-point Likert scales that are shown in the main table. The current default threshold values are based on a combination of guidelines (e.g. regarding Delta~E), common sense, and a more or less even distribution of popular color palettes into three classes. Task oriented user studies are recommended to asses the quality of the properties. For instance, what is the relation between measured visual bias in typical visualisation tasks and our proposed fairness score?
 
-Regarding **Fairness** we consider two metrics: the luminance range (`Lrange`) and the chroma range (`Crange`). We call a palette:
+This work provides strategies for creating color palettes that meet specific criteria, such as color blind friendliness and fairness. These strategies currently involve manual adjustments and refinements based on the analysis provided by cols4all. However, mathematical optimization and machine learning offer promising avenues for automating palette generation @yuan22}. Future work could explore developing separate tools that leverage these techniques, optimizing palettes for the properties proposed in this paper. A key challenge in designing such tools lies in integrating user preferences and domain expertise into the automated process. Interactive visualization tools that enable users to guide and refine the automated learning process would be a valuable asset, allowing for efficient exploration of the vast design space while ensuring the resulting palettes align with user needs and preferences.
 
-- **fair** (<font size="4">&#9825;</font>) if `Crange <= 50` and (for categorical palettes only) `Lrange <= 30`
-- **unfair** (<font size="4">&#10799;</font>) if `Crange <= 80` or (for categorical palettes only) `Lrange >= 50`
+During the development  of \textit{cols4all} and the properties related to color distance we noticed that the perceived distance of two colors depends not only on those two color, but also on the background color. To accommodate for this phenomenon we introduce a so-called background adjusted color distance between colors $i$ and $j$ against background color $k$:
 
-Note that harmonic color palettes are usually not color blind friendly. Furthermore, when the luminance values of the colors are about equal, the contrast of those colors is low, which requires the use of border lines (see below).
+\begin{equation}
+d(i,j,k) = \frac{2d(i,j)^2}{d(i,k) + d(j,k)}
+\end{equation}
 
-### Naming
+We implemented this function in the main tool (tab page "Color Blind Friendliness", checkbox "Background Adjusted" located above the similarity matrix). However this metric needs further development and is therefore not yet used in the properties introduced in this paper.
 
-This property is still in development. Details will follow.
 
-### Contrast
+## Conclusion}
 
-The border between two colored shapes appears **wobbly** when the colors are equally luminant (bright), no matter what hue (red, blue, etc.) they have. This visual illusion is called **equiluminance**.
-
-The **contrast ratio** is a measure for equiluminance, calculated as `CR = (L1 + 0.05) / (L2 + 0.05)`, where `L1` and `L2` are the luminances (normalized between 0 and 1) of the lighter and darker colors, respectively. Note that the minimum contrast ratio is 1 and the maximum 21.
-
-In the overview table, there are three flags that indicate low contrast (`CR < 1.2`):
-
-- <font size="1">&#127937;</font>: Between two colors of the palettes
-- <font size="1">&#127987;</font>: Between one color of the palette and white
-- <font size="1">&#127988;</font>: Between one color of the palette and black
-
-The go-to solution to prevent wobbly borders is by using black or white (depending of the lightness of the colors) **border lines**.
-
-
-
-
-### 3D Blues
-
-Pure blue colors, by which we mean a 0 or very low number for the R (red) and G (green) channels and a high number for the B (blue) channel may cause a visual illusion called **chromostereopsis**. This effect is especially prominent when blue objects are shown next to red objects against a black background.
-
-The table column "3D Blues" indicates when a palette contains a pure blue color. The used symbol is B7#9 (which refers to a music chord used in blues music). 
-
-
-## References
-
-Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for Selecting Colour Schemes for Maps.” _The Cartographic Journal_,
-*40*(1), 27-37.
-
-Hvitfeldt E. (2021). paletteer: Comprehensive Collection of Color Palettes. version 1.3.0. https://github.com/EmilHvitfeldt/paletteer
-
-Ware, C (2019). Information Visualization - Perception for Design - 4th Edition. Elsevier
-
-Wright K (2021). _pals: Color Palettes, Colormaps, and Tools to Evaluate Them_. R package version 1.7,
-  <https://CRAN.R-project.org/package=pals>.
-  
-  
+\texttt{cols4all} represents a significant step towards creating more accessible and effective data visualizations. By providing a comprehensive platform for color palette analysis and comparison, it encourages informed decision-making and promotes inclusivity in design. The open-source nature of the tool fosters community involvement and collaborative development, paving the way for future enhancements and a broader understanding of color perception in visualization. Future research could focus on user studies to evaluate the tool's effectiveness and identify areas for improvement, as well as the development of new metrics and visualizations to further enhance its analytical capabilities.

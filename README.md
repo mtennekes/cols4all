@@ -25,8 +25,8 @@ aesthetic harmony, and how many different hues are used. Finally, for
 each color palette a color for missing values is assigned, which is
 especially important for spatial data visualization. Currently we
 support several types: *categorical* (qualitative) palettes,
-*sequential* palettes, *diverging* palettes, and *bivariate* palettes
-(divided into four subtypes).
+*sequential* palettes, *diverging* palettes, *cycling* palettes and
+*bivariate* palettes (divided into four subtypes).
 
 ## Installation
 
@@ -43,6 +43,8 @@ install.packages("remotes")
 remotes::install_github("mtennekes/cols4all", dependencies = TRUE)
 ```
 
+This development version will be on CRAN soon (October 2024)
+
 ## Getting started
 
 Load the package:
@@ -57,98 +59,103 @@ The main tool is a dashboard, which is started with:
 c4a_gui()
 ```
 
-[<img src="vignettes/dash-3.png" width="650"/>](vignettes/dash-3.png)
+[<img src="vignettes/cols4all2.png" width="900"/>](vignettes/cols4all2.png)
 
-What types and series are available?
+What palettes are available? That is, by default; other palettes can be
+added!
 
 ``` r
-c4a_types()
-#>   type                          description
-#> 1  cat                          categorical
-#> 2  seq                           sequential
-#> 3  div                            diverging
-#> 4 bivs  bivariate (sequential x sequential)
-#> 5 bivc bivariate (sequential x categorical)
-#> 6 bivd   bivariate (sequential x diverging)
-#> 7 bivg bivariate (sequential x desaturated)
-
 c4a_series()
-#>     series                                         description
-#> 1   brewer                                ColorBrewer palettes
-#> 2      c4a                  cols4all palettes (in development)
-#> 3    carto                          Palettes designed by CARTO
-#> 4      hcl  Palettes from the Hue Chroma Luminance color space
-#> 5   kovesi                   Palettes designed by Peter Kovesi
-#> 6      met Palettes inspired by The Metropolitan Museum of Art
-#> 7     misc                              Miscellaneous palettes
-#> 8    miscs                                                <NA>
-#> 9    parks                 Palettes inspired by National Parks
-#> 10    poly               Qualitative palettes with many colors
-#> 11   scico     Scientific colour map palettes by Fabio Crameri
-#> 12 seaborn            Palettes from the Python library Seaborn
-#> 13 stevens                Bivariate palettes by Joshua Stevens
-#> 14 tableau                        Palettes designed by Tableau
-#> 15     tol                       Palettes designed by Paul Tol
-#> 16 viridis          Palettes fom the Python library matplotlib
-#> 17     wes                   Palettes from Wes Anderson movies
+#>        series                                         description
+#> 1      brewer                                ColorBrewer palettes
+#> 2       carto                          Palettes designed by CARTO
+#> 3    cols4all                  cols4all palettes (in development)
+#> 4         hcl  Palettes from the Hue Chroma Luminance color space
+#> 5      kovesi                   Palettes designed by Peter Kovesi
+#> 6  matplotlib         Palettes from the Python library matplotlib
+#> 7         met Palettes inspired by The Metropolitan Museum of Art
+#> 8        misc                              Miscellaneous palettes
+#> 9       parks                 Palettes inspired by National Parks
+#> 10       poly               Qualitative palettes with many colors
+#> 11    powerbi                    Palettes from Microsoft Power BI
+#> 12      scico             Scientific colour maps by Fabio Crameri
+#> 13    seaborn            Palettes from the Python library Seaborn
+#> 14    stevens                Bivariate palettes by Joshua Stevens
+#> 15    tableau                        Palettes designed by Tableau
+#> 16        tol                       Palettes designed by Paul Tol
+#> 17        wes                   Palettes from Wes Anderson movies
 ```
 
-How many palettes per type x series?
+## Using the tool
 
-``` r
-c4a_overview()
-#>         cat seq div bivs bivc bivd bivg
-#> brewer    8  18   9    2    1    1   NA
-#> c4a      NA  NA   2    2   NA    2    5
-#> carto     6  21   7   NA   NA   NA   NA
-#> hcl       9  23  11   NA   NA   NA   NA
-#> kovesi   NA  17  13   NA   NA   NA   NA
-#> met      33   8  14   NA    1   NA   NA
-#> misc      1  NA  NA   NA    3   NA   NA
-#> miscs     4  NA  NA   NA   NA   NA   NA
-#> parks    22   5   3   NA   NA   NA   NA
-#> poly      9  NA  NA   NA   NA   NA   NA
-#> scico    21  21  10   NA    2   NA    1
-#> seaborn   6   4   2   NA   NA   NA   NA
-#> stevens  NA  NA  NA    5   NA   NA   NA
-#> tableau  29  23  28   NA   NA   NA   NA
-#> tol       8   8   4   NA   NA   NA   NA
-#> viridis  NA   7   1   NA   NA   NA   NA
-#> wes      23  NA   1   NA   NA   NA   NA
-```
+Use the tool to compare palettes and if needed analyse a palette in
+depth (via the other tabs).
 
-What palettes are available, e.g diverging from the hcl series?
+Find a trade-off you like among the following properties (the columns in
+the main table):
 
-``` r
-# Diverging palettes from the 'hcl' series
-c4a_palettes(type = "div", series = "hcl")
-#>  [1] "hcl.blue_red1"    "hcl.blue_red2"    "hcl.blue_red3"    "hcl.red_green"   
-#>  [5] "hcl.purple_green" "hcl.purple_brown" "hcl.green_brown"  "hcl.blue_yellow2"
-#>  [9] "hcl.blue_yellow3" "hcl.green_orange" "hcl.cyan_magenta"
-```
+- Colorblind friendly: Is the palette color blind friendly?
+- Fair: Is the palette fair? In a fair palette, colors stand out about
+  equally.
+- Hues: What hue ranges are used? All across the (rainbow) color
+  spectrum, or a limited range?
+- Vivid: Are there any colors that are very saturated? Perhaps a little
+  too much?
+- Contrast: Is there sufficient contrast against white, black (using
+  WACG criteria) and between colors?
+- 3D Blues: If blue is a palette color, a 3D visual illusion could
+  appear.
+- Naming (in development): How well can palette colors be named?
 
-Give me the colors!
+### Example 1
 
-``` r
-# select purple green palette from the hcl series:
-c4a("hcl.purple_green", 11)
-#>  [1] "#492050" "#82498C" "#B574C2" "#D2A9DB" "#E8D4ED" "#F1F1F1" "#C8E1C9"
-#>  [8] "#91C392" "#4E9D4F" "#256C26" "#023903"
+When we are looking for a fair categorical palette of seven colors that
+is as color blind friendly as possible, then filter on “Fair”, and sort
+by “Colorblind-friendly”:
 
-# get the associated color for missing values
-c4a_na("hcl.purple_green")
-#> [1] "#868686"
-```
+[<img src="vignettes/cols4all_fair_sort_cbf.png" width="900"/>](vignettes/cols4all_fair_sort_cbf.png)
 
-Plot these colors:
+### Example 2
 
-``` r
-c4a_plot("hcl.purple_green", 11, include.na = TRUE)
-```
+Say we need a diverging palette that is color blind friendly, and what
+to choose one by eye. Then filter by “Colorblind-friendly” and sort by
+“Huddle Middle L” (the hue of the left wing):
 
-![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
+[<img src="vignettes/cols4all_div.png" width="900"/>](vignettes/cols4all_div.png)
 
-## Using cols4all palettes in ggplot2
+Reverse sorting is also applied.
+
+## Preliminary set of new `cols4all` palettes
+
+We applied a basic heuristics to explore palettes that score well on a
+mix of the properties named above
+
+[<img src="vignettes/c4a_pals.png" width="900"/>](vignettes/c4a_pals.png)
+
+`area7`, `area8` and `area9` are fair, contain low pastel colors, and
+are color-blind friendly (up to 7 colors). So ideal for maps and other
+space-filling visualizations! These are used in
+[https://github.com/r-tmap/tmap](%60tmap4%60).
+
+[<img src="vignettes/area7.png" width="900"/>](vignettes/area7.png)
+
+`area7d`, `area8d` and `area9d` similar but for dark mode:.
+
+[<img src="vignettes/area7d.png" width="900"/>](vignettes/area7d.png)
+
+`line7`, `line8` and `line9` are colors with good contrast against both
+black and white, and are also colorblind-friendly to some extent. So
+ideal for line graphs and scatter plots:
+
+[<img src="vignettes/line7_wt.png" width="440"/>](vignettes/line7_wt.png)
+[<img src="vignettes/line7_bk.png" width="440"/>](vignettes/line7_bk.png)
+
+Finally `friendly7` … `friendly13` are colorblind-friendly palettes
+(disregarding the other properties):
+
+[<img src="vignettes/friendly13.png" width="900"/>](vignettes/friendly13.png)
+
+## `ggplot2` integration
 
 ``` r
 library(ggplot2)
@@ -162,7 +169,7 @@ ggplot(diam_exp, aes(x = carat, y = price, color = color)) +
     theme_light()
 ```
 
-![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 
@@ -173,7 +180,7 @@ ggplot(diam_exp, aes(x = carat, y = depth, color = price)) +
     theme_light()
 ```
 
-![](man/figures/README-unnamed-chunk-11-2.png)<!-- -->
+![](man/figures/README-unnamed-chunk-7-2.png)<!-- -->
 
 ## Overview of functions
 
@@ -213,6 +220,39 @@ ggplot2
 - `scale_<aesthetic>_<mapping>_c4a_<type>`
   e.g. `scale_color_continuous_c4a_div` Add scale to ggplot2.
 
+## Other R funtions
+
+What palettes are available, e.g diverging from the hcl series?
+
+``` r
+# Diverging palettes from the 'hcl' series
+c4a_palettes(type = "div", series = "hcl")
+#>  [1] "hcl.blue_red"     "hcl.blue_red2"    "hcl.blue_red3"    "hcl.red_green"   
+#>  [5] "hcl.purple_green" "hcl.purple_brown" "hcl.green_brown"  "hcl.blue_yellow2"
+#>  [9] "hcl.blue_yellow3" "hcl.green_orange" "hcl.cyan_magenta"
+```
+
+Give me the colors!
+
+``` r
+# select purple green palette from the hcl series:
+c4a("hcl.purple_green", 11)
+#>  [1] "#492050" "#82498C" "#B574C2" "#D2A9DB" "#E8D4ED" "#F1F1F1" "#C8E1C9"
+#>  [8] "#91C392" "#4E9D4F" "#256C26" "#023903"
+
+# get the associated color for missing values
+c4a_na("hcl.purple_green")
+#> [1] "#BABABA"
+```
+
+Plot these colors:
+
+``` r
+c4a_plot_cvd("hcl.purple_green", 11, include.na = TRUE)
+```
+
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
+
 ## Related R packages
 
 The foundation of this package is another R package:
@@ -230,17 +270,11 @@ few features that distinguishes **cols4all** from those packages:
   color blindness, fairness (whether colors stand out about equally),
   and contrast are determined for each palette.
 
-- Bivariate color palettes are available (besides the three main palette
-  types: categorical, sequential, and diverging).
+- Bivariate color palettes are available.
 
 - Own color palettes can be loaded and analysed.
 
-- Color for missing values are made explicit.
-
-- Palettes are made consistent with each other to enable comparison. For
-  instance, black and white are (by default) removed from categorical
-  palettes. Another standard that we adapt to is that all sequential
-  palettes go from light to dark and not the other way round.
+- Colors for missing values are made explicit.
 
 - There is native support for **ggplot2** and **tmap** (as of the
   upcoming version 4).

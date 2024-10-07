@@ -44,9 +44,10 @@ knitr::knit_hooks$set(output = function(x, options) {
 <!-- badges: end --->
 
 
+
 **cols4all** is an R package for selecting color palettes. "Color for all" refers to our mission that colors should be usable for not just people with normal color vision, but also for people with color vision deficiency. Currently, this package contains palettes from several popular and lesser known color palette series. Own palettes series can be added as well.
 
-Color palettes are well organized and made consistent with each other. Moreover, they are scored on several aspects: color-blind-friendliness, the presence of intense colors (which should be avoided), the overall aesthetic harmony, and how many different hues are used. Finally, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, and *bivariate* palettes (divided into four subtypes).
+Color palettes are well organized and made consistent with each other. Moreover, they are scored on several aspects: color-blind-friendliness, the presence of intense colors (which should be avoided), the overall aesthetic harmony, and how many different hues are used. Finally, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: *categorical* (qualitative) palettes, *sequential* palettes, *diverging* palettes, *cycling* palettes and *bivariate* palettes (divided into four subtypes).
 
 ## Installation
 
@@ -62,6 +63,9 @@ The development version can be installed as follows:
 install.packages("remotes")
 remotes::install_github("mtennekes/cols4all", dependencies = TRUE)
 ```
+
+This development version will be on CRAN soon (October 2024)
+
 
 ```{r, echo=FALSE, message=FALSE}
 devtools::load_all(".")
@@ -82,49 +86,75 @@ The main tool is a dashboard, which is started with:
 c4a_gui()
 ```
 
-[<img src="vignettes/dash-3.png" width="650"/>](vignettes/dash-3.png)
+[<img src="vignettes/cols4all2.png" width="900"/>](vignettes/cols4all2.png)
 
 
-What types and series are available?
+What palettes are available? That is, by default; other palettes can be added!
+
 
 ```{r}
-c4a_types()
-
 c4a_series()
 ```
 
-How many palettes per type x series?
+## Using the tool
 
-```{r}
-c4a_overview()
-```
+Use the tool to compare palettes and if needed analyse a palette in depth (via the other tabs).
 
-What palettes are available, e.g diverging from the hcl series?
+Find a trade-off you like among the following properties (the columns in the main table):
 
-```{r}
-# Diverging palettes from the 'hcl' series
-c4a_palettes(type = "div", series = "hcl")
-```
+* Colorblind friendly: Is the palette color blind friendly?
+* Fair: Is the palette fair? In a fair palette, colors stand out about equally. 
+* Hues: What hue ranges are used? All across the (rainbow) color spectrum, or a limited range?
+* Vivid: Are there any colors that are very saturated? Perhaps a little too much?
+* Contrast: Is there sufficient contrast against white, black (using WACG criteria) and between colors?
+* 3D Blues: If blue is a palette color, a 3D visual illusion could appear.
+* Naming (in development): How well can palette colors be named?
 
-Give me the colors!
+### Example 1 
 
-```{r}
-# select purple green palette from the hcl series:
-c4a("hcl.purple_green", 11)
+When we are looking for a fair categorical palette of seven colors that is as color blind friendly as possible, then filter on "Fair", and sort by "Colorblind-friendly":
 
-# get the associated color for missing values
-c4a_na("hcl.purple_green")
-```
+[<img src="vignettes/cols4all_fair_sort_cbf.png" width="900"/>](vignettes/cols4all_fair_sort_cbf.png)
 
-Plot these colors:
+This gave us inspiration to develop own palettes: see these `cols4all` palettes below.
 
-```{r, fig.height = 2}
-c4a_plot("hcl.purple_green", 11, include.na = TRUE)
-```
+### Example 2
+
+Say we need a diverging palette that is color blind friendly, and what to choose one by eye. Then filter by "Colorblind-friendly" and sort by "Huddle Middle L" (the hue of the left wing):
+
+[<img src="vignettes/cols4all_div.png" width="900"/>](vignettes/cols4all_div.png)
+
+Reverse sorting is also applied.
+
+## Preliminary set of new `cols4all` palettes
+
+We applied a basic heuristics to explore palettes that score well on a mix of the properties named above
+
+[<img src="vignettes/c4a_pals.png" width="900"/>](vignettes/c4a_pals.png)
+
+`area7`, `area8` and `area9` are fair, contain low pastel colors, and are color-blind friendly (up to 7 colors). So ideal for maps and other space-filling visualizations! These are used in [https://github.com/r-tmap/tmap](`tmap4`).
+
+[<img src="vignettes/area7.png" width="900"/>](vignettes/area7.png)
+
+`area7d`, `area8d` and `area9d` similar but for dark mode:.
+
+[<img src="vignettes/area7d.png" width="900"/>](vignettes/area7d.png)
+
+
+`line7`, `line8` and `line9` are colors with good contrast against both black and white, and are also colorblind-friendly to some extent. So ideal for line graphs and scatter plots:
+
+[<img src="vignettes/line7_wt.png" width="440"/>](vignettes/line7_wt.png)
+[<img src="vignettes/line7_bk.png" width="440"/>](vignettes/line7_bk.png)
+
+Finally `friendly7` ... `friendly13` are colorblind-friendly palettes (disregarding the other properties):
+
+[<img src="vignettes/friendly13.png" width="900"/>](vignettes/friendly13.png)
 
 
 
-## Using cols4all palettes in ggplot2
+
+
+## `ggplot2` integration
 
 ```{r}
 library(ggplot2)
@@ -182,6 +212,34 @@ ggplot2
 * 	`scale_<aesthetic>_<mapping>_c4a_<type>` e.g. `scale_color_continuous_c4a_div` Add scale to ggplot2. 
 
 
+
+## Other R funtions
+
+What palettes are available, e.g diverging from the hcl series?
+
+```{r}
+# Diverging palettes from the 'hcl' series
+c4a_palettes(type = "div", series = "hcl")
+```
+
+Give me the colors!
+
+```{r}
+# select purple green palette from the hcl series:
+c4a("hcl.purple_green", 11)
+
+# get the associated color for missing values
+c4a_na("hcl.purple_green")
+```
+
+Plot these colors:
+
+```{r, fig.height = 2}
+c4a_plot_cvd("hcl.purple_green", 11, include.na = TRUE)
+```
+
+
+
 ## Related R packages
 
 The foundation of this package is another R package: [**colorspace**](https://colorspace.r-forge.r-project.org/). We use this package to analyse colors. For this purpose and specifically for color blind friendliness checks, we also use [**colorblindcheck**](https://github.com/Nowosad/colorblindcheck).
@@ -190,13 +248,11 @@ There are a few other pacakges with a large collection of color palettes, in par
 
 *	Color palettes are characterized and analysed. Properties such as color blindness, fairness (whether colors stand out about equally), and contrast are determined for each palette.
 
-*	Bivariate color palettes are available (besides the three main palette types: categorical, sequential, and diverging).
+*	Bivariate color palettes are available.
 
 *	Own color palettes can be loaded and analysed.
 
-*	Color for missing values are made explicit.
-
-*   Palettes are made consistent with each other to enable comparison. For instance, black and white are (by default) removed from categorical palettes. Another standard that we adapt to is that all sequential palettes go from light to dark and not the other way round.
+*	Colors for missing values are made explicit.
 
 *   There is native support for **ggplot2** and **tmap** (as of the
     upcoming version 4).
