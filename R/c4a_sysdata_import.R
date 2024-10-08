@@ -12,7 +12,16 @@ c4a_sysdata_import = function(data) {
 	if (!is.list(data) || !setequal(c("data", "scores", "citation", "description"), names(data))) stop("data should be a list of four: data, scores, citation, and description", call. = FALSE)
 
 	z = check_z(data$data)
-	s = check_s(data$scores, nrow(z))
+
+	svalid = check_s(data$scores, nrow(z))
+
+	s = if (svalid) {
+		data$scores
+	} else {
+		message("Recalculating scores")
+		series_add_get_scores(z)
+	}
+
 	zbib = data$citation # to do: check
 	zdes = data$description
 

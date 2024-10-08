@@ -19,7 +19,7 @@
 #'
 #' @param x either a named list of color palettes or a \code{\link{c4a_info}} object. For the first case: see details for indexing. The second case will bypass the other arguments.
 #' @param xNA colors for missing values. Vector of the same length as x (or length 1). For `NA` values, the color for missing values is automatically determined (preferable a light grayscale color, but if it is indistinguishable by color blind people, a light color with a low chroma value is selected)
-#' @param types character vector of the same length as x (or length 1), which determines the type of palette: `"cat"`, `"seq"`, `"div"`, `"bivs"`, `"bivc"`, `"bivd"`, or `"bivg"`. See details.
+#' @param types character vector of the same length as x (or length 1), which determines the type of palette: `"cat"`, `"seq"`, `"div"`, `"cyc"`, `"bivs"`, `"bivc"`, `"bivd"`, or `"bivg"`. See details.
 #' @param series a character vector of the same length as x (or length 1), which determines the series.
 #' @param nmin,nmax,ndef minimum / maximum / default number of colors for the palette. By default: `nmin = 1`, for `"cat"` `nmax` and `ndef` the number of supplied colors. For the other types, `nmax` is `Inf`. `ndef` is 7 for `"seq"`, 9. For diverging palettes, these numbers refer to the number of columns. (See `mmin`, `mmax`, `mdef` for the rows)
 #' @param mmin,mmax,mdef minimum / maximum / default number of rows for bivariate palettes.
@@ -62,7 +62,8 @@ c4a_data = function(x, xNA = NA, types = "cat", series = "x", nmin = NA, nmax = 
 		if (!is.list(x)) stop("x is not a list")
 		nms = names(x)
 		if (is.null(nms)) stop("x must be named")
-		x = lapply(x, validate_colors, name = "x", from_list = TRUE)
+		#x = lapply(x, validate_colors, name = "x", from_list = TRUE)
+		x = mapply(validate_colors, x = x, name = nms, MoreArgs = list(from_list = TRUE), SIMPLIFY = FALSE)
 
 		# number of palettes
 		k = length(x)
@@ -284,7 +285,9 @@ c4a_load = function(data, overwrite = FALSE) {
 		s = abind::abind(s2, s, along=1)
 	}
 
-	zbib = do.call(c, c(list(zbib2), zbib)) # to do: check for duplicates
+	if (!is.null(zbib2)) {
+		zbib = do.call(c, c(list(zbib2), zbib)) # to do: check for duplicates
+	}
 	zdes = c(zdes2, zdes) # to do: check
 
 
@@ -334,15 +337,27 @@ check_z = function(z) {
 }
 
 check_s = function(s, n) {
-	if (!is.array(s)) stop("x$scores is not an array", call. = FALSE)
+	if (!is.array(s)) {
+		message("x$scores is not an array", call. = FALSE)
+		return(FALSE)
+	}
 	d = dim(s)
 
 	snames = c(.C4A$sc, .C4A$hcl, .C4A$rgb)
 
-	if (d[1] != n) stop("number of rows (first dim) of x$s does not correspond to the number of rows in x$data", call. = FALSE)
-	if (!setequal(dimnames(s)[[2]], snames)) stop("columns (second dim) in x$scores should correspond to", paste(snames, collapse = ","), call. = FALSE)
-	if (d[3] != max(.C4A$nmax)) stop("Third dimension of x$scores should be", d[3], call. = FALSE)
-	s
+	if (d[1] != n) {
+		message("number of rows (first dim) of x$s does not correspond to the number of rows in x$data", call. = FALSE)
+		return(FALSE)
+	}
+	if (!setequal(dimnames(s)[[2]], snames)) {
+		message("columns (second dim) in x$scores should correspond to", paste(snames, collapse = ","), call. = FALSE)
+		return(FALSE)
+	}
+	if (d[3] != max(.C4A$nmax)) {
+		message("Third dimension of x$scores should be", d[3], call. = FALSE)
+		return(FALSE)
+	}
+	TRUE
 }
 
 character2bibentry = function(x) {

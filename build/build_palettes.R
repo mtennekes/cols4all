@@ -527,15 +527,11 @@ local({
 local({
 	cartoQual = cartocolors[cartocolors$Type == "qualitative",]
 
-	indices = lapply(1:nrow(cartoQual), function(i) {
-		structure(lapply(1:12, function(j) {
-			if (j < 3) 1:j else match(cartoQual[[paste0("n", j)]][[i]], cartoQual$n12[[i]])
-		}), names = as.character(1:12))
-	})
+	# seems indexed, but only the 12th color (a gray) is added.
+	# -> use that 12th as colNA
 
-	pals = mapply(function(pal, ind) {
-		structure(pal, index = ind)
-	}, cartoQual$n12, indices, SIMPLIFY = FALSE)
+	pals = lapply(cartoQual$n12, function(p) p[1:11])
+	colNAs = sapply(cartoQual$n12, function(p) p[12])
 
 	names(pals) = cartoQual$Name
 
@@ -552,7 +548,7 @@ local({
 	names(pals3) = tolower(cartoAgg$Name)
 	names(pals3)[2] = "ag_grn_yl"
 
-	c4a_load(c4a_data(pals, types = "cat", series = "carto"))
+	c4a_load(c4a_data(pals, xNA = colNAs, types = "cat", series = "carto"))
 	c4a_load(c4a_data(pals2, types = type, series = "carto"))
 	c4a_load(c4a_data(pals3, types = "seq", series = "carto", format.palette.name = FALSE))
 

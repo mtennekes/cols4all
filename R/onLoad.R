@@ -129,7 +129,7 @@ do_cellspec = function(lst) {
 	attach_bib()
 
 	with(.C4A,{
-		defaults = c(cat = "tol.muted", seq = "hcl.blues2", div = "hcl.purple_green", bivs = "c4a.bu_br_bivs", bivc = "met_monet", bivd = "c4a.pu_gn_bivd", bivg = "c4a.br_bivg")
+		defaults = c(cat = "cols4all.line7", seq = "kovesi.blue", div = "cols4all.pu_gn_div", cyc = "scico.roma_o", bivs = "cols4all.bu_br_bivs", bivc = "met_monet", bivd = "cols4all.pu_gn_bivd", bivg = "cols4all.br_bivg")
 
 		score_x100 = c("min_dist", "min_step", "max_step", "inter_wing_dist", "tri_ineq", "CRmin", "CRwt", "CRbk", "Blues")
 
