@@ -175,8 +175,9 @@ tritanopia will be referred to as , , and , respectively.</p>
 </h3>
 <p>The contrast ratio measures the difference in brightness between
 foreground and background colors. It is defined as:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>R</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>+</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mi>j</mi></msub><mo>+</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">\begin{equation}\label{eq:cr}
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>R</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>+</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mi>j</mi></msub><mo>+</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mi>#</mi><mi>e</mi><mi>q</mi><mo>:</mo><mi>c</mi><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{equation}
 CR(i,j) = \frac{(Y_i + \alpha)}{(Y_j + \alpha)}
+(\#eq:cr)
 \end{equation}</annotation></semantics></math></p>
 <p>where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
@@ -205,8 +206,8 @@ adjacent colors <span class="citation">[11]</span>.</p>
 </h3>
 <p>This work adopts the Hue-Chroma-Luminance (HCL) color space, a
 cylindrical transformation of the CIELUV color space. This color space,
-also used by <span class="citation">[2]</span>,colorspace,ihaka2003, has
-three dimensions:
+also used by <span class="citation">[2], [24], [25]</span>, has three
+dimensions:
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>),
 ranging from 0 to 360 degrees;
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>),
@@ -219,11 +220,12 @@ ranging from 0 (black) to 100 (white).</p>
 <h3 id="color-distance">Color distance<a class="anchor" aria-label="anchor" href="#color-distance"></a>
 </h3>
 <p>To measure the perceived distance between two colors, we use the
-metric <span class="citation">[24]</span>, denoted by
+metric <span class="citation">[26]</span>, denoted by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Delta E(i,j)</annotation></semantics></math>.</p>
 <p>The interpretation of Delta E values depends on several factors, most
 importantly the application. We apply the following rule of thumb:</p>
 <table class="table">
+<caption>(#tab:deltae) Delta E interpretation</caption>
 <thead><tr class="header">
 <th align="left">Delta E Range</th>
 <th align="left">Perceptibility</th>
@@ -257,7 +259,7 @@ importantly the application. We apply the following rule of thumb:</p>
 </table>
 <p>To measure color distances as perceived by people with color vision
 deficiency, we apply the Delta E metric in simulations for deuteranopia,
-protanopia, and tritanopia <span class="citation">[25]</span>,colorblindcheck. These metrics are denoted
+protanopia, and tritanopia <span class="citation">[27]</span>,colorblindcheck. These metrics are denoted
 by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><msup><mi>E</mi><mtext mathvariant="normal">deutan</mtext></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Delta E^{\mbox{deutan}}(i,j)</annotation></semantics></math>,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><msup><mi>E</mi><mtext mathvariant="normal">protan</mtext></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Delta E^{\mbox{protan}}(i,j)</annotation></semantics></math>,
@@ -271,11 +273,11 @@ respectively.</p>
 </h2>
 <p>We introduce a tool, called , that can be used to analyse and compare
 color palettes. It is written as a package for the R programming
-language <span class="citation">[26]</span>.</p>
+language <span class="citation">[28]</span>.</p>
 <p>The cols4all package has an on-going development and driven by the
 active community of statisticians and data scientists that use R. The
 color palettes can easily be used in any other R package, and has native
-integration with the popular visualization package ggplot2 <span class="citation">[27]</span>. Via the GUI, these palettes can also be
+integration with the popular visualization package ggplot2 <span class="citation">[29]</span>. Via the GUI, these palettes can also be
 copied to the clipboard and used anywhere else.</p>
 <p>The tool is intended for data visualization designers to select
 appropriate color palettes for their data visualizations. Another use
@@ -325,57 +327,291 @@ rows, is equal to sequential color scale. For these subtypes, the second
 dimension (columns) is represented as sequential, categorical,
 diverging, and a desaturated scale respectively.</li>
 </ul>
-<p>Examples of each of these palette types are provided in Figure
-@ref(fig:expals) and @ref(fig:expals2). This list of palette types is
+<div class="figure">
+<img src="ex_cat.jpg" alt="Example of palette type: categorical" width="400"><p class="caption">
+Example of palette type: categorical
+</p>
+</div>
+<div class="figure">
+<img src="ex_seq.jpg" alt="Example of palette type: sequential" width="400"><p class="caption">
+Example of palette type: sequential
+</p>
+</div>
+<div class="figure">
+<img src="ex_div.jpg" alt="Example of palette type: diverging" width="400"><p class="caption">
+Example of palette type: diverging
+</p>
+</div>
+<div class="figure">
+<img src="ex_cyc.jpg" alt="Example of palette type: cyclic" width="400"><p class="caption">
+Example of palette type: cyclic
+</p>
+</div>
+<div class="figure">
+<img src="ex_bivs.jpg" alt="Example of palette type: bivariate (seq x seq)" width="200"><p class="caption">
+Example of palette type: bivariate (seq x seq)
+</p>
+</div>
+<div class="figure">
+<img src="ex_bivc.jpg" alt="Example of palette type: bivariate (seq x cat)" width="200"><p class="caption">
+Example of palette type: bivariate (seq x cat)
+</p>
+</div>
+<div class="figure">
+<img src="ex_bivd.jpg" alt="Example of palette type: bivariate (seq x div)" width="200"><p class="caption">
+Example of palette type: bivariate (seq x div)
+</p>
+</div>
+<div class="figure">
+<img src="ex_bivg.jpg" alt="Example of palette type: bivariate (seq x desaturated)" width="200"><p class="caption">
+Example of palette type: bivariate (seq x desaturated)
+</p>
+</div>
+<p>Examples of each of these palette types are provided in Figures
+@ref(fig:expals1) to @ref(fig:expals8). This list of palette types is
 not exhaustive; for instance also palettes for tree-structured data have
-been designed <span class="citation">[28]</span>. Because these kind of
+been designed <span class="citation">[30]</span>. Because these kind of
 palette types are special and often one of a kind, they are not (yet)
 included in .</p>
-<div class="figure">
-<img src="ex_cat.jpg" alt="Examples of palette types supported by cols4all" width="700"><p class="caption">
-Examples of palette types
-</p>
-</div>
-<div class="figure">
-<img src="ex_seq.jpg" alt="Examples of palette types supported by cols4all" width="700"><p class="caption">
-Examples of palette types
-</p>
-</div>
-<div class="figure">
-<img src="ex_div.jpg" alt="Examples of palette types supported by cols4all" width="700"><p class="caption">
-Examples of palette types
-</p>
-</div>
-<div class="figure">
-<img src="ex_cyc.jpg" alt="Examples of palette types supported by cols4all" width="700"><p class="caption">
-Examples of palette types
-</p>
-</div>
-<div class="figure">
-<img src="ex_bivs.jpg" alt="Examples of bivariate palette types supported by cols4all" width="340"><p class="caption">
-Examples of bivariate palette types
-</p>
-</div>
-<div class="figure">
-<img src="ex_bivs.jpg" alt="Examples of bivariate palette types supported by cols4all" width="340"><p class="caption">
-Examples of bivariate palette types
-</p>
-</div>
-<div class="figure">
-<img src="ex_bivd.jpg" alt="Examples of bivariate palette types supported by cols4all" width="340"><p class="caption">
-Examples of bivariate palette types
-</p>
-</div>
-<div class="figure">
-<img src="ex_bivg.jpg" alt="Examples of bivariate palette types supported by cols4all" width="340"><p class="caption">
-Examples of bivariate palette types
-</p>
-</div>
 <p>Palettes are also arranged by series, by which we mean either the
 source (e.g.  stands for ColorBrewer <span class="citation">[13]</span>}) or group of similar palettes (e.g. 
 includes categorical palettes with many colors). An overview of the
 palettes that are included in cols4all is provided in Table
-@ref(table:overview).</p>
+@ref(tab:overview).</p>
+<table class="table">
+<caption>(#tab:overview) Overview of the palettes series</caption>
+<colgroup>
+<col width="11%">
+<col width="52%">
+<col width="4%">
+<col width="4%">
+<col width="4%">
+<col width="4%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">series</th>
+<th align="left">description</th>
+<th align="right">cat</th>
+<th align="right">seq</th>
+<th align="right">div</th>
+<th align="right">cyc</th>
+<th align="right">bivs</th>
+<th align="right">bivc</th>
+<th align="right">bivd</th>
+<th align="right">bivg</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">brewer</td>
+<td align="left">ColorBrewer palettes</td>
+<td align="right">8</td>
+<td align="right">18</td>
+<td align="right">9</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">carto</td>
+<td align="left">Palettes designed by CARTO</td>
+<td align="right">6</td>
+<td align="right">21</td>
+<td align="right">7</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">cols4all</td>
+<td align="left">cols4all palettes (in development)</td>
+<td align="right">14</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="left">hcl</td>
+<td align="left">Palettes from the Hue Chroma Luminance color space</td>
+<td align="right">9</td>
+<td align="right">23</td>
+<td align="right">11</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">kovesi</td>
+<td align="left">Palettes designed by Peter Kovesi</td>
+<td align="right">0</td>
+<td align="right">28</td>
+<td align="right">14</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">matplotlib</td>
+<td align="left">Palettes from the Python library matplotlib</td>
+<td align="right">0</td>
+<td align="right">51</td>
+<td align="right">12</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">met</td>
+<td align="left">Palettes inspired by The Metropolitan Museum of
+Art</td>
+<td align="right">33</td>
+<td align="right">8</td>
+<td align="right">14</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">misc</td>
+<td align="left">Miscellaneous palettes</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">parks</td>
+<td align="left">Palettes inspired by National Parks</td>
+<td align="right">22</td>
+<td align="right">5</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">poly</td>
+<td align="left">Qualitative palettes with many colors</td>
+<td align="right">9</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">powerbi</td>
+<td align="left">Palettes from Microsoft Power BI</td>
+<td align="right">19</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">scico</td>
+<td align="left">Scientific colour maps by Fabio Crameri</td>
+<td align="right">21</td>
+<td align="right">21</td>
+<td align="right">10</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">seaborn</td>
+<td align="left">Palettes from the Python library Seaborn</td>
+<td align="right">6</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">stevens</td>
+<td align="left">Bivariate palettes by Joshua Stevens</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">tableau</td>
+<td align="left">Palettes designed by Tableau</td>
+<td align="right">29</td>
+<td align="right">23</td>
+<td align="right">28</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">tol</td>
+<td align="left">Palettes designed by Paul Tol</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">wes</td>
+<td align="left">Palettes from Wes Anderson movies</td>
+<td align="right">23</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
 <p>Some categorical color palettes have included black or white, e.g. 
 <span class="citation">[5]</span>. Since these colors are typically used
 for background or annotations only, not just for those palettes but for
@@ -383,7 +619,7 @@ any categorical palette, we removed black and white from all categorical
 palettes. However, we took both black and white into account for certain
 parts of the analysis, for instance regarding contrast ratio.</p>
 <p>Exploratory data analysis often deals with analysis and visualisation
-of missing values <span class="citation">[29]</span>,song21. Therefore,
+of missing values <span class="citation">[31]</span>,song21. Therefore,
 we assigned a special color for missing values for each palette. The
 palette series by Paul Tol <span class="citation">[6]</span> already
 contains dedicated colors for missing values. For the other palettes, we
@@ -422,8 +658,8 @@ the fourth, than
 will be low.</p>
 <p>For
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">d(i,j)</annotation></semantics></math>
-we use the same interpretation as provided in Table @ref(tab:delta_e),
-so of the group that has the most trouble with distinguishing the
+we use the same interpretation as provided in Table @ref(tab:deltae), so
+of the group that has the most trouble with distinguishing the
 colors.</p>
 <p>For palettes we simply use the minimum distance over any two palette
 colors
@@ -451,7 +687,7 @@ category:</p>
 \end{equation}</annotation></semantics></math></p>
 <p>In the main overview table (Figure @ref(fig:teaser)), the categories
 are represented by symbols: side eyes for
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>−</mo><annotation encoding="application/x-tex">−</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>−</mo><annotation encoding="application/x-tex">−</annotation></semantics></math>,
 a smiley for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>+</mo><annotation encoding="application/x-tex">+</annotation></semantics></math>,
 and a double smiley for
@@ -550,7 +786,7 @@ friendliness as palettes, with the addition that the first and last
 colors should be identical.</p>
 <p>The color palettes are analysed using a combination of one of the
 definitions above. For a bivaraite sequential x sequential (Figure
-@ref(fig:expals)(e)), three sequential palettes are derived: the two
+@ref(fig:expals5)), three sequential palettes are derived: the two
 marginal ones (in the figure, the top row and the left hand side column)
 and the diagonal (in the figure from top left to bottom right). For each
 pair of sequential palettes, an odd numbered diverging palette is
@@ -559,19 +795,19 @@ Subsequently the color blind friendliness scores for diverging color
 palettes (as described above) is computed, and the minimal score is
 used. A similar approach is used for the other three bivariate color
 palette types <span class="citation">[12]</span>}.</p>
-<p>Figure @ref(fig:cbf_okabe) shows how users can analyse color blind
+<p>Figure @ref(fig:cbfokabe) shows how users can analyse color blind
 friendliness in .</p>
 <p>On the top left the CIE xyY space clipped to sRGB gamut is shown with
 hue lines diverging from the defined white point (CIE standard
 illuminant D65). The bottom left shows the same plot, but using colors
-simulated for deutans, with confusion lines <span class="citation">[30]</span>.</p>
+simulated for deutans, with confusion lines <span class="citation">[32]</span>.</p>
 <p>In the middle column two similarity matrices are shown, above for
 people with normal color vision, below for deutans. The big dot
 indicates there is a minor issue with pink and grey. This is illustrated
 in the maps in the right hand side column.</p>
 </div>
 <div class="section level4">
-<h4 id="fairness">Fairness}<a class="anchor" aria-label="anchor" href="#fairness"></a>
+<h4 id="fairness">Fairness<a class="anchor" aria-label="anchor" href="#fairness"></a>
 </h4>
 <p>We say that a color palette is fair if all colors stand out about
 equally.</p>
@@ -589,11 +825,11 @@ palette colors:</p>
 \end{equation}</annotation></semantics></math></p>
 <p>It is important to note that a color’s luminance alone does not
 determine its salience against the background; the background luminance
-also plays a crucial role. This is exactly where the contrast ratio~()
-comes into play. However, the smaller the luminance range of the colors,
-the smaller the contrast ratios of each of those colors with the
-background color, irrespective of the background color and its luminace
-itself.</p>
+also plays a crucial role. This is exactly where the contrast ratio
+@ref(eq:cr) comes into play. However, the smaller the luminance range of
+the colors, the smaller the contrast ratios of each of those colors with
+the background color, irrespective of the background color and its
+luminace itself.</p>
 <p>For chroma this is a different story; the higher the chroma, the more
 that color will stand out, especilly because background colors are
 generally unchromatic.</p>
@@ -621,14 +857,14 @@ account, because luminance is usually used to form the gradient of
 colors.</p>
 </div>
 <div class="section level4">
-<h4 id="vividness">Vividness}<a class="anchor" aria-label="anchor" href="#vividness"></a>
+<h4 id="vividness">Vividness<a class="anchor" aria-label="anchor" href="#vividness"></a>
 </h4>
 <p>Another property that is useful for data visualisation is how vivid
 the palette colors are.</p>
 <p>Prolonged exposure to highly saturated colors can induce visual
-fatigue <span class="citation">[31]</span>. Therefore, low saturated
+fatigue <span class="citation">[33]</span>. Therefore, low saturated
 (pastel) colors are generally recommended for space-filling
-visualisations such as choropleths and treemaps <span class="citation">[32]</span>.</p>
+visualisations such as choropleths and treemaps <span class="citation">[34]</span>.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>C</mi><mtext mathvariant="normal">max</mtext></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>max</mo><mrow><mi>i</mi><mo>∈</mo><mi>S</mi></mrow></munder><msub><mi>C</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\begin{equation}
 C^{\mbox{max}}(S) = \max_{i \in S} C_i
 \end{equation}</annotation></semantics></math></p>
@@ -641,7 +877,7 @@ and an asterisk (for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>C</mi><mtext mathvariant="normal">max</mtext></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>&lt;</mo><mn>70</mn></mrow><annotation encoding="application/x-tex">C^{\mbox{max}}(S) &lt; 70</annotation></semantics></math>).</p>
 </div>
 <div class="section level4">
-<h4 id="hues">Hues}<a class="anchor" aria-label="anchor" href="#hues"></a>
+<h4 id="hues">Hues<a class="anchor" aria-label="anchor" href="#hues"></a>
 </h4>
 <p>Analyzing the distribution of hues within a palette is crucial for
 several reasons. Categorical palettes with an even distribution of hues
@@ -674,7 +910,7 @@ value of 90.</p>
 Palettes for which the hue width is less than 15 are labeled as “single
 hue” in the overview table indicated with a pencil symbol. Those
 palettes are generally recommended because of the relative low visual
-bias <span class="citation">[32]</span>. Palettes with a hue width above
+bias <span class="citation">[34]</span>. Palettes with a hue width above
 the default threshold value of 180 are labeled as rainbow palette. Note
 that this specification is different than for categorical palettes, due
 to the nature of these palette types.</p>
@@ -685,23 +921,22 @@ both hue widths score below 20, it is classified as double hue, shown in
 the overview table with a yin-yang symbol.</p>
 <div class="figure">
 <img src="necklace.jpg" alt="Hue necklace with the hue width for carto.safe" width="400"><p class="caption">
-Hue necklace with the hue width for exttt{carto.safe}
+Hue necklace with the hue width for carto.safe
 </p>
 </div>
 <p>Color blind friendliness can be analysed with the next tab of the
-tool. Figure @ref(fig:cbf_okabe) shows a part of this tab.</p>
+tool. Figure @ref(fig:cbfokabe) shows a part of this tab.</p>
 <p>On the top left the CIE xyY space clipped to sRGB gamut is shown with
 hue lines diverging from the defined white point (CIE standard
 illuminant D65). The bottom left shows the same plot, but using colors
-simulated for deutans, with confusion lines <span class="citation">[30]</span>.</p>
+simulated for deutans, with confusion lines <span class="citation">[32]</span>.</p>
 <p>In the middle column two similarity matrices are shown, above for
 people with normal color vision, below for deutans. The big dot
 indicates there is a minor issue with pink and grey. This is illustrated
 in the maps in the right hand side column.</p>
 <div class="figure">
 <img src="cbf_okabe.jpg" alt="Color blind friendliness analysis plots for the palette misc.okabe" width="700"><p class="caption">
-Color blind friendliness analysis plots for the palette
-exttt{misc.okabe}
+Color blind friendliness analysis plots for the palette misc.okabe
 </p>
 </div>
 </div>
@@ -729,7 +964,7 @@ the WCAG threshold values; in this example, only yellow does not meet
 the criterion of 3.</p>
 <div class="figure">
 <img src="contrast_powerbi_default.jpg" alt="Contrast ratio of powerbi.default against white" width="700"><p class="caption">
-Contrast ratio of exttt{powerbi.default} against white
+Contrast ratio of powerbi.default against white
 </p>
 </div>
 <p>The contrast ratio between two colors is not only useful to check
@@ -738,7 +973,7 @@ colors are called equiluminant if they have similar luminance values, so
 resulting in a contrast ratio close to 1.</p>
 <p>Several visual illusions could appear at equiluminance, such as that
 the eye has trouble to separate neighbouring objects, even though they
-use totally different colors in terms of hue <span class="citation">[33]</span>. This is illustrated in the map shown in
+use totally different colors in terms of hue <span class="citation">[35]</span>. This is illustrated in the map shown in
 Figure @ref(fig:equi)(a) where two colors of the palette are used.</p>
 <div class="figure">
 <img src="equi1.jpg" alt="Equiliminant colors from the palette hcl.set3" width="700"><p class="caption">
@@ -762,14 +997,14 @@ symbol is shown in the overview table @ref(fig:teaser).</p>
 <h4 id="d-blues">3D Blues<a class="anchor" aria-label="anchor" href="#d-blues"></a>
 </h4>
 <p>A visual illusion called chromostereopsis occurs where two colors are
-perceived in different depth planes <span class="citation">[34]</span>.
+perceived in different depth planes <span class="citation">[36]</span>.
 This illusion, most prominent with red and blue against a black
 background, can create a perception of depth or displacement.</p>
 <p>Figure @ref(fig:3dblues) illustrates this illusion with a categorical
 map of the red and blue colors from .</p>
 <div class="figure">
 <img src="3Dblues_map.jpg" alt="Chromostereopsis caused by two palette colors from seaborn.bright" width="700"><p class="caption">
-Chromostereopsis caused by two palette colors from exttt{seaborn.bright}
+Chromostereopsis caused by two palette colors from seaborn.bright
 </p>
 </div>
 <p>To warn for this possible visual illusion, which especially occurs
@@ -783,8 +1018,8 @@ overview table.</p>
 communication of color, impacting how we understand and interpret visual
 information. The ability to accurately name colors is particularly
 important in data visualization, where clear communication is essential
-<span class="citation">[35]</span>. However, color naming is inherently
-subject to cultural variations <span class="citation">[36]</span>}, with
+<span class="citation">[37]</span>. However, color naming is inherently
+subject to cultural variations <span class="citation">[38]</span>}, with
 differences observed not only between distinct cultural regions but also
 among neighboring countries. For instance, while Dutch uses “paars” and
 “roze” to describe shades of purple and pink, German employs “Violet”,
@@ -796,7 +1031,7 @@ color naming systems in data visualization.</p>
 users whether palette colors are easy to name.</p>
 <p>To accomplish this, we explore the match between the palette colors
 and a basic, commonly used, set of color names. By default we use the
-English names of the 11 colors identified by <span class="citation">[37]</span>: green, blue, purple, pink, yellow, brown,
+English names of the 11 colors identified by <span class="citation">[39]</span>: green, blue, purple, pink, yellow, brown,
 orange, red, white, grey, and black.</p>
 <p>Let us denote the common color name set as
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>.
@@ -825,7 +1060,7 @@ visually verify the classification and target users to understand the
 match between palette colors and basic color names.</p>
 <div class="figure">
 <img src="naming_tableau10.jpg" alt="Nameability analysis of tableau.10" width="700"><p class="caption">
-Nameability analysis of exttt{tableau.10}
+Nameability analysis of tableau.10
 </p>
 </div>
 </div>
@@ -843,8 +1078,8 @@ code:</p>
 for programmatic access to palette colors, parameter setting, and
 uploading user-defined palettes for analysis. Those functions are out of
 the scope of this paper and are described in the documentation <span class="citation">[12]</span>.</p>
-<p>Figures @ref(fig:teaser), @ref(fig:overview_seq), and
-@ref(fig:overview_div) present screenshots of the main table for
+<p>Figures @ref(fig:teaser), @ref(fig:overviewseq), and
+@ref(fig:overviewdiv) present screenshots of the main table for
 categorical, sequential, and diverging palettes, respectively. With the
 inputs above the table, users are able to select and filter color
 palettes. In addition, color blind simulation can be enabled, and color
@@ -871,12 +1106,12 @@ illustrated above. All figures in this paper are included in these
 tabs.</p>
 <p>The properties fairness, hues, and vividness all use the HCL color
 space, and are therefore further analysed in the HCL Analysis tab.
-Furthermore, in this tab an interactive 3D scatter plot (using <span class="citation">[38]</span>) provide additional insights in how the
+Furthermore, in this tab an interactive 3D scatter plot (using <span class="citation">[40]</span>) provide additional insights in how the
 palette colors are located in this color space. A screenshot is shown in
-Figure @ref(fig:hcl_space) where the colors from are plotted.</p>
+Figure @ref(fig:hclspace) where the colors from are plotted.</p>
 <div class="figure">
 <img src="hcl_carto_safe.jpg" alt="3D scatter plot of carto.safe in the HCL color space" width="700"><p class="caption">
-3D scatter plot of exttt{carto.safe} in the HCL color space
+3D scatter plot of carto.safe in the HCL color space
 </p>
 </div>
 <p>In the last tap, Application, users can explore palettes with
@@ -903,7 +1138,7 @@ on fairness are not classified as color blind friendly. This is shown in
 the main table after filtering on “Fair” and sorting by “Colorblind
 friendly” (Figure @ref(fig:fair_sort_cbf)). The most color blind
 friendly palette of this selection is for which the min_dist score is
-7.23, a strong color difference according Table @ref(tab:delta_e), but
+7.23, a strong color difference according Table @ref(tab:deltae), but
 too low to be labeled as color blind friendly. Reversely, color palettes
 that are labeled as color blind friendly were not labeled as fair. The
 fairest palettes and scored 56 and 29 on the fairness score, which both
@@ -920,7 +1155,7 @@ Fairest categorical palettes, sorted by color blind friendliness
 in terms of color blind friendliness. Designing color blind friendly
 spectral/rainbow palettes is challenging, as individuals with color
 vision deficiency struggle to differentiate hues (see the simulated
-color space for deutans in Figure @ref(fig:cbf_okabe)).</p>
+color space for deutans in Figure @ref(fig:cbfokabe)).</p>
 <p>A severe issue that may induce visual bias for color blind people is
 illustrated with the palette (which is similar to in Figure
 @ref(fig:spectral). For people with normal color vision, green, the
@@ -937,7 +1172,7 @@ cols4all_matplotlib_spectral
 </p>
 </div>
 <p>Several spectral sequential palettes from the series <span class="citation">[3]</span>, <span class="citation">[4]</span>
-(viridis), and <span class="citation">[39]</span> did succeed in this
+(viridis), and <span class="citation">[41]</span> did succeed in this
 quest. Moreover, they scored high on fairness, as can be seen in Figure
 @ref(fig:seq_spec). Also the cyclic palettes from scored well on color
 blind friendliness and fairness.</p>
@@ -970,7 +1205,7 @@ therefore be used, albeit with caution. Bivariate palettes of the
 subtype sequantial x categorical with 3 or more columns (categories) are
 almost by definition not color blind friendly, because color blind
 people can only perceive combinations of at most two hues (Figure
-@ref(fig:cbf_okabe)). The fact they can observe three or more different
+@ref(fig:cbfokabe)). The fact they can observe three or more different
 hues in categorical palettes is not because of the hue, but due to the
 variance in chroma and luminance.</p>
 </div>
@@ -987,33 +1222,32 @@ the first seven colors are shown in Figure @ref(fig:c4a).</p>
 <p>The used approach to find those palettes was the following:</p>
 <div class="figure">
 <img src="c4a_pals.jpg" alt="New preliminary set of cols4all palettes" width="700"><p class="caption">
-New preliminary set of exttt{cols4all} palettes
+New preliminary set of cols4all palettes
 </p>
 </div>
 <div class="figure">
 <img src="area7.jpg" alt="area7: a palette for space-filling visualisations" width="700"><p class="caption">
-exttt{area7}: a palette for space-filling visualisations
+area7: a palette for space-filling visualisations
 </p>
 </div>
 <div class="figure">
 <img src="area7d.jpg" alt="area7d: a palette for space-filling visualisations with dark background" width="700"><p class="caption">
-exttt{area7d}: a palette for space-filling visualisations with dark
-background
+area7d: a palette for space-filling visualisations with dark background
 </p>
 </div>
 <div class="figure">
 <img src="line7_wt.jpg" alt="line7: a palette for point and line charts" width="700"><p class="caption">
-exttt{line7}: a palette for point and line charts
+line7: a palette for point and line charts
 </p>
 </div>
 <div class="figure">
 <img src="line7_bk.jpg" alt="line7: a palette for point and line charts" width="700"><p class="caption">
-exttt{line7}: a palette for point and line charts
+line7: a palette for point and line charts
 </p>
 </div>
 <div class="figure">
 <img src="friendly13.jpg" alt="friendly: a palette optimized for color blind friendliness" width="700"><p class="caption">
-exttt{friendly}: a palette optimized for color blind friendliness
+friendly: a palette optimized for color blind friendliness
 </p>
 </div>
 </div>
@@ -1057,12 +1291,12 @@ color vision only, or also for color blind people.</p>
 <p>One area where further development is needed is in improving the
 “nameability” of palette colors. Nameability, which refers to how easily
 colors can be identified and labeled with common color names, has been
-shown to improve user performance in data visualization tasks <span class="citation">[35]</span>. The nameability property we proposed has a
+shown to improve user performance in data visualization tasks <span class="citation">[37]</span>. The nameability property we proposed has a
 few limitations that require further research. Besides the room for
 improvement regarding the method to match the colors to the common color
 names, one aspect that remains unclear is whether “light” or “dark”
 variants of the common color names should be taken into account. Observe
-that for set of 11 common color names <span class="citation">[37]</span>, these variants are only commonly used in
+that for set of 11 common color names <span class="citation">[39]</span>, these variants are only commonly used in
 combination with blue and green; for instance dark pink can also be
 named purple and light red as orange or pink. How does the presence of
 both light and dark blue (as illustrated in Figure @ref(fig:name)),
@@ -1281,8 +1515,24 @@ Neitz and G. H. Jacobs, <span>“Polymorphism of the long-wavelength cone
 in normal human color vision,”</span> <em>Nature</em>, vol. 343, no.
 6255, pp. 211–213, 1990.</div>
 </div>
-<div id="ref-sharma2005" class="csl-entry">
+<div id="ref-colorspace" class="csl-entry">
 <div class="csl-left-margin">[24] </div>
+<div class="csl-right-inline">A.
+Zeileis <em>et al.</em>, <span>“<span class="nocase">colorspace</span>:
+A toolbox for manipulating and assessing colors and palettes,”</span>
+<em>Journal of Statistical Software</em>, vol. 96, no. 1, pp. 1–49,
+2020, doi: <a href="https://doi.org/10.18637/jss.v096.i01" class="external-link">10.18637/jss.v096.i01</a>.</div>
+</div>
+<div id="ref-ihaka2003" class="csl-entry">
+<div class="csl-left-margin">[25] </div>
+<div class="csl-right-inline">R.
+Ihaka, <span>“Colour for presentation graphics,”</span> in
+<em>Proceedings of the 3rd international workshop on distributed
+statistical computing</em>, K. Hornik, F. Leisch, and A. Zeileis, Eds.,
+Vienna, Austria, 2003.</div>
+</div>
+<div id="ref-sharma2005" class="csl-entry">
+<div class="csl-left-margin">[26] </div>
 <div class="csl-right-inline">G.
 Sharma, W. Wu, and E. N. Dalal, <span>“The <span>CIEDE2000</span>
 color-difference formula: Implementation notes, supplementary test data,
@@ -1290,7 +1540,7 @@ and mathematical observations,”</span> <em>Color Research &amp;
 Application</em>, vol. 30, no. 1, pp. 21–30, 2005, doi: <a href="https://doi.org/10.1002/col.20070" class="external-link">10.1002/col.20070</a>.</div>
 </div>
 <div id="ref-machado2009" class="csl-entry">
-<div class="csl-left-margin">[25] </div>
+<div class="csl-left-margin">[27] </div>
 <div class="csl-right-inline">G.
 M. Machado, M. M. Oliveira, and L. A. F. Fernandes, <span>“A
 physiologically-based model for simulation of color vision
@@ -1298,7 +1548,7 @@ deficiency,”</span> <em>IEEE Transactions on Visualization and Computer
 Graphics</em>, vol. 15, no. 6, pp. 1291–1298, 2009.</div>
 </div>
 <div id="ref-r" class="csl-entry">
-<div class="csl-left-margin">[26] </div>
+<div class="csl-left-margin">[28] </div>
 <div class="csl-right-inline">R
 Core Team, <em>R: A language and environment for statistical
 computing</em>. Vienna, Austria: R Foundation for Statistical Computing,
@@ -1306,67 +1556,67 @@ computing</em>. Vienna, Austria: R Foundation for Statistical Computing,
 </div>
 </div>
 <div id="ref-ggplot2" class="csl-entry">
-<div class="csl-left-margin">[27] </div>
+<div class="csl-left-margin">[29] </div>
 <div class="csl-right-inline">H.
 Wickham, <em>ggplot2: Elegant graphics for data analysis</em>.
 Springer-Verlag New York, 2016. Available: <a href="https://ggplot2.tidyverse.org" class="external-link">https://ggplot2.tidyverse.org</a>
 </div>
 </div>
 <div id="ref-tennekes14" class="csl-entry">
-<div class="csl-left-margin">[28] </div>
+<div class="csl-left-margin">[30] </div>
 <div class="csl-right-inline">M.
 Tennekes and E. de Jonge, <span>“Tree colors: Color schemes for
 tree-structured data,”</span> <em>IEEE Transactions on Visualization and
 Computer Graphics</em>, vol. 20, pp. 2072–2081, Dec. 2014, doi: <a href="https://doi.org/10.1109/TVCG.2014.2346277" class="external-link">10.1109/TVCG.2014.2346277</a>.</div>
 </div>
 <div id="ref-vim" class="csl-entry">
-<div class="csl-left-margin">[29] </div>
+<div class="csl-left-margin">[31] </div>
 <div class="csl-right-inline">A.
 Kowarik and M. Templ, <span>“Imputation with the <span>R</span> package
 <span>VIM</span>,”</span> <em>Journal of Statistical Software</em>, vol.
 74, no. 7, pp. 1–16, 2016, doi: <a href="https://doi.org/10.18637/jss.v074.i07" class="external-link">10.18637/jss.v074.i07</a>.</div>
 </div>
 <div id="ref-judd43" class="csl-entry">
-<div class="csl-left-margin">[30] </div>
+<div class="csl-left-margin">[32] </div>
 <div class="csl-right-inline">D.
 B. Judd, <span>“Facts of color-blindness,”</span> <em>Journal of the
 Optical Society of America</em>, vol. 33, no. 6, pp. 294–307,
 1943.</div>
 </div>
 <div id="ref-cakir1980" class="csl-entry">
-<div class="csl-left-margin">[31] </div>
+<div class="csl-left-margin">[33] </div>
 <div class="csl-right-inline">A.
 Cakir, D. J. Hart, and T. F. M. Stewart, <span>“Visual fatigue and
 VDTs,”</span> <em>Human Factors</em>, vol. 22, no. 4, pp. 513–526,
 1980.</div>
 </div>
 <div id="ref-ware2021" class="csl-entry">
-<div class="csl-left-margin">[32] </div>
+<div class="csl-left-margin">[34] </div>
 <div class="csl-right-inline">C.
 Ware, <em>Information visualization: Perception for design</em>, 4th ed.
 Morgan Kaufmann, 2021.</div>
 </div>
 <div id="ref-bach" class="csl-entry">
-<div class="csl-left-margin">[33] </div>
+<div class="csl-left-margin">[35] </div>
 <div class="csl-right-inline">M.
 Bach, <span>“Visual phenomena &amp; optical illusions.”</span> <a href="https://michaelbach.de/ot/index.html" class="external-link uri">https://michaelbach.de/ot/index.html</a>, 2024.</div>
 </div>
 <div id="ref-brewster1844" class="csl-entry">
-<div class="csl-left-margin">[34] </div>
+<div class="csl-left-margin">[36] </div>
 <div class="csl-right-inline">D.
 Brewster, <span>“On the optical illusion of the conversion of a plane
 into a concave surface and vice versa,”</span> <em>Transactions of the
 Royal Society of Edinburgh</em>, vol. 15, pp. 39–51, 1844.</div>
 </div>
 <div id="ref-reda21" class="csl-entry">
-<div class="csl-left-margin">[35] </div>
+<div class="csl-left-margin">[37] </div>
 <div class="csl-right-inline">K.
 Reda, A. A. Salvi, J. Gray, and M. E. Papka, <span>“Color nameability
 predicts inference accuracy in spatial visualizations,”</span>
 <em>Computer Graphics Forum</em>, vol. 40, no. 3, 2021.</div>
 </div>
 <div id="ref-kim19" class="csl-entry">
-<div class="csl-left-margin">[36] </div>
+<div class="csl-left-margin">[38] </div>
 <div class="csl-right-inline">Y.
 Kim, K. Thayer, G. S. Gorsky, and J. Heer, <span>“<span class="nocase">Color Names Across Languages: Salient Colors and Term
 Translation in Multilingual Color Naming Models</span>,”</span> in
@@ -1374,21 +1624,21 @@ Translation in Multilingual Color Naming Models</span>,”</span> in
 Marai, Eds., The Eurographics Association, 2019. doi: <a href="https://doi.org/10.2312/evs.20191166" class="external-link">10.2312/evs.20191166</a>.</div>
 </div>
 <div id="ref-boynton89" class="csl-entry">
-<div class="csl-left-margin">[37] </div>
+<div class="csl-left-margin">[39] </div>
 <div class="csl-right-inline">R.
 M. Boynton, <span>“Eleven colors that are almost never confused,”</span>
 in <em>Human vision, visual processing, and digital display</em>, SPIE,
 1989, pp. 322–332.</div>
 </div>
 <div id="ref-plotly" class="csl-entry">
-<div class="csl-left-margin">[38] </div>
+<div class="csl-left-margin">[40] </div>
 <div class="csl-right-inline">C.
 Sievert, <em>Interactive web-based data visualization with r, plotly,
 and shiny</em>. Chapman; Hall/CRC, 2020. Available: <a href="https://plotly-r.com" class="external-link">https://plotly-r.com</a>
 </div>
 </div>
 <div id="ref-kovesi" class="csl-entry">
-<div class="csl-left-margin">[39] </div>
+<div class="csl-left-margin">[41] </div>
 <div class="csl-right-inline">P.
 Kovesi, <span>“Good colour maps: How to design them,”</span>
 <em>CoRR</em>, vol. abs/1509.03700, 2015, Available: <a href="http://arxiv.org/abs/1509.03700" class="external-link">http://arxiv.org/abs/1509.03700</a>
