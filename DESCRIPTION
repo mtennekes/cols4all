@@ -37,6 +37,7 @@ Suggests:
     ggplot2,
     scales,
     rmarkdown,
+    bookdown,
     bibtex,
     plotly
 URL: https://mtennekes.github.io/cols4all/, https://github.com/mtennekes/cols4all
