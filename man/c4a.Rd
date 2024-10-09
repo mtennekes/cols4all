@@ -15,23 +15,28 @@ c4a(
   order = NULL,
   range = NA,
   colorsort = "orig",
-  format = c("hex", "RGB", "HCL"),
+  format = c("hex", "rgb", "hcl", "RGB", "XYZ", "HSV", "HLS", "LAB", "polarLAB", "LUV",
+    "polarLUV"),
   nm_invalid = c("error", "repeat", "interpolate"),
   verbose = TRUE
 )
 
 c4a_ramp(..., space = c("rgb", "Lab"), interpolate = c("linear", "spline"))
 
-c4a_na(palette = NULL, type = c("cat", "seq", "div", "cyc"), verbose = TRUE)
+c4a_na(
+  palette = NULL,
+  type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"),
+  verbose = TRUE
+)
 }
 \arguments{
-\item{palette}{name of the palette. See \code{\link{c4a_palettes}} for options. If omitted, the default palette is provided by \code{c4a_default_palette}. The palette name can be prefixed with a \code{"-"} symbol, which will reverse the palette (this can also be done with the \code{reverse} argument).}
+\item{palette}{name of the palette. See \code{\link{c4a_palettes}} for available palettes. If omitted, the default palette is provided by \code{c4a_default_palette}. The palette name can be prefixed with a \code{"-"} symbol, which will reverse the palette (this can also be done with the \code{reverse} argument).}
 
-\item{n}{number of colors. If omitted then: for type \code{"cat"} the maximum number of colors is returned, for types \code{"seq"} and \code{"div"}, 9 colors.}
+\item{n}{number of colors. If omitted then: for type \code{"cat"} the maximum number of colors is returned, for types \code{"seq"}, \code{"div"}, and \code{"cyc"}, 7 , 9, and 9 colors respectively.}
 
-\item{m}{number of rows in case type is \code{"bivs"}, \code{"bivc"}, \code{"bivd"} or  \code{"bivg"} (which stand for respectively sequential, categorical, diverging and desaturated (\code{g} for 'grayscale')).}
+\item{m}{number of rows in case type is bivariate, so one of \code{"bivs"}, \code{"bivc"}, \code{"bivd"} or  \code{"bivg"} (see \code{\link{c4a_types}} for descriptions)}
 
-\item{type}{type of color palette, in case \code{palette} is not specified: one of \code{"cat"} (categorical/qualitative palette), \code{"seq"} (sequential palette), \code{"div"} (diverging palette), and \code{"bivs"}/\code{"bivc"}/\code{"bivd"}/\code{"bivg"} (bivariate: respectively seq-seq seq-cat, seq-div, and seq-desaturated).}
+\item{type}{type of color palette, in case \code{palette} is not specified: one of \code{"cat"}, \code{"seq"}, \code{"div"}, \code{"cyc"}, \code{"bivs"}, \code{"bivc"}, \code{"bivd"}, \code{"bivg"}. Run \code{\link{c4a_types}} for descriptions.}
 
 \item{reverse}{should the palette be reversed?}
 
@@ -39,9 +44,9 @@ c4a_na(palette = NULL, type = c("cat", "seq", "div", "cyc"), verbose = TRUE)
 
 \item{range}{a vector of two numbers between 0 and 1 that determine the range that is used for sequential and diverging palettes. The first number determines where the palette begins, and the second number where it ends. For sequential \code{"seq"} palettes, 0 means the leftmost (normally lightest) color, and 1 the rightmost (often darkest) color. For diverging \code{"seq"} palettes, 0 means the middle color, and 1 both extremes. If only one number is provided, this number is interpreted as the endpoint (with 0 taken as the start).}
 
-\item{colorsort}{Sort the colors (\code{"cat"} only). Options: \code{"orig"} (original order), \code{"Hx"} (hue, where x is a starting number from 0 to 360), \code{"C"} (chroma), \code{"L"} (luminance)}
+\item{colorsort}{Sort the colors. Options: \code{"orig"} (original order), \code{"Hx"} (hue, where x is a starting number from 0 to 360), \code{"C"} (chroma), \code{"L"} (luminance). All these options are available for \code{"cat"} palettes, only the last one for \code{"seq"}, and none for the other palette types.}
 
-\item{format}{format of the colors. One of: \code{"hex"} character vector of hex color values, \code{"RGB"} 3 column matrix of RGB values, or \code{"HCL"} 3-column matrix of HCL values}
+\item{format}{format of the colors. One of: \code{"hex"} character vector of hex color values, \code{"rgb"} 3 column matrix of RGB values, \code{"hcl"} 3-column matrix of HCL values, or one of the color classes from \code{\link[colorspace:color-class]{colorspace}}}
 
 \item{nm_invalid}{what should be done in case \code{n} or \code{m} is larger than the maximum number of colors or smaller than the minimum number? Options are \code{"error"} (an error is returned), \code{"repeat"}, the palette is repeated, \code{"interpolate"} colors are interpolated. For categorical \code{"cat"} palettes only.}
 
@@ -57,29 +62,45 @@ c4a_na(palette = NULL, type = c("cat", "seq", "div", "cyc"), verbose = TRUE)
 A vector of colors (\code{c4a}) and a color (\code{c4a_na})
 }
 \description{
-Get a cols4all color palette: \code{c4a} returns the colors of the specified palette, and \code{c4a_na} returns the color for missing value that is associated with the specified palette. Run \code{\link{c4a_gui}} to see all available palettes, which are also listed with \code{\link{c4a_palettes}}.
+Get a cols4all color palette: \code{c4a} returns the colors of the specified palette, \code{c4a_na} returns the color for missing value that is associated with the specified palette, and \code{c4a_ramp} returns a color ramp function.  Run \code{\link{c4a_gui}} to see all available palettes, which are also listed with \code{\link{c4a_palettes}}.
 }
 \examples{
-c4a_palettes("div")
+# get the colors from brewer.set3 and plot them
+set3 <- c4a("brewer.set3")
+c4a_plot_hex(set3, nrows = 1)
 
-c4a(type = "cat")
+c4a("hcl.set2", n = 36) |> c4a_plot_hex()
+c4a("-hcl.set2", n = 12) |> c4a_plot_hex()
 
-(pal = c4a("tol.sunset", n = 7, range = c(0, .6)))
+# how to know which palettes are avaiable?
+# 1) Via the interactive tool:
+\dontrun{
+	c4a_gui()
+}
 
-c4a_plot(pal)
+# 2) Via the overview function:
+c4a_palettes(type = "cat")
+c4a_palettes(series = "brewer")
+c4a_palettes(type = "cat", series = "brewer")
+# Run c4a_overview() to see which are available
 
-c4a("set2")
+# 3) Via .P
+.P$brewer$cat$set3
 
-c4a("hcl.set2")
+# each palette contains a color for missing values
 
-c4a("hcl.set2", n = 8)
+c4a("carto.safe", 7)
+c4a_na("carto.safe")
 
-# reversed palette
-c4a("hcl.set2", reverse = TRUE, n = 8)
+c4a_plot_hex("carto.safe", n = 7, include.na = TRUE)
 
-# handy shortcut
-c4a("-hcl.set2", n = 8)
 
-# the color for missing values is white:
-c4a_na("hcl.set2")
+c4a_plot_hex("carto.safe", n = 7, include.na = TRUE)
+# same (but shorter) as
+# c4a_plot_hex(c(c4a("carto.safe", 7), c4a_na("carto.safe")), include.na = TRUE)
+
+
+# color ramp
+c4a("viridis", 100) |> c4a_plot()
+c4a_ramp("viridis")(100) |> c4a_plot()
 }

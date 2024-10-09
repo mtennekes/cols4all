@@ -483,8 +483,11 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #'
 #' Graphical user interface to analyse palettes. `c4a_table` shows a table that can be opened in the browser. `c4a_gui` is a graphical user interface (shiny app) around this table.
 #'
+#' See vignette how the properties are calculated. Parameters, such as threshold values which determined when palettes are classified as "colorblind-friendly", can be specified via \code{\link{c4a_options}}. Also the nameability score function (which is in development) can be specified there. See the examples of \code{\link{c4a_options}} for both use cases.
+#'
 #' @param type type of palette. Run \code{\link{c4a_types}} to see the implemented types and their description. For `c4a_gui` it only determines which type is shown initially.
 #' @param n,m `n` is the number of displayed colors. For bivariate palettes `"biv"`, `n` and `m` are the number of columns and rows respectively. If omitted: for `"cat"` the full palette is displayed, for `"seq"`, `"div"` and `"cyc"`, 7, 9, and 9 colors respectively, and for `"bivs"`/`"bivc"`/`"bivd"`/`"bivg"` 4 columns and rows. For `c4a_gui` it only determines which number of colors initially.
+#' @param continuous should the palettes as continuous instead of discrete. Only applicable for `"seq"`, `"div"`, and `"cyc"`.
 #' @param filters filters to be applied. A character vector with a subset from:`"nmax"` (only palettes where `n = nmax`, which is only applicable for categorical palettes),  `"cbf"` (colorblind-friendly), `"fair"` (fairness),`"naming"` (nameability),  `"crW"` (sufficient contrast ratio with white), and `"crB"` (sufficient contrast ratio with black). By default an empty vector, so no filters are applied.
 #' @param cvd.sim color vision deficiency simulation: one of `"none"`, `"deutan"`, `"protan"`, `"tritan"`
 #' @param sort column name to sort the data. The available column names depend on the arguments `type` and `show.scores`. They are listed in the warning message. Use a `"-"` prefix to reverse the order.
@@ -509,7 +512,7 @@ plot_table = function(p, text.format, text.col, include.na, cvd.sim, verbose) {
 #' @export
 #' @return An HMTL table (`kableExtra` object)
 #' @rdname c4a_gui
-#' @name c4a_gui
+#' @name c4a_table
 c4a_table = function(type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"), n = NULL, m = NULL, continuous = FALSE, filters = character(0), cvd.sim = c("none", "deutan", "protan", "tritan"), sort = "name", text.format = "hex", text.col = "same", series = "all", range = NA, colorsort = "orig", include.na = FALSE, show.scores = FALSE, columns = NA, verbose = TRUE) {
 	cvd.sim = match.arg(cvd.sim)
 	p = prep_table(type = type, n = n, m = m, continuous = continuous, filters = filters, sort = sort, series = series, range = range, colorsort = colorsort, show.scores = show.scores, columns = columns, verbose = verbose)

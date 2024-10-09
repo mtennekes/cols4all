@@ -4,6 +4,7 @@
 ^README\.md$
 ^sandbox$
 ^examples$
+^local$
 ^doc$
 ^Meta$
 ^CRAN-SUBMISSION$

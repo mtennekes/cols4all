@@ -141,7 +141,7 @@ c4a_plot_hues = function(pal, dark = FALSE, C_grey = 5, width = c("none", "total
 
 			grid::grid.polyline(x = grid::unit(coords[,1], "npc"),
 								y = grid::unit(coords[,2], "npc"), gp = grid::gpar(col = fc, lwd = 1.5))
-			grid::grid.text(paste0(HW, "°"),
+			grid::grid.text(paste0(HW, "\u00b0"),
 							x = grid::unit(tcoords[1], "npc"),
 							y = grid::unit(tcoords[2], "npc"),
 							just = "right",

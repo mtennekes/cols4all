@@ -45,3 +45,5 @@ inst/markdown/*.pdf
 /doc/
 /Meta/
 docs
+
+local/

@@ -49,7 +49,7 @@ c4a_data_as_is(
 
 \item{xNA}{colors for missing values. Vector of the same length as x (or length 1). For \code{NA} values, the color for missing values is automatically determined (preferable a light grayscale color, but if it is indistinguishable by color blind people, a light color with a low chroma value is selected)}
 
-\item{types}{character vector of the same length as x (or length 1), which determines the type of palette: \code{"cat"}, \code{"seq"}, \code{"div"}, \code{"bivs"}, \code{"bivc"}, \code{"bivd"}, or \code{"bivg"}. See details.}
+\item{types}{character vector of the same length as x (or length 1), which determines the type of palette: \code{"cat"}, \code{"seq"}, \code{"div"}, \code{"cyc"}, \code{"bivs"}, \code{"bivc"}, \code{"bivd"}, or \code{"bivg"}. See details.}
 
 \item{series}{a character vector of the same length as x (or length 1), which determines the series.}
 
@@ -151,6 +151,7 @@ if (requireNamespace("colorblindcheck", quietly = TRUE)) {
 		requireNamespace("shinyjs") &&
 		requireNamespace("kableExtra") &&
 		requireNamespace("colorblindcheck") &&
+		requireNamespace("plotly") &&
 		interactive()) {
 		c4a_gui(series = "pinkfloyd", n = 8)
 	}

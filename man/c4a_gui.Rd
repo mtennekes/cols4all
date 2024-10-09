@@ -11,6 +11,7 @@ c4a_table(
   type = c("cat", "seq", "div", "cyc", "bivs", "bivc", "bivd", "bivg"),
   n = NULL,
   m = NULL,
+  continuous = FALSE,
   filters = character(0),
   cvd.sim = c("none", "deutan", "protan", "tritan"),
   sort = "name",
@@ -28,9 +29,11 @@ c4a_table(
 \arguments{
 \item{type}{type of palette. Run \code{\link{c4a_types}} to see the implemented types and their description. For \code{c4a_gui} it only determines which type is shown initially.}
 
-\item{n, m}{\code{n} is the number of displayed colors. For bivariate palettes \code{"biv"}, \code{n} and \code{m} are the number of columns and rows respectively. If omitted: for \code{"cat"} the full palette is displayed, for \code{"seq"} and \code{"div"}, 9 colors, and for \code{"bivs"}/\code{"bivc"}/\code{"bivd"}/\code{"bivg"} 4 columns and rows. For \code{c4a_gui} it only determines which number of colors initially.}
+\item{n, m}{\code{n} is the number of displayed colors. For bivariate palettes \code{"biv"}, \code{n} and \code{m} are the number of columns and rows respectively. If omitted: for \code{"cat"} the full palette is displayed, for \code{"seq"}, \code{"div"} and \code{"cyc"}, 7, 9, and 9 colors respectively, and for \code{"bivs"}/\code{"bivc"}/\code{"bivd"}/\code{"bivg"} 4 columns and rows. For \code{c4a_gui} it only determines which number of colors initially.}
 
 \item{series}{Series of palettes to show. See \code{\link{c4a_series}} for options. By default, \code{"all"}, which means all series. For \code{c4a_gui} it only determines which series are shown initially.}
+
+\item{continuous}{should the palettes as continuous instead of discrete. Only applicable for \code{"seq"}, \code{"div"}, and \code{"cyc"}.}
 
 \item{filters}{filters to be applied. A character vector with a subset from:\code{"nmax"} (only palettes where \code{n = nmax}, which is only applicable for categorical palettes),  \code{"cbf"} (colorblind-friendly), \code{"fair"} (fairness),\code{"naming"} (nameability),  \code{"crW"} (sufficient contrast ratio with white), and \code{"crB"} (sufficient contrast ratio with black). By default an empty vector, so no filters are applied.}
 
@@ -59,6 +62,9 @@ An HMTL table (\code{kableExtra} object)
 }
 \description{
 Graphical user interface to analyse palettes. \code{c4a_table} shows a table that can be opened in the browser. \code{c4a_gui} is a graphical user interface (shiny app) around this table.
+}
+\details{
+See vignette how the properties are calculated. Parameters, such as threshold values which determined when palettes are classified as "colorblind-friendly", can be specified via \code{\link{c4a_options}}. Also the nameability score function (which is in development) can be specified there. See the examples of \code{\link{c4a_options}} for both use cases.
 }
 \examples{
 if (requireNamespace("shiny") &&

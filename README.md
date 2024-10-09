@@ -59,7 +59,7 @@ The main tool is a dashboard, which is started with:
 c4a_gui()
 ```
 
-[<img src="vignettes/cols4all2.png" width="900"/>](vignettes/cols4all2.png)
+[<img src="vignettes/cols4all2.png" width="900"/>](vignettes/cols4all2.jpg)
 
 What palettes are available? That is, by default; other palettes can be
 added!
@@ -114,6 +114,9 @@ is as color blind friendly as possible, then filter on “Fair”, and sort
 by “Colorblind-friendly”:
 
 [<img src="vignettes/cols4all_fair_sort_cbf.png" width="900"/>](vignettes/cols4all_fair_sort_cbf.png)
+
+This gave us inspiration to develop own palettes: see these `cols4all`
+palettes below.
 
 ### Example 2
 

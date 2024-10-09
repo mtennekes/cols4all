@@ -44,6 +44,7 @@ if (requireNamespace("colorblindcheck", quietly = TRUE)) {
 		requireNamespace("shinyjs") &&
 		requireNamespace("kableExtra") &&
 		requireNamespace("colorblindcheck") &&
+		requireNamespace("plotly") &&
 		interactive()) {
 		c4a_gui(series = "pinkfloyd", n = 8)
 	}

@@ -77,7 +77,7 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 	tab_nmin = tapply(z$nmin, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = min)
 	tab_nmax = tapply(z$nmax, INDEX = list(z$series, factor(z$type, levels = tps)), FUN = max)
-	tab_k = c4a_overview()
+	tab_k = c4a_overview(zero.count.as.NA = TRUE)
 
 
 	allseries = sort(unique(z$series))
