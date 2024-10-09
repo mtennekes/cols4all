@@ -45,6 +45,7 @@
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cat"</span>, <span class="st">"seq"</span>, <span class="st">"div"</span>, <span class="st">"cyc"</span>, <span class="st">"bivs"</span>, <span class="st">"bivc"</span>, <span class="st">"bivd"</span>, <span class="st">"bivg"</span><span class="op">)</span>,</span>
 <span>  n <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  m <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  continuous <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  filters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  cvd.sim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"deutan"</span>, <span class="st">"protan"</span>, <span class="st">"tritan"</span><span class="op">)</span>,</span>
 <span>  sort <span class="op">=</span> <span class="st">"name"</span>,</span>
@@ -69,11 +70,15 @@
 
 
 <dt id="arg-n-m">n, m<a class="anchor" aria-label="anchor" href="#arg-n-m"></a></dt>
-<dd><p><code>n</code> is the number of displayed colors. For bivariate palettes <code>"biv"</code>, <code>n</code> and <code>m</code> are the number of columns and rows respectively. If omitted: for <code>"cat"</code> the full palette is displayed, for <code>"seq"</code> and <code>"div"</code>, 9 colors, and for <code>"bivs"</code>/<code>"bivc"</code>/<code>"bivd"</code>/<code>"bivg"</code> 4 columns and rows. For <code>c4a_gui</code> it only determines which number of colors initially.</p></dd>
+<dd><p><code>n</code> is the number of displayed colors. For bivariate palettes <code>"biv"</code>, <code>n</code> and <code>m</code> are the number of columns and rows respectively. If omitted: for <code>"cat"</code> the full palette is displayed, for <code>"seq"</code>, <code>"div"</code> and <code>"cyc"</code>, 7, 9, and 9 colors respectively, and for <code>"bivs"</code>/<code>"bivc"</code>/<code>"bivd"</code>/<code>"bivg"</code> 4 columns and rows. For <code>c4a_gui</code> it only determines which number of colors initially.</p></dd>
 
 
 <dt id="arg-series">series<a class="anchor" aria-label="anchor" href="#arg-series"></a></dt>
 <dd><p>Series of palettes to show. See <code><a href="c4a_palettes.html">c4a_series</a></code> for options. By default, <code>"all"</code>, which means all series. For <code>c4a_gui</code> it only determines which series are shown initially.</p></dd>
+
+
+<dt id="arg-continuous">continuous<a class="anchor" aria-label="anchor" href="#arg-continuous"></a></dt>
+<dd><p>should the palettes as continuous instead of discrete. Only applicable for <code>"seq"</code>, <code>"div"</code>, and <code>"cyc"</code>.</p></dd>
 
 
 <dt id="arg-filters">filters<a class="anchor" aria-label="anchor" href="#arg-filters"></a></dt>
@@ -123,6 +128,10 @@
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An HMTL table (<code>kableExtra</code> object)</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>See vignette how the properties are calculated. Parameters, such as threshold values which determined when palettes are classified as "colorblind-friendly", can be specified via <code><a href="c4a_options.html">c4a_options</a></code>. Also the nameability score function (which is in development) can be specified there. See the examples of <code><a href="c4a_options.html">c4a_options</a></code> for both use cases.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

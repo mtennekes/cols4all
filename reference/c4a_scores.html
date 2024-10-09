@@ -29,7 +29,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Get information from a cols4all palette</h1>
-      <small class="dont-index">Source: <a href="https://github.com/mtennekes/cols4all/blob/main/R/c4a.R" class="external-link"><code>R/c4a.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mtennekes/cols4all/blob/main/R/c4a_scores.R" class="external-link"><code>R/c4a_scores.R</code></a></small>
       <div class="d-none name"><code>c4a_scores.Rd</code></div>
     </div>
 
@@ -40,7 +40,9 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">c4a_scores</span><span class="op">(</span></span>
-<span>  <span class="va">palette</span>,</span>
+<span>  palette <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  series <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  no.match <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"message"</span>, <span class="st">"error"</span>, <span class="st">"null"</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -53,6 +55,14 @@
 
 <dl><dt id="arg-palette">palette<a class="anchor" aria-label="anchor" href="#arg-palette"></a></dt>
 <dd><p>name of the palette</p></dd>
+
+
+<dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
+<dd><p>type of palettes (in case palette is not specified)</p></dd>
+
+
+<dt id="arg-series">series<a class="anchor" aria-label="anchor" href="#arg-series"></a></dt>
+<dd><p>series name (in case palette is not specified)</p></dd>
 
 
 <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
@@ -72,6 +82,59 @@
     <p>list with the following items: name, series, fullname, type, palette (colors), na (color), nmax, and reverse. The latter is <code>TRUE</code> when there is a <code>"-"</code> prefix before the palette name.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">c4a_scores</span><span class="op">(</span><span class="st">"blues3"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     name series   fullname type n min_dist nameability min_step max_step</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 blues3    hcl hcl.blues3  seq 7     7.17          NA     7.17    12.64</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   inter_wing_dist tri_ineq Cmax   H  HL  HR Lmid Hwidth HwidthL HwidthR Lrange</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              NA     6.79   70 246 248 244   68     11       7       6     67</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Crange fairness CRmin CRwt CRbk Blues cbfriendly chroma Hspread fair hues</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     60       81  1.18 1.12 2.15  1.83    1.00717      M       4    H   SH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   equiluminance contrastWT contrastBK float nameable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          TRUE       TRUE       TRUE FALSE       NA</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">pals</span> <span class="op">=</span> <span class="fu"><a href="c4a_palettes.html">c4a_palettes</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"cat"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">scores_cat7</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">pals</span>, <span class="va">c4a_scores</span>, n <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores_cat7</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               name      series   fullname        type  n min_dist nameability</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.r3       "r3"      "misc"   "misc.r3"       "cat" 7 8.63     0          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.r4       "r4"      "misc"   "misc.r4"       "cat" 7 4.29     0          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.ggplot2  "ggplot2" "misc"   "misc.ggplot2"  "cat" 7 3.93     0          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.okabe    "okabe"   "misc"   "misc.okabe"    "cat" 7 11.13    0          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brewer.accent "accent"  "brewer" "brewer.accent" "cat" 7 2.06     0          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brewer.dark2  "dark2"   "brewer" "brewer.dark2"  "cat" 7 2.29     0          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               min_step max_step inter_wing_dist tri_ineq Cmax H   HL  HR  Lmid</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.r3       NA       NA       NA              NA       179  360 17  17  91  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.r4       NA       NA       NA              NA       105  360 245 10  82  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.ggplot2  NA       NA       NA              NA       100  360 12  14  70  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.okabe    NA       NA       NA              NA       110  360 142 316 89  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brewer.accent NA       NA       NA              NA       132  360 26  320 98  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brewer.dark2  NA       NA       NA              NA       115  360 270 84  52  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               Hwidth HwidthL HwidthR Lrange Crange fairness CRmin CRwt CRbk</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.r3       287    223     139     65     179    0        1.16  1.07 2.44</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.r4       291    241     111     34     105    12       1     1.6  4.37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.ggplot2  296    238     118     6      100    20       1     2.27 7.71</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.okabe    271    186     142     43     57     56       1.02  1.32 4.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brewer.accent 237    206     137     53     102    8        1.04  1.05 3.94</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brewer.dark2  248    232     64      23     63     73       1.03  2.06 4.72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               Blues cbfriendly chroma Hspread fair hues equiluminance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.r3       Inf   0.00863    "H"    93      "L"  "RH" TRUE         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.r4       1.52  0.00429    "H"    94      "L"  "RH" TRUE         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.ggplot2  1.63  0.00393    "H"    96      "L"  "RH" TRUE         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.okabe    1.56  1.01113    "H"    88      "M"  "NA" TRUE         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brewer.accent 1.63  0.00206    "H"    77      "L"  "NA" TRUE         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brewer.dark2  1.53  0.00229    "H"    80      "M"  "NA" TRUE         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               contrastWT contrastBK float nameable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.r3       TRUE       TRUE       TRUE  FALSE   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.r4       TRUE       FALSE      FALSE FALSE   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.ggplot2  TRUE       FALSE      FALSE FALSE   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> misc.okabe    TRUE       FALSE      FALSE FALSE   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brewer.accent TRUE       FALSE      FALSE FALSE   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> brewer.dark2  TRUE       FALSE      FALSE FALSE   </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

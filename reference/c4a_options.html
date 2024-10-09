@@ -29,7 +29,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Set cols4all options</h1>
-      <small class="dont-index">Source: <a href="https://github.com/mtennekes/cols4all/blob/main/R/onLoad.R" class="external-link"><code>R/onLoad.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mtennekes/cols4all/blob/main/R/c4a_options.R" class="external-link"><code>R/c4a_options.R</code></a></small>
       <div class="d-none name"><code>c4a_options.Rd</code></div>
     </div>
 
@@ -57,8 +57,87 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
-<table class="table table"><tr><td><strong>Option</strong></td><td><strong>Description</strong></td></tr><tr><td>defaults</td><td>Default palettes per type</td></tr><tr><td>CBF_th</td><td>Parameters that label a palette as color blind friendly</td></tr><tr><td>CBU_th</td><td>Parameters that label a palette as color blind unfriendly</td></tr><tr><td>CrangeFair</td><td>Maximum chroma range for which a palette is considered harmonic</td></tr><tr><td>CrangeUnfair</td><td>Minimum chroma range for which a palette is considered disharmonic</td></tr><tr><td>LrangeFair</td><td>Maximum luminance range for which a palette is considered harmonic</td></tr><tr><td>LrangeUnfair</td><td>Minimum luminance range for which a palette is considered disharmonic</td></tr><tr><td>Cintense</td><td>Chroma of colors that are considered intense</td></tr><tr><td>Cpastel</td><td>Chroma of colors that are considered 'pastel'</td></tr><tr><td>HwidthDivRainbow</td><td>A diverging palette is labeled as 'rainbow hue' if HwidthL or HwidthR are at least <code>HwidthDivRainbow</code></td></tr><tr><td>HwidthDivSingle</td><td>A diverging palette is labeled as 'single hue' if HwidthL and HwidthR are at most <code>HwidthDivSingle</code></td></tr><tr><td>HwidthSeqRainbow</td><td>A sequential palette is labeled as 'rainbow hue' if Hwidth is at least <code>HwidthSeqRainbow</code></td></tr><tr><td>HwidthSeqSingle</td><td>A sequential palette is labeled as 'single hue' if Hwidth is at most <code>HwidthSeqSingle</code></td></tr></table></div>
+<table class="table table"><tr><td><strong>Option</strong></td><td><strong>Description</strong></td></tr><tr><td>defaults</td><td>Default palettes per type</td></tr><tr><td>CBF_th</td><td>Parameters that label a palette as color blind friendly</td></tr><tr><td>CBVF_th</td><td>Parameters that label a palette as very color blind friendly</td></tr><tr><td>CBU_th</td><td>Parameters that label a palette as color blind unfriendly</td></tr><tr><td>CrangeFair</td><td>Maximum chroma range for which a palette is considered harmonic</td></tr><tr><td>CrangeUnfair</td><td>Minimum chroma range for which a palette is considered disharmonic</td></tr><tr><td>LrangeFair</td><td>Maximum luminance range for which a palette is considered harmonic</td></tr><tr><td>LrangeUnfair</td><td>Minimum luminance range for which a palette is considered disharmonic</td></tr><tr><td>Cintense</td><td>Chroma of colors that are considered intense</td></tr><tr><td>Cpastel</td><td>Chroma of colors that are considered 'pastel'</td></tr><tr><td>HwidthDivRainbow</td><td>A diverging palette is labeled as 'rainbow hue' if HwidthL or HwidthR are at least <code>HwidthDivRainbow</code></td></tr><tr><td>HwidthDivSingle</td><td>A diverging palette is labeled as 'single hue' if HwidthL and HwidthR are at most <code>HwidthDivSingle</code></td></tr><tr><td>HwidthSeqRainbow</td><td>A sequential palette is labeled as 'rainbow hue' if Hwidth is at least <code>HwidthSeqRainbow</code></td></tr><tr><td>HwidthSeqSingle</td><td>A sequential palette is labeled as 'single hue' if Hwidth is at most <code>HwidthSeqSingle</code></td></tr><tr><td>naming_fun</td><td>Function that returns a distance matrix with the <code>naming_colors</code> (see examples)</td></tr><tr><td>naming_fun_args</td><td>List of arguments for <code>naming_fun</code></td></tr><tr><td>naming_colors</td><td>Vector of prototype colors for the color names (see examples)</td></tr><tr><td>naming_softmax</td><td>List of parameters for the softmax function applied to the distance matrix</td></tr></table></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example how to lower the color-blind friendly threshold</span></span></span>
+<span class="r-in"><span><span class="co"># for categorical palettes (so more smileys in the GUI!)</span></span></span>
+<span class="r-in"><span><span class="co"># CBF_th: one smiley</span></span></span>
+<span class="r-in"><span><span class="co"># CBVF_th: two smileys</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># current table</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="c4a_gui.html">c4a_table</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">9</span>, sort <span class="op">=</span> <span class="st">"cbfriendly"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">opts</span> <span class="op">=</span> <span class="fu">c4a_options</span><span class="op">(</span><span class="st">"CBF_th"</span>, <span class="st">"CBVF_th"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">opts</span><span class="op">$</span><span class="va">CBF_th</span><span class="op">$</span><span class="va">cat</span><span class="op">[</span><span class="st">"min_dist"</span><span class="op">]</span> <span class="op">=</span> <span class="fl">7</span></span></span>
+<span class="r-in"><span><span class="va">opts</span><span class="op">$</span><span class="va">CBVF_th</span><span class="op">$</span><span class="va">cat</span><span class="op">[</span><span class="st">"min_dist"</span><span class="op">]</span> <span class="op">=</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">old</span> <span class="op">=</span> <span class="fu">c4a_options</span><span class="op">(</span><span class="va">opts</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># more smileys :-) :-)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="c4a_gui.html">c4a_table</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">9</span>, sort <span class="op">=</span> <span class="st">"cbfriendly"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># set the old settings back</span></span></span>
+<span class="r-in"><span><span class="fu">c4a_options</span><span class="op">(</span><span class="va">old</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Example how to use own nameability function</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># This function should:</span></span></span>
+<span class="r-in"><span><span class="co"># - have an argument "pal" (vector of colors)</span></span></span>
+<span class="r-in"><span><span class="co"># - optionally have other arguments</span></span></span>
+<span class="r-in"><span><span class="co"># - return a distance matrix of n rows (length of pal) and k columns (classes).</span></span></span>
+<span class="r-in"><span><span class="co">#   It shoud have columns names that correspond to the naming colors (see below).</span></span></span>
+<span class="r-in"><span><span class="va">naming_RGB</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">pal</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">cols</span> <span class="op">=</span> <span class="fu">colorspace</span><span class="fu">::</span><span class="fu"><a href="https://colorspace.R-Forge.R-project.org/reference/hex2RGB.html" class="external-link">hex2RGB</a></span><span class="op">(</span><span class="va">pal</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">coords</span> <span class="op">=</span> <span class="va">cols</span><span class="op">@</span><span class="va">coords</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">cls</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">coords</span>, MARGIN <span class="op">=</span> <span class="fl">1</span>, <span class="va">which.max</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">mx</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">coords</span>, MARGIN <span class="op">=</span> <span class="fl">1</span>, <span class="va">max</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">dominance</span> <span class="op">=</span> <span class="op">(</span><span class="op">(</span><span class="va">mx</span> <span class="op">+</span> <span class="fl">0.001</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">coords</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.001</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">cls</span><span class="op">[</span><span class="va">dominance</span> <span class="op">&lt;</span> <span class="fl">0.4</span><span class="op">]</span> <span class="op">=</span> <span class="fl">4L</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pal</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">4</span>,</span></span>
+<span class="r-in"><span>        dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Red"</span>, <span class="st">"Green"</span>, <span class="st">"Blue"</span>, <span class="st">"Other"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="va">m</span><span class="op">[</span><span class="va">i</span>, <span class="va">cls</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="op">-</span><span class="va">m</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># testing this function...</span></span></span>
+<span class="r-in"><span><span class="fu">naming_RGB</span><span class="op">(</span><span class="fu"><a href="c4a.html">c4a</a></span><span class="op">(</span><span class="st">"brewer.set1"</span><span class="op">)</span><span class="op">)</span> <span class="co">#fair enough</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Red Green Blue Other</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]  -1     0    0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]   0     0   -1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]   0    -1    0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]   0     0   -1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]  -1     0    0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]  -1     0    0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]  -1     0    0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]  -1     0    0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]   0     0    0    -1</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># This vector should contain the 'prototype' colors, and have names that correspond</span></span></span>
+<span class="r-in"><span><span class="co"># to the column names of the returned matrices by the function above.</span></span></span>
+<span class="r-in"><span><span class="va">names_RGB</span> <span class="op">=</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Red"</span> <span class="op">=</span> <span class="st">"#FF0000"</span>,</span></span>
+<span class="r-in"><span>      <span class="st">"Green"</span> <span class="op">=</span> <span class="st">"#00FF00"</span>,</span></span>
+<span class="r-in"><span>      <span class="st">"Blue"</span> <span class="op">=</span> <span class="st">"#0000FF"</span>,</span></span>
+<span class="r-in"><span>      <span class="st">"Other"</span> <span class="op">=</span> <span class="st">"#AAAAAA"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Set the options (may take a while because if calculated the nameability scores)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="fu">c4a_options</span><span class="op">(</span>naming_fun <span class="op">=</span> <span class="va">naming_RGB</span>,</span></span>
+<span class="r-in"><span>      naming_fun_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      naming_colors <span class="op">=</span> <span class="va">names_RGB</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
