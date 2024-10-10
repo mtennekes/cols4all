@@ -138,7 +138,7 @@ Table: (\#tab:deltae) Delta E interpretation
 To measure color distances as perceived by people with color vision deficiency, we apply the Delta E metric in simulations for deuteranopia, protanopia, and tritanopia @machado2009,colorblindcheck. These metrics are denoted by $\Delta E^{\mbox{deutan}}(i,j)$, $\Delta E^{\mbox{protan}}(i,j)$, and $\Delta E^{\mbox{tritan}}(i,j)$, respectively.
 
 
-## Tool description}
+## Tool description
 
 We introduce a tool, called \texttt{cols4all}, that can be used to analyse and compare color palettes. It is written as a package for the R programming language @r. 
 
@@ -235,7 +235,7 @@ Examples of each of these palette types are provided in Figures \@ref(fig:expals
 
 
 
-Palettes are also arranged by series, by which we mean either the source (e.g. \texttt{brewer} stands for ColorBrewer @brewer}) or group of similar palettes (e.g. \texttt{poly} includes categorical palettes with many colors). An overview of the palettes that are included in cols4all is provided in Table \@ref(tab:overview).
+Palettes are also arranged by series, by which we mean either the source (e.g. \texttt{brewer} stands for ColorBrewer @brewer) or group of similar palettes (e.g. \texttt{poly} includes categorical palettes with many colors). An overview of the palettes that are included in cols4all is provided in Table \@ref(tab:overview).
 
 Table: (\#tab:overview) Overview of the palettes series
 
@@ -350,7 +350,7 @@ The inter wing distance is the minimum distance between any palette color $i$ (e
 
 For the \textbf{cyclic} palettes we use exactly the same definition of color blind friendliness as \textbf{sequential} palettes, with the addition that the first and last colors should be identical.
 
-The \textbf{bivariate} color palettes are analysed using a combination of one of the definitions above. For a bivaraite sequential x sequential (Figure \@ref(fig:expals5)), three sequential palettes are derived: the two marginal ones (in the figure, the top row and the left hand side column) and the diagonal (in the figure from top left to bottom right). For each pair of sequential palettes, an odd numbered diverging palette is constructed, each with the top left color as the middle color. Subsequently the color blind friendliness scores for diverging color palettes (as described above) is computed, and the minimal score is used. A similar approach is used for the other three bivariate color palette types @c4a}.
+The \textbf{bivariate} color palettes are analysed using a combination of one of the definitions above. For a bivaraite sequential x sequential (Figure \@ref(fig:expals5)), three sequential palettes are derived: the two marginal ones (in the figure, the top row and the left hand side column) and the diagonal (in the figure from top left to bottom right). For each pair of sequential palettes, an odd numbered diverging palette is constructed, each with the top left color as the middle color. Subsequently the color blind friendliness scores for diverging color palettes (as described above) is computed, and the minimal score is used. A similar approach is used for the other three bivariate color palette types @c4a.
 
 Figure \@ref(fig:cbfokabe) shows how users can analyse color blind friendliness in \texttt{cols4all}.
 
@@ -541,7 +541,7 @@ To warn for this possible visual illusion, which especially occurs against a dar
 
 #### Naming
 
-Color naming significantly influences our perception and communication of color, impacting how we understand and interpret visual information. The ability to accurately name colors is particularly important in data visualization, where clear communication is essential @reda21. However, color naming is inherently subject to cultural variations @kim19}, with differences observed not only between distinct cultural regions but also among neighboring countries. For instance, while Dutch uses "paars" and "roze" to describe shades of purple and pink, German employs "Violet", "Lila," "Pink", and "Rosa", highlighting the nuances in color terminology even within geographically close regions. This cultural variability poses a challenge for developing universally applicable color naming systems in data visualization.
+Color naming significantly influences our perception and communication of color, impacting how we understand and interpret visual information. The ability to accurately name colors is particularly important in data visualization, where clear communication is essential @reda21. However, color naming is inherently subject to cultural variations @kim19, with differences observed not only between distinct cultural regions but also among neighboring countries. For instance, while Dutch uses "paars" and "roze" to describe shades of purple and pink, German employs "Violet", "Lila," "Pink", and "Rosa", highlighting the nuances in color terminology even within geographically close regions. This cultural variability poses a challenge for developing universally applicable color naming systems in data visualization.
 
 In cols4all we derived a property called nameability that informs users whether palette colors are easy to name.
 
@@ -646,9 +646,9 @@ Although the main focus of this paper is the tool itself rather than the analysi
 
 ### Insights from Palette Analysis
 
-Fairness and color blind friendliness often present conflicting objectives. Many categorical palettes with seven colors that score high on fairness are not classified as color blind friendly. This is shown in the main table after filtering on "Fair" and sorting by "Colorblind friendly" (Figure \@ref(fig:fair_sort_cbf)). The most color blind friendly palette of this selection is \texttt{tol.light} for which the min\_dist score is 7.23, a strong color difference according Table \@ref(tab:deltae), but too low to be labeled as color blind friendly. Reversely, color palettes that are labeled as color blind friendly were not labeled as fair. The fairest palettes \texttt{misc.okabe} and \texttt{tol.muted} scored 56 and 29 on the fairness score, which both fall into the neutral category. A general aesthetic preference for fair palettes was observed. Further research is necessary to investigate whether this preference is subjective or shared across a wider population.
+Fairness and color blind friendliness often present conflicting objectives. Many categorical palettes with seven colors that score high on fairness are not classified as color blind friendly. This is shown in the main table after filtering on "Fair" and sorting by "Colorblind friendly" (Figure \@ref(fig:fairsortcbf)). The most color blind friendly palette of this selection is \texttt{tol.light} for which the min\_dist score is 7.23, a strong color difference according Table \@ref(tab:deltae), but too low to be labeled as color blind friendly. Reversely, color palettes that are labeled as color blind friendly were not labeled as fair. The fairest palettes \texttt{misc.okabe} and \texttt{tol.muted} scored 56 and 29 on the fairness score, which both fall into the neutral category. A general aesthetic preference for fair palettes was observed. Further research is necessary to investigate whether this preference is subjective or shared across a wider population.
 
-```{r fair_sort_cbf, fig.cap = "Fairest categorical palettes, sorted by color blind friendliness"}
+```{r fairsortcbf, fig.cap = "Fairest categorical palettes, sorted by color blind friendliness"}
 #| fig.alt = "Fairest categorical palettes, sorted by color blind friendliness",
 #| out.width = 700,
 #| echo = FALSE
