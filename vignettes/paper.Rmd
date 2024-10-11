@@ -1,10 +1,11 @@
 ---
 title: "Analysing and comparing color palettes with cols4all"
 output: 
-  bookdown::html_vignette2
-math_method: mathml
+  bookdown::html_vignette2:
 pkgdown:
   as_is: true
+template:
+  math-rendering: mathjax
 bibliography: '`r system.file("cols4all.bib", package="cols4all")`'
 csl: "`r system.file('ieee.csl', package = 'cols4all')`"
 vignette: >
