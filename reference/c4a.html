@@ -15,8 +15,11 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/cols4all.html">Get started</a></li>
-<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/paper.html">Analysing and comparing color palettes with cols4all</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -100,7 +103,7 @@
 
 
 <dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
-<dd><p>format of the colors. One of: <code>"hex"</code> character vector of hex color values, <code>"rgb"</code> 3 column matrix of RGB values, <code>"hcl"</code> 3-column matrix of HCL values, or one of the color classes from <code><a href="https://colorspace.R-Forge.R-project.org/reference/color-class.html" class="external-link">colorspace</a></code></p></dd>
+<dd><p>format of the colors. One of: <code>"hex"</code> character vector of hex color values, <code>"rgb"</code> 3 column matrix of RGB values, <code>"hcl"</code> 3-column matrix of HCL values, or one of the color classes from <code><a href="https://rdrr.io/pkg/colorspace/man/color-class.html" class="external-link">colorspace</a></code></p></dd>
 
 
 <dt id="arg-nm-invalid">nm_invalid<a class="anchor" aria-label="anchor" href="#arg-nm-invalid"></a></dt>
