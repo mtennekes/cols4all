@@ -2,10 +2,12 @@
 title: "Analysing and comparing color palettes with cols4all"
 output: 
   bookdown::html_vignette2
+pkgdown:
+  as_is: true
 bibliography: '`r system.file("cols4all.bib", package="cols4all")`'
 csl: "`r system.file('ieee.csl', package = 'cols4all')`"
 vignette: >
-  %\VignetteIndexEntry{cols4all: introduction}
+  %\VignetteIndexEntry{cols4all: analysing and comparing color palettes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
