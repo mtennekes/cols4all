@@ -1,5 +1,5 @@
 ---
-title: "Analysing and comparing color palettes with cols4all"
+title: "cols4all: analysing and comparing color palettes"
 output: 
   bookdown::html_vignette2:
 pkgdown:
