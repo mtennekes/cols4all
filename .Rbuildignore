@@ -26,3 +26,4 @@ build/xkcd.ttf
 ^pkgdown$
 ^\.github$
 man/figures/logo.png
+^vignettes/articles$
