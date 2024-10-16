@@ -473,11 +473,11 @@ knitr::include_graphics("cbf_okabe.jpg")
 Since white and black are frequently used for backgrounds or text, properties are included to assess whether palette colors have sufficient contrast against them.
 
 \begin{equation}
-\mbox{CR\_white}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{white})
+\mbox{CR_white}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{white})
 \end{equation}
 
 \begin{equation}
-\mbox{CR\_black}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{black})
+\mbox{CR_black}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{black})
 \end{equation}
 
 If all colors have sufficient contrast with white, which is 3 according to the WCAG guideline, then $\mbox{CR\_white}(S)\geq 3$ and a white flag will be shown in the overview table (Figure \@ref(fig:teaser). For the contrast ratio with black, a black flag will be shown.
@@ -514,7 +514,7 @@ knitr::include_graphics(c("equi1.jpg", "equi2.jpg"))
 Therefore, we compute the minimal contrast ratio between palette colors:
 
 \begin{equation}
-\mbox{CR\_within}(S) = \min_{i,j \in S}\mbox{CR}(i, j)
+\mbox{CR_within}(S) = \min_{i,j \in S}\mbox{CR}(i, j)
 \end{equation}
 
 When this value is below the default threshold value of 1.2, a spiral symbol is shown in the overview table \@ref(fig:teaser).
@@ -677,9 +677,9 @@ knitr::include_graphics("cols4all_matplotlib_spectral.jpg")
 
 
 
-Several spectral sequential palettes from the series \texttt{scico} @scico, \texttt{matplotlib}@matplotlib (viridis), and \texttt{kovesi} @kovesi did succeed in this quest. Moreover, they scored high on fairness, as can be seen in Figure \@ref(fig:seq_spec). Also the cyclic palettes from \texttt{scico} scored well on color blind friendliness and fairness.
+Several spectral sequential palettes from the series \texttt{scico} @scico, \texttt{matplotlib}@matplotlib (viridis), and \texttt{kovesi} @kovesi did succeed in this quest. Moreover, they scored high on fairness, as can be seen in Figure \@ref(fig:seqspec). Also the cyclic palettes from \texttt{scico} scored well on color blind friendliness and fairness.
 
-```{r seq_spec, fig.cap = "Spectral sequential palettes that scores well in general, shown in continuous format"}
+```{r seqspec, fig.cap = "Spectral sequential palettes that scores well in general, shown in continuous format"}
 #| fig.alt = "Spectral sequential palettes that scores well in general, shown in continuous format",
 #| out.width = 700,
 #| echo = FALSE
@@ -767,7 +767,7 @@ knitr::include_graphics("area7d.jpg")
 
 ```{r line7, fig.cap = "line7: a palette for point and line charts"}
 #| fig.alt = "line7: a palette for point and line charts",
-#| out.width = 700,
+#| out.width = 350,
 #| echo = FALSE
 
 knitr::include_graphics(c("line7_wt.jpg", "line7_bk.jpg"))

@@ -839,6 +839,8 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 			n = values$n
 			if (length(pals)) {
 				tab_vals$pals = pals
+				tab_vals$pals_byname = sort(pals)
+
 				tab_vals$n = n
 				if (!length(tab_vals$pal_name) || !(tab_vals$pal_name %in% pals)) {
 					tab_vals$pal_name = pals[1]
@@ -887,12 +889,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 		shiny::observe({
 			if (length(tab_vals$pal)) {
-				shiny::updateSelectizeInput(session, "cbfPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
-				shiny::updateSelectizeInput(session, "CLPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
-				shiny::updateSelectizeInput(session, "namePal", choices = tab_vals$pals, selected = tab_vals$pal_name)
-				shiny::updateSelectizeInput(session, "contrastPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
-				shiny::updateSelectizeInput(session, "floatPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
-				shiny::updateSelectizeInput(session, "APPPal", choices = tab_vals$pals, selected = tab_vals$pal_name)
+				shiny::updateSelectizeInput(session, "cbfPal", choices = tab_vals$pals_byname, selected = tab_vals$pal_name)
+				shiny::updateSelectizeInput(session, "CLPal", choices = tab_vals$pals_byname, selected = tab_vals$pal_name)
+				shiny::updateSelectizeInput(session, "namePal", choices = tab_vals$pals_byname, selected = tab_vals$pal_name)
+				shiny::updateSelectizeInput(session, "contrastPal", choices = tab_vals$pals_byname, selected = tab_vals$pal_name)
+				shiny::updateSelectizeInput(session, "floatPal", choices = tab_vals$pals_byname, selected = tab_vals$pal_name)
+				shiny::updateSelectizeInput(session, "APPPal", choices = tab_vals$pals_byname, selected = tab_vals$pal_name)
 				shinyjs::enable("cbfPal")
 				shinyjs::enable("CLPal")
 				shinyjs::enable("namePal")
@@ -976,12 +978,12 @@ c4a_gui = function(type = "cat", n = NA, series = "all") {
 
 				tab_vals$type = x$type
 			}
-			if (pal_nr != 1) shiny::updateSelectizeInput(session, "cbfPal", choices = tab_vals$pals, selected = pal)
-			if (pal_nr != 2) shiny::updateSelectizeInput(session, "CLPal", choices = tab_vals$pals, selected = pal)
-			if (pal_nr != 3) shiny::updateSelectizeInput(session, "namePal", choices = tab_vals$pals, selected = pal)
-			if (pal_nr != 4) shiny::updateSelectizeInput(session, "contrastPal", choices = tab_vals$pals, selected = pal)
-			if (pal_nr != 5) shiny::updateSelectizeInput(session, "floatPal", choices = tab_vals$pals, selected = pal)
-			if (pal_nr != 6) shiny::updateSelectizeInput(session, "APPPal", choices = tab_vals$pals, selected = pal)
+			if (pal_nr != 1) shiny::updateSelectizeInput(session, "cbfPal", choices = tab_vals$pals_byname, selected = pal)
+			if (pal_nr != 2) shiny::updateSelectizeInput(session, "CLPal", choices = tab_vals$pals_byname, selected = pal)
+			if (pal_nr != 3) shiny::updateSelectizeInput(session, "namePal", choices = tab_vals$pals_byname, selected = pal)
+			if (pal_nr != 4) shiny::updateSelectizeInput(session, "contrastPal", choices = tab_vals$pals_byname, selected = pal)
+			if (pal_nr != 5) shiny::updateSelectizeInput(session, "floatPal", choices = tab_vals$pals_byname, selected = pal)
+			if (pal_nr != 6) shiny::updateSelectizeInput(session, "APPPal", choices = tab_vals$pals_byname, selected = pal)
 
 		}
 
