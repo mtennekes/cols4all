@@ -43,8 +43,6 @@ install.packages("remotes")
 remotes::install_github("mtennekes/cols4all", dependencies = TRUE)
 ```
 
-This development version will be on CRAN soon (October 2024)
-
 ## Getting started
 
 Load the package:
@@ -59,7 +57,7 @@ The main tool is a dashboard, which is started with:
 c4a_gui()
 ```
 
-[<img src="vignettes/articles/cols4all2.jpg" width="900"/>](vignettes/articles/cols4all2.jpg)
+[<img src="articles/cols4all2.jpg" width="900"/>](articles/cols4all2.jpg)
 
 What palettes are available? That is, by default; other palettes can be
 added!
@@ -113,7 +111,7 @@ When we are looking for a fair categorical palette of seven colors that
 is as color blind friendly as possible, then filter on “Fair”, and sort
 by “Colorblind-friendly”:
 
-[<img src="vignettes/articles/cols4all_fair_sort_cbf.jpg" width="900"/>](vignettes/articles/cols4all_fair_sort_cbf.jpg)
+[<img src="articles/cols4all_fair_sort_cbf.jpg" width="900"/>](articles/cols4all_fair_sort_cbf.jpg)
 
 This inspired us to develop our own palettes: see these `cols4all`
 palettes below.
@@ -124,7 +122,7 @@ Say we need a diverging palette that is color blind friendly, and what
 to choose one by eye. Then filter by “Colorblind-friendly” and sort by
 “Hue Middle L” (the hue of the left wing):
 
-[<img src="vignettes/articles/cols4all_div.jpg" width="900"/>](vignettes/articles/cols4all_div.jpg)
+[<img src="articles/cols4all_div.jpg" width="900"/>](articles/cols4all_div.jpg)
 
 Reverse sorting is also applied.
 
@@ -133,30 +131,30 @@ Reverse sorting is also applied.
 We applied a basic heuristic to explore palettes that score well on a
 mix of the properties named above
 
-[<img src="vignettes/articles/c4a_pals.jpg" width="900"/>](vignettes/articles/c4a_pals.jpg)
+[<img src="articles/c4a_pals.jpg" width="900"/>](articles/c4a_pals.jpg)
 
 `area7`, `area8` and `area9` are fair, contain low pastel colors, and
 are color-blind friendly (up to 7 colors). So ideal for maps and other
 space-filling visualizations! These are used in
 [https://github.com/r-tmap/tmap](%60tmap4%60).
 
-[<img src="vignettes/articles/area7.jpg" width="900"/>](vignettes/articles/area7.jpg)
+[<img src="articles/area7.jpg" width="900"/>](articles/area7.jpg)
 
 `area7d`, `area8d` and `area9d` similar but for dark mode:.
 
-[<img src="vignettes/articles/area7d.jpg" width="900"/>](vignettes/articles/area7d.jpg)
+[<img src="articles/area7d.jpg" width="900"/>](articles/area7d.jpg)
 
 `line7`, `line8` and `line9` are colors with good contrast against both
 black and white, and are also colorblind-friendly to some extent. So
 ideal for line graphs and scatter plots:
 
-[<img src="vignettes/articles/line7_wt.jpg" width="440"/>](vignettes/articles/line7_wt.jpg)
-[<img src="vignettes/articles/line7_bk.jpg" width="440"/>](vignettes/articles/line7_bk.jpg)
+[<img src="articles/line7_wt.jpg" width="440"/>](articles/line7_wt.jpg)
+[<img src="articles/line7_bk.jpg" width="440"/>](articles/line7_bk.jpg)
 
 Finally `friendly7` … `friendly13` are colorblind-friendly palettes
 (disregarding the other properties):
 
-[<img src="vignettes/articles/friendly13.jpg" width="900"/>](vignettes/articles/friendly13.jpg)
+[<img src="articles/friendly13.jpg" width="900"/>](articles/friendly13.jpg)
 
 ## `ggplot2` integration
 
