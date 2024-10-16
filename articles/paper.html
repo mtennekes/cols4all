@@ -606,10 +606,10 @@ Figure 12: Color blind friendliness analysis plots for the palette misc.okabe
 </h4>
 <p>Since white and black are frequently used for backgrounds or text, properties are included to assess whether palette colors have sufficient contrast against them.</p>
 <p><span class="math display">\[\begin{equation}
-\mbox{CR\_white}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{white})
+\mbox{CR_white}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{white})
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
-\mbox{CR\_black}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{black})
+\mbox{CR_black}(S) = \min_{i \in S}\mbox{CR}(i, \mbox{black})
 \end{equation}\]</span></p>
 <p>If all colors have sufficient contrast with white, which is 3 according to the WCAG guideline, then <span class="math inline">\(\mbox{CR\_white}(S)\geq 3\)</span> and a white flag will be shown in the overview table (Figure <a href="#fig:teaser">1</a>. For the contrast ratio with black, a black flag will be shown.</p>
 <p>Figure <a href="#fig:contrast">13</a> shows a bar chart of the contrast ratio values of the palette~ against white. The horizontal lines correspond to the WCAG threshold values; in this example, only yellow does not meet the criterion of 3.</p>
@@ -635,7 +635,7 @@ Figure 15: Equiliminant colors from the palette hcl.set3
 </div>
 <p>Therefore, we compute the minimal contrast ratio between palette colors:</p>
 <p><span class="math display">\[\begin{equation}
-\mbox{CR\_within}(S) = \min_{i,j \in S}\mbox{CR}(i, j)
+\mbox{CR_within}(S) = \min_{i,j \in S}\mbox{CR}(i, j)
 \end{equation}\]</span></p>
 <p>When this value is below the default threshold value of 1.2, a spiral symbol is shown in the overview table <a href="#fig:teaser">1</a>.</p>
 </div>
@@ -728,19 +728,20 @@ Figure 21: Fairest categorical palettes, sorted by color blind friendliness
 Figure 22: cols4all_matplotlib_spectral
 </p>
 </div>
-<p>Several spectral sequential palettes from the series <span class="citation">[3]</span>, <span class="citation">[4]</span> (viridis), and <span class="citation">[41]</span> did succeed in this quest. Moreover, they scored high on fairness, as can be seen in Figure @ref(fig:seq_spec). Also the cyclic palettes from scored well on color blind friendliness and fairness.</p>
+<p>Several spectral sequential palettes from the series <span class="citation">[3]</span>, <span class="citation">[4]</span> (viridis), and <span class="citation">[41]</span> did succeed in this quest. Moreover, they scored high on fairness, as can be seen in Figure <a href="#fig:seqspec">23</a>. Also the cyclic palettes from scored well on color blind friendliness and fairness.</p>
 <div class="figure">
+<span style="display:block;" id="fig:seqspec"></span>
 <img src="cols4all_seq_spectral.jpg" alt="Spectral sequential palettes that scores well in general, shown in continuous format" width="700"><p class="caption">
-(#fig:seq_spec)Spectral sequential palettes that scores well in general, shown in continuous format
+Figure 23: Spectral sequential palettes that scores well in general, shown in continuous format
 </p>
 </div>
 <div class="figure">
 <span style="display:block;" id="fig:div"></span>
 <img src="cols4all_div.jpg" alt="Color blind friendly diverging palettes" width="700"><p class="caption">
-Figure 23: Color blind friendly diverging palettes
+Figure 24: Color blind friendly diverging palettes
 </p>
 </div>
-<p>Diverging palettes score well on color blind friendliness when both wings have a distinct hue (yin yang symbol). More specifically, almost exclusively the combinations red/orange/brown with blue, and purple with green scored well (Figure <a href="#fig:div">23</a>). The former combination has the drawback that red and orange are often more saturated, leading to a lower fairness score than the latter combination.</p>
+<p>Diverging palettes score well on color blind friendliness when both wings have a distinct hue (yin yang symbol). More specifically, almost exclusively the combinations red/orange/brown with blue, and purple with green scored well (Figure <a href="#fig:div">24</a>). The former combination has the drawback that red and orange are often more saturated, leading to a lower fairness score than the latter combination.</p>
 <p>Color blind friendliness of bivariate palettes is even more challenging to achieve, because not only the two (or three) marginal palettes on which they are based need to be color blind friendly, also the bivariate color combinations. Because the properties for bivariate palettes are still in development, the labels for color blind friendliness and fairness have to be taken with a grain of salt. Bivariate palettes that are based on either the orange-blue or purple-green combinations are the least color blind unfriendly and could therefore be used, albeit with caution. Bivariate palettes of the subtype sequantial x categorical with 3 or more columns (categories) are almost by definition not color blind friendly, because color blind people can only perceive combinations of at most two hues (Figure <a href="#fig:cbfokabe">12</a>). The fact they can observe three or more different hues in categorical palettes is not because of the hue, but due to the variance in chroma and luminance.</p>
 </div>
 <div class="section level3">
@@ -748,43 +749,43 @@ Figure 23: Color blind friendly diverging palettes
 </h3>
 <p>We used the development functions included in the R package to find categorical palettes that are color blind friendly, fair, and with sufficient contrast with white and/or black.</p>
 <p>More specifically, we aimed for three use cases:</p>
-<p>We designed the following preliminary set of color palettes, of which the first seven colors are shown in Figure <a href="#fig:c4a">24</a>.</p>
+<p>We designed the following preliminary set of color palettes, of which the first seven colors are shown in Figure <a href="#fig:c4a">25</a>.</p>
 <p>.</p>
 <p>The used approach to find those palettes was the following:</p>
 <div class="figure">
 <span style="display:block;" id="fig:c4a"></span>
 <img src="c4a_pals.jpg" alt="New preliminary set of cols4all palettes" width="700"><p class="caption">
-Figure 24: New preliminary set of cols4all palettes
+Figure 25: New preliminary set of cols4all palettes
 </p>
 </div>
 <div class="figure">
 <span style="display:block;" id="fig:area7"></span>
 <img src="area7.jpg" alt="area7: a palette for space-filling visualisations" width="700"><p class="caption">
-Figure 25: area7: a palette for space-filling visualisations
+Figure 26: area7: a palette for space-filling visualisations
 </p>
 </div>
 <div class="figure">
 <span style="display:block;" id="fig:area7d"></span>
 <img src="area7d.jpg" alt="area7d: a palette for space-filling visualisations with dark background" width="700"><p class="caption">
-Figure 26: area7d: a palette for space-filling visualisations with dark background
+Figure 27: area7d: a palette for space-filling visualisations with dark background
 </p>
 </div>
 <div class="figure">
 <span style="display:block;" id="fig:line7-1"></span>
-<img src="line7_wt.jpg" alt="line7: a palette for point and line charts" width="700"><p class="caption">
-Figure 27: line7: a palette for point and line charts
+<img src="line7_wt.jpg" alt="line7: a palette for point and line charts" width="350"><p class="caption">
+Figure 28: line7: a palette for point and line charts
 </p>
 </div>
 <div class="figure">
 <span style="display:block;" id="fig:line7-2"></span>
-<img src="line7_bk.jpg" alt="line7: a palette for point and line charts" width="700"><p class="caption">
-Figure 28: line7: a palette for point and line charts
+<img src="line7_bk.jpg" alt="line7: a palette for point and line charts" width="350"><p class="caption">
+Figure 29: line7: a palette for point and line charts
 </p>
 </div>
 <div class="figure">
 <span style="display:block;" id="fig:friendly"></span>
 <img src="friendly13.jpg" alt="friendly: a palette optimized for color blind friendliness" width="700"><p class="caption">
-Figure 29: friendly: a palette optimized for color blind friendliness
+Figure 30: friendly: a palette optimized for color blind friendliness
 </p>
 </div>
 </div>
