@@ -15,8 +15,8 @@ checks](https://cranchecks.info/badges/worst/cols4all)](https://cran.r-project.o
 all” refers to our mission that colors should be usable for not just
 people with normal color vision, but also for people with color vision
 deficiency. Currently, this package contains palettes from several
-popular and lesser known color palette series. Own palettes series can
-be added as well.
+popular and lesser known color palette series. Users can also add their
+own palette series.
 
 Color palettes are well organized and made consistent with each other.
 Moreover, they are scored on several aspects: color-blind-friendliness,
@@ -59,7 +59,7 @@ The main tool is a dashboard, which is started with:
 c4a_gui()
 ```
 
-[<img src="vignettes/cols4all2.jpg" width="900"/>](vignettes/cols4all2.jpg)
+[<img src="vignettes/articles/cols4all2.jpg" width="900"/>](vignettes/articles/cols4all2.jpg)
 
 What palettes are available? That is, by default; other palettes can be
 added!
@@ -113,50 +113,50 @@ When we are looking for a fair categorical palette of seven colors that
 is as color blind friendly as possible, then filter on “Fair”, and sort
 by “Colorblind-friendly”:
 
-[<img src="vignettes/cols4all_fair_sort_cbf.jpg" width="900"/>](vignettes/cols4all_fair_sort_cbf.jpg)
+[<img src="vignettes/articles/cols4all_fair_sort_cbf.jpg" width="900"/>](vignettes/articles/cols4all_fair_sort_cbf.jpg)
 
-This gave us inspiration to develop own palettes: see these `cols4all`
+This inspired us to develop our own palettes: see these `cols4all`
 palettes below.
 
 ### Example 2
 
 Say we need a diverging palette that is color blind friendly, and what
 to choose one by eye. Then filter by “Colorblind-friendly” and sort by
-“Huddle Middle L” (the hue of the left wing):
+“Hue Middle L” (the hue of the left wing):
 
-[<img src="vignettes/cols4all_div.jpg" width="900"/>](vignettes/cols4all_div.jpg)
+[<img src="vignettes/articles/cols4all_div.jpg" width="900"/>](vignettes/articles/cols4all_div.jpg)
 
 Reverse sorting is also applied.
 
 ## Preliminary set of new `cols4all` palettes
 
-We applied a basic heuristics to explore palettes that score well on a
+We applied a basic heuristic to explore palettes that score well on a
 mix of the properties named above
 
-[<img src="vignettes/c4a_pals.jpg" width="900"/>](vignettes/c4a_pals.jpg)
+[<img src="vignettes/articles/c4a_pals.jpg" width="900"/>](vignettes/articles/c4a_pals.jpg)
 
 `area7`, `area8` and `area9` are fair, contain low pastel colors, and
 are color-blind friendly (up to 7 colors). So ideal for maps and other
 space-filling visualizations! These are used in
 [https://github.com/r-tmap/tmap](%60tmap4%60).
 
-[<img src="vignettes/area7.jpg" width="900"/>](vignettes/area7.jpg)
+[<img src="vignettes/articles/area7.jpg" width="900"/>](vignettes/articles/area7.jpg)
 
 `area7d`, `area8d` and `area9d` similar but for dark mode:.
 
-[<img src="vignettes/area7d.jpg" width="900"/>](vignettes/area7d.jpg)
+[<img src="vignettes/articles/area7d.jpg" width="900"/>](vignettes/articles/area7d.jpg)
 
 `line7`, `line8` and `line9` are colors with good contrast against both
 black and white, and are also colorblind-friendly to some extent. So
 ideal for line graphs and scatter plots:
 
-[<img src="vignettes/line7_wt.jpg" width="440"/>](vignettes/line7_wt.jpg)
-[<img src="vignettes/line7_bk.jpg" width="440"/>](vignettes/line7_bk.jpg)
+[<img src="vignettes/articles/line7_wt.jpg" width="440"/>](vignettes/articles/line7_wt.jpg)
+[<img src="vignettes/articles/line7_bk.jpg" width="440"/>](vignettes/articles/line7_bk.jpg)
 
 Finally `friendly7` … `friendly13` are colorblind-friendly palettes
 (disregarding the other properties):
 
-[<img src="vignettes/friendly13.jpg" width="900"/>](vignettes/friendly13.jpg)
+[<img src="vignettes/articles/friendly13.jpg" width="900"/>](vignettes/articles/friendly13.jpg)
 
 ## `ggplot2` integration
 
@@ -223,7 +223,7 @@ ggplot2
 - `scale_<aesthetic>_<mapping>_c4a_<type>`
   e.g. `scale_color_continuous_c4a_div` Add scale to ggplot2.
 
-## Other R funtions
+## Other R functions
 
 What palettes are available, e.g diverging from the hcl series?
 
@@ -264,10 +264,10 @@ package to analyse colors. For this purpose and specifically for color
 blind friendliness checks, we also use
 [**colorblindcheck**](https://github.com/Nowosad/colorblindcheck).
 
-There are a few other pacakges with a large collection of color
+There are a few other packages with a large collection of color
 palettes, in particular [**pals**](https://kwstat.github.io/pals/) and
 [**paletteer**](https://github.com/EmilHvitfeldt/paletteer). There are a
-few features that distinguishes **cols4all** from those packages:
+few features that distinguish **cols4all** from those packages:
 
 - Color palettes are characterized and analysed. Properties such as
   color blindness, fairness (whether colors stand out about equally),
