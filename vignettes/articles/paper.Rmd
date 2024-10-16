@@ -8,10 +8,6 @@ template:
   math-rendering: mathjax
 bibliography: '`r system.file("cols4all.bib", package="cols4all")`'
 csl: "`r system.file('ieee.csl', package = 'cols4all')`"
-vignette: >
-  %\VignetteIndexEntry{cols4all: analysing and comparing color palettes}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
