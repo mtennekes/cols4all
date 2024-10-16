@@ -67,7 +67,7 @@
 </div>
 <!-- badges: start --->
 
-<p><strong>cols4all</strong> is an R package for selecting color palettes. “Color for all” refers to our mission that colors should be usable for not just people with normal color vision, but also for people with color vision deficiency. Currently, this package contains palettes from several popular and lesser known color palette series. Own palettes series can be added as well.</p>
+<p><strong>cols4all</strong> is an R package for selecting color palettes. “Color for all” refers to our mission that colors should be usable for not just people with normal color vision, but also for people with color vision deficiency. Currently, this package contains palettes from several popular and lesser known color palette series. Users can also add their own palette series.</p>
 <p>Color palettes are well organized and made consistent with each other. Moreover, they are scored on several aspects: color-blind-friendliness, the presence of intense colors (which should be avoided), the overall aesthetic harmony, and how many different hues are used. Finally, for each color palette a color for missing values is assigned, which is especially important for spatial data visualization. Currently we support several types: <em>categorical</em> (qualitative) palettes, <em>sequential</em> palettes, <em>diverging</em> palettes, <em>cycling</em> palettes and <em>bivariate</em> palettes (divided into four subtypes).</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -90,7 +90,7 @@
 <p>The main tool is a dashboard, which is started with:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_gui.html">c4a_gui</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><a href="vignettes/cols4all2.jpg"><img src="articles/cols4all2.jpg" width="900"></a></p>
+<p><a href="vignettes/articles/cols4all2.jpg"><img src="articles/articles/cols4all2.jpg" width="900"></a></p>
 <p>What palettes are available? That is, by default; other palettes can be added!</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/c4a_palettes.html">c4a_series</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -131,30 +131,30 @@
 <h3 id="example-1">Example 1<a class="anchor" aria-label="anchor" href="#example-1"></a>
 </h3>
 <p>When we are looking for a fair categorical palette of seven colors that is as color blind friendly as possible, then filter on “Fair”, and sort by “Colorblind-friendly”:</p>
-<p><a href="vignettes/cols4all_fair_sort_cbf.jpg"><img src="articles/cols4all_fair_sort_cbf.jpg" width="900"></a></p>
-<p>This gave us inspiration to develop own palettes: see these <code>cols4all</code> palettes below.</p>
+<p><a href="vignettes/articles/cols4all_fair_sort_cbf.jpg"><img src="articles/articles/cols4all_fair_sort_cbf.jpg" width="900"></a></p>
+<p>This inspired us to develop our own palettes: see these <code>cols4all</code> palettes below.</p>
 </div>
 <div class="section level3">
 <h3 id="example-2">Example 2<a class="anchor" aria-label="anchor" href="#example-2"></a>
 </h3>
-<p>Say we need a diverging palette that is color blind friendly, and what to choose one by eye. Then filter by “Colorblind-friendly” and sort by “Huddle Middle L” (the hue of the left wing):</p>
-<p><a href="vignettes/cols4all_div.jpg"><img src="articles/cols4all_div.jpg" width="900"></a></p>
+<p>Say we need a diverging palette that is color blind friendly, and what to choose one by eye. Then filter by “Colorblind-friendly” and sort by “Hue Middle L” (the hue of the left wing):</p>
+<p><a href="vignettes/articles/cols4all_div.jpg"><img src="articles/articles/cols4all_div.jpg" width="900"></a></p>
 <p>Reverse sorting is also applied.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="preliminary-set-of-new-cols4all-palettes">Preliminary set of new <code>cols4all</code> palettes<a class="anchor" aria-label="anchor" href="#preliminary-set-of-new-cols4all-palettes"></a>
 </h2>
-<p>We applied a basic heuristics to explore palettes that score well on a mix of the properties named above</p>
-<p><a href="vignettes/c4a_pals.jpg"><img src="articles/c4a_pals.jpg" width="900"></a></p>
+<p>We applied a basic heuristic to explore palettes that score well on a mix of the properties named above</p>
+<p><a href="vignettes/articles/c4a_pals.jpg"><img src="articles/articles/c4a_pals.jpg" width="900"></a></p>
 <p><code>area7</code>, <code>area8</code> and <code>area9</code> are fair, contain low pastel colors, and are color-blind friendly (up to 7 colors). So ideal for maps and other space-filling visualizations! These are used in <a href="%60tmap4%60">https://github.com/r-tmap/tmap</a>.</p>
-<p><a href="vignettes/area7.jpg"><img src="articles/area7.jpg" width="900"></a></p>
+<p><a href="vignettes/articles/area7.jpg"><img src="articles/articles/area7.jpg" width="900"></a></p>
 <p><code>area7d</code>, <code>area8d</code> and <code>area9d</code> similar but for dark mode:.</p>
-<p><a href="vignettes/area7d.jpg"><img src="articles/area7d.jpg" width="900"></a></p>
+<p><a href="vignettes/articles/area7d.jpg"><img src="articles/articles/area7d.jpg" width="900"></a></p>
 <p><code>line7</code>, <code>line8</code> and <code>line9</code> are colors with good contrast against both black and white, and are also colorblind-friendly to some extent. So ideal for line graphs and scatter plots:</p>
-<p><a href="vignettes/line7_wt.jpg"><img src="articles/line7_wt.jpg" width="440"></a> <a href="vignettes/line7_bk.jpg"><img src="articles/line7_bk.jpg" width="440"></a></p>
+<p><a href="vignettes/articles/line7_wt.jpg"><img src="articles/articles/line7_wt.jpg" width="440"></a> <a href="vignettes/articles/line7_bk.jpg"><img src="articles/articles/line7_bk.jpg" width="440"></a></p>
 <p>Finally <code>friendly7</code> … <code>friendly13</code> are colorblind-friendly palettes (disregarding the other properties):</p>
-<p><a href="vignettes/friendly13.jpg"><img src="articles/friendly13.jpg" width="900"></a></p>
+<p><a href="vignettes/articles/friendly13.jpg"><img src="articles/articles/friendly13.jpg" width="900"></a></p>
 </div>
 <div class="section level2">
 <h2 id="ggplot2-integration">
@@ -234,7 +234,7 @@
 </ul>
 </div>
 <div class="section level2">
-<h2 id="other-r-funtions">Other R funtions<a class="anchor" aria-label="anchor" href="#other-r-funtions"></a>
+<h2 id="other-r-functions">Other R functions<a class="anchor" aria-label="anchor" href="#other-r-functions"></a>
 </h2>
 <p>What palettes are available, e.g diverging from the hcl series?</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -262,7 +262,7 @@
 <h2 id="related-r-packages">Related R packages<a class="anchor" aria-label="anchor" href="#related-r-packages"></a>
 </h2>
 <p>The foundation of this package is another R package: <a href="https://colorspace.r-forge.r-project.org/" class="external-link"><strong>colorspace</strong></a>. We use this package to analyse colors. For this purpose and specifically for color blind friendliness checks, we also use <a href="https://github.com/Nowosad/colorblindcheck" class="external-link"><strong>colorblindcheck</strong></a>.</p>
-<p>There are a few other pacakges with a large collection of color palettes, in particular <a href="https://kwstat.github.io/pals/" class="external-link"><strong>pals</strong></a> and <a href="https://github.com/EmilHvitfeldt/paletteer" class="external-link"><strong>paletteer</strong></a>. There are a few features that distinguishes <strong>cols4all</strong> from those packages:</p>
+<p>There are a few other packages with a large collection of color palettes, in particular <a href="https://kwstat.github.io/pals/" class="external-link"><strong>pals</strong></a> and <a href="https://github.com/EmilHvitfeldt/paletteer" class="external-link"><strong>paletteer</strong></a>. There are a few features that distinguish <strong>cols4all</strong> from those packages:</p>
 <ul>
 <li><p>Color palettes are characterized and analysed. Properties such as color blindness, fairness (whether colors stand out about equally), and contrast are determined for each palette.</p></li>
 <li><p>Bivariate color palettes are available.</p></li>
