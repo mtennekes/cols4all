@@ -14,5 +14,5 @@
 ^docs$
 ^pkgdown$
 ^\.github$
-man/figures/logo.png
+^man/figures$
 ^vignettes/articles$

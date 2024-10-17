@@ -85,7 +85,7 @@ The main tool is a dashboard, which is started with:
 c4a_gui()
 ```
 
-[<img src="articles/cols4all2.jpg" width="900"/>](articles/cols4all2.jpg)
+[<img src="man/figures/cols4all2.jpg" width="900"/>](man/figures/cols4all2.jpg)
 
 
 What palettes are available? That is, by default; other palettes can be added!
@@ -113,7 +113,7 @@ Find a trade-off you like among the following properties (the columns in the mai
 
 When we are looking for a fair categorical palette of seven colors that is as color blind friendly as possible, then filter on "Fair", and sort by "Colorblind-friendly":
 
-[<img src="articles/cols4all_fair_sort_cbf.jpg" width="900"/>](articles/cols4all_fair_sort_cbf.jpg)
+[<img src="man/figures/cols4all_fair_sort_cbf.jpg" width="900"/>](man/figures/cols4all_fair_sort_cbf.jpg)
 
 
 This inspired us to develop our own palettes: see these `cols4all` palettes below.
@@ -122,7 +122,7 @@ This inspired us to develop our own palettes: see these `cols4all` palettes belo
 
 Say we need a diverging palette that is color blind friendly, and what to choose one by eye. Then filter by "Colorblind-friendly" and sort by "Hue Middle L" (the hue of the left wing):
 
-[<img src="articles/cols4all_div.jpg" width="900"/>](articles/cols4all_div.jpg)
+[<img src="man/figures/cols4all_div.jpg" width="900"/>](man/figures/cols4all_div.jpg)
 
 Reverse sorting is also applied.
 
@@ -130,25 +130,25 @@ Reverse sorting is also applied.
 
 We applied a basic heuristic to explore palettes that score well on a mix of the properties named above
 
-[<img src="articles/c4a_pals.jpg" width="900"/>](articles/c4a_pals.jpg)
+[<img src="man/figures/c4a_pals.jpg" width="900"/>](man/figures/c4a_pals.jpg)
 
-`area7`, `area8` and `area9` are fair, contain low pastel colors, and are color-blind friendly (up to 7 colors). So ideal for maps and other space-filling visualizations! These are used in [https://github.com/r-tmap/tmap](`tmap4`).
+`area7`, `area8` and `area9` are fair, contain low pastel colors, and are color-blind friendly (up to 7 colors). So ideal for maps and other space-filling visualizations! These are used in [`tmap4`](https://github.com/r-tmap/tmap).
 
-[<img src="articles/area7.jpg" width="900"/>](articles/area7.jpg)
+[<img src="man/figures/area7.jpg" width="900"/>](man/figures/area7.jpg)
 
 `area7d`, `area8d` and `area9d` similar but for dark mode:.
 
-[<img src="articles/area7d.jpg" width="900"/>](articles/area7d.jpg)
+[<img src="man/figures/area7d.jpg" width="900"/>](man/figures/area7d.jpg)
 
 
 `line7`, `line8` and `line9` are colors with good contrast against both black and white, and are also colorblind-friendly to some extent. So ideal for line graphs and scatter plots:
 
-[<img src="articles/line7_wt.jpg" width="440"/>](articles/line7_wt.jpg)
-[<img src="articles/line7_bk.jpg" width="440"/>](articles/line7_bk.jpg)
+[<img src="man/figures/line7_wt.jpg" width="440"/>](man/figures/line7_wt.jpg)
+[<img src="man/figures/line7_bk.jpg" width="440"/>](man/figures/line7_bk.jpg)
 
 Finally `friendly7` ... `friendly13` are colorblind-friendly palettes (disregarding the other properties):
 
-[<img src="articles/friendly13.jpg" width="900"/>](articles/friendly13.jpg)
+[<img src="man/figures/friendly13.jpg" width="900"/>](man/figures/friendly13.jpg)
 
 
 
