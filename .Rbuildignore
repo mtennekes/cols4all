@@ -3,6 +3,7 @@
 ^README\.Rmd$
 ^README\.md$
 ^sandbox$
+^build$
 ^examples$
 ^local$
 ^doc$
