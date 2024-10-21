@@ -2,3 +2,4 @@ url: https://mtennekes.github.io/cols4all/
 template:
   bootstrap: 5
   math-rendering: mathjax
+  assets: pkgdown/assets
