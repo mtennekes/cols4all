@@ -16,4 +16,4 @@
 ^pkgdown$
 ^\.github$
 ^man/figures$
-^vignettes/articles$
+^vignettes$
