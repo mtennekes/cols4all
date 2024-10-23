@@ -625,7 +625,7 @@ knitr::include_graphics("../man/figures/overview_div.jpg")
 
 The other tabs are used for further analysis of the properties, as illustrated above. All figures in this paper are included in these tabs.
 
-The properties fairness, hues, and vividness all use the HCL color space, and are therefore further analysed in the HCL Analysis tab. Furthermore, in this tab an interactive 3D scatter plot (using **plotly} @plotly) provide additional insights in how the palette colors are located in this color space. A screenshot is shown in Figure \@ref(fig:hclspace) where the colors from **carto.safe} are plotted.
+The properties fairness, hues, and vividness all use the HCL color space, and are therefore further analysed in the HCL Analysis tab. Furthermore, in this tab an interactive 3D scatter plot (using **plotly** @plotly) provide additional insights in how the palette colors are located in this color space. A screenshot is shown in Figure \@ref(fig:hclspace) where the colors from **carto.safe** are plotted.
 
 
 ```{r hclspace, fig.cap = "3D scatter plot of carto.safe in the HCL color space"}
@@ -660,7 +660,7 @@ knitr::include_graphics("../man/figures/cols4all_fair_sort_cbf.jpg")
 
 Many spectral sequential and diverging palettes exhibit limitations in terms of color blind friendliness. Designing color blind friendly spectral/rainbow palettes is challenging, as individuals with color vision deficiency struggle to differentiate hues (see the simulated color space for deutans in Figure \@ref(fig:cbfokabe)).
 
-A severe issue that may induce visual bias for color blind people is illustrated with the palette **matplotlib.spectral** (which is similar to **brewer.spectral** in Figure \@ref(fig:spectral). For people with normal color vision, green, the fifth of seven colors, appears to be on the right-hand side wing. However, for deutans and protans, this color is much closer to the colors from the left-hand side wing. This can be explained by analysing the confusion lines (Figure \@ref(fig:spectral) bottom left); color 5 is on the same confusion line as colors 4 and 1, and only 2 lines away from colors 2 and 3, whereas the differences with colors 6 and 7 are 2.5 and 6 confusion lines respectively.
+A severe issue that may induce visual bias for color blind people is illustrated with the palette **matplotlib.spectral** (which is similar to **brewer.spectral**) in Figure \@ref(fig:spectral). For people with normal color vision, green, the fifth of seven colors, appears to be on the right-hand side wing. However, for deutans and protans, this color is much closer to the colors from the left-hand side wing. This can be explained by analysing the confusion lines (Figure \@ref(fig:spectral) bottom left); color 5 is on the same confusion line as colors 4 and 1, and only 2 lines away from colors 2 and 3, whereas the differences with colors 6 and 7 are 2.5 and 6 confusion lines respectively.
 
 
 ```{r spectral, fig.cap = "cols4all_matplotlib_spectral"}
@@ -673,7 +673,7 @@ knitr::include_graphics("../man/figures/cols4all_matplotlib_spectral.jpg")
 
 
 
-Several spectral sequential palettes from the series **scico** @scico, **matplotlib**@matplotlib (viridis), and **kovesi** @kovesi did succeed in this quest. Moreover, they scored high on fairness, as can be seen in Figure \@ref(fig:seqspec). Also the cyclic palettes from **scico** scored well on color blind friendliness and fairness.
+Several spectral sequential palettes from the series **scico** @scico, **matplotlib** @matplotlib (viridis), and **kovesi** @kovesi did succeed in this quest. Moreover, they scored high on fairness, as can be seen in Figure \@ref(fig:seqspec). Also the cyclic palettes from **scico** scored well on color blind friendliness and fairness.
 
 ```{r seqspec, fig.cap = "Spectral sequential palettes that scores well in general, shown in continuous format"}
 #| fig.alt = "Spectral sequential palettes that scores well in general, shown in continuous format",
