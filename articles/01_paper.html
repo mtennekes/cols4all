@@ -696,7 +696,7 @@ Figure 19: Overview table of diverging palettes
 </p>
 </div>
 <p>The other tabs are used for further analysis of the properties, as illustrated above. All figures in this paper are included in these tabs.</p>
-<p>The properties fairness, hues, and vividness all use the HCL color space, and are therefore further analysed in the HCL Analysis tab. Furthermore, in this tab an interactive 3D scatter plot (using <strong>plotly} <span class="citation">[40]</span>) provide additional insights in how the palette colors are located in this color space. A screenshot is shown in Figure <a href="#fig:hclspace">20</a> where the colors from </strong>carto.safe} are plotted.</p>
+<p>The properties fairness, hues, and vividness all use the HCL color space, and are therefore further analysed in the HCL Analysis tab. Furthermore, in this tab an interactive 3D scatter plot (using <strong>plotly</strong> <span class="citation">[40]</span>) provide additional insights in how the palette colors are located in this color space. A screenshot is shown in Figure <a href="#fig:hclspace">20</a> where the colors from <strong>carto.safe</strong> are plotted.</p>
 <div class="figure">
 <span style="display:block;" id="fig:hclspace"></span>
 <img src="../reference/figures/hcl_carto_safe.jpg" alt="3D scatter plot of carto.safe in the HCL color space" width="700"><p class="caption">
@@ -722,14 +722,14 @@ Figure 21: Fairest categorical palettes, sorted by color blind friendliness
 </p>
 </div>
 <p>Many spectral sequential and diverging palettes exhibit limitations in terms of color blind friendliness. Designing color blind friendly spectral/rainbow palettes is challenging, as individuals with color vision deficiency struggle to differentiate hues (see the simulated color space for deutans in Figure <a href="#fig:cbfokabe">12</a>).</p>
-<p>A severe issue that may induce visual bias for color blind people is illustrated with the palette <strong>matplotlib.spectral</strong> (which is similar to <strong>brewer.spectral</strong> in Figure <a href="#fig:spectral">22</a>. For people with normal color vision, green, the fifth of seven colors, appears to be on the right-hand side wing. However, for deutans and protans, this color is much closer to the colors from the left-hand side wing. This can be explained by analysing the confusion lines (Figure <a href="#fig:spectral">22</a> bottom left); color 5 is on the same confusion line as colors 4 and 1, and only 2 lines away from colors 2 and 3, whereas the differences with colors 6 and 7 are 2.5 and 6 confusion lines respectively.</p>
+<p>A severe issue that may induce visual bias for color blind people is illustrated with the palette <strong>matplotlib.spectral</strong> (which is similar to <strong>brewer.spectral</strong>) in Figure <a href="#fig:spectral">22</a>. For people with normal color vision, green, the fifth of seven colors, appears to be on the right-hand side wing. However, for deutans and protans, this color is much closer to the colors from the left-hand side wing. This can be explained by analysing the confusion lines (Figure <a href="#fig:spectral">22</a> bottom left); color 5 is on the same confusion line as colors 4 and 1, and only 2 lines away from colors 2 and 3, whereas the differences with colors 6 and 7 are 2.5 and 6 confusion lines respectively.</p>
 <div class="figure">
 <span style="display:block;" id="fig:spectral"></span>
 <img src="../reference/figures/cols4all_matplotlib_spectral.jpg" alt="cols4all_matplotlib_spectral" width="700"><p class="caption">
 Figure 22: cols4all_matplotlib_spectral
 </p>
 </div>
-<p>Several spectral sequential palettes from the series <strong>scico</strong> <span class="citation">[3]</span>, <strong><a href="mailto:matplotlib**@matplotlib" class="email">matplotlib**@matplotlib</a> (viridis), and </strong>kovesi** <span class="citation">[41]</span> did succeed in this quest. Moreover, they scored high on fairness, as can be seen in Figure <a href="#fig:seqspec">23</a>. Also the cyclic palettes from <strong>scico</strong> scored well on color blind friendliness and fairness.</p>
+<p>Several spectral sequential palettes from the series <strong>scico</strong> <span class="citation">[3]</span>, <strong>matplotlib</strong> <span class="citation">[4]</span> (viridis), and <strong>kovesi</strong> <span class="citation">[41]</span> did succeed in this quest. Moreover, they scored high on fairness, as can be seen in Figure <a href="#fig:seqspec">23</a>. Also the cyclic palettes from <strong>scico</strong> scored well on color blind friendliness and fairness.</p>
 <div class="figure">
 <span style="display:block;" id="fig:seqspec"></span>
 <img src="../reference/figures/cols4all_seq_spectral.jpg" alt="Spectral sequential palettes that scores well in general, shown in continuous format" width="700"><p class="caption">
