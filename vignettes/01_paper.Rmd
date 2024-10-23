@@ -1,5 +1,5 @@
 ---
-title: "cols4all: analysing and comparing color palettes"
+title: "Analysing and comparing color palettes with cols4all"
 output: 
   bookdown::html_vignette2:
 pkgdown:
@@ -60,22 +60,22 @@ Effective data visualization relies heavily on well-chosen color palettes to hig
 
 This challenge is further compounded by the need to consider accessibility for individuals with color vision deficiency, who comprise an estimated 8\% of males and 0.5\% of females globally @birch2012.  Accessibility guidelines, such as WCAG 2.2 @wcag22, recommend minimum contrast ratios between colors to ensure readability. Ensuring that visualizations are interpretable by everyone, regardless of their color vision capabilities, is essential for effective communication.
 
-To address these challenges, we introduce \texttt{cols4all}, an open-source software tool for analyzing and comparing color palettes. Developed as a package for the R programming language @c4a that features an interactive dashboard tool, \texttt{cols4all} provides a comprehensive set of features to evaluate palettes based on various criteria, including color-blind friendliness, contrast, and a novel fairness metric. Fairness evaluates whether all colors in a palette stand out equally. This is particularly important for categorical palettes to prevent visual bias and ensure that no single category dominates the visualization.
+To address these challenges, we introduce **cols4all**, an open-source software tool for analyzing and comparing color palettes. Developed as a package for the R programming language @c4a that features an interactive dashboard tool, **cols4all** provides a comprehensive set of features to evaluate palettes based on various criteria, including color-blind friendliness, contrast, and a novel fairness metric. Fairness evaluates whether all colors in a palette stand out equally. This is particularly important for categorical palettes to prevent visual bias and ensure that no single category dominates the visualization.
 
-Recognizing that these properties can involve trade-offs, \texttt{cols4all} empowers users to make informed decisions based on their specific needs and priorities. The tool's interactive nature allows users to explore and compare palettes, weighing different factors to select the most suitable option for their visualization task.
+Recognizing that these properties can involve trade-offs, **cols4all** empowers users to make informed decisions based on their specific needs and priorities. The tool's interactive nature allows users to explore and compare palettes, weighing different factors to select the most suitable option for their visualization task.
 
-With \texttt{cols4all}, we aim to engage the information visualization community in color perception research and promote the development of more accessible and effective visualizations. By providing this open-source tool, we hope to reach researchers, designers, and practitioners alike, encouraging the sharing of knowledge and best practices in color palette selection and design.
+With **cols4all**, we aim to engage the information visualization community in color perception research and promote the development of more accessible and effective visualizations. By providing this open-source tool, we hope to reach researchers, designers, and practitioners alike, encouraging the sharing of knowledge and best practices in color palette selection and design.
 
 
 ## Related literature
 
 Visualization software and tools increasingly incorporate features for color palette selection, offering predefined palettes and interactive previews.  ColorBrewer @brewer provides a limited but highly popular set of palettes and includes a colorblind-safe checkbox to aid in palette selection. Commercial platforms like Tableau @tableau and Microsoft Power BI @powerbi offer more extensive built-in palettes. Platforms like Adobe Color @adobe and Color Hunt @colorhunt support community-driven exploration and creation.  However, these tools primarily focus on quick exploration rather than in-depth analysis and comparison of palette properties.
 
-Dedicated tools address this gap by providing more comprehensive analytical capabilities. CCC-Tool @CCCtool and Colorgorical @Colorgorical allow for palette generation based on user preferences, catering to experienced users. In contrast, \texttt{cols4all} prioritizes analysis and comparison over generation, empowering users to make informed choices based on quantitative and qualitative insights derived from objective metrics and visualizations.
+Dedicated tools address this gap by providing more comprehensive analytical capabilities. CCC-Tool @CCCtool and Colorgorical @Colorgorical allow for palette generation based on user preferences, catering to experienced users. In contrast, **cols4all** prioritizes analysis and comparison over generation, empowering users to make informed choices based on quantitative and qualitative insights derived from objective metrics and visualizations.
 
-Recent research has explored advanced techniques for color palette recommendation. Deep learning approaches show promise for automated palette selection @yuan22, but often lack the transparency and interpretability of \texttt{cols4all}'s user-centric approach. Similarly, McNutt et al. @mcnutt2024 introduced a visualization linter for automated color palette checking, which is valuable for identifying potential issues but differs from \texttt{cols4all}'s focus on interactive exploration and comparison.
+Recent research has explored advanced techniques for color palette recommendation. Deep learning approaches show promise for automated palette selection @yuan22, but often lack the transparency and interpretability of **cols4all**'s user-centric approach. Similarly, McNutt et al. @mcnutt2024 introduced a visualization linter for automated color palette checking, which is valuable for identifying potential issues but differs from **cols4all**'s focus on interactive exploration and comparison.
 
-Furthermore, \texttt{cols4all} deliberately avoids linking colors or palettes to specific emotions, recognizing the cultural and temporal variability of color associations @elliot2014, schloss2011. By focusing on objective metrics rather than subjective interpretations, \texttt{cols4all} fosters informed decision-making without relying on potentially culturally biased associations.
+Furthermore, **cols4all** deliberately avoids linking colors or palettes to specific emotions, recognizing the cultural and temporal variability of color associations @elliot2014, schloss2011. By focusing on objective metrics rather than subjective interpretations, **cols4all** fosters informed decision-making without relying on potentially culturally biased associations.
 
 
 
@@ -88,9 +88,9 @@ Furthermore, \texttt{cols4all} deliberately avoids linking colors or palettes to
 
 Humans typically perceive color through three types of cone cells. These cones measure the color spectrum in three different areas: short, medium, and long wavelengths. The combination of these three cone types leads to a color percept (a perceived color).
 
-People with color vision deficiency lack (at least) one type of cone. For the three types of color blindness, \textit{deuteranopia}, \textit{protanopia}, and \textit{tritanopia}, the missing cones are those mainly sensitive to medium (green), long (red), and short (blue) wavelengths, respectively. Color perception for these individuals is based on the two remaining cone types. As a result, people with deuteranopia and protanopia have difficulty distinguishing green and red, whereas people with tritanopia can hardly distinguish blue from yellow @neitz90. 
+People with color vision deficiency lack (at least) one type of cone. For the three types of color blindness, *deuteranopia*, *protanopia*, and *tritanopia*, the missing cones are those mainly sensitive to medium (green), long (red), and short (blue) wavelengths, respectively. Color perception for these individuals is based on the two remaining cone types. As a result, people with deuteranopia and protanopia have difficulty distinguishing green and red, whereas people with tritanopia can hardly distinguish blue from yellow @neitz90. 
 
-People can also be partially color blind. However, to avoid excessive complexity in the analysis, we do not take the severity level into account. For brevity, individuals with deuteranopia, protanopia, and tritanopia will be referred to as \textit{deutans}, \textit{protans}, and \textit{tritans}, respectively.
+People can also be partially color blind. However, to avoid excessive complexity in the analysis, we do not take the severity level into account. For brevity, individuals with deuteranopia, protanopia, and tritanopia will be referred to as *deutans*, *protans*, and *tritans*, respectively.
 
 
 ### Contrast ratio
@@ -116,7 +116,7 @@ WCAG 2.2 level AA requires a minimum contrast ratio of 3:1 for informational non
 
 ### HCL color space
 
-This work adopts the Hue-Chroma-Luminance (HCL) color space, a cylindrical transformation of the CIELUV color space. This color space, also used by [@hcl;@colorspace;@ihaka2003], has three dimensions: \textit{hue} ($H$), ranging from 0 to 360 degrees; \textit{chroma} ($C$), ranging from 0 (grayscale) to a maximum that depends on both hue and luminance; and \textit{luminance} ($L$), ranging from 0 (black) to 100 (white).
+This work adopts the Hue-Chroma-Luminance (HCL) color space, a cylindrical transformation of the CIELUV color space. This color space, also used by [@hcl;@colorspace;@ihaka2003], has three dimensions: *hue* ($H$), ranging from 0 to 360 degrees; *chroma* ($C$), ranging from 0 (grayscale) to a maximum that depends on both hue and luminance; and *luminance* ($L$), ranging from 0 (black) to 100 (white).
 
 ### Color distance
 
@@ -140,7 +140,7 @@ To measure color distances as perceived by people with color vision deficiency, 
 
 ## Tool description
 
-We introduce a tool, called \texttt{cols4all}, that can be used to analyse and compare color palettes. It is written as a package for the R programming language @r. 
+We introduce a tool, called **cols4all**, that can be used to analyse and compare color palettes. It is written as a package for the R programming language @r. 
 
 The cols4all package has an on-going development and driven by the active community of statisticians and data scientists that use R. The color palettes can easily be used in any other R package, and has native integration with the popular visualization package ggplot2 @ggplot2. Via the GUI, these palettes can also be copied to the clipboard and used anywhere else.
 
@@ -148,7 +148,7 @@ The tool is intended for data visualization designers to select appropriate colo
 
 ### Organisation of palettes
 
-This work focuses exclusively on \textbf{discrete} color palettes. Continuous color palettes can be loaded and analysed in \texttt{cols4all} as well, but under the hood they are discretized in a sufficient number of classes. Conversely, interpolation (linear or spline) in a color space (RGB or CIELab) can transform any discrete palette into a continuous color ramp.
+This work focuses exclusively on \textbf{discrete} color palettes. Continuous color palettes can be loaded and analysed in **cols4all** as well, but under the hood they are discretized in a sufficient number of classes. Conversely, interpolation (linear or spline) in a color space (RGB or CIELab) can transform any discrete palette into a continuous color ramp.
 
 
 Palettes are organised by functional type. We distinguish the following types:
@@ -229,13 +229,13 @@ knitr::include_graphics("../man/figures/ex_bivg.jpg")
 
 
 
-Examples of each of these palette types are provided in Figures \@ref(fig:expals1) to \@ref(fig:expals8). This list of palette types is not exhaustive; for instance also palettes for tree-structured data have been designed @tennekes14. Because these kind of palette types are special and often one of a kind, they are not (yet) included in \texttt{cols4all}.
+Examples of each of these palette types are provided in Figures \@ref(fig:expals1) to \@ref(fig:expals8). This list of palette types is not exhaustive; for instance also palettes for tree-structured data have been designed @tennekes14. Because these kind of palette types are special and often one of a kind, they are not (yet) included in **cols4all**.
 
 
 
 
 
-Palettes are also arranged by series, by which we mean either the source (e.g. \texttt{brewer} stands for ColorBrewer @brewer) or group of similar palettes (e.g. \texttt{poly} includes categorical palettes with many colors). An overview of the palettes that are included in cols4all is provided in Table \@ref(tab:overview).
+Palettes are also arranged by series, by which we mean either the source (e.g. **brewer} stands for ColorBrewer @brewer) or group of similar palettes (e.g. **poly} includes categorical palettes with many colors). An overview of the palettes that are included in cols4all is provided in Table \@ref(tab:overview).
 
 Table: (\#tab:overview) Overview of the palettes series
 
@@ -260,11 +260,11 @@ Table: (\#tab:overview) Overview of the palettes series
 |wes        |Palettes from Wes Anderson movies                   |  23|   0|   1|   0|    0|    0|    0|    0|
 
 
-Some categorical color palettes have included black or white, e.g. \texttt{misc.okabe} @misc.okabe. Since these colors are typically used for background or annotations only, not just for those palettes but for any categorical palette, we removed black and white from all categorical palettes. However, we took both black and white into account for certain parts of the analysis, for instance regarding contrast ratio.
+Some categorical color palettes have included black or white, e.g. **misc.okabe} @misc.okabe. Since these colors are typically used for background or annotations only, not just for those palettes but for any categorical palette, we removed black and white from all categorical palettes. However, we took both black and white into account for certain parts of the analysis, for instance regarding contrast ratio.
 
 Exploratory data analysis often deals with analysis and visualisation of missing values @vim,song21. Therefore, we assigned a special color for missing values for each palette. The palette series by Paul Tol @tol already contains dedicated colors for missing values. For the other palettes, we use simple heuristics to obtain a suitable color, which is a greyscale color that is distinguishable from the other palette colors not only by people with normal color vision but also by colorblind people.
 
-Users are able to load, analyse, and compare other palettes as well @c4a. The palette names in the tool are formatted in snake case, with the series name put in front separated with a dot. E.g. the Color Blind from Tableau @tableau is called \texttt{tableau.color\_blind}.
+Users are able to load, analyse, and compare other palettes as well @c4a. The palette names in the tool are formatted in snake case, with the series name put in front separated with a dot. E.g. the Color Blind from Tableau @tableau is called **tableau.color\_blind}.
 
 
 ### Properties
@@ -352,7 +352,7 @@ For the \textbf{cyclic} palettes we use exactly the same definition of color bli
 
 The \textbf{bivariate} color palettes are analysed using a combination of one of the definitions above. For a bivaraite sequential x sequential (Figure \@ref(fig:expals5)), three sequential palettes are derived: the two marginal ones (in the figure, the top row and the left hand side column) and the diagonal (in the figure from top left to bottom right). For each pair of sequential palettes, an odd numbered diverging palette is constructed, each with the top left color as the middle color. Subsequently the color blind friendliness scores for diverging color palettes (as described above) is computed, and the minimal score is used. A similar approach is used for the other three bivariate color palette types @c4a.
 
-Figure \@ref(fig:cbfokabe) shows how users can analyse color blind friendliness in \texttt{cols4all}.
+Figure \@ref(fig:cbfokabe) shows how users can analyse color blind friendliness in **cols4all**.
 
 On the top left the CIE xyY space clipped to sRGB gamut is shown with hue lines diverging from the defined white point (CIE standard illuminant D65). The bottom left shows the same plot, but using colors simulated for deutans, with confusion lines @judd43.
 
@@ -478,7 +478,7 @@ Since white and black are frequently used for backgrounds or text, properties ar
 
 If all colors have sufficient contrast with white, which is 3 according to the WCAG guideline, then $\mbox{CR\_white}(S)\geq 3$ and a white flag will be shown in the overview table (Figure \@ref(fig:teaser). For the contrast ratio with black, a black flag will be shown.
 
-Figure \@ref(fig:contrast) shows a bar chart of the contrast ratio values of the palette~\texttt{powerbi.default} against white. The horizontal lines correspond to the WCAG threshold values; in this example, only yellow does not meet the criterion of 3.
+Figure \@ref(fig:contrast) shows a bar chart of the contrast ratio values of the palette **powerbi.default** against white. The horizontal lines correspond to the WCAG threshold values; in this example, only yellow does not meet the criterion of 3.
 
 
 ```{r contrast, fig.cap = "Contrast ratio of powerbi.default against white"}
@@ -494,7 +494,7 @@ knitr::include_graphics("../man/figures/contrast_powerbi_default.jpg")
 
 The contrast ratio between two colors is not only useful to check accessibility, but also to warn for unwanted visual illusions. Two colors are called equiluminant if they have similar luminance values, so resulting in a contrast ratio close to 1.
 
-Several visual illusions could appear at equiluminance, such as that the eye has trouble to separate neighbouring objects, even though they use totally different colors in terms of hue @bach. This is illustrated in the map shown in Figure \@ref(fig:equi)(a) where two colors of the palette \texttt{hcl.set3} are used.
+Several visual illusions could appear at equiluminance, such as that the eye has trouble to separate neighbouring objects, even though they use totally different colors in terms of hue @bach. This is illustrated in the map shown in Figure \@ref(fig:equi)(a) where two colors of the palette **hcl.set3} are used.
 
 
 ```{r equi, fig.cap = "Equiliminant colors from the palette hcl.set3"}
@@ -526,7 +526,7 @@ When this value is below the default threshold value of 1.2, a spiral symbol is 
 
 A visual illusion called chromostereopsis occurs where two colors are perceived in different depth planes @brewster1844. This illusion, most prominent with red and blue against a black background, can create a perception of depth or displacement.
 
-Figure \@ref(fig:3dblues) illustrates this illusion with a categorical map of the red and blue colors from \texttt{seaborn.bright}.
+Figure \@ref(fig:3dblues) illustrates this illusion with a categorical map of the red and blue colors from **seaborn.bright}.
 
 ```{r 3dblues, fig.cap = "Chromostereopsis caused by two palette colors from seaborn.bright"}
 #| fig.alt = "Chromostereopsis caused by two palette colors from seaborn.bright",
@@ -554,7 +554,7 @@ Let us denote the common color name set as $Q$. We say that the colors of a pale
 \item Each color name $q \in Q$ is used at most for one palette color. 
 \end{enumerate}
 
-The naming match between the palette colors and the common color names is illustrated in Figure \@ref(fig:name), where the first seven colors from \texttt{tableau.10} are examined. The palette colors are shown as row heads, and the common color names as column heads. For each common color name a large set of small dots is shown to illustrate the variety of colors that are named after this name (more on this later).
+The naming match between the palette colors and the common color names is illustrated in Figure \@ref(fig:name), where the first seven colors from **tableau.10} are examined. The palette colors are shown as row heads, and the common color names as column heads. For each common color name a large set of small dots is shown to illustrate the variety of colors that are named after this name (more on this later).
 
 Each dot represents a match; larger dots indicate stronger matches. When there are multiple dots in one row, it means that multiple names can be given to the corresponding palette color, which violated rule 1. This is the case for the last palette color which is most often named "purple" but also "pink". Multiple dots in one column indicate that a common color name is used more than once, in this case blue. Hence rule 2 is violated.
 
@@ -565,7 +565,7 @@ We used the following method to compute this match and to derive a nameability s
     \item[Obtain annotated colors] We conducted a user experiment of 194 Dutch people with normal vision who were asked to label 64 random colors according choosing from the same set of 11 colors  (which map 1:1 to Dutch color names).
     \item[Model fit] For each of the basic color names and for each dimension in a color space (we used the HCL space) fit the parameters of a suitable distribution function (we used the beta distribution) using the label frequenties of the annotated colors.
     \item[Similarity matrix] Compute a similarity matrix based on the fitted distributions, in which the rows correspond to the palette colors and the columns to the basic color names (as in Figure \@ref(fig:name)).
-    \item[Softmax normalisation] Apply softmax function row wise where its parameters determine how much large the dots are shown compared to each other; a higher power exponent multiplier gives higher weight to the dominant color name, and therefore only draws dots that correspond to those names. In the example: a higher value of this parameter would result in just one dot in the seventh row, namely the one for purple, the most dominant color name. In \texttt{cols4all} this is configurable via a slider called "Clarity level".
+    \item[Softmax normalisation] Apply softmax function row wise where its parameters determine how much large the dots are shown compared to each other; a higher power exponent multiplier gives higher weight to the dominant color name, and therefore only draws dots that correspond to those names. In the example: a higher value of this parameter would result in just one dot in the seventh row, namely the one for purple, the most dominant color name. In **cols4all** this is configurable via a slider called "Clarity level".
 \end{description}
 
 
@@ -603,7 +603,7 @@ In addition to the interactive tool, the package includes functions for programm
 Figures \@ref(fig:teaser),  \@ref(fig:overviewseq), and \@ref(fig:overviewdiv) present screenshots of the main table for categorical, sequential, and diverging palettes, respectively. With the inputs above the table, users are able to select and  filter color palettes. In addition, color blind simulation can be enabled, and color codes in various formats can be shown. For advanced users, the underlying scores can be shown in the table as additional columns. A "dark mode" toggle allows users to switch between light and dark background themes.
 
 
-The columns on the right-hand side of the colors include symbols on which the user can click to obtain either a citation (either plan or in Bibtex format) or the palette colors, either in square brackets (used by JavaScript and Python) or in R format (using the \texttt{c()} function).
+The columns on the right-hand side of the colors include symbols on which the user can click to obtain either a citation (either plan or in Bibtex format) or the palette colors, either in square brackets (used by JavaScript and Python) or in R format (using the **c()} function).
 
 ```{r overviewseq, fig.cap = "Overview table of sequential palettes"}
 #| fig.alt = "Overview table of sequential palettes",
@@ -625,7 +625,7 @@ knitr::include_graphics("../man/figures/overview_div.jpg")
 
 The other tabs are used for further analysis of the properties, as illustrated above. All figures in this paper are included in these tabs.
 
-The properties fairness, hues, and vividness all use the HCL color space, and are therefore further analysed in the HCL Analysis tab. Furthermore, in this tab an interactive 3D scatter plot (using \texttt{plotly} @plotly) provide additional insights in how the palette colors are located in this color space. A screenshot is shown in Figure \@ref(fig:hclspace) where the colors from \texttt{carto.safe} are plotted.
+The properties fairness, hues, and vividness all use the HCL color space, and are therefore further analysed in the HCL Analysis tab. Furthermore, in this tab an interactive 3D scatter plot (using **plotly} @plotly) provide additional insights in how the palette colors are located in this color space. A screenshot is shown in Figure \@ref(fig:hclspace) where the colors from **carto.safe} are plotted.
 
 
 ```{r hclspace, fig.cap = "3D scatter plot of carto.safe in the HCL color space"}
@@ -642,11 +642,11 @@ In the last tap, Application, users can explore palettes with examples of the ba
 
 ## Palette Design: Insights and Strategies
 
-Although the main focus of this paper is the tool itself rather than the analysis and comparison of color palette, we would like to share some insights we obtains when using the tool to choose palettes for everyday visualisation tasks. Next, we challenged ourselves to create own color palettes. Strategies to obtain those \texttt{cols4all} palettes are described later on.
+Although the main focus of this paper is the tool itself rather than the analysis and comparison of color palette, we would like to share some insights we obtains when using the tool to choose palettes for everyday visualisation tasks. Next, we challenged ourselves to create own color palettes. Strategies to obtain those **cols4all** palettes are described later on.
 
 ### Insights from Palette Analysis
 
-Fairness and color blind friendliness often present conflicting objectives. Many categorical palettes with seven colors that score high on fairness are not classified as color blind friendly. This is shown in the main table after filtering on "Fair" and sorting by "Colorblind friendly" (Figure \@ref(fig:fairsortcbf)). The most color blind friendly palette of this selection is \texttt{tol.light} for which the min\_dist score is 7.23, a strong color difference according Table \@ref(tab:deltae), but too low to be labeled as color blind friendly. Reversely, color palettes that are labeled as color blind friendly were not labeled as fair. The fairest palettes \texttt{misc.okabe} and \texttt{tol.muted} scored 56 and 29 on the fairness score, which both fall into the neutral category. A general aesthetic preference for fair palettes was observed. Further research is necessary to investigate whether this preference is subjective or shared across a wider population.
+Fairness and color blind friendliness often present conflicting objectives. Many categorical palettes with seven colors that score high on fairness are not classified as color blind friendly. This is shown in the main table after filtering on "Fair" and sorting by "Colorblind friendly" (Figure \@ref(fig:fairsortcbf)). The most color blind friendly palette of this selection is **tol.light** for which the min\_dist score is 7.23, a strong color difference according Table \@ref(tab:deltae), but too low to be labeled as color blind friendly. Reversely, color palettes that are labeled as color blind friendly were not labeled as fair. The fairest palettes **misc.okabe** and **tol.muted** scored 56 and 29 on the fairness score, which both fall into the neutral category. A general aesthetic preference for fair palettes was observed. Further research is necessary to investigate whether this preference is subjective or shared across a wider population.
 
 ```{r fairsortcbf, fig.cap = "Fairest categorical palettes, sorted by color blind friendliness"}
 #| fig.alt = "Fairest categorical palettes, sorted by color blind friendliness",
@@ -660,7 +660,7 @@ knitr::include_graphics("../man/figures/cols4all_fair_sort_cbf.jpg")
 
 Many spectral sequential and diverging palettes exhibit limitations in terms of color blind friendliness. Designing color blind friendly spectral/rainbow palettes is challenging, as individuals with color vision deficiency struggle to differentiate hues (see the simulated color space for deutans in Figure \@ref(fig:cbfokabe)).
 
-A severe issue that may induce visual bias for color blind people is illustrated with the palette \texttt{matplotlib.spectral} (which is similar to \texttt{brewer.spectral} in Figure \@ref(fig:spectral). For people with normal color vision, green, the fifth of seven colors, appears to be on the right-hand side wing. However, for deutans and protans, this color is much closer to the colors from the left-hand side wing. This can be explained by analysing the confusion lines (Figure \@ref(fig:spectral) bottom left); color 5 is on the same confusion line as colors 4 and 1, and only 2 lines away from colors 2 and 3, whereas the differences with colors 6 and 7 are 2.5 and 6 confusion lines respectively.
+A severe issue that may induce visual bias for color blind people is illustrated with the palette **matplotlib.spectral** (which is similar to **brewer.spectral** in Figure \@ref(fig:spectral). For people with normal color vision, green, the fifth of seven colors, appears to be on the right-hand side wing. However, for deutans and protans, this color is much closer to the colors from the left-hand side wing. This can be explained by analysing the confusion lines (Figure \@ref(fig:spectral) bottom left); color 5 is on the same confusion line as colors 4 and 1, and only 2 lines away from colors 2 and 3, whereas the differences with colors 6 and 7 are 2.5 and 6 confusion lines respectively.
 
 
 ```{r spectral, fig.cap = "cols4all_matplotlib_spectral"}
@@ -673,7 +673,7 @@ knitr::include_graphics("../man/figures/cols4all_matplotlib_spectral.jpg")
 
 
 
-Several spectral sequential palettes from the series \texttt{scico} @scico, \texttt{matplotlib}@matplotlib (viridis), and \texttt{kovesi} @kovesi did succeed in this quest. Moreover, they scored high on fairness, as can be seen in Figure \@ref(fig:seqspec). Also the cyclic palettes from \texttt{scico} scored well on color blind friendliness and fairness.
+Several spectral sequential palettes from the series **scico** @scico, **matplotlib**@matplotlib (viridis), and **kovesi** @kovesi did succeed in this quest. Moreover, they scored high on fairness, as can be seen in Figure \@ref(fig:seqspec). Also the cyclic palettes from **scico** scored well on color blind friendliness and fairness.
 
 ```{r seqspec, fig.cap = "Spectral sequential palettes that scores well in general, shown in continuous format"}
 #| fig.alt = "Spectral sequential palettes that scores well in general, shown in continuous format",
@@ -701,7 +701,7 @@ Color blind friendliness of bivariate palettes is even more challenging to achie
 
 ### Strategies for Palette Design
 
-We used the development functions included in the R package \texttt{cols4all} to find categorical palettes that are color blind friendly, fair, and with sufficient contrast with white and/or black.
+We used the development functions included in the R package **cols4all** to find categorical palettes that are color blind friendly, fair, and with sufficient contrast with white and/or black.
 
 More specifically, we aimed for three use cases:
 
@@ -715,19 +715,19 @@ More specifically, we aimed for three use cases:
 We designed the following preliminary set of color palettes, of which the first seven colors are shown in Figure \@ref(fig:c4a).
 
 \begin{description}
-    \item[\texttt{area7}, \texttt{area8}, \texttt{area9}] Palettes for bright space-filling visualisations, preferably used against a white background. There is sufficient contrast with black, so black text annotations are possible (and according WCAG standards). See Figure \@ref(fig:area7) for an example.
-    \item[\texttt{area7}, \texttt{area8}, \texttt{area9}] The same as above, but dark variants for a black background and white text annotations (see Figure \@ref(fig:area7d).
-    \item[\texttt{line7}, \texttt{line8}, \texttt{line9}] Palettes for line and point charts. These palettes have sufficient contrast with both white and black so can be used for both light and dark modes (Figure \@ref(fig:line7).
-    \item[\texttt{friendly7}, \texttt{friendly9}, \texttt{friendly11}, \texttt{friendly13}] We managed to develope colorblind-friendly palettes with up to 13 colors (Figure \@ref(fig:friendly), ensuring a minimum color distance of 10. However, we advise against using such a large number of categorical colors for visualizing critical information, as it can hinder clarity and interpretation.
+    \item[**area7**, **area8**, **area9**] Palettes for bright space-filling visualisations, preferably used against a white background. There is sufficient contrast with black, so black text annotations are possible (and according WCAG standards). See Figure \@ref(fig:area7) for an example.
+    \item[**area7**, **area8**, **area9**] The same as above, but dark variants for a black background and white text annotations (see Figure \@ref(fig:area7d).
+    \item[**line7**, **line8**, **line9**] Palettes for line and point charts. These palettes have sufficient contrast with both white and black so can be used for both light and dark modes (Figure \@ref(fig:line7).
+    \item[**friendly7**, **friendly9**, **friendly11**, **friendly13**] We managed to develope colorblind-friendly palettes with up to 13 colors (Figure \@ref(fig:friendly), ensuring a minimum color distance of 10. However, we advise against using such a large number of categorical colors for visualizing critical information, as it can hinder clarity and interpretation.
 \end{description}.
 
 The used approach to find those palettes was the following:
 
 \begin{description}
-    \item[Pool of colors] We selected colors from several existing color blind friendly palettes (\texttt{carto}, \texttt{tableau} and \texttt{tol}).
+    \item[Pool of colors] We selected colors from several existing color blind friendly palettes (**carto**, **tableau** and **tol**).
     \item[Filter] We filtered the colors by chroma and or luminance to obtain the desired ranges. This ensures the desired fairness, vividness and contrast ratio scores.
-    \item[Compute \texttt{min_dist}] For each permutation we computed the minimum distance. To reduce the high number of permutations, "twin" colors from the pool were also filtered out.
-    \item[Visual inspection] The color palette candidates were loaded in \texttt{cols4all} and analysed.
+    \item[Compute **min_dist**] For each permutation we computed the minimum distance. To reduce the high number of permutations, "twin" colors from the pool were also filtered out.
+    \item[Visual inspection] The color palette candidates were loaded in **cols4all** and analysed.
     \item[Selection] The visually most appealing palettes (given the constraints) were selected.
 \end{description}
 
@@ -781,13 +781,13 @@ knitr::include_graphics("../man/figures/friendly13.jpg")
 
 ## Discussion
 
-\texttt{cols4all} offers a unique approach to color palette analysis and comparison, going beyond the functionalities of existing tools. By focusing on accessibility, fairness, and visual effectiveness, cols4all empowers users to make informed decisions based on quantitative and qualitative insights. The inclusion of color blindness simulation and contrast analysis aids in creating visualizations that are inclusive and perceptually effective for a wider audience. The concept of fairness introduces a novel perspective, promoting palettes where all colors are equally salient.
+**cols4all** offers a unique approach to color palette analysis and comparison, going beyond the functionalities of existing tools. By focusing on accessibility, fairness, and visual effectiveness, cols4all empowers users to make informed decisions based on quantitative and qualitative insights. The inclusion of color blindness simulation and contrast analysis aids in creating visualizations that are inclusive and perceptually effective for a wider audience. The concept of fairness introduces a novel perspective, promoting palettes where all colors are equally salient.
 
-\texttt{cols4all} is in active ongoing development with new features and refinements regularly added. This commitment to ongoing improvement is driven by a desire to meet the evolving needs of users and address the limitations identified through community feedback and ongoing research. For example, while the tool currently focuses on discrete palettes, it can effectively analyze continuous palettes by discretizing them into a sufficient number of classes, thus extending its applicability. However, the tool could also incorporate features to analyse sequential and diverging palettes in their continuous form.
+**cols4all** is in active ongoing development with new features and refinements regularly added. This commitment to ongoing improvement is driven by a desire to meet the evolving needs of users and address the limitations identified through community feedback and ongoing research. For example, while the tool currently focuses on discrete palettes, it can effectively analyze continuous palettes by discretizing them into a sufficient number of classes, thus extending its applicability. However, the tool could also incorporate features to analyse sequential and diverging palettes in their continuous form.
 
-While \texttt{cols4all} provides objective metrics, cultural backgrounds, individual preferences, and the specific context of use can influence how colors are perceived and interpreted. To better account for these subjective factors, future development could explore incorporating user feedback mechanisms and customizable settings to accommodate individual preferences.  Furthermore, drawing upon insights from other fields, such as visual perception research, can inform the development of new metrics and analytical tools that better capture the nuances of human color perception.
+While **cols4all** provides objective metrics, cultural backgrounds, individual preferences, and the specific context of use can influence how colors are perceived and interpreted. To better account for these subjective factors, future development could explore incorporating user feedback mechanisms and customizable settings to accommodate individual preferences.  Furthermore, drawing upon insights from other fields, such as visual perception research, can inform the development of new metrics and analytical tools that better capture the nuances of human color perception.
 
-Various sequential and diverging color palettes have been designed to be perceptually linear, in particular the \texttt{scico} @scico, \texttt{hcl} @hcl, and \texttt{matplotlib} (viridis) @matplotlib series. Currently there are no properties in \texttt{cols4all} that assess whether sequential and diverging palettes are perceived linearly. This could be assessed for people with normal color vision only, or also for color blind people.
+Various sequential and diverging color palettes have been designed to be perceptually linear, in particular the **scico** @scico, **hcl** @hcl, and **matplotlib** (viridis) @matplotlib series. Currently there are no properties in **cols4all** that assess whether sequential and diverging palettes are perceived linearly. This could be assessed for people with normal color vision only, or also for color blind people.
 
 One area where further development is needed is in improving the "nameability" of palette colors.  Nameability, which refers to how easily colors can be identified and labeled with common color names, has been shown to improve user performance in data visualization tasks @reda21.  The nameability property we proposed has a few limitations that require further research. Besides the room for improvement regarding the method to match the colors to the common color names, one aspect that remains unclear is whether "light" or "dark" variants of the common color names should be taken into account. Observe that for set of 11 common color names @boynton89, these variants are only commonly used in combination with blue and green; for instance dark pink can also be named purple and light red as orange or pink. How does the presence of both light and dark blue (as illustrated in Figure \@ref(fig:name)), influence user performance?  
 
@@ -795,7 +795,7 @@ User studies, both qualitative and quantitative, are needed to verify and if nee
 
 This work provides strategies for creating color palettes that meet specific criteria, such as color blind friendliness and fairness. These strategies currently involve manual adjustments and refinements based on the analysis provided by cols4all. However, mathematical optimization and machine learning offer promising avenues for automating palette generation @yuan22. Future work could explore developing separate tools that leverage these techniques, optimizing palettes for the properties proposed in this paper. A key challenge in designing such tools lies in integrating user preferences and domain expertise into the automated process. Interactive visualization tools that enable users to guide and refine the automated learning process would be a valuable asset, allowing for efficient exploration of the vast design space while ensuring the resulting palettes align with user needs and preferences.
 
-During the development  of \textit{cols4all} and the properties related to color distance we noticed that the perceived distance of two colors depends not only on those two color, but also on the background color. To accommodate for this phenomenon we introduce a so-called background adjusted color distance between colors $i$ and $j$ against background color $k$:
+During the development  of **cols4all** and the properties related to color distance we noticed that the perceived distance of two colors depends not only on those two color, but also on the background color. To accommodate for this phenomenon we introduce a so-called background adjusted color distance between colors $i$ and $j$ against background color $k$:
 
 \begin{equation}
 d(i,j,k) = \frac{2d(i,j)^2}{d(i,k) + d(j,k)}
@@ -806,4 +806,4 @@ We implemented this function in the main tool (tab page "Color Blind Friendlines
 
 ## Conclusion
 
-\texttt{cols4all} represents a significant step towards creating more accessible and effective data visualizations. By providing a comprehensive platform for color palette analysis and comparison, it encourages informed decision-making and promotes inclusivity in design. The open-source nature of the tool fosters community involvement and collaborative development, paving the way for future enhancements and a broader understanding of color perception in visualization. Future research could focus on user studies to evaluate the tool's effectiveness and identify areas for improvement, as well as the development of new metrics and visualizations to further enhance its analytical capabilities.
+**cols4all** represents a significant step towards creating more accessible and effective data visualizations. By providing a comprehensive platform for color palette analysis and comparison, it encourages informed decision-making and promotes inclusivity in design. The open-source nature of the tool fosters community involvement and collaborative development, paving the way for future enhancements and a broader understanding of color perception in visualization. Future research could focus on user studies to evaluate the tool's effectiveness and identify areas for improvement, as well as the development of new metrics and visualizations to further enhance its analytical capabilities.

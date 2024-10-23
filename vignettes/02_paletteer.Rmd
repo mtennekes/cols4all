@@ -1,5 +1,5 @@
 ---
-title: "Ranking the 2759 palettes from the package **paletteer**"
+title: "Exploring the 2759 palettes from paletteer"
 output: 
   bookdown::html_vignette2:
 pkgdown:
@@ -51,13 +51,16 @@ library(cols4all)
 
 ## Introduction
 
-The most extensive collection of color palettes in R is the package \texttt{paletteer} @paletteer with big credits to the author Emil Hvitfeldt. Let's load these palettes into \texttt{cols4all}.
+The most extensive collection of color palettes in R is the package **paletteer** by Emil Hvitfeldt@paletteer. Let's load these palettes into \texttt{cols4all}.
 
 ## Loading the paletteer palettes
+
 The prepared system data can be loaded as follows:
 
 ```{r}
 paletteer = readRDS(gzcon(url("https://mtennekes.github.io/cols4all/paletteer.rds")))
+# from paletteer version 1.6.0
+
 c4a_sysdata_import(paletteer)
 ```
 
@@ -83,7 +86,7 @@ Now we can start the interactive tool:
 c4a_gui()
 ```
 
-First we will see all categorical palettes of length 7, sorted by name. When we filter on color blind friendliness and sort by fairness (a measure that indicated whether all colors stand out about equally) we get this table:
+First we will see all categorical palettes of length 7, sorted by name. When we filter on color blind friendliness and sort by [fairness](01_paper.html#fairness) we get this table:
 
 
 ```{r cbf,fig.cap="Colorblind friendly categorical palettes of 7 colors, sorted by fairness"}
@@ -93,6 +96,8 @@ First we will see all categorical palettes of length 7, sorted by name. When we 
 
 knitr::include_graphics("../man/figures/paletteer_cbf.png")
 ```
+
+As you can see, the top three palettes are identical, namely the palette by Okabe and Ito@okabe, but from difference R package sources and variations regarding the the eighth color (black or gray).
 
 The other way round, when we filter on fair and sort by colorblind-friendliness we get this table:
 
@@ -104,5 +109,5 @@ The other way round, when we filter on fair and sort by colorblind-friendliness 
 knitr::include_graphics("../man/figures/paletteer_fair.png")
 ```
 
-Observe that there are no color palettes of length 7 that are both color-blind friendly and fair. The good news is that cols4all contains a few new preliminary palettes that meet both criteria. See [strategies for palette design](paper.html#strategies-for-palette-design).
+Observe that there are no color palettes of length 7 that are both color-blind friendly and fair. The good news is that cols4all contains a few new preliminary palettes that meet both criteria. See [strategies for palette design](01_paper.html#strategies-for-palette-design).
 
